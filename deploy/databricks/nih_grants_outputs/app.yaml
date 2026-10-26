@@ -1,0 +1,24 @@
+# Databricks App: nih-grants-outputs (read-only public NIH grant + output data).
+# https://docs.databricks.com/aws/en/dev-tools/databricks-apps/app-runtime
+#
+# Deploy (stages this file + requirements.txt + src/shared + src/nih_grants_outputs):
+#   set -a; source deploy/databricks/.env; source deploy/databricks/nih_grants_outputs/.env; set +a
+#   bash deploy/databricks/deploy-databricks-app.sh
+#
+# Endpoints:  https://<app-url>/mcp (streamable HTTP)   /health   /version
+#
+# Databricks injects DATABRICKS_APP_PORT, DATABRICKS_HOST, DATABRICKS_CLIENT_ID and
+# DATABRICKS_CLIENT_SECRET (this App's own service principal). app.py sees
+# DATABRICKS_APP_PORT and serves streamable HTTP on it.
+command:
+  [
+    "/bin/sh",
+    "-c",
+    "export PYTHONPATH=/app/python/source_code/src:$PYTHONPATH && python -m nih_grants_outputs.app",
+  ]
+
+# Enable once a SQL warehouse resource with key "sql-warehouse" is attached to
+# this App (needed for table reads, Step 3+):
+# env:
+#   - name: OUTPUTS_DATABRICKS_WAREHOUSE_ID
+#     valueFrom: sql-warehouse

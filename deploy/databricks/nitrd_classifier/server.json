@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.conroyriodss/nitrd-classifier",
+  "description": "NITRD parent-category and subcategory suggestions with supporting evidence for public NIH projects. Suggestions only; not RCDC coding.",
+  "repository": {
+    "url": "https://github.com/conroyriodss/nitrd-categorization-mcp",
+    "source": "github",
+    "subfolder": "src/nitrd_classifier"
+  },
+  "version": "0.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://nitrd-classifier.example.invalid/mcp"
+    }
+  ]
+}

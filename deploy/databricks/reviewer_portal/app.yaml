@@ -1,0 +1,25 @@
+# Databricks App: reviewer-portal (sandbox writes: review requests, decisions, routing).
+# https://docs.databricks.com/aws/en/dev-tools/databricks-apps/app-runtime
+#
+# Deploy (stages this file + requirements.txt + src/shared + src/reviewer_portal):
+#   set -a; source deploy/databricks/.env; source deploy/databricks/reviewer_portal/.env; set +a
+#   bash deploy/databricks/deploy-databricks-app.sh
+#
+# Endpoints:  https://<app-url>/mcp (streamable HTTP)   /health   /version
+#
+# Databricks injects DATABRICKS_APP_PORT, DATABRICKS_HOST, DATABRICKS_CLIENT_ID and
+# DATABRICKS_CLIENT_SECRET (this App's own service principal). This is the only
+# App whose service principal gets write grants (review_requests, review_events,
+# routing_events). Every record it writes carries sandbox=true.
+command:
+  [
+    "/bin/sh",
+    "-c",
+    "export PYTHONPATH=/app/python/source_code/src:$PYTHONPATH && python -m reviewer_portal.app",
+  ]
+
+# Enable once a SQL warehouse resource with key "sql-warehouse" is attached to
+# this App (needed for table reads/writes, Step 3+):
+# env:
+#   - name: PORTAL_DATABRICKS_WAREHOUSE_ID
+#     valueFrom: sql-warehouse

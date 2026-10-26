@@ -4,6 +4,10 @@ A ready-to-run starter for building a [Model Context Protocol (MCP)](https://mod
 
 Built with [FastMCP](https://github.com/jlowin/fastmcp) and [uv](https://docs.astral.sh/uv/). If you have never built an MCP server before, start with **[QUICKSTART.md](QUICKSTART.md)**.
 
+> **NITRD Categorization MCP Suite — work in progress.** This fork replaces the template's `example_server` with three servers, each deployed as its own Databricks App over streamable HTTP:
+> `src/nih_grants_outputs` (read), `src/nitrd_classifier` (inference), `src/reviewer_portal` (sandbox write), plus `src/shared`. Per-App deploy files live in `deploy/databricks/<server>/`; deploy one App at a time with `deploy/databricks/deploy-databricks-app.sh` and `SERVER=<server>`.
+> **FastMCP version:** this suite is built against **FastMCP 4.x** (pinned in `uv.lock`). Some template text below follows FastMCP 2.x conventions; where they differ, the 4.x API wins (for example, use `await mcp.list_tools()`, not `get_tools()`). Template sections that still mention `example_server` describe the original starter and will be rewritten for the suite.
+
 ---
 
 ## What is an MCP server?

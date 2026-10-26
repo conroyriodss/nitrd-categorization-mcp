@@ -1,26 +1,45 @@
 [project]
-name = "example-server"
+name = "nitrd-categorization-mcp"
 version = "0.1.0"
-description = "Starter MCP server for the GSA MCP hackathon"
+description = "Three MCP servers for NITRD categorization of NIH grants: nih-grants-outputs (read), nitrd-classifier (inference), reviewer-portal (sandbox write)"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "fastmcp>=2.0.0",
+    # Built against the FastMCP 4.x API (e.g. list_tools(), not get_tools()).
+    "fastmcp>=4.0,<5",
     "httpx>=0.27.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
 ]
 
+[project.optional-dependencies]
+# Only the nitrd-classifier server needs the ML stack. Install locally with
+# `uv sync --extra classifier`. Databricks Apps do not read pyproject.toml; each
+# App installs deploy/databricks/<server>/requirements.txt (keep them in sync).
+classifier = [
+    "scikit-learn>=1.6",
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "pandas>=2.2",
+]
+
 [project.scripts]
-# Lets you run the server with `uv run example-server`.
-example-server = "example_server.app:main"
+# One console script per server, e.g. `uv run nih-grants-outputs`.
+nih-grants-outputs = "nih_grants_outputs.app:main"
+nitrd-classifier = "nitrd_classifier.app:main"
+reviewer-portal = "reviewer_portal.app:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/example_server"]
+packages = [
+    "src/shared",
+    "src/nih_grants_outputs",
+    "src/nitrd_classifier",
+    "src/reviewer_portal",
+]
 
 [dependency-groups]
 # Dev + eval-only deps. Install with `uv sync --group dev`.

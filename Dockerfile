@@ -28,4 +28,8 @@ RUN uv pip install --system --no-cache .
 EXPOSE 8080
 
 # PORT=8080 (set above) makes app.py run HTTP on that port automatically.
-CMD ["python", "-m", "example_server.app"]
+# Pick the server at run time: docker run -e SERVER_MODULE=nitrd_classifier ...
+# (nih_grants_outputs | nitrd_classifier | reviewer_portal). Databricks Apps do
+# not use this Dockerfile; see deploy/databricks/.
+ENV SERVER_MODULE=nih_grants_outputs
+CMD ["sh", "-c", "python -m ${SERVER_MODULE}.app"]

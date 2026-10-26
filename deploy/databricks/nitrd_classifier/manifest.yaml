@@ -1,0 +1,17 @@
+# cloud.gov (Cloud Foundry) manifest for nitrd-classifier. Not used by the
+# Databricks deployment (the hackathon target); kept per server for parity with
+# the template. Push from the repo root:
+#   cf push -f deploy/databricks/nitrd_classifier/manifest.yaml
+applications:
+  - name: nitrd-classifier
+    buildpacks:
+      - python_buildpack
+    command: PYTHONPATH=src python -m nitrd_classifier.app
+    health-check-type: http
+    health-check-http-endpoint: /health
+    env:
+      PYTHONUNBUFFERED: 1
+    routes:
+      - route: nitrd-classifier.app.cloud.gov
+    disk_quota: 2G
+    memory: 1G

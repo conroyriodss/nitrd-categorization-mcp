@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.conroyriodss/reviewer-portal",
+  "description": "Sandbox reviewer portal: route and record NITRD categorization review requests and decisions. Demonstration only; every record is sandbox=true and not RCDC.",
+  "repository": {
+    "url": "https://github.com/conroyriodss/nitrd-categorization-mcp",
+    "source": "github",
+    "subfolder": "src/reviewer_portal"
+  },
+  "version": "0.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://reviewer-portal.example.invalid/mcp"
+    }
+  ]
+}

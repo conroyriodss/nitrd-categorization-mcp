@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.conroyriodss/nih-grants-outputs",
+  "description": "Read-only public NIH grant data and research outputs (ExPORTER, iCite, PubMed, DataCite) for NITRD categorization review.",
+  "repository": {
+    "url": "https://github.com/conroyriodss/nitrd-categorization-mcp",
+    "source": "github",
+    "subfolder": "src/nih_grants_outputs"
+  },
+  "version": "0.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://nih-grants-outputs.example.invalid/mcp"
+    }
+  ]
+}
