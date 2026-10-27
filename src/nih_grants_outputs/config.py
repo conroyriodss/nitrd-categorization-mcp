@@ -21,12 +21,15 @@ class Settings(BaseSettings):
     mcp_host: str = "0.0.0.0"
     mcp_port: int = 8001
 
-    # Databricks SQL warehouse used for table reads (set in Step 3+).
+    # Databricks SQL warehouse used for table reads. Empty -> DATABRICKS_WAREHOUSE_ID.
     databricks_warehouse_id: str = ""
 
     # Result caps.
     find_projects_max_limit: int = 500
     publications_max: int = 100
+    # Publications fed to the intensity scorer (newest first). One outlier core
+    # has 20,604 linked PMIDs; the median is 12 and p90 is 97.
+    intensity_max_publications: int = 2000
 
 
 settings = Settings()

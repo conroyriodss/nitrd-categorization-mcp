@@ -12,6 +12,9 @@ from typing import Any, Literal
 from fastmcp import FastMCP
 from pydantic import Field
 
+from nih_grants_outputs import data, intensity
+from nih_grants_outputs.config import settings
+from nih_grants_outputs.tools.get_project_publications import check_core
 from nih_grants_outputs.utils import (
     DATACITE_OUTPUTS,
     ICITE_PUBS,
@@ -19,7 +22,6 @@ from nih_grants_outputs.utils import (
     PUBMED_ARTICLES,
     PUBMED_MESH,
     PUBMED_PUBTYPES,
-    not_implemented,
 )
 from shared.models import (
     READ_ONLY,
@@ -67,6 +69,53 @@ class IntensityResult(ResultModel):
     source: SourceInfo
 
 
+TOP_EVIDENCE = 5
+
+
+def build_result(
+    core: str, rows: list[dict], total: int, scored: dict
+) -> IntensityResult:
+    usable = bool(scored["score_interpretable"])
+    warnings = list(scored["warnings"])
+    if total > len(rows):
+        warnings.append(
+            f"Scored the newest {len(rows)} of {total} linked publications "
+            f"(cap intensity_max_publications={settings.intensity_max_publications})."
+        )
+    warnings.append("DataCite outputs not loaded (MVP); publications only.")
+    evidence = sorted(
+        scored["evidence"]["overall"],
+        key=lambda e: (-e["project_contribution"], e["work_key"]),
+    )[:TOP_EVIDENCE]
+    return IntensityResult(
+        core_project_num=core,
+        status=scored["status"],
+        score_interpretable=usable,
+        overall=scored["overall"] if usable else None,
+        per_pca=scored["per_pca"] if usable else None,
+        inputs=IntensityInputs(
+            publications=len(rows),
+            publications_with_mesh=sum(1 for r in rows if r["mesh"] is not None),
+            datacite_status="not_available",
+            datacite_outputs=0,
+        ),
+        top_evidence=evidence,
+        coverage=scored["coverage"],
+        warnings=warnings,
+        reproducibility=scored["reproducibility"],
+        source=SourceInfo(
+            tables=[
+                NITRD_PUB_LINKS,
+                PUBMED_ARTICLES,
+                PUBMED_MESH,
+                PUBMED_PUBTYPES,
+                ICITE_PUBS,
+                DATACITE_OUTPUTS,
+            ]
+        ),
+    )
+
+
 def register(mcp: FastMCP) -> None:
     @mcp.tool(annotations={**READ_ONLY, "title": "Score NITRD output intensity"})
     async def outputs_score_project_intensity(
@@ -79,14 +128,17 @@ def register(mcp: FastMCP) -> None:
         Exploratory weights; evidence for a reviewer, not a classification.
         With no usable outputs the scores are null and score_interpretable is false.
         """
-        _ = SourceInfo(
-            tables=[
-                NITRD_PUB_LINKS,
-                PUBMED_ARTICLES,
-                PUBMED_MESH,
-                PUBMED_PUBTYPES,
-                ICITE_PUBS,
-                DATACITE_OUTPUTS,
-            ]
+        total, rows = await data.fetch_publications(
+            core_project_num, settings.intensity_max_publications
         )
-        raise not_implemented("outputs_score_project_intensity")
+        if total == 0:
+            await check_core(core_project_num)
+        provenance = {
+            "core_project_num": core_project_num,
+            "publication_source": "ExPORTER publication links + PubMed + iCite "
+            "(nitrd_hackathon_v1 snapshot)",
+            "datacite_source": "not loaded (MVP)",
+            "output_window": "all linked publications, newest first",
+        }
+        scored = intensity.score(rows, provenance)
+        return build_result(core_project_num, rows, total, scored)

@@ -1,0 +1,82 @@
+{
+  "version": "demo-personas-v1-2026-10-27",
+  "note": "Fictional demo personas, not NIH staff; no names, emails or contact fields. po_name_sha256 = SHA-256 of a public RePORTER program-officer name after reviewer_portal.routing.normalize_po_name; the name itself is not stored. Not RCDC / demonstration only.",
+  "personas": [
+    {
+      "reviewer_id": "demo_po_niaid_01",
+      "role": "program_officer",
+      "role_title": "Program Officer (NIAID, demo)",
+      "ic": "NIAID",
+      "active": true,
+      "po_name_sha256": ["705ea6d3cf7302d57f10667b313abf03eace3c028427c91b92b5bfb652abe56f"],
+      "demo_note": "Stands in for the PO of demo project U24AI171008 (appl 10506013)."
+    },
+    {
+      "reviewer_id": "demo_po_ninr_01",
+      "role": "program_officer",
+      "role_title": "Program Officer (NINR, demo)",
+      "ic": "NINR",
+      "active": true,
+      "po_name_sha256": ["648fa1680cdf7217609afcd4778559c768e89ecc258e54d8ac868d3a85a8ff1a"],
+      "demo_note": "Stands in for the PO of demo project R01NR013912 (appl 10388671)."
+    },
+    {
+      "reviewer_id": "demo_po_nci_01",
+      "role": "program_officer",
+      "role_title": "Program Officer (NCI, demo)",
+      "ic": "NCI",
+      "active": true,
+      "po_name_sha256": [],
+      "demo_note": "No PO bound yet; add a hash to route an NCI demo project to tier 1."
+    },
+    {
+      "reviewer_id": "demo_po_nhlbi_01",
+      "role": "program_officer",
+      "role_title": "Program Officer (NHLBI, demo, inactive)",
+      "ic": "NHLBI",
+      "active": false,
+      "po_name_sha256": [],
+      "demo_note": "Inactive on purpose: shows fallback when a matched PO is inactive."
+    },
+    {
+      "reviewer_id": "demo_ic_rep_nci",
+      "role": "ic_nitrd_rep",
+      "role_title": "NCI NITRD Representative (demo)",
+      "ic": "NCI",
+      "active": true,
+      "po_name_sha256": []
+    },
+    {
+      "reviewer_id": "demo_ic_rep_nigms",
+      "role": "ic_nitrd_rep",
+      "role_title": "NIGMS NITRD Representative (demo)",
+      "ic": "NIGMS",
+      "active": true,
+      "po_name_sha256": []
+    },
+    {
+      "reviewer_id": "demo_ic_rep_niaid",
+      "role": "ic_nitrd_rep",
+      "role_title": "NIAID NITRD Representative (demo)",
+      "ic": "NIAID",
+      "active": true,
+      "po_name_sha256": []
+    },
+    {
+      "reviewer_id": "demo_ic_rep_nimh",
+      "role": "ic_nitrd_rep",
+      "role_title": "NIMH NITRD Representative (demo)",
+      "ic": "NIMH",
+      "active": true,
+      "po_name_sha256": []
+    },
+    {
+      "reviewer_id": "demo_sia",
+      "role": "sia_queue",
+      "role_title": "NITRD SIA Review Queue (demo)",
+      "ic": null,
+      "active": true,
+      "po_name_sha256": []
+    }
+  ]
+}

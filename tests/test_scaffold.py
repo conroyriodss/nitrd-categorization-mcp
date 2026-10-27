@@ -2,8 +2,8 @@
 
 Each server must import, carry its own name, publish exactly its MVP tools
 (with input AND output schemas and the right read/write annotations), and serve
-/health and /version over HTTP. Step 3 bodies are schema-only skeletons, so a
-valid call must come back as a not-implemented tool error.
+/health and /version over HTTP. Tools not yet in IMPLEMENTED are schema-only
+skeletons, so a valid call must come back as a not-implemented tool error.
 """
 
 from __future__ import annotations
@@ -54,6 +54,17 @@ EXPECTED_TOOLS = {
 }
 WRITE_TOOLS = {"portal_submit_review_request", "portal_submit_review_decision"}
 
+# Tools with real bodies (Step 4). Everything else is still a skeleton.
+IMPLEMENTED = {
+    "outputs_find_projects",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_get_project_datacite",
+    "outputs_score_project_intensity",
+}
+# Implemented tools that need the vendored intensity scorer files.
+NEEDS_SCORER = {"outputs_score_project_intensity"}
+
 # One valid argument set per tool (used to prove the skeletons are wired).
 VALID_ARGS = {
     "outputs_find_projects": {
@@ -103,7 +114,7 @@ async def test_skeletons_validate_then_raise_not_implemented(
     package: str, name: str
 ) -> None:
     async with Client(_mcp(package)) as client:
-        for tool in sorted(EXPECTED_TOOLS[package]):
+        for tool in sorted(EXPECTED_TOOLS[package] - IMPLEMENTED):
             with pytest.raises(ToolError, match="not implemented yet"):
                 await client.call_tool(tool, VALID_ARGS[tool])
 

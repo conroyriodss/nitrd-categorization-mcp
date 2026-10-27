@@ -1,7 +1,8 @@
 """outputs_get_project_datacite: DataCite datasets/software funded by an award.
 
 MVP: the DataCite table is not loaded, so this returns status="not_available".
-If the DataCite v2 pull lands by Thu Nov 6 the same schema carries real rows.
+Once the batch pull creates the table, the same schema carries real rows (the
+tool checks for the table on every call; no redeploy needed).
 """
 
 from typing import Literal
@@ -9,8 +10,14 @@ from typing import Literal
 from fastmcp import FastMCP
 from pydantic import Field
 
-from nih_grants_outputs.utils import DATACITE_OUTPUTS, not_implemented
+from nih_grants_outputs import data
+from nih_grants_outputs.utils import DATACITE_OUTPUTS
 from shared.models import READ_ONLY, CoreProjectNum, ResultModel, SourceInfo
+
+NOT_LOADED = (
+    "The DataCite outputs table has not been loaded yet (MVP). Unknown, not "
+    "evidence of no data outputs."
+)
 
 
 class DataciteOutput(ResultModel):
@@ -52,5 +59,31 @@ def register(mcp: FastMCP) -> None:
         "not_available" and outputs is null. Treat that as unknown, not as
         evidence the award produced no data outputs.
         """
-        _ = SourceInfo(tables=[DATACITE_OUTPUTS])
-        raise not_implemented("outputs_get_project_datacite")
+        source = SourceInfo(tables=[DATACITE_OUTPUTS])
+        if not await data.datacite_loaded():
+            return DataciteResult(
+                core_project_num=core_project_num,
+                status="not_available",
+                reason=NOT_LOADED,
+                outputs=None,
+                source=source,
+            )
+        rows = await data.datacite_rows(core_project_num)
+        return DataciteResult(
+            core_project_num=core_project_num,
+            status="available",
+            reason=None,
+            outputs=[
+                DataciteOutput(
+                    doi=r["doi"],
+                    title=data.clean(r["title"]),
+                    resource_type_general=data.clean(r["resource_type_general"]),
+                    resource_type=data.clean(r["resource_type"]),
+                    publication_year=data.to_int(r["publication_year"]),
+                    award_number_matched=data.clean(r["award_number_matched"]),
+                    match_confidence=r["match_confidence"],
+                )
+                for r in rows
+            ],
+            source=source,
+        )

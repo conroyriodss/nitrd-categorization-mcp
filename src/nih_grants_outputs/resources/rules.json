@@ -1,0 +1,996 @@
+{
+  "schema_version": 1,
+  "rule_version": "0.1.0-exploratory",
+  "pca_definition_year": 2026,
+  "pcas": [
+    "LSDMA",
+    "HCIA",
+    "CHuman",
+    "AI",
+    "EHCS",
+    "CSP",
+    "SPSQ"
+  ],
+  "mesh_year": 2026,
+  "verified_on": "2026-10-26",
+  "pca_source_url": "https://www.nitrd.gov/program-component-areas/nitrd-pcas-2026/",
+  "signal_weights": {
+    "publication": {
+      "mesh": 0.55,
+      "title": 0.35,
+      "venue": 0.1
+    },
+    "datacite": {
+      "title": 0.55,
+      "resource_type": 0.45
+    }
+  },
+  "stream_weights": {
+    "publication": 0.7,
+    "datacite": 0.3
+  },
+  "resource_types": {
+    "Software": 1.0,
+    "Dataset": 0.8,
+    "ComputationalNotebook": 0.8,
+    "Workflow": 0.8,
+    "Model": 0.3,
+    "Collection": 0.0,
+    "Text": 0.0
+  },
+  "publication_type_factors": {
+    "Review": 0.75,
+    "Systematic Review": 0.75,
+    "Meta-Analysis": 0.75,
+    "Editorial": 0.25,
+    "Comment": 0.25,
+    "Letter": 0.25,
+    "News": 0.25
+  },
+  "excluded_publication_types": [
+    "Retracted Publication",
+    "Retraction of Publication",
+    "Published Erratum",
+    "Expression of Concern"
+  ],
+  "mesh": [
+    {
+      "id": "D000465",
+      "label": "Algorithms",
+      "aliases": [],
+      "overall": 0.35,
+      "pca": {},
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000465",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D001185",
+      "label": "Artificial Intelligence",
+      "aliases": [
+        "AI (Artificial Intelligence)",
+        "Computational Intelligence",
+        "Computer Reasoning",
+        "Computer Vision Systems",
+        "Knowledge Acquisition (Computer)",
+        "Knowledge Representation (Computer)",
+        "Machine Intelligence"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D001185",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000081411",
+      "label": "Augmented Reality",
+      "aliases": [
+        "Mixed Reality"
+      ],
+      "overall": 0.85,
+      "pca": {
+        "CHuman": 0.85
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000081411",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000077558",
+      "label": "Big Data",
+      "aliases": [],
+      "overall": 1.0,
+      "pca": {
+        "LSDMA": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000077558",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000081186",
+      "label": "Blockchain",
+      "aliases": [
+        "Block Chain"
+      ],
+      "overall": 0.8,
+      "pca": {
+        "CSP": 0.8
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000081186",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D062207",
+      "label": "Brain-Computer Interfaces",
+      "aliases": [
+        "Brain Machine Interface",
+        "Brain-Computer Interface",
+        "Brain-Machine Interfaces",
+        "Neural Interface Technology"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "CHuman": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D062207",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000067917",
+      "label": "Cloud Computing",
+      "aliases": [
+        "Cloud Processing",
+        "Cloud Service",
+        "Cloud Storage",
+        "Edge Computing",
+        "Fog Computing"
+      ],
+      "overall": 0.8,
+      "pca": {
+        "HCIA": 0.8
+      },
+      "title_context_required": [
+        "HCIA"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000067917",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D065709",
+      "label": "Common Data Elements",
+      "aliases": [],
+      "overall": 0.55,
+      "pca": {
+        "LSDMA": 0.55
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D065709",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D003196",
+      "label": "Computer Graphics",
+      "aliases": [],
+      "overall": 0.65,
+      "pca": {
+        "CHuman": 0.65
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D003196",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D016494",
+      "label": "Computer Security",
+      "aliases": [
+        "Compromising of Data",
+        "Computer Hackers",
+        "Computer Viruses",
+        "Computer Worms",
+        "Cyber Security",
+        "Cybersecurity",
+        "Data Encryption",
+        "Data Protection",
+        "Data Security",
+        "Information Protection"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "CSP": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D016494",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D003198",
+      "label": "Computer Simulation",
+      "aliases": [
+        "Computational Modeling",
+        "Computational Modelling",
+        "Computer Models",
+        "Computerized Models",
+        "In silico Modeling",
+        "In silico Models",
+        "In silico Simulation",
+        "Models, Computer"
+      ],
+      "overall": 0.4,
+      "pca": {
+        "HCIA": 0.4
+      },
+      "title_context_required": [
+        "HCIA"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D003198",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D003199",
+      "label": "Computer Systems",
+      "aliases": [
+        "Computer Architecture",
+        "Computer System",
+        "Computer Systems Development",
+        "Computer Systems Evaluation",
+        "Computer Systems Organization",
+        "Organization, Computer Systems",
+        "Real Time System",
+        "Real-Time Systems"
+      ],
+      "overall": 0.5,
+      "pca": {
+        "HCIA": 0.5,
+        "EHCS": 0.5
+      },
+      "title_context_required": [
+        "HCIA",
+        "EHCS"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D003199",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D003201",
+      "label": "Computers",
+      "aliases": [
+        "Calculators, Programmable",
+        "Computer Hardware",
+        "Computers, Digital",
+        "Hardware, Computer"
+      ],
+      "overall": 0.3,
+      "pca": {
+        "EHCS": 0.3
+      },
+      "title_context_required": [
+        "EHCS"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D003201",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D039301",
+      "label": "Computers, Molecular",
+      "aliases": [
+        "DNA Computation",
+        "DNA Computers",
+        "Molecular Computation",
+        "RNA Computation",
+        "RNA Computers"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "EHCS": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D039301",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000068240",
+      "label": "Data Anonymization",
+      "aliases": [
+        "Data Masking",
+        "De-Identification",
+        "Deidentification"
+      ],
+      "overall": 0.85,
+      "pca": {
+        "CSP": 0.85
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000068240",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000079803",
+      "label": "Data Management",
+      "aliases": [
+        "Data Administration"
+      ],
+      "overall": 0.75,
+      "pca": {
+        "LSDMA": 0.75
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000079803",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D057225",
+      "label": "Data Mining",
+      "aliases": [
+        "Text Mining"
+      ],
+      "overall": 0.8,
+      "pca": {
+        "LSDMA": 0.8
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D057225",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000077488",
+      "label": "Data Science",
+      "aliases": [
+        "Data-Driven Science"
+      ],
+      "overall": 0.65,
+      "pca": {
+        "LSDMA": 0.65
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000077488",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000073458",
+      "label": "Data Warehousing",
+      "aliases": [
+        "Data Mart",
+        "Data Warehouse",
+        "Datawarehouse",
+        "Datawarehousing",
+        "Enterprise Data Warehouse"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "LSDMA": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000073458",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D003628",
+      "label": "Database Management Systems",
+      "aliases": [
+        "Data Base Management Systems",
+        "Management System, Data Base",
+        "Management Systems, Data Base",
+        "System, Data Base Management",
+        "Systems, Data Base Management"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "LSDMA": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D003628",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D019992",
+      "label": "Databases as Topic",
+      "aliases": [
+        "Data Banks as Topic",
+        "Data Bases as Topic",
+        "Databanks as Topic"
+      ],
+      "overall": 0.6,
+      "pca": {
+        "LSDMA": 0.6
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D019992",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D066264",
+      "label": "Datasets as Topic",
+      "aliases": [
+        "Data Sets as Topic",
+        "Dataset as Topic"
+      ],
+      "overall": 0.35,
+      "pca": {
+        "LSDMA": 0.35
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D066264",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000077321",
+      "label": "Deep Learning",
+      "aliases": [
+        "Hierarchical Learning"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000077321",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000098406",
+      "label": "Ensemble Learning",
+      "aliases": [
+        "Ensemble Model Aggregation"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000098406",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D005103",
+      "label": "Expert Systems",
+      "aliases": [],
+      "overall": 0.9,
+      "pca": {
+        "AI": 0.9
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D005103",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000098407",
+      "label": "Federated Learning",
+      "aliases": [
+        "Federated Learning, Machine",
+        "Federated Machine Learning"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000098407",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D017143",
+      "label": "Fuzzy Logic",
+      "aliases": [
+        "Logic, Fuzzy"
+      ],
+      "overall": 0.75,
+      "pca": {
+        "AI": 0.75
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D017143",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000098842",
+      "label": "Generative Artificial Intelligence",
+      "aliases": [
+        "Chat GPT",
+        "Chat-GPT",
+        "ChatGPT",
+        "Chatbot",
+        "Gen AI",
+        "GenAI",
+        "Generative AI"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000098842",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000089862",
+      "label": "Haptic Technology",
+      "aliases": [
+        "Haptic Communication Technology",
+        "Haptic Feedback Technology",
+        "Haptic Perception Technology",
+        "Haptics",
+        "Touch Feedback Technology"
+      ],
+      "overall": 0.9,
+      "pca": {
+        "CHuman": 0.9
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000089862",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000073892",
+      "label": "Health Information Interoperability",
+      "aliases": [
+        "Health Information System Interoperability"
+      ],
+      "overall": 0.9,
+      "pca": {
+        "LSDMA": 0.9
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000073892",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D016247",
+      "label": "Information Storage and Retrieval",
+      "aliases": [
+        "Data Files",
+        "Data Linkage",
+        "Data Retrieval",
+        "Data Storage",
+        "Data Storage and Retrieval",
+        "Information Extraction",
+        "Information Retrieval",
+        "Information Storage",
+        "Machine-Readable Data Files"
+      ],
+      "overall": 0.65,
+      "pca": {
+        "LSDMA": 0.65
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D016247",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000098342",
+      "label": "Large Language Models",
+      "aliases": [
+        "Large Language Model"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000098342",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000069550",
+      "label": "Machine Learning",
+      "aliases": [
+        "Transfer Learning"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000069550",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000071253",
+      "label": "Metadata",
+      "aliases": [
+        "Metatags"
+      ],
+      "overall": 0.75,
+      "pca": {
+        "LSDMA": 0.75
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000071253",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D009323",
+      "label": "Natural Language Processing",
+      "aliases": [],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D009323",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D016571",
+      "label": "Neural Networks, Computer",
+      "aliases": [
+        "Computational Neural Networks",
+        "Connectionist Models",
+        "Models, Neural Network",
+        "Neural Network Models",
+        "Neural Networks (Computer)",
+        "Perceptrons"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D016571",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000098436",
+      "label": "Parallel Algorithms",
+      "aliases": [],
+      "overall": 0.9,
+      "pca": {
+        "EHCS": 0.9
+      },
+      "title_context_required": [
+        "EHCS"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000098436",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D010363",
+      "label": "Pattern Recognition, Automated",
+      "aliases": [
+        "Automated Pattern Recognition",
+        "Pattern Recognition System"
+      ],
+      "overall": 0.85,
+      "pca": {
+        "AI": 0.85
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D010363",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D011381",
+      "label": "Programming Languages",
+      "aliases": [],
+      "overall": 0.9,
+      "pca": {
+        "SPSQ": 0.9
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D011381",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000098408",
+      "label": "Reinforcement Machine Learning",
+      "aliases": [
+        "Deep Reinforcement Learning",
+        "Reinforcement Learning, Machine"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000098408",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000075403",
+      "label": "Semantic Web",
+      "aliases": [
+        "Linked Data",
+        "Semantic Network"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "LSDMA": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000075403",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D012984",
+      "label": "Software",
+      "aliases": [
+        "Computer Applications Software",
+        "Computer Programs",
+        "Computer Programs and Programming",
+        "Computer Software",
+        "Computer Software Applications",
+        "Open Source Software",
+        "Software Engineering",
+        "Software Tools"
+      ],
+      "overall": 0.65,
+      "pca": {
+        "SPSQ": 0.65
+      },
+      "title_context_required": [
+        "SPSQ"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D012984",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D012985",
+      "label": "Software Design",
+      "aliases": [
+        "Flow Charts (Computer)",
+        "Flowcharts",
+        "Flowcharts (Computer)"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "SPSQ": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D012985",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D012986",
+      "label": "Software Validation",
+      "aliases": [
+        "Software Verification"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "SPSQ": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D012986",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000069553",
+      "label": "Supervised Machine Learning",
+      "aliases": [
+        "Active Machine Learning",
+        "Inductive Machine Learning",
+        "Learning from Labeled Data",
+        "Machine Learning with a Teacher",
+        "Semi-supervised Learning"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000069553",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000069558",
+      "label": "Unsupervised Machine Learning",
+      "aliases": [],
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000069558",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000086825",
+      "label": "User-Centered Design",
+      "aliases": [
+        "Usability Testing"
+      ],
+      "overall": 0.85,
+      "pca": {
+        "CHuman": 0.85
+      },
+      "title_context_required": [
+        "CHuman"
+      ],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000086825",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D014584",
+      "label": "User-Computer Interface",
+      "aliases": [
+        "Interface, User Computer",
+        "User Computer Interface",
+        "Virtual Systems"
+      ],
+      "overall": 1.0,
+      "pca": {
+        "CHuman": 1.0
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D014584",
+      "mesh_year": 2026
+    },
+    {
+      "id": "D000076142",
+      "label": "Virtual Reality",
+      "aliases": [
+        "Virtual Reality, Educational",
+        "Virtual Reality, Instructional"
+      ],
+      "overall": 0.85,
+      "pca": {
+        "CHuman": 0.85
+      },
+      "title_context_required": [],
+      "source_url": "https://meshb.nlm.nih.gov/record/ui?ui=D000076142",
+      "mesh_year": 2026
+    }
+  ],
+  "title_rules": [
+    {
+      "id": "data_ecosystem",
+      "pattern": "knowledge graphs?|semantic web|linked data|data interoperability|data harmonization|data integration|data curation|data provenance|data warehous(?:e|es|ing)|database management|fair data|metadata standards?|data infrastructure",
+      "overall": 1.0,
+      "pca": {
+        "LSDMA": 1.0
+      }
+    },
+    {
+      "id": "data_analysis",
+      "pattern": "big data|data mining|data management|information retrieval|data repositories|data repository|data commons|common data elements",
+      "overall": 0.8,
+      "pca": {
+        "LSDMA": 0.8
+      }
+    },
+    {
+      "id": "hpc_infrastructure",
+      "pattern": "high performance computing|high capability computing|supercomput(?:er|ers|ing)|hpc clusters?|scientific computing infrastructure|research computing infrastructure|computational infrastructure|cloud computing infrastructure",
+      "overall": 1.0,
+      "pca": {
+        "HCIA": 1.0
+      }
+    },
+    {
+      "id": "hpc_applications",
+      "pattern": "large scale simulation|large scale simulations|massively parallel simulations?|distributed scientific computing|gpu accelerated simulations?",
+      "overall": 0.85,
+      "pca": {
+        "HCIA": 0.85
+      }
+    },
+    {
+      "id": "human_interaction",
+      "pattern": "human computer interaction|human machine interaction|human ai collaboration|brain computer interfaces?|brain machine interfaces?|user computer interfaces?",
+      "overall": 1.0,
+      "pca": {
+        "CHuman": 1.0
+      }
+    },
+    {
+      "id": "human_interfaces",
+      "pattern": "virtual reality|augmented reality|mixed reality|haptic technolog(?:y|ies)|user centered design|user centred design|usability testing|accessible interfaces?",
+      "overall": 0.85,
+      "pca": {
+        "CHuman": 0.85
+      }
+    },
+    {
+      "id": "ai_methods",
+      "pattern": "artificial intelligence|machine learning|deep learning|natural language processing|large language models?|generative ai|computer vision|federated learning|reinforcement learning|support vector machines?|random forests?|convolutional neural networks?|graph neural networks?|artificial neural networks?",
+      "overall": 1.0,
+      "pca": {
+        "AI": 1.0
+      }
+    },
+    {
+      "id": "ai_secondary",
+      "pattern": "expert systems?|fuzzy logic|automated pattern recognition|neural network models?|ensemble learning",
+      "overall": 0.8,
+      "pca": {
+        "AI": 0.8
+      }
+    },
+    {
+      "id": "advanced_computing",
+      "pattern": "quantum computing|quantum computers?|neuromorphic computing|molecular computing|dna computing|exascale computing|parallel computing algorithms?|parallel algorithm design|gpu kernels?|gpu kernel optimization|computing architectures?|memory architectures?|energy efficient computing",
+      "overall": 1.0,
+      "pca": {
+        "EHCS": 1.0
+      }
+    },
+    {
+      "id": "security",
+      "pattern": "cybersecurity|cyber security|computer security|differential privacy|homomorphic encryption|secure multiparty computation|privacy preserving computation|privacy preserving data sharing|privacy preserving machine learning|intrusion detection|data anonymization|data anonymisation|cryptograph(?:y|ic)",
+      "overall": 1.0,
+      "pca": {
+        "CSP": 1.0
+      }
+    },
+    {
+      "id": "security_secondary",
+      "pattern": "blockchain|data encryption|secure computing|data de identification",
+      "overall": 0.8,
+      "pca": {
+        "CSP": 0.8
+      }
+    },
+    {
+      "id": "software_engineering",
+      "pattern": "software engineering|software design|software testing|software validation|software verification|software sustainability|software maintainability|software quality|software reproducibility|software reusability|software reuse|programming languages?|static program analysis|formal software verification",
+      "overall": 1.0,
+      "pca": {
+        "SPSQ": 1.0
+      }
+    },
+    {
+      "id": "software_practices",
+      "pattern": "continuous integration|reproducible computational workflows?|reusable software|sustainable software|software development frameworks?",
+      "overall": 0.85,
+      "pca": {
+        "SPSQ": 0.85
+      }
+    },
+    {
+      "id": "generic_software",
+      "pattern": "software|open source|computational workflows?|computational pipelines?",
+      "overall": 0.65,
+      "pca": {}
+    },
+    {
+      "id": "generic_algorithms",
+      "pattern": "algorithms?|computational modeling|computational modelling|computer simulations?",
+      "overall": 0.35,
+      "pca": {}
+    }
+  ],
+  "venues": [
+    {
+      "id": "jmlr",
+      "names": [
+        "Journal of Machine Learning Research",
+        "J Mach Learn Res",
+        "JMLR"
+      ],
+      "strength": 1.0,
+      "source_url": "https://jmlr.org/"
+    },
+    {
+      "id": "joss",
+      "names": [
+        "Journal of Open Source Software",
+        "J Open Source Softw",
+        "JOSS"
+      ],
+      "strength": 1.0,
+      "source_url": "https://joss.theoj.org/about"
+    },
+    {
+      "id": "bioinformatics",
+      "names": [
+        "Bioinformatics",
+        "Bioinformatics (Oxford, England)"
+      ],
+      "strength": 0.85,
+      "source_url": "https://academic.oup.com/bioinformatics/pages/about"
+    },
+    {
+      "id": "bmc_bioinformatics",
+      "names": [
+        "BMC Bioinformatics"
+      ],
+      "strength": 0.85,
+      "source_url": "https://link.springer.com/journal/12859/aims-and-scope"
+    }
+  ]
+}

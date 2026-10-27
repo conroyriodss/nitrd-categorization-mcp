@@ -1,0 +1,52 @@
+{
+  "version": "demo-projects-v2-2026-10-27",
+  "note": "Public FY2022 NITRD (RCDC 329) projects for the smoke tests and the demo (Prompt BJ selection: NITRD flag, >=10 publications in nitrd_pub_links, FY2018-2022, three administering ICs). Facts below were read from users.conroyri.nitrd_hackathon_v1_exporter_projects and nitrd_pub_links on 2026-10-27. Expected routing was produced by reviewer_portal.routing with resources/personas.json; tier values are RoutingTier values. The 480 sealed UAC projects are never used here.",
+  "negative_control": {
+    "appl_id": 10304125,
+    "core_project_num": "R01GM125981",
+    "full_project_num": "5R01GM125981-05",
+    "fy": 2022,
+    "administering_ic": "NIGMS",
+    "nitrd": false,
+    "title": "A Multienzyme Metabolic Complex for Glucose Metabolism",
+    "note": "Non-NITRD (spending categories: Nutrition). Used only for the parent-probability sanity check."
+  },
+  "projects": [
+    {
+      "appl_id": 10506013,
+      "core_project_num": "U24AI171008",
+      "full_project_num": "1U24AI171008-01",
+      "fy": 2022,
+      "administering_ic": "NIAID",
+      "nitrd": true,
+      "title": "VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase",
+      "publications_linked": 40,
+      "expected_routing": {"tier": "program_officer", "reviewer_id": "demo_po_niaid_01"},
+      "pca_target": "LSDMA"
+    },
+    {
+      "appl_id": 10388671,
+      "core_project_num": "R01NR013912",
+      "full_project_num": "2R01NR013912-08A1",
+      "fy": 2022,
+      "administering_ic": "NINR",
+      "nitrd": true,
+      "title": "Predicting Patient Instability Noninvasively for Nursing Care - Three (PPINNC-3)",
+      "publications_linked": 40,
+      "expected_routing": {"tier": "program_officer", "reviewer_id": "demo_po_ninr_01"},
+      "pca_target": "AI"
+    },
+    {
+      "appl_id": 10445135,
+      "core_project_num": "R01CA258987",
+      "full_project_num": "1R01CA258987-01A1",
+      "fy": 2022,
+      "administering_ic": "NCI",
+      "title": "Artificial Intelligence-Based Quality Assurance for Online Adaptive Radiotherapy",
+      "publications_linked": 46,
+      "nitrd": true,
+      "expected_routing": {"tier": "ic_rep", "reviewer_id": "demo_ic_rep_nci"},
+      "pca_target": "AI"
+    }
+  ]
+}
