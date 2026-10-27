@@ -29,6 +29,7 @@ NITRD_PUB_LINKS = table("nitrd_pub_links")
 ICITE_PUBS = table("icite_pubs")
 PUBMED_ARTICLES = table("pubmed_articles")
 PUBMED_MESH = table("pubmed_mesh")
+PUBMED_PUBTYPES = table("pubmed_pubtypes")
 
 # Read table, not yet loaded (batch pull after the DataCite v2 client arrives).
 DATACITE_OUTPUTS = table("datacite_outputs")
@@ -38,5 +39,20 @@ REVIEW_REQUESTS = table("review_requests")
 REVIEW_EVENTS = table("review_events")
 ROUTING_EVENTS = table("routing_events")
 
-# NIH spending category name for NITRD (RCDC category 329) in exporter_projects.
-NITRD_CATEGORY = "Networking and Information Technology R&D"
+# exporter_projects.nih_spending_cats holds category NAMES joined by ';' (not
+# numeric RCDC IDs). NULL/empty = unlabeled record (dropped, not a negative).
+# The NITRD (RCDC 329) name CHANGED: FY2015-2018 rows say "Networking and
+# Information Technology R&D"; FY2019-2023 rows add " (NITRD)" (verified per FY
+# 2026-10-27; counts 1490/1978/2242/2729 then 2937/3410/3760/4247/4583). Match
+# a record as NITRD when ANY name in NITRD_CATEGORY_NAMES is present.
+NITRD_CATEGORY = "Networking and Information Technology R&D (NITRD)"
+NITRD_CATEGORY_NAMES = (
+    "Networking and Information Technology R&D",  # FY2015-2018
+    NITRD_CATEGORY,  # FY2019-2023
+)
+SPENDING_CATS_SEPARATOR = ";"
+
+# Fiscal years loaded in exporter_projects (fy is stored as STRING there;
+# application_id is the STRING column behind every tool's integer appl_id).
+FIRST_FY = 2015
+LAST_FY = 2023

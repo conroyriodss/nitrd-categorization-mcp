@@ -12,6 +12,9 @@ PACKAGE_DIR = Path(__file__).resolve().parent
 SANDBOX = True
 RECORD_LABEL = "Not RCDC / demonstration only"
 
+# Routing policy recorded on every RoutingDecision (draft 2026-10-26).
+POLICY_VERSION = "nitrd-routing-v2-2026-10-26"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(

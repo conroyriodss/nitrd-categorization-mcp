@@ -1,33 +1,29 @@
-"""Response shapes shared by every tool.
+"""Error conventions shared by every tool.
 
-The template's error format is a dict with an actionable `error` and a `hint`.
-Tools return these instead of raising, so the calling agent can recover.
+Every tool declares a Pydantic return model, so FastMCP publishes an output
+schema and returns structured content. Failures therefore do NOT return an
+error dict (that would break the output schema); they raise ToolError, which
+MCP clients receive as a tool result with isError=true and the message text.
+Messages say what went wrong and what to try next, so the agent can recover.
+
+Two kinds of "nothing" are NOT errors and come back as normal results:
+- a valid query with no matches (empty list, counts of 0);
+- data that is not loaded yet (e.g. DataCite: status="not_available").
 """
 
 from __future__ import annotations
 
-from typing import Any
+from fastmcp.exceptions import ToolError
 
 
-def error_response(message: str, hint: str | None = None) -> dict[str, Any]:
-    """A failed call the caller can fix (bad input, unknown ID, ...)."""
-    out: dict[str, Any] = {"error": message}
-    if hint:
-        out["hint"] = hint
-    return out
+def tool_error(message: str, hint: str | None = None) -> ToolError:
+    """An error the caller can fix (unknown ID, out-of-range year, ...). Raise it."""
+    return ToolError(f"{message} Hint: {hint}" if hint else message)
 
 
-def not_available(what: str, reason: str, hint: str | None = None) -> dict[str, Any]:
-    """Valid request, but the data is not in the demo tables."""
-    out: dict[str, Any] = {"error": f"{what} not available", "reason": reason}
-    if hint:
-        out["hint"] = hint
-    return out
-
-
-def not_implemented(tool: str) -> dict[str, Any]:
-    """Placeholder returned by scaffolded tools before they are implemented."""
-    return error_response(
-        f"{tool} is not implemented yet",
-        hint="Scaffold only; the implementation lands in a later step.",
+def not_implemented(tool: str) -> ToolError:
+    """Raised by Step 3 skeletons; the tool body lands in a later step."""
+    return tool_error(
+        f"{tool} is not implemented yet (schema-only skeleton).",
+        hint="Schemas are final for review; the body lands in Step 4+.",
     )
