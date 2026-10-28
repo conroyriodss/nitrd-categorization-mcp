@@ -1,7 +1,7 @@
 """Adapter for the vendored nitrd_intensity v0.1.0 scorer (ChatGPT artifact).
 
 The scorer is used unmodified: nitrd_intensity.py + rules.json live in
-resources/ (copied from uploads/nitrd_intensity_v0.1.0) and are checked
+resources/nitrd_intensity/ (copied from uploads/nitrd_intensity_v0.1.0) and are checked
 against the artifact's SHA256SUMS before loading, so
 reproducibility.code_sha256 in every result matches the reviewed artifact.
 NITRD_INTENSITY_DIR overrides the location (local dev).
@@ -22,7 +22,7 @@ from typing import Any
 
 from shared.responses import tool_error
 
-DEFAULT_DIR = Path(__file__).resolve().parent / "resources"
+DEFAULT_DIR = Path(__file__).resolve().parent / "resources" / "nitrd_intensity"
 
 #: From uploads/nitrd_intensity_v0.1.0/SHA256SUMS (verified 34/34 tests).
 EXPECTED_SHA256 = {

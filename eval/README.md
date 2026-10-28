@@ -1,5 +1,10 @@
 # Evaluations (stub)
 
+> **Model evaluation for this project:** the nitrd-classifier parent model,
+> its feature choices and performance by new vs continuing awards are in
+> [`classifier_evaluation.md`](classifier_evaluation.md). The rest of this
+> file is the template's guidance for agent-level MCP evaluation.
+
 This template does **not** include an evaluation harness — but building one is
 the single best way to know whether your MCP server actually works well.
 

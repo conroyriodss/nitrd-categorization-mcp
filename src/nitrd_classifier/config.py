@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     databricks_warehouse_id: str = ""
 
     # Trained parent model (written once by scripts/train_parent_classifier.py).
-    parent_model_path: Path = PACKAGE_DIR / "resources" / "parent_model.pkl"
+    parent_model_path: Path = PACKAGE_DIR / "resources" / "parent_model.joblib"
 
     # Scope-vocabulary JSON files copied from the uac-nitrd engine (Task 2).
     scope_dir: Path = PACKAGE_DIR / "resources" / "scope"

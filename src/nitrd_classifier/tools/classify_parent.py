@@ -8,23 +8,27 @@ other half is the reported validation set. Unlabeled records (no spending
 categories) were dropped from training, not treated as negatives.
 """
 
-from typing import Literal
+from typing import Any, Literal
 
+import anyio
 from fastmcp import FastMCP
 from pydantic import Field
 
+from nitrd_classifier import data
 from nitrd_classifier.models import (
     Cohort,
     FeatureContribution,
     Fy2019Half,
     ParentModelInfo,
 )
-from nitrd_classifier.utils import (
-    EXPORTER_ABSTRACTS,
-    EXPORTER_PROJECTS,
-    not_implemented,
-)
+from nitrd_classifier.utils import EXPORTER_ABSTRACTS, EXPORTER_PROJECTS
 from shared.models import NOT_RCDC, READ_ONLY, ApplId, ResultModel, SourceInfo
+
+TOP_FEATURES = 10
+NO_VOCABULARY = (
+    "No term in the title, abstract or PHR is in the model's vocabulary, so "
+    "there is nothing to score."
+)
 
 
 class ParentResult(ResultModel):
@@ -58,15 +62,72 @@ class ParentResult(ResultModel):
     source: SourceInfo
 
 
+def model_info(model) -> ParentModelInfo:
+    return ParentModelInfo(
+        model_id=model.model_id,
+        train_fys=list(model.train_fys),
+        threshold_fy=model.threshold_fy,
+        calibration=model.calibration,
+        threshold=model.threshold,
+        sklearn_version=model.sklearn_version,
+    )
+
+
+def contributions(items) -> list[FeatureContribution]:
+    return [
+        FeatureContribution(
+            term=c.term, field=c.field, contribution=round(c.contribution, 6)
+        )
+        for c in items
+    ]
+
+
+async def score(appl_id: int, top_k: int = TOP_FEATURES) -> dict[str, Any]:
+    """Project text + model + prediction + explanation (shared with explain)."""
+    text = await data.project_text(appl_id)
+    model = await anyio.to_thread.run_sync(data.parent_model)
+    fields = text.fields()
+    prediction, explanation = await anyio.to_thread.run_sync(
+        lambda: (model.predict([fields])[0], model.explain(fields, top_k=top_k))
+    )
+    return {
+        "text": text,
+        "model": model,
+        "prediction": prediction,
+        "explanation": explanation,
+    }
+
+
+def parent_result(scored: dict[str, Any]) -> ParentResult:
+    text, model = scored["text"], scored["model"]
+    pred, expl = scored["prediction"], scored["explanation"]
+    cohort, half = data.cohort_for(text.fy, text.core_project_num)
+    if pred.abstained:
+        suggestion, reason = "abstain", NO_VOCABULARY
+    else:
+        suggestion, reason = ("nitrd" if pred.suggest_nitrd else "not_nitrd"), None
+    return ParentResult(
+        appl_id=text.appl_id,
+        fy=text.fy,
+        suggestion=suggestion,
+        probability=None if pred.abstained else round(pred.probability, 6),
+        abstain_reason=reason,
+        cohort=cohort,
+        fy2019_half=half,
+        top_features=contributions(expl.positive[:TOP_FEATURES]),
+        model=model_info(model),
+        source=SourceInfo(tables=[EXPORTER_PROJECTS, EXPORTER_ABSTRACTS]),
+    )
+
+
 def register(mcp: FastMCP) -> None:
     @mcp.tool(annotations={**READ_ONLY, "title": "Suggest NITRD parent category"})
     async def classifier_classify_parent(appl_id: ApplId) -> ParentResult:
-        """Suggest whether one NIH application is NITRD (RCDC 329) from its text.
+        """Suggest whether one NIH application is NITRD from its text.
 
         Returns a calibrated probability, the decision threshold, and the terms
         that pushed the score up. It is a suggestion for a human reviewer, not
         RCDC coding. Use classifier_explain(task="parent") for the full signed
         term list. An appl_id outside the FY2015-2023 snapshot is an error.
         """
-        _ = SourceInfo(tables=[EXPORTER_PROJECTS, EXPORTER_ABSTRACTS])
-        raise not_implemented("classifier_classify_parent")
+        return parent_result(await score(appl_id))

@@ -59,8 +59,16 @@ target-version = "py311"
 exclude = [".venv", ".agents"]
 # Don't reformat Python code fences inside Markdown docs (they're illustrative
 # snippets, not runnable modules).
-extend-exclude = ["*.md", "src/nih_grants_outputs/resources/nitrd_intensity.py"]
-# ^ vendored nitrd_intensity v0.1.0 is kept byte-identical (SHA-checked).
+extend-exclude = [
+    "*.md",
+    "src/nih_grants_outputs/resources/nitrd_intensity/nitrd_intensity.py",
+    "src/nitrd_classifier/subcategory/engine.py",
+    "docs/analysis/feature_ablation.py",
+]
+# ^ vendored code: nitrd_intensity v0.1.0 is byte-identical (SHA-checked); the
+#   uac-nitrd engine keeps upstream scoring functions textually unchanged.
+#   feature_ablation.py is kept as run: docs/analysis/feature_ablation.md cites
+#   its sha256, so it is not reformatted.
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

@@ -61,6 +61,9 @@ IMPLEMENTED = {
     "outputs_get_project_publications",
     "outputs_get_project_datacite",
     "outputs_score_project_intensity",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
 }
 # Implemented tools that need the vendored intensity scorer files.
 NEEDS_SCORER = {"outputs_score_project_intensity"}

@@ -1,7 +1,7 @@
 """nitrd-classifier resources.
 
 Planned files in this folder:
-    parent_model.pkl   trained Task 1 model (scripts/train_parent_classifier.py)
+    parent_model.joblib  trained Task 1 model (scripts/train_parent_classifier.py)
     scope/*.json       Task 2 scope vocabulary, copied from the uac-nitrd engine
 Planned MCP resource: the PCA list with short scope descriptions.
 """

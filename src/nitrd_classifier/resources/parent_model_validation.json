@@ -1,0 +1,118 @@
+{
+  "model_id": "nitrd-parent-v2-ba10594d9581",
+  "trained_at": "2026-10-27T14:57:14+00:00",
+  "calibration": "CalibratedClassifierCV(sigmoid, GroupKFold(5) by core, ensemble=False)",
+  "threshold": 0.3893682055460409,
+  "train_fys": [
+    2015,
+    2016,
+    2017,
+    2018
+  ],
+  "threshold_fy": 2019,
+  "config": {
+    "seed": 329,
+    "C": 1.0,
+    "class_weight": "balanced",
+    "min_df": 3,
+    "max_df": 0.995,
+    "max_title_features": 40000,
+    "max_abstract_features": 180000,
+    "max_phr_features": 50000,
+    "max_iter": 2000,
+    "n_folds": 5,
+    "ece_bins": 15
+  },
+  "split": {
+    "train": {
+      "records": 125847,
+      "positives": 3857,
+      "cores": 94065
+    },
+    "threshold_selection": {
+      "records": 35058,
+      "positives": 1409,
+      "cores": 28316
+    },
+    "validation": {
+      "records": 35090,
+      "positives": 1528,
+      "cores": 28275
+    },
+    "exclusions": {
+      "duplicate_text_in_training": 132205,
+      "no_core_project_num": 223,
+      "unlabeled_no_spending_categories": 50943
+    }
+  },
+  "evaluation": {
+    "threshold_selection": {
+      "n": 35058,
+      "positives": 1409,
+      "average_precision": 0.8586969319173929,
+      "pr_auc_trapezoidal": 0.858632473236494,
+      "roc_auc": 0.9894924518324596,
+      "brier": 0.012261121877462998,
+      "ece": 0.005556126198726332,
+      "threshold": 0.3893682055460409,
+      "tp": 1099,
+      "fp": 214,
+      "fn": 310,
+      "tn": 33435,
+      "precision": 0.837014470677837,
+      "recall": 0.7799858055358411,
+      "f1": 0.807494489346069,
+      "review_fraction": 0.03745222203206115,
+      "abstained": 0
+    },
+    "validation": {
+      "n": 35089,
+      "positives": 1528,
+      "average_precision": 0.8621057896061455,
+      "pr_auc_trapezoidal": 0.8619401372171632,
+      "roc_auc": 0.9879296427650457,
+      "brier": 0.01269546651107076,
+      "ece": 0.005324197367749125,
+      "threshold": 0.3893682055460409,
+      "tp": 1203,
+      "fp": 220,
+      "fn": 325,
+      "tn": 33341,
+      "precision": 0.8453970484891076,
+      "recall": 0.787303664921466,
+      "f1": 0.8153168417485598,
+      "review_fraction": 0.04055401977827809,
+      "abstained": 1
+    },
+    "validation_unseen_cores": {
+      "n": 8956,
+      "positives": 413,
+      "average_precision": 0.7136795375830471,
+      "pr_auc_trapezoidal": 0.7118062497693476,
+      "roc_auc": 0.9742659198205121,
+      "brier": 0.022095730243245786,
+      "ece": 0.010479197415138164,
+      "threshold": 0.3893682055460409,
+      "tp": 228,
+      "fp": 71,
+      "fn": 185,
+      "tn": 8472,
+      "precision": 0.7625418060200669,
+      "recall": 0.5520581113801453,
+      "f1": 0.6404494382022472,
+      "review_fraction": 0.033385439928539526
+    },
+    "validation_is_threshold_selection_cohort": false,
+    "note": "FY2019 split 50/50 by core_project_num; the threshold was chosen on one half and these validation metrics come from the other half."
+  },
+  "sklearn_version": "1.9.1",
+  "source_tables": [
+    "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+    "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+  ],
+  "source_query": "\nSELECT p.application_id, p.core_project_num, p.fy, p.nih_spending_cats,\n       p.project_title, p.phr, a.abstract_text\nFROM users.conroyri.nitrd_hackathon_v1_exporter_projects p\nLEFT JOIN (\n  -- 5 application_ids have two abstract rows; keep the longest, exactly as\n  -- the classifier tools do at inference (nitrd_classifier/data.py).\n  SELECT application_id, max_by(abstract_text, length(abstract_text)) AS abstract_text\n  FROM users.conroyri.nitrd_hackathon_v1_exporter_abstracts\n  GROUP BY application_id\n) a ON a.application_id = p.application_id\nWHERE CAST(p.fy AS INT) BETWEEN 2015 AND 2019\n",
+  "input": "parquet /tmp/nitrd-ci/data/fy2015_2019.parquet",
+  "model_bytes": 8063492,
+  "seconds": 1237.4,
+  "label": "Not RCDC / demonstration only"
+}

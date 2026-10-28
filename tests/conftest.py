@@ -17,7 +17,9 @@ from fastmcp import Client
 
 from nih_grants_outputs import intensity
 from nih_grants_outputs.app import mcp as outputs_mcp
+from nitrd_classifier import data as classifier_data
 from nitrd_classifier.app import mcp as classifier_mcp
+from nitrd_classifier.config import settings as classifier_settings
 from reviewer_portal.app import mcp as portal_mcp
 from shared import sql
 from tests.fake_sql import demo_sql
@@ -29,6 +31,29 @@ SCORER_VENDORED = all(
 needs_scorer = pytest.mark.skipif(
     not SCORER_VENDORED, reason="nitrd_intensity v0.1.0 files not vendored"
 )
+
+
+@pytest.fixture(scope="session", autouse=True)
+def parent_model_file(tmp_path_factory):
+    """A small synthetic ParentModel for offline tests (never the NIH model).
+
+    Skipped when CLASSIFIER_PARENT_MODEL_PATH is set, so a live run can point
+    the classifier at the real trained bundle instead.
+    """
+    if os.getenv("CLASSIFIER_PARENT_MODEL_PATH"):
+        yield classifier_settings.parent_model_path
+        return
+    from nitrd_classifier.parent.data import split_records
+    from nitrd_classifier.parent.model import train
+    from tests.test_parent_classifier import CFG, synthetic_rows
+
+    path = tmp_path_factory.mktemp("model") / "parent_model.joblib"
+    train(split_records(synthetic_rows()), CFG).save(path)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(classifier_settings, "parent_model_path", path)
+        classifier_data.reset_model_cache()
+        yield path
+    classifier_data.reset_model_cache()
 
 
 @pytest.fixture(autouse=True)
