@@ -56,8 +56,9 @@ DEMO_PROJECT = {
     "administering_ic": "AI",
     "ic_name": "NATIONAL INSTITUTE OF ALLERGY AND INFECTIOUS DISEASES",
     "org_name": "UNIVERSITY OF MICHIGAN AT ANN ARBOR",
-    "pi_names": "HE, YONGQUN  (contact);HUR, JUNGUK ;TAO, CUI  ",
-    "program_officer_name": "GEZMU, MISRAK  ",
+    # Person names are fictional; appl_id / project numbers are real public IDs.
+    "pi_names": "ROE, RICHARD  (contact);DOE, JANE Q ;POE, ALEX  ",
+    "program_officer_name": "SMITH, JOHN A  ",
     "project_start": "2022-08-19",
     "project_end": "2027-07-31",
     "total_cost": "753786",

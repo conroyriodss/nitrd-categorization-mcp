@@ -80,8 +80,8 @@ async def test_find_projects_unknown_category_is_an_error():
 async def test_project_detail_parses_exporter_strings():
     out = await call("outputs_get_project_detail", {"appl_id": DEMO_APPL})
     project = out["project"]
-    assert project["pi_names"] == ["HE, YONGQUN", "HUR, JUNGUK", "TAO, CUI"]
-    assert project["program_officer_name"] == "GEZMU, MISRAK"
+    assert project["pi_names"] == ["ROE, RICHARD", "DOE, JANE Q", "POE, ALEX"]
+    assert project["program_officer_name"] == "SMITH, JOHN A"
     assert project["spending_categories"] == [
         "Bioengineering",
         NITRD_2022,

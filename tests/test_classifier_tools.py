@@ -24,9 +24,9 @@ from nitrd_classifier.subcategory import engine
 from shared.models import NOT_RCDC
 from tests.fake_sql import CLASSIFIER_TEXTS, DEMO_APPL, DEMO_PROJECT
 
-UAC_NITRD_ROOT = Path(
-    os.getenv("UAC_NITRD_ROOT", "/Workspace/Users/conroyri@nih.gov/entry2-uac-nitrd")
-)
+# Environment variable only; no default path. Unset -> the parity test skips.
+_ROOT_ENV = os.getenv("UAC_NITRD_ROOT")
+UAC_NITRD_ROOT = Path(_ROOT_ENV) if _ROOT_ENV else None
 FY2019, FY2016, NO_VOCAB = 90000019, 90000016, 90000000
 
 
@@ -202,7 +202,7 @@ def test_aian_is_not_artificial_intelligence():
 
 
 @pytest.mark.skipif(
-    not (UAC_NITRD_ROOT / "engine" / "run.py").is_file(),
+    UAC_NITRD_ROOT is None or not (UAC_NITRD_ROOT / "engine" / "run.py").is_file(),
     reason="uac-nitrd repo not available (set UAC_NITRD_ROOT)",
 )
 def test_vendored_engine_matches_upstream():

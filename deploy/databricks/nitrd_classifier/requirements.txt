@@ -1,8 +1,9 @@
 # Databricks App runtime deps for nitrd-classifier (base + [classifier] extra).
 # Databricks Apps install this file; they do not read pyproject.toml.
 # Pins match uv.lock - update both together. scikit-learn MUST equal the version
-# used to train resources/parent_model.pkl (pickles are version-specific).
+# used to train resources/parent_model.joblib (pickles are version-specific).
 fastmcp==4.0.11
+databricks-sdk==0.157.0
 httpx==0.28.1
 pydantic==2.13.5
 pydantic-settings==2.15.0

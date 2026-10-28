@@ -62,7 +62,7 @@ def category_aliases(category: str) -> tuple[str, str]:
 
 
 def parse_pi_names(value: str | None) -> list[str]:
-    """'HE, YONGQUN  (contact);HUR, JUNGUK ;' -> contact PI first, trimmed."""
+    """'DOE, JANE Q ;ROE, RICHARD  (contact);' -> contact PI first, trimmed."""
     contact, others = [], []
     for raw in (value or "").split(";"):
         name = " ".join(raw.split())
