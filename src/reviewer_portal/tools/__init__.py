@@ -1,13 +1,12 @@
 """reviewer-portal tools, one per file (each module exposes register(mcp)).
 
-Step 3: input/output schemas are final; bodies raise not_implemented.
+All five are implemented (Gate 3); table I/O is in reviewer_portal/data.py.
     submit_review_request.py    portal_submit_review_request
     list_pending_reviews.py     portal_list_pending_reviews
     submit_review_decision.py   portal_submit_review_decision
     get_review_history.py       portal_get_review_history
     get_reviewer_assignment.py  portal_get_reviewer_assignment
-Routing logic will live in reviewer_portal/routing.py (the ChatGPT routing
-package source was not received; only its README/VALIDATION docs were).
+Routing logic lives in reviewer_portal/routing.py.
 """
 
 from __future__ import annotations

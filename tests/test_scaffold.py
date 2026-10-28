@@ -64,6 +64,11 @@ IMPLEMENTED = {
     "classifier_classify_parent",
     "classifier_classify_subcategory",
     "classifier_explain",
+    "portal_submit_review_request",
+    "portal_list_pending_reviews",
+    "portal_submit_review_decision",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
 }
 # Implemented tools that need the vendored intensity scorer files.
 NEEDS_SCORER = {"outputs_score_project_intensity"}
@@ -87,10 +92,10 @@ VALID_ARGS = {
         "evidence": {"summary": "Ontology platform; AI and data management terms."},
         "task1_suggestion": {"suggestion": "nitrd", "probability": 0.91},
     },
-    "portal_list_pending_reviews": {"reviewer_id": "demo_po_lsdma_01"},
+    "portal_list_pending_reviews": {"reviewer_id": "demo_sia"},
     "portal_submit_review_decision": {
         "request_id": "00000000-0000-4000-8000-000000000000",
-        "reviewer_id": "demo_po_lsdma_01",
+        "reviewer_id": "demo_po_niaid_01",
         "decision": "approved",
         "rationale": "Abstract is clearly informatics infrastructure.",
     },

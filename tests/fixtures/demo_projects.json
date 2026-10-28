@@ -9,7 +9,8 @@
     "administering_ic": "NIGMS",
     "nitrd": false,
     "title": "A Multienzyme Metabolic Complex for Glucose Metabolism",
-    "note": "Non-NITRD (spending categories: Nutrition). Used only for the parent-probability sanity check."
+    "note": "Non-NITRD (spending categories: Nutrition). Used for the parent-probability sanity check and as the fourth routing check.",
+    "expected_routing": {"tier": "ic_rep", "reviewer_id": "demo_ic_rep_nigms"}
   },
   "projects": [
     {

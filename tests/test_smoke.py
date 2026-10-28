@@ -11,6 +11,10 @@ from reviewer_portal.routing import default_directory
 from tests.conftest import SCORER_VENDORED
 from tests.test_scaffold import EXPECTED_TOOLS, IMPLEMENTED, NEEDS_SCORER, VALID_ARGS
 
+# Implemented tools whose VALID_ARGS point at state that does not exist in a
+# fresh FakeSql (a placeholder request_id): the right answer is this error.
+EXPECTED_ERRORS = {"portal_submit_review_decision": "No review request"}
+
 
 async def test_initialize_and_list_tools(server, mcp_client):
     name, mcp = server
@@ -31,7 +35,10 @@ async def test_every_tool_answers_over_mcp(server, mcp_client):
             result = await client.call_tool(
                 tool, VALID_ARGS[tool], raise_on_error=False
             )
-            if tool in IMPLEMENTED:
+            if tool in EXPECTED_ERRORS:
+                assert result.is_error, tool
+                assert EXPECTED_ERRORS[tool] in result.content[0].text, tool
+            elif tool in IMPLEMENTED:
                 assert not result.is_error, (tool, result.content)
                 assert result.structured_content is not None, tool
             else:

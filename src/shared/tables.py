@@ -34,7 +34,8 @@ PUBMED_PUBTYPES = table("pubmed_pubtypes")
 # Read table, not yet loaded (batch pull after the DataCite v2 client arrives).
 DATACITE_OUTPUTS = table("datacite_outputs")
 
-# Write tables (reviewer-portal only; not yet created).
+# Write tables (reviewer-portal only; created 2026-10-28 by
+# scripts/create_review_tables.py; every row sandbox = true, CHECK-enforced).
 REVIEW_REQUESTS = table("review_requests")
 REVIEW_EVENTS = table("review_events")
 ROUTING_EVENTS = table("routing_events")

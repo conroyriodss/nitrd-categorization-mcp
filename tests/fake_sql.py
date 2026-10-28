@@ -198,9 +198,250 @@ def _text(params, _statement):
     return []
 
 
+# --- reviewer-portal: routing inputs + the three sandbox tables ----------------
+
+NOT_RCDC = "Not RCDC / demonstration only"
+
+
+def _routing_row(appl, fy, core, full, ic, po, sub=None):
+    return {
+        "application_id": str(appl),
+        "fy": str(fy),
+        "core_project_num": core,
+        "full_project_num": full,
+        "subproject_id": sub,
+        "administering_ic": ic,
+        "program_officer_name": po,
+    }
+
+
+#: Real public IDs and IC codes; PO names are FICTIONAL (tests patch persona
+#: hashes to match them). 9000010x are synthetic parent/subproject records.
+FAKE_PO = {
+    "NIAID": "SMITH, JOHN A",
+    "NINR": "LEE, MORGAN T",
+    "NCI": "PARK, JORDAN",
+    "NIGMS": "NGUYEN, SAM",
+}
+PORTAL_PROJECTS = [
+    {k: DEMO_PROJECT[k] for k in _routing_row(0, 0, 0, 0, 0, 0)},
+    _routing_row(
+        10388671, 2022, "R01NR013912", "2R01NR013912-08A1", "NR", FAKE_PO["NINR"]
+    ),
+    _routing_row(
+        10445135, 2022, "R01CA258987", "1R01CA258987-01A1", "CA", FAKE_PO["NCI"]
+    ),
+    _routing_row(
+        10304125, 2022, "R01GM125981", "5R01GM125981-05", "GM", FAKE_PO["NIGMS"]
+    ),
+    # Parent award (NIAID, PO matches demo_po_niaid_01) and its subproject.
+    _routing_row(
+        90000100, 2022, "P01AI000100", "5P01AI000100-02", "AI", FAKE_PO["NIAID"]
+    ),
+    _routing_row(
+        90000101, 2022, "P01AI000100", "5P01AI000100-02", "AI", None, sub="7001"
+    ),
+    # Subproject with no parent record.
+    _routing_row(
+        90000102, 2022, "P01AI000999", "5P01AI000999-01", "AI", None, sub="7002"
+    ),
+]
+
+_REQUEST_FROM_PARAMS = (
+    "request_id",
+    "idempotency_key",
+    "payload_sha256",
+    "appl_id",
+    "fy",
+    "task1_suggestion",
+    "task2_suggestion",
+    "evidence",
+    "requested_by",
+    "assigned_reviewer_id",
+    "assigned_reviewer_role",
+    "routing_tier",
+    "routing_fallback_used",
+    "routing_rationale",
+    "inherited_from_full_project_num",
+    "inherited_from_fy",
+    "routing_policy_version",
+    "created_at",
+    "sandbox",
+    "label",
+)
+_EVENT_ORDER = {"created": 0, "routed": 1}
+
+
+class FakePortal:
+    """Stateful in-memory stand-in for the portal's named queries.
+
+    Mirrors the warehouse semantics the portal relies on: NOT EXISTS guards on
+    every insert, the decision UPDATE only while pending and by the assignee,
+    and the CHECK constraints (sandbox = true, Not-RCDC label, event types).
+    """
+
+    def __init__(self, projects: list[dict]) -> None:
+        self.projects = [dict(p) for p in projects]
+        self.requests: list[dict] = []
+        self.review_events: list[dict] = []
+        self.routing_events: list[dict] = []
+
+    def install(self, fake: FakeSql) -> FakeSql:
+        for name in (
+            "project",
+            "parent",
+            "request_by_key",
+            "request_by_id",
+            "event_by_id",
+            "pending",
+            "history_requests",
+            "history_events",
+            "submit",
+            "decide",
+        ):
+            fake.on(f"portal.{name}", getattr(self, name))
+        fake.portal = self
+        return fake
+
+    @staticmethod
+    def _check(row: dict, types: tuple[str, ...] | None = None) -> dict:
+        assert row["sandbox"] is True, "CHECK sandbox = true"
+        assert row["label"] == NOT_RCDC, "CHECK label"
+        if types is not None:
+            assert row["event_type"] in types, "CHECK event_type"
+        return row
+
+    def project(self, p, _s):
+        return [dict(r) for r in self.projects if r["application_id"] == p["appl_id"]]
+
+    def parent(self, p, _s):
+        return [
+            dict(r)
+            for r in self.projects
+            if r["full_project_num"] == p["full_project_num"]
+            and r["fy"] == p["fy"]
+            and not (r["subproject_id"] or "").strip()
+        ][:3]
+
+    def request_by_key(self, p, _s):
+        k = p["idempotency_key"]
+        return [dict(r) for r in self.requests if r["idempotency_key"] == k]
+
+    def request_by_id(self, p, _s):
+        return [dict(r) for r in self.requests if r["request_id"] == p["request_id"]]
+
+    def event_by_id(self, p, _s):
+        return [dict(e) for e in self.review_events if e["event_id"] == p["event_id"]]
+
+    def pending(self, p, _s):
+        rows = [
+            r
+            for r in self.requests
+            if r["assigned_reviewer_id"] == p["reviewer_id"]
+            and r["status"] == "pending"
+        ]
+        rows.sort(key=lambda r: (r["created_at"], r["request_id"]))
+        return [dict(r) for r in rows[: p["limit"]]]
+
+    def history_requests(self, p, _s):
+        rows = [r for r in self.requests if r["appl_id"] == p["appl_id"]]
+        rows.sort(key=lambda r: (r["created_at"], r["request_id"]))
+        return [dict(r) for r in rows]
+
+    def history_events(self, p, _s):
+        rows = [
+            e
+            for e in self.review_events + self.routing_events
+            if e["appl_id"] == p["appl_id"]
+        ]
+        rows.sort(
+            key=lambda e: (e["at"], _EVENT_ORDER.get(e["event_type"], 2), e["event_id"])
+        )
+        return [dict(e) for e in rows]
+
+    def _event(self, event_id, p, event_type, actor, details, at) -> dict:
+        return {
+            "event_id": event_id,
+            "request_id": p["request_id"],
+            "appl_id": p.get("appl_id"),
+            "event_type": event_type,
+            "actor_id": actor,
+            "details": details,
+            "at": at,
+            "sandbox": p["sandbox"],
+            "label": p["label"],
+        }
+
+    def submit(self, p, _s):
+        if not any(r["idempotency_key"] == p["idempotency_key"] for r in self.requests):
+            row = {k: p[k] for k in _REQUEST_FROM_PARAMS}
+            row |= {
+                "status": "pending",
+                "decided_by": None,
+                "decision_at": None,
+                "decision_rationale": None,
+            }
+            self.requests.append(self._check(row))
+        if not any(e["event_id"] == p["created_event_id"] for e in self.review_events):
+            ev = self._event(
+                p["created_event_id"],
+                p,
+                "created",
+                p["requested_by"],
+                p["created_details"],
+                p["created_at"],
+            )
+            self.review_events.append(self._check(ev, ("created",)))
+        if not any(e["event_id"] == p["routed_event_id"] for e in self.routing_events):
+            ev = self._event(
+                p["routed_event_id"],
+                p,
+                "routed",
+                "system",
+                p["routed_details"],
+                p["created_at"],
+            )
+            self.routing_events.append(self._check(ev, ("routed",)))
+        return []
+
+    def decide(self, p, _s):
+        for r in self.requests:
+            if (
+                r["request_id"] == p["request_id"]
+                and r["status"] == "pending"
+                and r["assigned_reviewer_id"] == p["reviewer_id"]
+            ):
+                r |= {
+                    "status": p["decision"],
+                    "decided_by": p["reviewer_id"],
+                    "decision_at": p["at"],
+                    "decision_rationale": p["rationale"],
+                }
+        for r in self.requests:
+            if (
+                r["request_id"] == p["request_id"]
+                and r["status"] == p["decision"]
+                and r["decided_by"] == p["reviewer_id"]
+                and r["decision_at"] == p["at"]
+                and not any(e["event_id"] == p["event_id"] for e in self.review_events)
+            ):
+                ev = self._event(
+                    p["event_id"],
+                    p | {"appl_id": r["appl_id"]},
+                    p["decision"],
+                    p["reviewer_id"],
+                    p["details"],
+                    p["at"],
+                )
+                self.review_events.append(
+                    self._check(ev, ("approved", "rejected", "deferred"))
+                )
+        return []
+
+
 def demo_sql() -> FakeSql:
-    """FakeSql answering the outputs + classifier queries for the demo award."""
-    return (
+    """FakeSql answering the outputs, classifier and portal queries for the demos."""
+    fake = (
         FakeSql()
         .on("outputs.find_projects", _find)
         .on("outputs.category_exists", _category)
@@ -218,3 +459,4 @@ def demo_sql() -> FakeSql:
         .on("outputs.datacite_table", [{"n": 0}])
         .on("classifier.project_text", _text)
     )
+    return FakePortal(PORTAL_PROJECTS).install(fake)

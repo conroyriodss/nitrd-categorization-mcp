@@ -1,8 +1,15 @@
 """Pydantic models and enums shared by the reviewer-portal tools.
 
 Records mirror the sandbox tables (review_requests, review_events,
-routing_events). Per-tool result models live with their tool under tools/.
-Every stored record carries sandbox=true and the Not-RCDC label.
+routing_events; DDL in scripts/create_review_tables.sql). Per-tool result
+models live with their tool under tools/. Every stored record carries
+sandbox=true and the Not-RCDC label.
+
+Table mapping: nested argument models (task1_suggestion, task2_suggestion,
+evidence) and ReviewEvent.details are stored as JSON strings; the
+RoutingDecision in ReviewRequestRecord.assignment is flattened into
+assigned_reviewer_id, assigned_reviewer_role, routing_tier, ... columns so the
+pending queue can be filtered by reviewer.
 """
 
 from datetime import datetime
@@ -56,6 +63,7 @@ class RoutingTier(str, Enum):
 
 
 EventType = Literal["created", "routed", "approved", "rejected", "deferred"]
+"""'routed' rows live in routing_events; all others in review_events."""
 
 
 # --- Structured arguments of portal_submit_review_request ------------------------
@@ -144,7 +152,14 @@ class RoutingDecision(ResultModel):
 class ReviewRequestRecord(ResultModel):
     """One row of review_requests."""
 
-    request_id: UUID
+    request_id: UUID = Field(description="Derived from idempotency_key (UUIDv5).")
+    idempotency_key: str = Field(
+        description="Caller-supplied key, or 'auto:' + payload_sha256 when omitted."
+    )
+    payload_sha256: str = Field(
+        description="SHA-256 of the canonical submitted payload (appl_id, "
+        "suggestions, evidence, requested_by)."
+    )
     appl_id: int
     fy: int
     task1_suggestion: Task1Suggestion | None
@@ -166,6 +181,7 @@ class ReviewEvent(ResultModel):
 
     event_id: UUID
     request_id: UUID
+    appl_id: int = Field(description="Application the request is about.")
     event_type: EventType
     actor_id: str = Field(
         description="Persona (or 'system' for routing) that caused it."
@@ -173,3 +189,4 @@ class ReviewEvent(ResultModel):
     details: dict[str, Any] = Field(description="Event-specific payload.")
     at: datetime
     sandbox: Literal[True] = True
+    label: Literal["Not RCDC / demonstration only"] = NOT_RCDC

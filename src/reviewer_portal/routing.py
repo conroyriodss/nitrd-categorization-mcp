@@ -11,7 +11,10 @@ per the MVP decisions:
 3. NITRD SIA queue (demo_sia) otherwise.
 
 Subprojects inherit the routing of their parent record: the non-subproject row
-with the same (full_project_num, fy). Routing events go to the routing_events
+with the same (full_project_num, fy). A subproject whose parent cannot be
+identified uniquely (none or several such rows) goes to the SIA queue with that
+reason recorded (route_unresolved_subproject); on FY2022 NITRD data all 897
+subprojects have exactly one parent. Routing events go to the routing_events
 table (no SQLite). No email or contact fields.
 
 PO names are public RePORTER data, but they are not stored here: a persona
@@ -296,16 +299,47 @@ def route(
     return _decide(basis, directory, notes, inherited)
 
 
+def route_unresolved_subproject(
+    project: ProjectRouting,
+    parent_count: int,
+    *,
+    directory: PersonaDirectory | None = None,
+) -> RoutingDecision:
+    """SIA-queue decision for a subproject whose parent record is not unique."""
+    directory = directory or default_directory()
+    if not project.is_subproject:
+        raise RoutingError(f"appl {project.appl_id} is not a subproject")
+    found = "no parent record" if parent_count == 0 else f"{parent_count} records"
+    note = (
+        f"Subproject {project.subproject_id}: {found} with full_project_num "
+        f"{project.full_project_num or '(none)'} and FY{project.fy} and no "
+        "subproject_id, so the parent's routing cannot be inherited. "
+        "Tier 3: NITRD SIA review queue."
+    )
+    queue = directory.require_active(SIA_QUEUE_ID)
+    return RoutingDecision(
+        reviewer_id=queue.reviewer_id,
+        reviewer_role=queue.role_title,
+        tier=RoutingTier.SIA_QUEUE,
+        fallback_used=True,
+        rationale=note,
+        inherited_from=None,
+    )
+
+
 def routing_event(
     request_id: UUID,
+    appl_id: int,
     decision: RoutingDecision,
     *,
     at: datetime | None = None,
+    event_id: UUID | None = None,
 ) -> ReviewEvent:
     """routing_events row for a decision (actor 'system')."""
     return ReviewEvent(
-        event_id=uuid4(),
+        event_id=event_id or uuid4(),
         request_id=request_id,
+        appl_id=appl_id,
         event_type="routed",
         actor_id="system",
         details=decision.model_dump(mode="json"),

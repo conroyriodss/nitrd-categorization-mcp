@@ -17,6 +17,7 @@ from reviewer_portal.routing import (
     normalize_po_name,
     po_name_sha256,
     route,
+    route_unresolved_subproject,
     routing_event,
 )
 
@@ -165,6 +166,19 @@ def test_subproject_inherits_parent():
         route(sub, parent=wrong, directory=directory())
 
 
+@pytest.mark.parametrize("count", [0, 2])
+def test_subproject_without_unique_parent_goes_to_queue(count):
+    sub = project(
+        application_id="900002", subproject_id="0003", program_officer_name=None
+    )
+    d = route_unresolved_subproject(sub, count, directory=directory())
+    assert d.reviewer_id == "demo_sia" and d.tier == RoutingTier.SIA_QUEUE
+    assert d.fallback_used is True and d.inherited_from is None
+    assert "cannot be inherited" in d.rationale
+    with pytest.raises(RoutingError):
+        route_unresolved_subproject(project(), 0, directory=directory())
+
+
 def test_directory_validation():
     with pytest.raises(ValidationError):
         Persona(reviewer_id="demo_sia", role="sia_queue", role_title="q", ic="NCI")
@@ -186,8 +200,10 @@ def test_directory_validation():
 def test_routing_event_row():
     d = route(project(), directory=directory())
     request_id = uuid4()
-    event = routing_event(request_id, d)
+    event = routing_event(request_id, 900001, d)
     assert event.event_type == "routed" and event.actor_id == "system"
     assert event.request_id == request_id and event.sandbox is True
+    assert event.appl_id == 900001
+    assert event.label == "Not RCDC / demonstration only"
     assert event.details["reviewer_id"] == "demo_po_nci_01"
     assert event.details["policy_version"].startswith("nitrd-routing-v2")

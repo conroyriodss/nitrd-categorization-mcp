@@ -3,12 +3,12 @@
 from fastmcp import FastMCP
 from pydantic import Field
 
+from reviewer_portal import data
 from reviewer_portal.models import ReviewEvent, ReviewRequestRecord
 from reviewer_portal.utils import (
     REVIEW_EVENTS,
     REVIEW_REQUESTS,
     ROUTING_EVENTS,
-    not_implemented,
 )
 from shared.models import READ_ONLY, ApplId, ResultModel, SourceInfo
 
@@ -30,5 +30,13 @@ def register(mcp: FastMCP) -> None:
         An application never sent for review returns empty lists. Use this to
         check what already happened before submitting or retrying a write.
         """
-        _ = SourceInfo(tables=[REVIEW_REQUESTS, REVIEW_EVENTS, ROUTING_EVENTS])
-        raise not_implemented("portal_get_review_history")
+        requests, events = await data.history(appl_id)
+        return ReviewHistoryResult(
+            appl_id=appl_id,
+            requests=requests,
+            events=events,
+            source=SourceInfo(
+                tables=[REVIEW_REQUESTS, REVIEW_EVENTS, ROUTING_EVENTS],
+                snapshot="Live sandbox tables (portal writes); not RCDC.",
+            ),
+        )
