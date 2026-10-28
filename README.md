@@ -1,170 +1,202 @@
-# GSA MCP Hackathon — Server Template
+# NIH NITRD Categorization MCP Suite
 
-A ready-to-run starter for building a [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server in Python, plus deployment kits for **IBM Cloud (watsonx Orchestrate)** and **Databricks**.
+Evidence-assisted categorization of NIH research for the Networking and
+Information Technology Research and Development (NITRD) program.
 
-Built with [FastMCP](https://github.com/jlowin/fastmcp) and [uv](https://docs.astral.sh/uv/). If you have never built an MCP server before, start with **[QUICKSTART.md](QUICKSTART.md)**.
+This hackathon prototype brings NIH project records, linked publications,
+classification suggestions, and a human-review handoff into one Model Context
+Protocol (MCP) workflow. Three servers separate evidence retrieval, inference,
+and sandbox review writes. An AI client coordinates the tool calls; human
+reviewers keep responsibility for categorization decisions.
 
-> **NITRD Categorization MCP Suite — work in progress.** This fork replaces the template's `example_server` with three servers, each deployed as its own Databricks App over streamable HTTP:
-> `src/nih_grants_outputs` (read), `src/nitrd_classifier` (inference), `src/reviewer_portal` (sandbox write), plus `src/shared`. Per-App deploy files live in `deploy/databricks/<server>/`; deploy one App at a time with `deploy/databricks/deploy-databricks-app.sh` and `SERVER=<server>`.
-> **FastMCP version:** this suite is built against **FastMCP 4.x** (pinned in `uv.lock`). Some template text below follows FastMCP 2.x conventions; where they differ, the 4.x API wins (for example, use `await mcp.list_tools()`, not `get_tools()`). Template sections that still mention `example_server` describe the original starter and will be rewritten for the suite.
+Public data only. Suggestions and sandbox records are for demonstration
+("Not RCDC / demonstration only"); they do not change official NIH or RCDC
+classifications. GSA MCP + AI Agent Hackathon, Service Write Integration track.
 
----
+## Start here
 
-## What is an MCP server?
+- Run the servers locally: [Run locally](#run-locally).
+- Inspect the implementation: [read server](src/nih_grants_outputs/),
+  [inference server](src/nitrd_classifier/) ([model card](src/nitrd_classifier/README.md)),
+  and [review portal](src/reviewer_portal/).
+- Test and evaluation evidence: [eval/README.md](eval/README.md).
+- Analyses behind the model choices: [docs/analysis/](docs/analysis/).
+- Security posture: [Scope and limitations](#scope-and-limitations) and
+  [eval/README.md section 3](eval/README.md#3-security-considerations).
 
-An MCP server exposes **tools** (functions the model can call), **prompts** (reusable conversation starters), and **resources** (data the model can read) to an AI client such as Claude Desktop, Claude Code, or an agent platform like watsonx Orchestrate. You write the tools; the client's model decides when to call them.
+## Submission status
 
-This template gives you a working server with one example of each, so you can replace the examples with your own service and deploy.
+As of commit `526a753` (2026-10-28).
 
----
+| Component | Status | Scope of the claim |
+| --- | --- | --- |
+| `nih-grants-outputs` (5 tools) | Implemented | Reads public ExPORTER, iCite, and PubMed data staged in Unity Catalog tables. The DataCite tool returns `not_available` because the DataCite table is not loaded in the MVP. |
+| `nitrd-classifier` (3 tools) | Implemented | Parent (NITRD yes/no) probability with feature explanations; PCA ranking with matched scope terms. |
+| Parent model `nitrd-parent-v2-ba10594d9581` | Trained and evaluated | FY2019 validation half: PR-AUC 0.862 (all), 0.720 (new cores). Agreement with RCDC labels. [Details](eval/classifier_evaluation.md). |
+| `reviewer-portal` (5 tools) | **Gate 3 pending** | Routing logic and nine fictional personas are implemented and tested; the five tools are still skeletons and the sandbox tables do not exist yet. Gate 3 is done when the tools write and read the sandbox tables, every row carries the sandbox marker, submission is idempotent, and end-to-end steps 8–10 pass live. |
+| Software tests | 141 passed, 6 skipped, 1 xfailed (offline, CI-equivalent run at `526a753`) | Skips are live-mode and optional parity tests. GitHub Actions has not yet run on this repository. Test results are separate from model and agent performance. |
+| End-to-end sequence | Steps 1–7 pass live on three demo projects | Steps 8–10 need the reviewer portal. |
+| Agent-level (MLflow) evaluation | Not run | Blocked on a workspace-admin-provisioned service principal; request pending. |
+| Databricks Apps deployment | Not yet deployed | Planned after Gate 3 (one App per server). |
 
-## Repo structure
+## Problem and mission value
 
-```
-mcp-hackathon-template/
-├── README.md                  # This file
-├── QUICKSTART.md              # 5-minute clone → run → connect walkthrough
-├── main.py                    # Local entry point (uv run python main.py)
-├── pyproject.toml             # Package + dependencies (uv)
-├── requirements.txt           # Mirror of runtime deps (for buildpack hosts)
-├── Dockerfile                 # Container image (streamable-HTTP, port 8080)
-├── manifest.yaml              # cloud.gov (Cloud Foundry) deploy
-├── server.json                # MCP registry metadata
-├── .env.example               # Copy to .env for local dev
-├── .github/workflows/ci.yml   # Lint + test on push/PR
-├── docs/                      # Vendor-contributed reference materials
-├── src/
-│   └── example_server/        # ← rename to your service
-│       ├── app.py             # Thin entry point: builds FastMCP, picks transport
-│       ├── config.py          # Settings from env vars / .env
-│       ├── models.py          # Pydantic models & enums for tool params
-│       ├── utils.py           # Shared helpers (HTTP client, pagination)
-│       ├── routes.py          # HTTP-only routes (/health, /version)
-│       ├── tools/             # ONE FILE PER TOOL
-│       │   ├── __init__.py    #   register_tools(mcp) aggregator
-│       │   └── example_tool.py
-│       ├── prompts/
-│       │   ├── __init__.py    #   register_prompts(mcp) aggregator
-│       │   └── example.py
-│       └── resources/
-│           ├── __init__.py    #   register_resources(mcp) aggregator
-│           └── example.py
-├── tests/                     # Import + registration smoke tests
-├── eval/                      # Stub → build a Phoenix eval harness (see mcp-eval skill)
-└── deploy/
-    ├── README.md              # Which deployment kit to use
-    ├── ibm/                   # watsonx Orchestrate: 3 kits (see below)
-    └── databricks/            # Databricks Apps kit
-```
+NITRD categorization requires reviewers to connect research descriptions with
+computing-related scope and supporting evidence. That evidence is spread across
+project records, publications, and other research outputs, and the current
+workflow relies on searches, spreadsheets, and email.
 
----
+The suite is designed to reduce the effort of assembling and inspecting that
+evidence. It presents model suggestions and their supporting signals for human
+judgement, and routes a sandbox review request to a reviewer. The intended
+benefit is more consistent, traceable portfolio review. Reviewer time savings,
+improved agreement, and effects on reporting quality have not been measured.
 
-## Getting started
+## What makes this contribution distinctive
 
-### Prerequisites
-- [uv](https://docs.astral.sh/uv/) — `pip install uv` or `brew install uv`
+An evidence-to-review workflow for a specific federal research-classification
+task:
 
-### Install and run
+- **Connected evidence:** project text, publications, and research outputs are
+  available through one tool interface, with source availability stated
+  explicitly (an unloaded source is `not_available`, not "no outputs").
+- **Distinct analytical roles:** a supervised model suggests the NITRD parent
+  category; a scope-vocabulary engine ranks Program Component Areas (PCAs); an
+  exploratory output-intensity index adds evidence. Their outputs mean
+  different things and are reported separately.
+- **Measured design choices:** field ablation, scope-vs-learned vocabulary, and
+  PI-history studies decided what the model uses; PI identity and history are
+  deliberately excluded.
+- **An explicit human handoff:** routing preview and sandbox review requests
+  connect analysis to a reviewer (Gate 3 pending).
+
+MCP provides the common interface. The distinctive work is the domain-specific
+evidence assembly, interpretable outputs, and review workflow built on it.
+
+## Architecture
+
+An MCP-capable client coordinates three servers. Public-source records are
+staged in Databricks Unity Catalog tables (`users.conroyri.nitrd_hackathon_v1_*`);
+tools query those snapshots through a SQL warehouse rather than calling upstream
+APIs per request.
+
+| Server | Responsibility | Tools | Side effects |
+| --- | --- | --- | --- |
+| `nih-grants-outputs` | Find projects; project detail, publications, DataCite outputs; output-intensity score | `outputs_find_projects`, `outputs_get_project_detail`, `outputs_get_project_publications`, `outputs_get_project_datacite`, `outputs_score_project_intensity` | Read only |
+| `nitrd-classifier` | Parent suggestion, PCA ranking, explanations | `classifier_classify_parent`, `classifier_classify_subcategory`, `classifier_explain` | Inference only (bundled model) |
+| `reviewer-portal` | Preview assignment; submit, list, decide, and inspect reviews | `portal_get_reviewer_assignment`, `portal_submit_review_request`, `portal_list_pending_reviews`, `portal_submit_review_decision`, `portal_get_review_history` | Sandbox writes (submit, decide); Gate 3 pending |
+
+Code lives in [`src/`](src/) (one package per server plus `src/shared`). Each
+server has its own Databricks App configuration under
+[`deploy/databricks/`](deploy/databricks/), served over streamable HTTP.
+
+Reviewer routing is deterministic: (1) the project's program officer, when
+exactly one active demo persona represents that officer in the administering
+IC; (2) the IC's NITRD representative; (3) the NITRD SIA queue. Subprojects
+inherit their parent award's routing (same `full_project_num` and fiscal year).
+
+## Demonstration workflow
+
+The planned demonstration follows one project through ten calls:
+
+1. `outputs_find_projects`: select projects in the NITRD parent category.
+2. `outputs_get_project_detail`: inspect project text and identifiers.
+3. `outputs_get_project_publications`: inspect linked papers and MeSH terms.
+4. `outputs_get_project_datacite`: shows `not_available` in the MVP.
+5. `outputs_score_project_intensity`: inspect the exploratory output signals.
+6. `classifier_classify_parent`: parent suggestion, probability, top features.
+7. `classifier_classify_subcategory`: ranked PCAs and matched scope terms.
+8. `portal_get_reviewer_assignment`: preview the reviewer assignment.
+9. `portal_submit_review_request`: after explicit user confirmation, create a
+   sandbox request with the suggestions and evidence.
+10. `portal_get_review_history`: confirm the request's created and routed events.
+
+Steps 1–7 pass live in [`tests/test_smoke_e2e.py`](tests/test_smoke_e2e.py)
+for demo projects U24AI171008, R01NR013912, and R01CA258987. Steps 8–10 are
+pending Gate 3.
+
+## Run locally
+
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-cp .env.example .env
-uv sync
-uv run python main.py
+uv sync --extra classifier --group dev
 ```
 
-The server starts in **stdio** mode — it talks JSON-RPC over stdin/stdout, which is how local clients (Claude Desktop, Claude Code) launch it. See [QUICKSTART.md](QUICKSTART.md) to connect a client.
-
-### Verify
+Run one server per terminal (stdio by default), or let your MCP client launch
+the command:
 
 ```bash
-uv sync --group dev
-uv run pytest tests/ -v      # tests
-uv run ruff check .          # lint
+uv run nih-grants-outputs
+uv run nitrd-classifier
+uv run reviewer-portal
+# equivalently: uv run python main.py <nih-grants-outputs|nitrd-classifier|reviewer-portal>
 ```
 
----
+Data-backed tools need Databricks access: set `DATABRICKS_WAREHOUSE_ID` and
+standard Databricks SDK authentication (for example `DATABRICKS_HOST` with a
+token or a configured profile). To serve over HTTP locally, set the server's
+prefixed transport variable to `streamable-http` (`OUTPUTS_MCP_TRANSPORT`,
+`CLASSIFIER_MCP_TRANSPORT`, or `PORTAL_MCP_TRANSPORT`); on Databricks Apps the
+server switches to HTTP automatically when `DATABRICKS_APP_PORT` is set.
 
-## The one-tool-per-file pattern
+Software checks:
 
-Each tool lives in its own file under `src/example_server/tools/` and exposes a `register(mcp)` function. `tools/__init__.py` calls each one from a single `register_tools(mcp)`. This keeps the tool list scannable and lets you add or remove an integration by touching two files.
-
-**Step 1 — create `src/example_server/tools/my_tool.py`:**
-
-```python
-from typing import Annotated
-from urllib.parse import quote
-from fastmcp import FastMCP
-
-from example_server.utils import fetch_json
-
-
-def register(mcp: FastMCP) -> None:
-    @mcp.tool(
-        name="example_get_thing",
-        annotations={
-            "title": "Get a thing",
-            "readOnlyHint": True,
-            "destructiveHint": False,
-            "idempotentHint": True,
-            "openWorldHint": True,
-        },
-    )
-    async def get_thing(thing_id: Annotated[str, "The ID to fetch."]) -> dict:
-        """One-line summary. Document the data source, its update cadence,
-        and the return shape here — the model reads this docstring."""
-        safe_id = quote(thing_id, safe="")
-        return await fetch_json(f"things/{safe_id}")
+```bash
+uv run pytest tests/ -q      # offline; live tests run when DATABRICKS_WAREHOUSE_ID is set
+uv run ruff check .
+uv run ruff format --check .
 ```
 
-**Step 2 — wire it up in `tools/__init__.py`:**
+## Deployment
 
-```python
-from example_server.tools import example_tool, my_tool
+The hackathon target is Databricks Apps, one App per server, over streamable
+HTTP. See [`deploy/databricks/`](deploy/databricks/); deploy one App at a time
+with `deploy/databricks/deploy-databricks-app.sh` and `SERVER=<server>`. The
+Apps are not yet deployed. Inherited deployment kits for other platforms
+(`deploy/ibm/`) are template reference material and have not been validated for
+this suite.
 
-def register_tools(mcp) -> None:
-    example_tool.register(mcp)
-    my_tool.register(mcp)  # ← add this line
-```
+## Testing, validation, and evaluation
 
-**Step 3 — add any API key** as a typed field in `config.py` and document the env var in `.env.example`.
+See [eval/README.md](eval/README.md). In short: software tests, the
+parent-model evaluation, and agent-level evaluation answer different questions
+and are reported separately. No agent-level MLflow run has been completed; the
+repository includes the Databricks MLflow kit, blocked on a service principal
+that requires a workspace administrator.
 
-Prompts (`prompts/`) and resources (`resources/`) follow the exact same `register(mcp)` + aggregator pattern.
+### Analysis and evidence
 
----
+| Document | What it shows |
+| --- | --- |
+| [eval/classifier_evaluation.md](eval/classifier_evaluation.md) | Parent-model protocol, held-out results by new/continuing core and new/returning PI, checks, limits. |
+| [src/nitrd_classifier/README.md](src/nitrd_classifier/README.md) | Model card: features used, tested, and excluded by policy; bias caveats. |
+| [docs/analysis/feature_ablation.md](docs/analysis/feature_ablation.md) | Which text and administrative fields carry the signal. |
+| [docs/analysis/scope_vs_learned.md](docs/analysis/scope_vs_learned.md) | Scope-keyword matching vs learned vocabulary for the parent decision. |
+| [docs/analysis/pi_history.md](docs/analysis/pi_history.md) | Whether PI or project history should be used (it is not). |
+| [docs/analysis/subcategory_ranking.md](docs/analysis/subcategory_ranking.md) | What the PCA engine ranks first on public NITRD awards (descriptive, no accuracy). |
+| [docs/HACKATHON_DEMO_FINAL.md](docs/HACKATHON_DEMO_FINAL.md) | Draft presentation outline. |
 
-## Rename the package
+## Related governance infrastructure — outside the demo
 
-Before publishing your server, rename `example_server` to your service (e.g. `census_mcp`):
+Separate governance infrastructure was built for workflows that need fixed
+input snapshots (a sealed FY2024 evaluation universe), an independent
+provenance record (a witness repository), and hash-linked change histories.
+It is outside this public-data demonstration and was not exercised by the MCP
+workflow; no security or compliance assurance for this demo is inferred from
+it.
 
-1. Rename the folder `src/example_server/` → `src/<your_name>/`.
-2. Update `pyproject.toml`: the `[project].name`, `[project.scripts]`, and `[tool.hatch.build.targets.wheel].packages`.
-3. Find-and-replace `example_server` across `src/`, `tests/`, `main.py`, `Dockerfile`, and `manifest.yaml`.
+## Scope and limitations
 
----
-
-## Tool design tips (federal data)
-
-- **Return structured data, not prose.** Return dicts/lists with consistent keys and let the model narrate.
-- **Document freshness.** Federal datasets lag; state the update frequency and "as-of" date in the docstring.
-- **Expose pagination.** Use `PaginationParams` / `paginate()` from `utils.py`, and return `has_more` / `next_offset`.
-- **Use explicit timeouts.** `utils.fetch_json` defaults to 30s.
-- **Actionable errors.** Return an error dict with a `hint`, not a raw stack trace.
-- **Constrain outbound requests.** Keep API origins in operator-controlled code or configuration, pass only validated relative paths to `fetch_json`, and encode path segments. Never pass a tool-supplied URL directly to an HTTP client.
-- **Treat redirects and DNS as security boundaries.** Redirects are disabled by default. A server that must fetch caller-supplied URLs needs connection-time IP validation on every hop plus network egress controls; a one-time DNS check is not sufficient.
-- **Keep sensitive data out of errors and logs.** Do not expose or log upstream bodies, headers, full URLs, query strings, credentials, stack traces, SSNs, dates of birth, or addresses.
-
----
-
-## Deploying
-
-Local development uses stdio. To share your server with an agent platform, deploy it and register it. See **[deploy/README.md](deploy/README.md)** for a chooser, then:
-
-- **IBM watsonx Orchestrate** — [deploy/ibm/](deploy/ibm/) (three kits: local stdio toolkit, Code Engine build-from-Git, and prebuilt image).
-- **Databricks Apps** — [deploy/databricks/](deploy/databricks/).
-
-Both read the same server code; `app.py` automatically serves HTTP when the platform injects a port.
-
----
+- Hackathon prototype using public-source data and fictional reviewer personas.
+- Program-officer names appear in public source metadata and are used only to
+  match a routing persona; fictional reviewer IDs do not authenticate anyone.
+- Parent probabilities, PCA match scores, and output-intensity values answer
+  different questions and are not interchangeable.
+- Sandbox records carry the demonstration marker and do not change operational
+  systems. The write path is pending Gate 3.
+- Reviewer time savings, human agreement, and end-to-end agent performance are
+  not claimed.
 
 ## Partner reference materials
 
@@ -180,14 +212,12 @@ the United States Government. These materials are provided for educational
 purposes only. See [`docs/README.md`](docs/README.md) for the complete notice and
 contribution guidance.
 
----
+## License and attribution
 
-## Evaluations
-
-Measuring how well an LLM can use your tools is the real test of server quality. This template intentionally does **not** ship an eval harness — see [eval/README.md](eval/README.md) for how to build one with the `mcp-eval` skill.
-
----
-
-## License
-
-[MIT](LICENSE). See [SECURITY.md](SECURITY.md) for the vulnerability disclosure policy and hackathon security notes.
+[MIT](LICENSE). Built from the
+[GSA MCP Hackathon template](https://github.com/GSA-TTS/mcp-hackathon-template);
+see [SECURITY.md](SECURITY.md) for the template's vulnerability disclosure
+policy. Solo entry, developed with LLM assistance; the submitter is responsible
+for the implementation, verification, and reported results. This prototype
+does not represent an official NIH classification decision or agency
+endorsement.
