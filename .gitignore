@@ -12,6 +12,10 @@ deploy/ibm/local-mcp-toolkit/_stage/
 deploy/ibm/local-mcp-toolkit/_toolkit.generated.yaml
 deploy/**/eval-results/
 
+# Ground-truth working files (judging sheet and sealed answer key); keep
+# local until judging is complete, see eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md
+eval/ground_truth/work/
+
 
 # IBM Bob IDE directory (skills and MCP tool definition)
 .bob/

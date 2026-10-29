@@ -250,10 +250,10 @@ or the reviewer guidance>
   time without a comparison.
 * **NITRD and PCA definitions.** Record which definition document the
   judgments use (procedure step 1).
-* **Where to keep the working files.** `eval/ground_truth/work/` is not
-  git-ignored. Commit the filled sheet and key together with the results, or
-  keep the directory outside the repository until then, so the key is not
-  pushed before judging is complete.
+* **Where to keep the working files.** `eval/ground_truth/work/` is
+  git-ignored, so the sheet and the key cannot be pushed by accident before
+  judging is complete. To publish them with the results, copy them out of
+  `work/` (or force-add them) in the results commit.
 
 ## 8. Timeline
 
