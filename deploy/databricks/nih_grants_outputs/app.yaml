@@ -17,8 +17,8 @@ command:
     "export PYTHONPATH=/app/python/source_code/src:$PYTHONPATH && python -m nih_grants_outputs.app",
   ]
 
-# Enable once a SQL warehouse resource with key "sql-warehouse" is attached to
-# this App (needed for table reads, Step 3+):
-# env:
-#   - name: OUTPUTS_DATABRICKS_WAREHOUSE_ID
-#     valueFrom: sql-warehouse
+# Requires a SQL warehouse resource with key "sql-warehouse" attached to this App
+# (CAN_USE). The warehouse ID is set on the resource, not here.
+env:
+  - name: OUTPUTS_DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse

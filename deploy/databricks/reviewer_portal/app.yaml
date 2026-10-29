@@ -18,8 +18,8 @@ command:
     "export PYTHONPATH=/app/python/source_code/src:$PYTHONPATH && python -m reviewer_portal.app",
   ]
 
-# Enable once a SQL warehouse resource with key "sql-warehouse" is attached to
-# this App (needed for table reads/writes, Step 3+):
-# env:
-#   - name: PORTAL_DATABRICKS_WAREHOUSE_ID
-#     valueFrom: sql-warehouse
+# Requires a SQL warehouse resource with key "sql-warehouse" attached to this App
+# (CAN_USE). The warehouse ID is set on the resource, not here.
+env:
+  - name: PORTAL_DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse

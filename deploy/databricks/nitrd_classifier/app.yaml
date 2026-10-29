@@ -17,8 +17,8 @@ command:
     "export PYTHONPATH=/app/python/source_code/src:$PYTHONPATH && python -m nitrd_classifier.app",
   ]
 
-# Enable once a SQL warehouse resource with key "sql-warehouse" is attached to
-# this App (needed to read project text, Step 3+):
-# env:
-#   - name: CLASSIFIER_DATABRICKS_WAREHOUSE_ID
-#     valueFrom: sql-warehouse
+# Requires a SQL warehouse resource with key "sql-warehouse" attached to this App
+# (CAN_USE). The warehouse ID is set on the resource, not here.
+env:
+  - name: CLASSIFIER_DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
