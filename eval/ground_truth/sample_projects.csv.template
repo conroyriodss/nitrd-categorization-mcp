@@ -1,0 +1,2 @@
+sample_id,fy,administering_ic,activity,pi_names,project_title,abstract_text,phr,judge_parent,judge_pca_1,judge_pca_2,judge_pca_3,judge_confidence,judge_seconds,judge_notes,judged_at
+EXAMPLE-01,2022,NLM,R01,"EXAMPLE, PI",Example title (this row is ignored by analyze_results.py),Example abstract.,Example public health relevance.,yes,LSDMA,AI,HCIA,4,95,"Builds a data platform; ML is secondary.",2026-11-10T14:05:00
