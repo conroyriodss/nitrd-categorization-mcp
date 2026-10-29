@@ -7,7 +7,7 @@ The runner's service principal needs CAN USE on the three apps, the
 sql-warehouse resource, SELECT on exporter_projects, SELECT + MODIFY on the
 three review tables (verification + cleanup) and on the e2e_runs table.
 
-Two jobs, one at a time, started from the browser:
+Jobs run one at a time, started from the browser:
   /api/start/smoke  tools/list + /health on all three apps, and
                     portal_get_reviewer_assignment(10388671) on the deployed
                     portal compared byte-for-byte with an in-process call.
@@ -19,6 +19,12 @@ Two jobs, one at a time, started from the browser:
                     of each MCP app to /health and an MCP initialize
                     request, per candidate Authorization header. Token
                     values are never stored or shown.
+  /api/start/parity tests/test_parity.py with NITRD_E2E_TRANSPORT=http: all 13
+                    tools on fixed inputs (demo projects, negative control,
+                    error cases), deployed answer compared byte-for-byte with
+                    the in-process answer from the same commit, plus latency.
+                    Read-only: write tools only get inputs that must fail,
+                    and the review-table row counts must not change.
   /api/status       state + report of the current / last job.
 Every finished job is also written to the e2e_runs table. A smoke or e2e job
 that errors also appends the auth diagnostics to its report.
@@ -408,6 +414,54 @@ def _e2e() -> tuple[bool, dict[str, Any], str, int]:
     return proc.returncode == 0, summary, report, proc.returncode
 
 
+def _parity() -> tuple[bool, dict[str, Any], str, int]:
+    """Every tool on the deployed apps vs in-process, byte-for-byte (read-only)."""
+    report_file = Path(tempfile.mkdtemp()) / "parity_report.json"
+    env = {
+        **os.environ,
+        "NITRD_E2E_TRANSPORT": "http",
+        "NITRD_PARITY_REPORT": str(report_file),
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONPATH": os.pathsep.join(
+            p for p in (str(ROOT / "src"), str(ROOT), os.getenv("PYTHONPATH")) if p
+        ),
+    }
+    for package, url in _app_urls().items():
+        env[URL_ENV[package]] = url
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "tests/test_parity.py"]
+        + ["-k", "matches_in_process", "-s", "-q", "-rA", "--color=no"]
+        + ["-p", "no:cacheprovider"],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=E2E_TIMEOUT_S,
+    )
+    summary: dict[str, Any] = {}
+    if report_file.exists():
+        rows = json.loads(report_file.read_text())
+        ms = sorted(r["remote_ms"] for r in rows)
+        summary = {
+            "cases": len(rows),
+            "identical": sum(r["identical"] for r in rows),
+            "expected_ok": sum(r["expected_ok"] for r in rows),
+            "failures": [
+                {k: r[k] for k in ("case", "remote", "local", "expect", "diff")}
+                for r in rows
+                if not (r["identical"] and r["expected_ok"])
+            ],
+            "remote_ms_p50": ms[len(ms) // 2] if ms else None,
+            "remote_ms_p95": ms[int(len(ms) * 0.95)] if ms else None,
+            "remote_ms_by_tool": {
+                tool: max(r["remote_ms"] for r in rows if r["tool"] == tool)
+                for tool in sorted({r["tool"] for r in rows})
+            },
+        }
+    report = proc.stdout + ("\n--- stderr ---\n" + proc.stderr if proc.stderr else "")
+    return proc.returncode == 0, summary, report, proc.returncode
+
+
 def _job(kind: str, run_id: str) -> None:
     try:
         if kind == "smoke":
@@ -416,6 +470,8 @@ def _job(kind: str, run_id: str) -> None:
         elif kind == "auth":
             passed, summary, report = _auth_probe()
             exit_code = 0 if passed else 1
+        elif kind == "parity":
+            passed, summary, report, exit_code = _parity()
         else:
             passed, summary, report, exit_code = _e2e()
     except Exception as exc:  # report it rather than dying silently
@@ -451,9 +507,9 @@ def _job(kind: str, run_id: str) -> None:
 
 async def start(request: Request) -> JSONResponse:
     kind = request.path_params["kind"]
-    if kind not in ("smoke", "e2e", "auth"):
+    if kind not in ("smoke", "e2e", "parity", "auth"):
         return JSONResponse(
-            {"error": "kind must be smoke, e2e or auth"}, status_code=404
+            {"error": "kind must be smoke, e2e, parity or auth"}, status_code=404
         )
     with _lock:
         if STATE.get("status") == "running":
@@ -483,7 +539,8 @@ async def index(request: Request) -> HTMLResponse:
         "<h2>NITRD Gate 4 e2e runner (sandbox)</h2>"
         '<p><a href="api/start/smoke">Start smoke (sub-gate D)</a> | '
         '<a href="api/start/e2e">Start e2e (sub-gate E, writes + cleans up '
-        'sandbox rows)</a> | <a href="api/start/auth">Start auth diagnostics</a>'
+        'sandbox rows)</a> | <a href="api/start/parity">Start parity (all 13 '
+        'tools, read-only)</a> | <a href="api/start/auth">Start auth diagnostics</a>'
         ' | <a href="api/status">Status JSON</a></p>'
         f"<pre>{escape(json.dumps(state, indent=2, default=str))}</pre>"
         f"<pre>{escape(STATE.get('report', ''))}</pre>"
