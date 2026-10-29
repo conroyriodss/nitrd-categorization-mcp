@@ -14,13 +14,20 @@ Two jobs, one at a time, started from the browser:
   /api/start/e2e    tests/test_smoke_e2e.py with NITRD_E2E_TRANSPORT=http:
                     10 steps x 3 demo projects, idempotent repeat, warehouse
                     persistence check, cleanup by request_id.
+  /api/start/auth   auth diagnostics: which credential this app's SDK uses,
+                    the token's non-secret claims, and the raw HTTP answer
+                    of each MCP app to /health and an MCP initialize
+                    request, per candidate Authorization header. Token
+                    values are never stored or shown.
   /api/status       state + report of the current / last job.
-Every finished job is also written to the e2e_runs table.
+Every finished job is also written to the e2e_runs table. A smoke or e2e job
+that errors also appends the auth diagnostics to its report.
 """
 
 from __future__ import annotations
 
 import asyncio
+import base64
 import json
 import os
 import subprocess
@@ -64,6 +71,15 @@ EXPECTED_TOOLS = {"nih_grants_outputs": 5, "nitrd_classifier": 3, "reviewer_port
 SMOKE_APPL, SMOKE_REVIEWER = 10388671, "demo_po_ninr_01"
 RESULTS = table("e2e_runs")
 E2E_TIMEOUT_S = 1500
+# Response headers worth showing for an auth failure (none carry secrets).
+DIAG_HEADERS = ("www-authenticate", "location", "content-type", "x-request-id")
+AUTH_ENV = (
+    "DATABRICKS_HOST",
+    "DATABRICKS_CLIENT_ID",
+    "DATABRICKS_CLIENT_SECRET",
+    "DATABRICKS_TOKEN",
+    "DATABRICKS_APP_NAME",
+)
 
 _lock = threading.Lock()
 STATE: dict[str, Any] = {"status": "idle"}
@@ -129,6 +145,128 @@ def _record(state: dict[str, Any]) -> None:
             "rows_left": json.dumps(state.get("rows_left")),
         },
     )
+
+
+# --- Auth diagnostics ----------------------------------------------------------
+
+
+def _claims(authorization: str) -> dict[str, Any]:
+    """Non-secret claims of a bearer JWT (no signature check, value dropped)."""
+    token = authorization.removeprefix("Bearer ").strip()
+    parts = token.split(".")
+    if len(parts) != 3:
+        return {"jwt": False, "length": len(token)}
+    try:
+        pad = "=" * (-len(parts[1]) % 4)
+        body = json.loads(base64.urlsafe_b64decode(parts[1] + pad))
+    except ValueError as exc:
+        return {"jwt": False, "decode_error": str(exc)}
+    keep = ("iss", "aud", "sub", "scope", "client_id", "azp", "exp", "iat")
+    out: dict[str, Any] = {"jwt": True, **{k: body[k] for k in keep if k in body}}
+    if "exp" in body:
+        out["expires_in_s"] = int(body["exp"] - datetime.now(UTC).timestamp())
+    return out
+
+
+def _candidate_headers(w) -> dict[str, dict[str, str] | str]:
+    """Authorization headers to try, by source; a string means it failed."""
+    out: dict[str, dict[str, str] | str] = {}
+    try:
+        out["config.authenticate()"] = dict(w.config.authenticate())
+    except Exception as exc:
+        out["config.authenticate()"] = f"{type(exc).__name__}: {exc}"
+    try:
+        token = w.config.oauth_token()
+        out["config.oauth_token()"] = {
+            "Authorization": f"{token.token_type or 'Bearer'} {token.access_token}"
+        }
+    except Exception as exc:
+        out["config.oauth_token()"] = f"{type(exc).__name__}: {exc}"
+    return out
+
+
+def _probe(http: httpx.Client, url: str, headers: dict[str, str]) -> dict[str, Any]:
+    """Raw answers to GET /health and an MCP initialize POST (no redirects)."""
+    init = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+            "protocolVersion": "2025-06-18",
+            "capabilities": {},
+            "clientInfo": {"name": "nitrd-e2e-runner-auth-probe", "version": "0"},
+        },
+    }
+    mcp_headers = {
+        **headers,
+        "Accept": "application/json, text/event-stream",
+        "Content-Type": "application/json",
+    }
+    out = {}
+    for name, call in (
+        ("GET /health", lambda: http.get(f"{url}/health", headers=headers)),
+        (
+            "POST /mcp initialize",
+            lambda: http.post(f"{url}/mcp", headers=mcp_headers, json=init),
+        ),
+    ):
+        try:
+            r = call()
+            out[name] = {
+                "status": r.status_code,
+                "headers": {h: r.headers[h] for h in DIAG_HEADERS if h in r.headers},
+                "body": r.text[:200],
+            }
+        except Exception as exc:
+            out[name] = {"error": f"{type(exc).__name__}: {exc}"}
+    return out
+
+
+def _auth_probe() -> tuple[bool, dict[str, Any], str]:
+    """Which identity this app uses and how each MCP app answers it."""
+    w = _workspace()
+    identity: dict[str, Any] = {
+        "auth_type": w.config.auth_type,
+        "host": w.config.host,
+        "env_set": {k: bool(os.getenv(k)) for k in AUTH_ENV},
+    }
+    try:
+        me = w.current_user.me()
+        identity["workspace_api_identity"] = me.user_name or me.display_name
+    except Exception as exc:
+        identity["workspace_api_identity"] = f"{type(exc).__name__}: {exc}"
+    urls = _app_urls()
+    candidates = _candidate_headers(w)
+    results: dict[str, Any] = {}
+    passed = False
+    with httpx.Client(timeout=30, follow_redirects=False) as http:
+        for source, headers in candidates.items():
+            if isinstance(headers, str):
+                results[source] = {"error": headers}
+                continue
+            entry: dict[str, Any] = {
+                "claims": _claims(headers.get("Authorization", "")),
+                "apps": {},
+            }
+            for package, url in urls.items():
+                entry["apps"][APPS[package]] = _probe(http, url, headers)
+            entry["all_ok"] = all(
+                p.get("POST /mcp initialize", {}).get("status") == 200
+                for p in entry["apps"].values()
+            )
+            passed = passed or entry["all_ok"]
+            results[source] = entry
+    summary = {"identity": identity, "candidates": results}
+    lines = [f"identity: {json.dumps(identity, default=str)}"]
+    for source, entry in results.items():
+        if "error" in entry:
+            lines.append(f"[{source}] could not get a header: {entry['error']}")
+            continue
+        lines.append(f"[{source}] claims: {json.dumps(entry['claims'], default=str)}")
+        for app_name, probe in entry["apps"].items():
+            for call, res in probe.items():
+                lines.append(f"  {app_name} {call}: {json.dumps(res, default=str)}")
+    return passed, summary, "\n".join(lines)
 
 
 # --- Jobs ----------------------------------------------------------------------
@@ -246,11 +384,21 @@ def _job(kind: str, run_id: str) -> None:
         if kind == "smoke":
             passed, summary, report = asyncio.run(_smoke())
             exit_code = 0 if passed else 1
+        elif kind == "auth":
+            passed, summary, report = _auth_probe()
+            exit_code = 0 if passed else 1
         else:
             passed, summary, report, exit_code = _e2e()
     except Exception as exc:  # report it rather than dying silently
         passed, summary, exit_code = False, {}, -1
         report = f"runner error: {type(exc).__name__}: {exc}"
+    if not passed and kind != "auth":
+        try:
+            _, diag, diag_report = _auth_probe()
+            summary = {**(summary or {}), "auth_diagnostics": diag}
+            report = f"{report}\n\n--- auth diagnostics ---\n{diag_report}"
+        except Exception as exc:
+            report = f"{report}\n\n--- auth diagnostics failed: {exc!r} ---"
     result = {
         **STATE,
         "passed": passed,
@@ -274,8 +422,10 @@ def _job(kind: str, run_id: str) -> None:
 
 async def start(request: Request) -> JSONResponse:
     kind = request.path_params["kind"]
-    if kind not in ("smoke", "e2e"):
-        return JSONResponse({"error": "kind must be smoke or e2e"}, status_code=404)
+    if kind not in ("smoke", "e2e", "auth"):
+        return JSONResponse(
+            {"error": "kind must be smoke, e2e or auth"}, status_code=404
+        )
     with _lock:
         if STATE.get("status") == "running":
             return JSONResponse({"error": "a job is already running", **STATE}, 409)
@@ -304,7 +454,8 @@ async def index(request: Request) -> HTMLResponse:
         "<h2>NITRD Gate 4 e2e runner (sandbox)</h2>"
         '<p><a href="api/start/smoke">Start smoke (sub-gate D)</a> | '
         '<a href="api/start/e2e">Start e2e (sub-gate E, writes + cleans up '
-        'sandbox rows)</a> | <a href="api/status">Status JSON</a></p>'
+        'sandbox rows)</a> | <a href="api/start/auth">Start auth diagnostics</a>'
+        ' | <a href="api/status">Status JSON</a></p>'
         f"<pre>{escape(json.dumps(state, indent=2, default=str))}</pre>"
         f"<pre>{escape(STATE.get('report', ''))}</pre>"
     )
