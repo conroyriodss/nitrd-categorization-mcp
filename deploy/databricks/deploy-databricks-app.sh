@@ -2,7 +2,9 @@
 # Deploy ONE of this repo's three MCP servers as its own Databricks App.
 #
 # Flow:
-#   1. Stage app.yaml, requirements.txt, src/shared and src/<SERVER> in a temp dir.
+#   1. Stage app.yaml, requirements.txt, src/shared and src/<SERVER> in a temp dir,
+#      exported from the committed HEAD (git archive), never from the working tree.
+#      Refuses to run if those paths have uncommitted or untracked changes.
 #   2. Ensure the Databricks App exists (create-or-reuse).
 #   3. Sync the staged source to a workspace path (SOURCE_CODE_PATH).
 #   4. `databricks apps deploy` from that path.
@@ -78,6 +80,25 @@ if ! databricks "${PROFILE_ARGS[@]}" current-user me >/dev/null 2>&1; then
   exit 1
 fi
 
+# --- Deploy only committed source ---------------------------------------------
+# The staged paths must match HEAD exactly: no modified, staged, or untracked
+# files under them. Gitignored files (e.g. __pycache__) are never staged.
+DEPLOY_PATHS=("deploy/databricks/${SERVER}/app.yaml" "deploy/databricks/${SERVER}/requirements.txt"
+              "src/shared" "src/${SERVER}")
+if ! git -C "${REPO_ROOT}" rev-parse --verify -q HEAD >/dev/null; then
+  echo "FATAL: ${REPO_ROOT} is not a git checkout with a HEAD commit" >&2
+  exit 1
+fi
+DIRTY="$(git -C "${REPO_ROOT}" status --porcelain --untracked-files=all -- "${DEPLOY_PATHS[@]}")"
+if [[ -n "${DIRTY}" ]]; then
+  echo "FATAL: working tree differs from HEAD in deployed paths; commit or revert first:" >&2
+  echo "${DIRTY}" | sed 's/^/  /' >&2
+  exit 1
+fi
+DEPLOY_COMMIT="$(git -C "${REPO_ROOT}" rev-parse HEAD)"
+echo "=== Deploying committed source: ${DEPLOY_COMMIT} ==="
+echo ""
+
 # --- Build a per-App staging directory ----------------------------------------
 # Databricks Apps reads app.yaml and requirements.txt from the root of the
 # deployed source directory. Each App gets only what it needs:
@@ -86,16 +107,17 @@ fi
 #   <stage>/src/shared/         shared table names + response helpers
 #   <stage>/src/<SERVER>/       this server's package (incl. its resources/)
 # app.yaml puts /app/python/source_code/src on PYTHONPATH, so no package
-# install is needed. The repo itself is never modified.
+# install is needed. Everything comes from `git archive HEAD`; the repo itself
+# is never modified.
 STAGE_DIR="$(mktemp -d)"
 cleanup() {
   rm -rf "${STAGE_DIR}"
 }
 trap cleanup EXIT
-mkdir -p "${STAGE_DIR}/src"
-cp "${SERVER_DIR}/app.yaml" "${SERVER_DIR}/requirements.txt" "${STAGE_DIR}/"
-cp -R "${REPO_ROOT}/src/shared" "${REPO_ROOT}/src/${SERVER}" "${STAGE_DIR}/src/"
-find "${STAGE_DIR}" -name "__pycache__" -type d -prune -exec rm -rf {} +
+git -C "${REPO_ROOT}" archive --format=tar "${DEPLOY_COMMIT}" -- "${DEPLOY_PATHS[@]}" | tar -x -C "${STAGE_DIR}"
+mv "${STAGE_DIR}/deploy/databricks/${SERVER}/app.yaml" "${STAGE_DIR}/deploy/databricks/${SERVER}/requirements.txt" "${STAGE_DIR}/"
+rm -r "${STAGE_DIR}/deploy"
+echo "${DEPLOY_COMMIT}" > "${STAGE_DIR}/DEPLOY_COMMIT"
 echo "=== Staged files ==="
 (cd "${STAGE_DIR}" && find . -type f | sort | sed 's/^/  /')
 echo ""
