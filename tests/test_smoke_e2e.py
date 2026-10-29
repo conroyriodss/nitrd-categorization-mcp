@@ -13,6 +13,17 @@ Transport: stdio by default. Each server is spawned as `python main.py <server>`
 exactly as a local MCP client would launch it. NITRD_E2E_TRANSPORT=memory
 uses FastMCP's in-process transport instead (faster, same protocol).
 
+NITRD_E2E_TRANSPORT=http runs the same chain against the three DEPLOYED
+Databricks Apps over streamable HTTP (<base-url>/mcp). Base URLs come from
+NITRD_E2E_URL_OUTPUTS, NITRD_E2E_URL_CLASSIFIER and NITRD_E2E_URL_PORTAL.
+Apps accept OAuth only, so the bearer token comes from your Databricks CLI
+login (`databricks auth login`; DATABRICKS_CONFIG_PROFILE picks the profile)
+or from NITRD_E2E_TOKEN. A PAT is rejected up front with a clear message.
+http mode writes real sandbox rows, so it also needs PORTAL_LIVE_WRITE_TESTS=1
+and DATABRICKS_WAREHOUSE_ID: after each project it checks on the warehouse
+that the step-9 request and its created/routed events persisted, then deletes
+exactly those rows by request_id (NITRD_E2E_KEEP_ROWS=1 keeps them).
+
 Outcome rules:
 * Any call that errors with something other than the skeleton's "not
   implemented yet" message FAILS the test. DataCite status="not_available"
@@ -49,7 +60,7 @@ from typing import Any
 
 import pytest
 from fastmcp import Client
-from fastmcp.client.transports import StdioTransport
+from fastmcp.client.transports import StdioTransport, StreamableHttpTransport
 
 from shared.models import NOT_RCDC
 from shared.tables import NITRD_CATEGORY
@@ -113,12 +124,51 @@ def _server_env() -> dict[str, str]:
     return env
 
 
+HTTP_URL_ENV = {
+    "nih_grants_outputs": "NITRD_E2E_URL_OUTPUTS",
+    "nitrd_classifier": "NITRD_E2E_URL_CLASSIFIER",
+    "reviewer_portal": "NITRD_E2E_URL_PORTAL",
+}
+_http_auth: dict[str, str] = {}
+
+
+def _http_headers() -> dict[str, str]:
+    """OAuth bearer for Databricks Apps (cached for the session)."""
+    if not _http_auth:
+        token = os.getenv("NITRD_E2E_TOKEN", "").strip()
+        if token:
+            _http_auth["Authorization"] = f"Bearer {token}"
+        else:
+            from databricks.sdk import WorkspaceClient
+
+            profile = os.getenv("DATABRICKS_CONFIG_PROFILE") or None
+            config = WorkspaceClient(profile=profile).config
+            if config.auth_type == "pat":
+                raise RuntimeError(
+                    "Databricks Apps reject PATs. Run `databricks auth login "
+                    "--host <workspace-url>` and use that profile, "
+                    "or set NITRD_E2E_TOKEN."
+                )
+            _http_auth.update(config.authenticate())
+    return dict(_http_auth)
+
+
+def _http_url(package: str) -> str:
+    var = HTTP_URL_ENV[package]
+    base = os.getenv(var, "").strip().rstrip("/")
+    if not base:
+        raise ValueError(f"NITRD_E2E_TRANSPORT=http needs {var} (the app's base URL)")
+    return base if base.endswith("/mcp") else f"{base}/mcp"
+
+
 def _target(package: str):
     if TRANSPORT == "memory":
         return SERVERS[package]
+    if TRANSPORT == "http":
+        return StreamableHttpTransport(_http_url(package), headers=_http_headers())
     if TRANSPORT != "stdio":
         raise ValueError(
-            f"NITRD_E2E_TRANSPORT must be stdio or memory, not {TRANSPORT}"
+            f"NITRD_E2E_TRANSPORT must be stdio, memory or http, not {TRANSPORT}"
         )
     log_dir = Path(os.getenv("NITRD_E2E_LOG_DIR") or tempfile.gettempdir())
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -476,10 +526,64 @@ def _sanity_checks(run, project, pubs, parent, sub, preview, first) -> None:
 # --- Tests ------------------------------------------------------------------
 
 
+def _verify_persisted_and_clean_up(run: Run) -> None:
+    """http mode: confirm on the warehouse that step 9's request and its
+    created/routed events persisted, then delete exactly those rows."""
+    from shared.sql import StatementExecutionBackend
+    from shared.tables import REVIEW_EVENTS, REVIEW_REQUESTS, ROUTING_EVENTS
+
+    request = (run.get("9") or {}).get("request") or {}
+    if not request.get("request_id"):
+        run.expect("9 request row persisted in review_requests (warehouse)", None)
+        run.expect("10 created + routed events persisted (warehouse)", None)
+        return
+    db = StatementExecutionBackend(os.environ["DATABRICKS_WAREHOUSE_ID"])
+    params = {"rid": str(request["request_id"])}
+    try:
+        rows = db.query(
+            "e2e.persisted_request",
+            f"SELECT appl_id, sandbox FROM {REVIEW_REQUESTS} WHERE request_id = :rid",
+            params,
+        )
+        run.expect(
+            "9 request row persisted in review_requests (warehouse)",
+            len(rows) == 1
+            and rows[0]["sandbox"] is True
+            and int(rows[0]["appl_id"]) == run.appl_id,
+            f"rows={len(rows)}",
+        )
+        events = db.query(
+            "e2e.persisted_events",
+            f"SELECT event_type FROM {REVIEW_EVENTS} WHERE request_id = :rid "
+            "UNION ALL "
+            f"SELECT event_type FROM {ROUTING_EVENTS} WHERE request_id = :rid",
+            params,
+        )
+        types = sorted(e["event_type"] for e in events)
+        run.expect(
+            "10 created + routed events persisted (warehouse)",
+            types.count("created") == 1 and "routed" in types,
+            f"events={types}",
+        )
+    finally:
+        if os.getenv("NITRD_E2E_KEEP_ROWS") != "1":
+            for table in (REVIEW_EVENTS, ROUTING_EVENTS, REVIEW_REQUESTS):
+                db.query(
+                    "e2e.cleanup",
+                    f"DELETE FROM {table} WHERE request_id = :rid",
+                    params,
+                )
+            log.info("cleaned up sandbox rows for request %s", params["rid"])
+
+
 @pytest.mark.parametrize("project", DEMO_PROJECTS, ids=lambda p: str(p["appl_id"]))
 async def test_prompt_bj_ten_step_chain(project, capsys, live_sql):
+    if TRANSPORT == "http" and os.getenv("PORTAL_LIVE_WRITE_TESTS") != "1":
+        pytest.skip("http mode writes sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1")
     async with three_clients() as clients:
         run = await run_scenario(clients, project)
+    if TRANSPORT == "http":
+        _verify_persisted_and_clean_up(run)
     RUNS[project["appl_id"]] = run
     run.finish(capsys)
 
