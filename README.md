@@ -26,18 +26,19 @@ classifications. GSA MCP + AI Agent Hackathon, Service Write Integration track.
 
 ## Submission status
 
-As of commit `526a753` (2026-10-28).
+As of commit `d54920b` (2026-10-29).
 
 | Component | Status | Scope of the claim |
 | --- | --- | --- |
 | `nih-grants-outputs` (5 tools) | Implemented | Reads public ExPORTER, iCite, and PubMed data staged in Unity Catalog tables. The DataCite tool returns `not_available` because the DataCite table is not loaded in the MVP. |
 | `nitrd-classifier` (3 tools) | Implemented | Parent (NITRD yes/no) probability with feature explanations; PCA ranking with matched scope terms. |
 | Parent model `nitrd-parent-v2-ba10594d9581` | Trained and evaluated | FY2019 validation half: PR-AUC 0.862 (all), 0.720 (new cores). Agreement with RCDC labels. [Details](eval/classifier_evaluation.md). |
-| `reviewer-portal` (5 tools) | **Gate 3 pending** | Routing logic and nine fictional personas are implemented and tested; the five tools are still skeletons and the sandbox tables do not exist yet. Gate 3 is done when the tools write and read the sandbox tables, every row carries the sandbox marker, submission is idempotent, and end-to-end steps 8–10 pass live. |
-| Software tests | 141 passed, 6 skipped, 1 xfailed (offline, CI-equivalent run at `526a753`) | Skips are live-mode and optional parity tests. GitHub Actions has not yet run on this repository. Test results are separate from model and agent performance. |
-| End-to-end sequence | Steps 1–7 pass live on three demo projects | Steps 8–10 need the reviewer portal. |
+| `reviewer-portal` (5 tools) | Implemented | Writes and reads three sandbox Delta tables. Table CHECK constraints require `sandbox=true` and the label "Not RCDC / demonstration only" on every row; submission is idempotent (UUIDv5 request ID); nine fictional personas, no end-user authentication. |
+| Software tests | Offline: 160 passed, 8 skipped, 1 xfailed. Live: 167 passed, 2 skipped. GitHub Actions CI passes on `main`. | Skips are live-mode, opt-in sandbox-write and optional parity tests. Test results are separate from model and agent performance. |
+| End-to-end sequence | All 10 steps pass live on three demo projects (in-process transport, shipped model, warehouse data) | Scripted tool calls, not an agent choosing tools. Run against the deployed Apps: pending (see below). |
+| Databricks Apps deployment | Three Apps deployed and running | `mcp-nih-grants-outputs` and `mcp-nitrd-classifier` return the same results as local servers. `mcp-nitrd-reviewer-portal` is healthy; its tool list and the 10-step chain over HTTP are not yet recorded. An e2e runner App ([`deploy/databricks/e2e_runner/`](deploy/databricks/e2e_runner/)) is in the repository to run that chain with its own service principal. |
 | Agent-level (MLflow) evaluation | Not run | Blocked on a workspace-admin-provisioned service principal; request pending. |
-| Databricks Apps deployment | Not yet deployed | Planned after Gate 3 (one App per server). |
+| Ground-truth validation (45 projects) | Sample drawn, judging not started | Pre-specified protocol: [eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md](eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md). One reviewer, blinded to model outputs and RCDC labels. |
 
 ## Problem and mission value
 
@@ -68,7 +69,7 @@ task:
   PI-history studies decided what the model uses; PI identity and history are
   deliberately excluded.
 - **An explicit human handoff:** routing preview and sandbox review requests
-  connect analysis to a reviewer (Gate 3 pending).
+  connect analysis to a reviewer, with every write confined to sandbox tables.
 
 MCP provides the common interface. The distinctive work is the domain-specific
 evidence assembly, interpretable outputs, and review workflow built on it.
@@ -84,7 +85,7 @@ APIs per request.
 | --- | --- | --- | --- |
 | `nih-grants-outputs` | Find projects; project detail, publications, DataCite outputs; output-intensity score | `outputs_find_projects`, `outputs_get_project_detail`, `outputs_get_project_publications`, `outputs_get_project_datacite`, `outputs_score_project_intensity` | Read only |
 | `nitrd-classifier` | Parent suggestion, PCA ranking, explanations | `classifier_classify_parent`, `classifier_classify_subcategory`, `classifier_explain` | Inference only (bundled model) |
-| `reviewer-portal` | Preview assignment; submit, list, decide, and inspect reviews | `portal_get_reviewer_assignment`, `portal_submit_review_request`, `portal_list_pending_reviews`, `portal_submit_review_decision`, `portal_get_review_history` | Sandbox writes (submit, decide); Gate 3 pending |
+| `reviewer-portal` | Preview assignment; submit, list, decide, and inspect reviews | `portal_get_reviewer_assignment`, `portal_submit_review_request`, `portal_list_pending_reviews`, `portal_submit_review_decision`, `portal_get_review_history` | Sandbox writes (submit, decide) |
 
 Code lives in [`src/`](src/) (one package per server plus `src/shared`). Each
 server has its own Databricks App configuration under
@@ -111,9 +112,13 @@ The planned demonstration follows one project through ten calls:
    sandbox request with the suggestions and evidence.
 10. `portal_get_review_history`: confirm the request's created and routed events.
 
-Steps 1–7 pass live in [`tests/test_smoke_e2e.py`](tests/test_smoke_e2e.py)
-for demo projects U24AI171008, R01NR013912, and R01CA258987. Steps 8–10 are
-pending Gate 3.
+All ten steps pass live in [`tests/test_smoke_e2e.py`](tests/test_smoke_e2e.py)
+for demo projects U24AI171008, R01NR013912, and R01CA258987 (application IDs
+10506013, 10388671, 10445135), including an idempotent repeat of step 9. With
+the shipped model their parent probabilities are 0.986, 0.580 and 0.275
+(threshold 0.389); RCDC lists all three as NITRD, so the third is a model
+miss. `NITRD_E2E_TRANSPORT=http` runs the same chain against the deployed
+Apps.
 
 ## Run locally
 
@@ -150,10 +155,10 @@ uv run ruff format --check .
 
 ## Deployment
 
-The hackathon target is Databricks Apps, one App per server, over streamable
-HTTP. See [`deploy/databricks/`](deploy/databricks/); deploy one App at a time
-with `deploy/databricks/deploy-databricks-app.sh` and `SERVER=<server>`. The
-Apps are not yet deployed. Inherited deployment kits for other platforms
+The suite runs on Databricks Apps, one App per server, over streamable HTTP;
+the three Apps are deployed. See [`deploy/databricks/`](deploy/databricks/);
+deploy one App at a time with `deploy/databricks/deploy-databricks-app.sh` and
+`SERVER=<server>`. Apps accept OAuth tokens only, not PATs. Inherited deployment kits for other platforms
 (`deploy/ibm/`) are template reference material and have not been validated for
 this suite.
 
@@ -175,6 +180,8 @@ that requires a workspace administrator.
 | [docs/analysis/scope_vs_learned.md](docs/analysis/scope_vs_learned.md) | Scope-keyword matching vs learned vocabulary for the parent decision. |
 | [docs/analysis/pi_history.md](docs/analysis/pi_history.md) | Whether PI or project history should be used (it is not). |
 | [docs/analysis/subcategory_ranking.md](docs/analysis/subcategory_ranking.md) | What the PCA engine ranks first on public NITRD awards (descriptive, no accuracy). |
+| [eval/EVALUATION_FRAMEWORK.md](eval/EVALUATION_FRAMEWORK.md) | How each output would be fully validated; what is done, partial, design-only or blocked. |
+| [eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md](eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md) | 45-project blinded judging protocol, with sampling and analysis scripts. |
 | [docs/HACKATHON_DEMO_FINAL.md](docs/HACKATHON_DEMO_FINAL.md) | Draft presentation outline. |
 
 ## Related governance infrastructure — outside the demo
@@ -194,7 +201,7 @@ it.
 - Parent probabilities, PCA match scores, and output-intensity values answer
   different questions and are not interchangeable.
 - Sandbox records carry the demonstration marker and do not change operational
-  systems. The write path is pending Gate 3.
+  systems.
 - Reviewer time savings, human agreement, and end-to-end agent performance are
   not claimed.
 

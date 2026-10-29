@@ -1,14 +1,19 @@
 # Evaluation — NIH NITRD Categorization MCP Suite
 
-**Hackathon submission evaluation record · 2026-10-28.** This README replaces
+**Hackathon submission evaluation record · 2026-10-29 (commit `d54920b`).** This README replaces
 the template's evaluation stub. It covers what has been built and what has been
 measured; scenario specifications and draft harnesses are not completed
 evaluations.
 
 The evidence consists of an automated pytest suite (offline and live modes),
 an offline evaluation of the parent classifier on a held-out validation half,
-four analysis reports, and a live run of steps 1–7 of the end-to-end sequence
-on three demo projects. **No agent-level evaluation runs have been executed.**
+four analysis reports, and a live run of all ten steps of the end-to-end
+sequence on three demo projects. **No agent-level evaluation runs have been
+executed.** How each output would be fully validated, and what is still
+missing, is in [`EVALUATION_FRAMEWORK.md`](EVALUATION_FRAMEWORK.md); a
+45-project blinded judging exercise is specified in
+[`GROUND_TRUTH_VALIDATION_PROTOCOL.md`](GROUND_TRUTH_VALIDATION_PROTOCOL.md)
+(sample drawn, judging not started).
 The multi-server MLflow path is blocked on a workspace administrator
 provisioning a service principal. This is a public-data, sandbox-write
 prototype, not an operational NIH categorization system.
@@ -19,9 +24,9 @@ prototype, not an operational NIH categorization system.
 
 | Evaluation layer | Infrastructure and scope | Status and evidentiary limit |
 |---|---|---|
-| Automated software tests (offline) | Pytest against `FakeSql` (no Databricks access), run as CI runs it: clean copy of the repository, public PyPI, `uv sync --extra classifier --group dev` | At commit `526a753`: **141 passed, 6 skipped, 1 xfailed**. Skipped: 5 live-mode tests (no `DATABRICKS_WAREHOUSE_ID`) and 1 engine-parity test (needs `UAC_NITRD_ROOT`). GitHub Actions has not yet run on this repository. |
-| Automated software tests (live) | The same suite with `DATABRICKS_WAREHOUSE_ID` set, against the Unity Catalog tables | Latest live run of the end-to-end module: **20 passed, 3 xfailed**; the 3 xfails are the reviewer-portal steps (Gate 3, not yet implemented). |
-| Scripted end-to-end test | The 10-step sequence in [`tests/test_smoke_e2e.py`](../tests/test_smoke_e2e.py) | Steps 1–7 pass live on three demo projects and one negative control; steps 8–10 are expected failures until the reviewer portal lands. Scripted tool calls do not show that an agent selects and composes the tools correctly. |
+| Automated software tests (offline) | Pytest against `FakeSql` (no Databricks access), run as CI runs it: clean copy of the repository, public PyPI, `uv sync --extra classifier --group dev` | At commit `d54920b`: **160 passed, 8 skipped, 1 xfailed**. Skips are live-mode tests (no `DATABRICKS_WAREHOUSE_ID`), the opt-in sandbox-write test and 1 engine-parity test (needs `UAC_NITRD_ROOT`). GitHub Actions CI passes on `main`. |
+| Automated software tests (live) | The same suite with `DATABRICKS_WAREHOUSE_ID` set, against the Unity Catalog tables | **167 passed, 2 skipped** (engine parity; opt-in sandbox-write test). Uses the synthetic test model unless `CLASSIFIER_PARENT_MODEL_PATH` points at the shipped bundle. |
+| Scripted end-to-end test | The 10-step sequence in [`tests/test_smoke_e2e.py`](../tests/test_smoke_e2e.py) | With the shipped model: **6 passed** (3 demo projects × 10 steps, idempotent repeat of step 9, negative control, cross-project intensity), in-process transport. Against the deployed Apps (`NITRD_E2E_TRANSPORT=http`): **not yet recorded**. Scripted tool calls do not show that an agent selects and composes the tools correctly. |
 | Parent-classifier evaluation | Offline, held-out FY2019 validation half; protocol in [`classifier_evaluation.md`](classifier_evaluation.md) | Measured; results in section 2. Agreement with RCDC labels, not with independent expert judgement. |
 | Analysis reports | Four reports in [`docs/analysis/`](../docs/analysis/) | Measured or descriptive as stated in each report; summarized below. |
 | Agent scenario specifications | Ten draft YAML scenarios (kept outside the repository) | Written against pre-MVP tool names and synthetic award IDs; they need an adapter before they can run. Execution results: **Not measured**. |
@@ -104,7 +109,7 @@ covers one validation year.
 | Agent answer grounding, clarification quality, LLM-as-judge scores | **Not measured**: draft rubrics and harness only. |
 | Agent resistance to hostile metadata, approval bypass, interruption/retry failures | **Not measured**. |
 | Independent human-labelled PCA agreement | **Not measured**: no public PCA labels. |
-| Live completion of all ten end-to-end steps | **Not measured**: steps 8–10 await the reviewer portal (Gate 3). |
+| All ten end-to-end steps against the deployed Apps | **Not measured**: passes in-process; the HTTP run needs an OAuth identity (user login or the e2e runner App). |
 | Reliability beyond the three demo projects | **Not measured**. |
 | Latency, throughput, concurrency, cost per review | **Not measured**. |
 | Reviewer time saved, correction burden, workload reduction | **Not measured**. |
@@ -117,11 +122,10 @@ covers one validation year.
 - **Public data only:** NIH ExPORTER/RePORTER, iCite, and PubMed records staged
   in Unity Catalog tables. DataCite is not loaded in the MVP; that tool returns
   `not_available`. No restricted grant-application data are used.
-- **Sandbox writes (Gate 3, in progress):** the reviewer portal is designed to
-  write only to sandbox Databricks tables, with `sandbox=true` and the label
-  **"Not RCDC / demonstration only"** on every row. These are demonstration
-  records, not categorization decisions. The write tools are not yet
-  implemented.
+- **Sandbox writes:** the reviewer portal writes only to three sandbox
+  Databricks tables. Table CHECK constraints require `sandbox=true` and the
+  label **"Not RCDC / demonstration only"** on every row. These are
+  demonstration records, not categorization decisions.
 - **No end-user authentication:** `reviewer_id` is a parameter checked against
   an allow-list of nine fictional personas. That checks roster membership; it
   does not establish the caller's identity or authority.
@@ -170,13 +174,15 @@ and executed security tests.
    awards; keep unsupported authorization tests explicit rather than scored.
 3. Run the multi-server harness and keep traces, tool arguments and results,
    write-state checks, and judge outputs, including failures and skips.
-4. Extend the live run through steps 8–10 once the reviewer portal lands, and
-   beyond three projects (missing data, uncertain classifications, routing
+4. Record the ten-step run against the deployed Apps, and extend it beyond
+   three projects (missing data, uncertain classifications, routing
    fallbacks, retries, hostile metadata).
 5. Evaluate the parent model on a later fiscal year, keeping new-core and
    continuing-core results separate.
 6. For PCA validation, obtain an independently adjudicated sample with
    reviewers blinded to model suggestions, and seal the labels before scoring.
+   The single-reviewer version of this is drawn and awaiting judging
+   ([protocol](GROUND_TRUTH_VALIDATION_PROTOCOL.md)).
 
 See the [main README](../README.md) for architecture and MVP scope, and
 [SECURITY.md](../SECURITY.md) for the security policy.

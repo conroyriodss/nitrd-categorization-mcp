@@ -50,7 +50,9 @@ They answer different questions and are not interchangeable:
 | 5.4 | MCP infrastructure | Agent-level MLflow evaluation | blocked |
 
 A 30-50 project ground-truth exercise by the submitter, which addresses parts
-of 1.3, 2.2 and 4.2 at small scale, is specified separately in `eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md`.
+of 1.3, 2.2 and 4.2 at small scale, is specified separately in
+[`GROUND_TRUTH_VALIDATION_PROTOCOL.md`](GROUND_TRUTH_VALIDATION_PROTOCOL.md).
+Its 45-project sample was drawn on 2026-10-29; judging has not started.
 
 ## 1. Parent classification
 
