@@ -109,9 +109,38 @@ def _app_urls() -> dict[str, str]:
     return urls
 
 
+def _git_head(root: Path) -> str | None:
+    """Commit SHA from root/.git without a git binary (HEAD, loose ref, or
+    packed-refs); None if there is no readable checkout."""
+    git = root / ".git"
+    try:
+        head = (git / "HEAD").read_text().strip()
+    except OSError:
+        return None
+    if not head.startswith("ref: "):
+        return head or None  # detached HEAD holds the SHA itself
+    ref = head.removeprefix("ref: ").strip()
+    loose = git / ref
+    if loose.is_file():
+        return loose.read_text().strip() or None
+    try:
+        for line in (git / "packed-refs").read_text().splitlines():
+            sha, _, name = line.partition(" ")
+            if name.strip() == ref and not line.startswith(("#", "^")):
+                return sha
+    except OSError:
+        pass
+    return None
+
+
 def _commit() -> str:
-    marker = ROOT / "DEPLOY_COMMIT"
-    return marker.read_text().strip() if marker.exists() else "unknown"
+    """Deployed commit: an explicit DEPLOY_COMMIT marker (the workspace may
+    store it as DEPLOY_COMMIT.py), else the snapshot's .git HEAD."""
+    for name in ("DEPLOY_COMMIT", "DEPLOY_COMMIT.py"):
+        marker = ROOT / name
+        if marker.is_file() and (value := marker.read_text().strip()):
+            return value
+    return _git_head(ROOT) or "unknown"
 
 
 def _rows_left() -> dict[str, int]:
