@@ -211,6 +211,12 @@ def _e2e() -> tuple[bool, dict[str, Any], str, int]:
         "PORTAL_LIVE_WRITE_TESTS": "1",
         "NITRD_E2E_REPORT": str(report_file),
         "PYTHONDONTWRITEBYTECODE": "1",
+        # The pytest subprocess does not inherit this process's sys.path edits;
+        # nothing is pip-installed, so put src/ (packages) and the repo root
+        # (tests.conftest) on its path explicitly.
+        "PYTHONPATH": os.pathsep.join(
+            p for p in (str(ROOT / "src"), str(ROOT), os.getenv("PYTHONPATH")) if p
+        ),
     }
     for package, url in _app_urls().items():
         env[URL_ENV[package]] = url
