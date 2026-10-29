@@ -20,9 +20,13 @@ Apps accept OAuth only, so the bearer token comes from your Databricks CLI
 login (`databricks auth login`; DATABRICKS_CONFIG_PROFILE picks the profile)
 or from NITRD_E2E_TOKEN. A PAT is rejected up front with a clear message.
 http mode writes real sandbox rows, so it also needs PORTAL_LIVE_WRITE_TESTS=1
-and DATABRICKS_WAREHOUSE_ID: after each project it checks on the warehouse
-that the step-9 request and its created/routed events persisted, then deletes
-exactly those rows by request_id (NITRD_E2E_KEEP_ROWS=1 keeps them).
+and DATABRICKS_WAREHOUSE_ID.
+
+The chain only runs live (DATABRICKS_WAREHOUSE_ID set), and step 9 then writes
+real sandbox rows in every transport. After each project the test checks on
+the warehouse that the step-9 request and its created/routed events persisted,
+then deletes exactly those rows by request_id (NITRD_E2E_KEEP_ROWS=1 keeps
+them).
 
 Outcome rules:
 * Any call that errors with something other than the skeleton's "not
@@ -527,8 +531,8 @@ def _sanity_checks(run, project, pubs, parent, sub, preview, first) -> None:
 
 
 def _verify_persisted_and_clean_up(run: Run) -> None:
-    """http mode: confirm on the warehouse that step 9's request and its
-    created/routed events persisted, then delete exactly those rows."""
+    """Confirm on the warehouse that step 9's request and its created/routed
+    events persisted, then delete exactly those rows (any transport)."""
     from shared.sql import StatementExecutionBackend
     from shared.tables import REVIEW_EVENTS, REVIEW_REQUESTS, ROUTING_EVENTS
 
@@ -582,8 +586,9 @@ async def test_prompt_bj_ten_step_chain(project, capsys, live_sql):
         pytest.skip("http mode writes sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1")
     async with three_clients() as clients:
         run = await run_scenario(clients, project)
-    if TRANSPORT == "http":
-        _verify_persisted_and_clean_up(run)
+    # live_sql guarantees a real warehouse, so step 9 wrote real sandbox rows
+    # whatever the transport; verify and remove them.
+    _verify_persisted_and_clean_up(run)
     RUNS[project["appl_id"]] = run
     run.finish(capsys)
 
