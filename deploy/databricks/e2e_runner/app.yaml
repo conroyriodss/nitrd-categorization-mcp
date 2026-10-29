@@ -1,0 +1,20 @@
+# Databricks App: nitrd-e2e-runner (Gate 4 test client for the three MCP apps).
+# https://docs.databricks.com/aws/en/dev-tools/databricks-apps/app-runtime
+#
+# Source root = repo root at a commit (needs src/, tests/, pyproject.toml and
+# this folder); copy this file + requirements.txt to the root when staging.
+# Calls the three deployed apps with this App's own service principal (OAuth
+# M2M). Grants it needs: CAN USE on the three mcp- apps; SELECT on
+# exporter_projects; SELECT + MODIFY on review_requests, review_events,
+# routing_events (verification + cleanup) and e2e_runs (results).
+command:
+  [
+    "/bin/sh",
+    "-c",
+    "cd /app/python/source_code && python deploy/databricks/e2e_runner/runner.py",
+  ]
+
+# Requires a SQL warehouse resource with key "sql-warehouse" (CAN_USE).
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
