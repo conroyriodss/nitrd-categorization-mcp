@@ -1,5 +1,6 @@
 {
   "version": "demo-projects-v2-2026-10-27",
+  "guardrail_note": "Pre-guardrail demo rows. These FY2022 projects pre-date the reserved-year rule (src/shared/guardrail.py, 2026-10-30) and are grandfathered, not an exception the rule tolerates: the Gate 4 tests use them with the per-project tools, never with a guarded surface (outputs_find_cohort, the portal operator pages, analysis_run_validation). New build and validation work uses FY2021 or earlier.",
   "note": "Public FY2022 NITRD (RCDC 329) projects for the smoke tests and the demo (Prompt BJ selection: NITRD flag, >=10 publications in nitrd_pub_links, FY2018-2022, three administering ICs). Facts below were read from users.conroyri.nitrd_hackathon_v1_exporter_projects and nitrd_pub_links on 2026-10-27. Expected routing was produced by reviewer_portal.routing with resources/personas.json; tier values are RoutingTier values. The 480 sealed UAC projects are never used here.",
   "negative_control": {
     "appl_id": 10304125,
@@ -11,6 +12,19 @@
     "title": "A Multienzyme Metabolic Complex for Glucose Metabolism",
     "note": "Non-NITRD (spending categories: Nutrition). Used for the parent-probability sanity check and as the fourth routing check.",
     "expected_routing": {"tier": "ic_rep", "reviewer_id": "demo_ic_rep_nigms"}
+  },
+  "override_project": {
+    "appl_id": 10075931,
+    "core_project_num": "R01EB016064",
+    "full_project_num": "5R01EB016064-08",
+    "fy": 2021,
+    "administering_ic": "NIBIB",
+    "nitrd": true,
+    "title": "Development and Maintenance of Software for MR Spectroscopic Imaging",
+    "publications_linked": 41,
+    "expected_routing": {"tier": "ic_rep", "reviewer_id": "demo_ic_rep_nibib"},
+    "corrected_pcas": ["LSDMA", "SPSQ"],
+    "note": "Step G live override case (4th lifecycle project, added 2026-11-01). FY2021, not FY2022: FY2022 is the blinded judging sample year (src/shared/guardrail.py), so a new FY2022 pick would be a post-rule read of a reserved year, not a grandfathered row. Selected with FY2021-only reads: NIBIB R01, RCDC NITRD flag, 41 publications in nitrd_pub_links, not a subproject, outside the FY2021 NIBIB U01 Step H cohort. Routing read live 2026-11-01 (Tier 2, no PO persona). Kept out of 'projects' so parity, contract and e2e cases are unchanged; only test_portal_lifecycle uses it."
   },
   "projects": [
     {

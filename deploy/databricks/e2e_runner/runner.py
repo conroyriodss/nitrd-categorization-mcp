@@ -25,6 +25,18 @@ Jobs run one at a time, started from the browser:
                     the in-process answer from the same commit, plus latency.
                     Read-only: write tools only get inputs that must fail,
                     and the review-table row counts must not change.
+  /api/start/lifecycle  tests/test_portal_lifecycle.py with
+                    NITRD_E2E_TRANSPORT=http: submit -> pending -> decision
+                    -> history on the deployed portal for the 3 demo projects
+                    (approved / rejected / deferred), plus the error paths
+                    that must write nothing. Writes sandbox rows, checks them
+                    on the warehouse, then deletes them by request_id.
+  /api/start/contract  tests/test_smoke_contract.py with
+                    NITRD_E2E_TRANSPORT=http, read-only: error paths, limit
+                    truncation and empty results (outputs), probability bands
+                    and explain/subcategory agreement (classifier), pending
+                    queues and routing (portal), p50/p95 per tool and the
+                    first call per app. Review-table counts must not change.
   /api/status       state + report of the current / last job.
 Every finished job is also written to the e2e_runs table. A smoke or e2e job
 that errors also appends the auth diagnostics to its report.
@@ -462,6 +474,83 @@ def _parity() -> tuple[bool, dict[str, Any], str, int]:
     return proc.returncode == 0, summary, report, proc.returncode
 
 
+def _pytest_http(
+    test_file: str, select: str, extra_env: dict[str, str]
+) -> subprocess.CompletedProcess:
+    """Run one live test file against the deployed apps (http transport)."""
+    env = {
+        **os.environ,
+        **extra_env,
+        "NITRD_E2E_TRANSPORT": "http",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONPATH": os.pathsep.join(
+            p for p in (str(ROOT / "src"), str(ROOT), os.getenv("PYTHONPATH")) if p
+        ),
+    }
+    for package, url in _app_urls().items():
+        env[URL_ENV[package]] = url
+    return subprocess.run(
+        [sys.executable, "-m", "pytest", test_file, "-k", select]
+        + ["-s", "-q", "-rA", "--color=no", "-p", "no:cacheprovider"],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=E2E_TIMEOUT_S,
+    )
+
+
+def _proc_report(proc: subprocess.CompletedProcess) -> str:
+    return proc.stdout + ("\n--- stderr ---\n" + proc.stderr if proc.stderr else "")
+
+
+def _contract() -> tuple[bool, dict[str, Any], str, int]:
+    """Read-only tool contracts + per-tool latency on the deployed apps."""
+    report_file = Path(tempfile.mkdtemp()) / "contract_report.json"
+    proc = _pytest_http(
+        "tests/test_smoke_contract.py",
+        "contracts_on_live_apps",
+        {"NITRD_CONTRACT_REPORT": str(report_file)},
+    )
+    summary: dict[str, Any] = {}
+    if report_file.exists():
+        rep = json.loads(report_file.read_text())
+        checks = rep["checks"]
+        for area in sorted({c["area"] for c in checks}):
+            mine = [c for c in checks if c["area"] == area]
+            summary[area] = {
+                "passed": sum(c["ok"] for c in mine),
+                "checks": len(mine),
+                "failed": [c["name"] for c in mine if not c["ok"]],
+            }
+        summary["latency_ms_by_tool"] = rep["latency"]["per_tool"]
+        summary["first_call_by_app"] = rep["latency"]["first_call"]
+        summary["app_started_at"] = rep.get("app_started_at")
+    return proc.returncode == 0, summary, _proc_report(proc), proc.returncode
+
+
+def _lifecycle() -> tuple[bool, dict[str, Any], str, int]:
+    """Portal submit -> pending -> decision -> history on the deployed portal."""
+    report_file = Path(tempfile.mkdtemp()) / "lifecycle_report.json"
+    proc = _pytest_http(
+        "tests/test_portal_lifecycle.py",
+        "lifecycle_live",
+        {
+            "PORTAL_LIVE_WRITE_TESTS": "1",
+            "NITRD_LIFECYCLE_REPORT": str(report_file),
+        },
+    )
+    summary: dict[str, Any] = {}
+    if report_file.exists():
+        for label, checks in json.loads(report_file.read_text()).items():
+            summary[label] = {
+                "passed": sum(c["ok"] for c in checks),
+                "checks": len(checks),
+                "failed": [c["name"] for c in checks if not c["ok"]],
+            }
+    return proc.returncode == 0, summary, _proc_report(proc), proc.returncode
+
+
 def _job(kind: str, run_id: str) -> None:
     try:
         if kind == "smoke":
@@ -472,6 +561,10 @@ def _job(kind: str, run_id: str) -> None:
             exit_code = 0 if passed else 1
         elif kind == "parity":
             passed, summary, report, exit_code = _parity()
+        elif kind == "lifecycle":
+            passed, summary, report, exit_code = _lifecycle()
+        elif kind == "contract":
+            passed, summary, report, exit_code = _contract()
         else:
             passed, summary, report, exit_code = _e2e()
     except Exception as exc:  # report it rather than dying silently
@@ -507,9 +600,10 @@ def _job(kind: str, run_id: str) -> None:
 
 async def start(request: Request) -> JSONResponse:
     kind = request.path_params["kind"]
-    if kind not in ("smoke", "e2e", "parity", "auth"):
+    if kind not in ("smoke", "e2e", "parity", "lifecycle", "contract", "auth"):
         return JSONResponse(
-            {"error": "kind must be smoke, e2e, parity or auth"}, status_code=404
+            {"error": "kind must be smoke, e2e, parity, lifecycle, contract or auth"},
+            status_code=404,
         )
     with _lock:
         if STATE.get("status") == "running":
@@ -540,7 +634,11 @@ async def index(request: Request) -> HTMLResponse:
         '<p><a href="api/start/smoke">Start smoke (sub-gate D)</a> | '
         '<a href="api/start/e2e">Start e2e (sub-gate E, writes + cleans up '
         'sandbox rows)</a> | <a href="api/start/parity">Start parity (all 13 '
-        'tools, read-only)</a> | <a href="api/start/auth">Start auth diagnostics</a>'
+        'tools, read-only)</a> | <a href="api/start/lifecycle">Start portal '
+        "lifecycle (writes + cleans up sandbox rows)</a> | "
+        '<a href="api/start/contract">Start extended smoke (contracts + '
+        "latency, read-only)</a> | "
+        '<a href="api/start/auth">Start auth diagnostics</a>'
         ' | <a href="api/status">Status JSON</a></p>'
         f"<pre>{escape(json.dumps(state, indent=2, default=str))}</pre>"
         f"<pre>{escape(STATE.get('report', ''))}</pre>"

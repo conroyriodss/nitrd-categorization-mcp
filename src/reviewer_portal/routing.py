@@ -44,40 +44,13 @@ from reviewer_portal.models import (
     RoutingDecision,
     RoutingTier,
 )
+from shared.ics import IC_CODE_TO_ABBREV
 from shared.models import PersonaId
 
 PersonaRole = Literal["program_officer", "ic_nitrd_rep", "sia_queue"]
 SIA_QUEUE_ID = "demo_sia"
 
-# ExPORTER administering_ic two-letter codes -> IC abbreviations.
-IC_CODE_TO_ABBREV = {
-    "CA": "NCI",
-    "AI": "NIAID",
-    "GM": "NIGMS",
-    "HL": "NHLBI",
-    "HG": "NHGRI",
-    "LM": "NLM",
-    "EB": "NIBIB",
-    "MH": "NIMH",
-    "DA": "NIDA",
-    "AG": "NIA",
-    "NS": "NINDS",
-    "DK": "NIDDK",
-    "HD": "NICHD",
-    "ES": "NIEHS",
-    "TR": "NCATS",
-    "OD": "OD",
-    "EY": "NEI",
-    "AA": "NIAAA",
-    "AR": "NIAMS",
-    "DC": "NIDCD",
-    "DE": "NIDCR",
-    "NR": "NINR",
-    "MD": "NIMHD",
-    "AT": "NCCIH",
-    "TW": "FIC",
-    "RM": "OD",
-}
+# ExPORTER administering_ic code -> IC abbreviation: one map in shared.ics.
 
 
 class RoutingError(ValueError):

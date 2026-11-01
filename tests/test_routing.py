@@ -76,12 +76,13 @@ def project(**kw):
     return ProjectRouting.from_exporter(row)
 
 
-def test_bundled_personas_are_nine_and_valid():
+def test_bundled_personas_are_ten_and_valid():
     d = default_directory()
-    assert len(d.personas) == 9
+    assert len(d.personas) == 10
     roles = [p.role for p in d.personas]
     assert roles.count("program_officer") == 4
-    assert roles.count("ic_nitrd_rep") == 4
+    assert roles.count("ic_nitrd_rep") == 5
+    assert d.require_active("demo_ic_rep_nibib").ic == "NIBIB"
     assert roles.count("sia_queue") == 1
     assert d.require_active("demo_sia").ic is None
     assert not d.get("demo_po_nhlbi_01").active
@@ -89,6 +90,20 @@ def test_bundled_personas_are_nine_and_valid():
     assert "@" not in json.dumps(raw)
     allowed = set(Persona.model_fields)
     assert all(set(p) <= allowed for p in raw["personas"])  # no email/name keys
+
+
+def test_bundled_nibib_routes_to_its_ic_rep():
+    # NIBIB (ExPORTER code EB) has no program-officer personas, so a named but
+    # unrepresented PO falls to Tier 2: demo_ic_rep_nibib, not the SIA queue.
+    p = project(
+        administering_ic="EB",
+        core_project_num="U01EB000001",
+        full_project_num="5U01EB000001-02",
+        fy="2021",
+    )
+    d = route(p, directory=default_directory())
+    assert (d.tier, d.reviewer_id) == (RoutingTier.IC_REP, "demo_ic_rep_nibib")
+    assert d.fallback_used is True
 
 
 def test_name_normalization():

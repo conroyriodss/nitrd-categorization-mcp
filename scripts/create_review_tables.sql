@@ -10,7 +10,8 @@
 --   review_requests  <- ReviewRequestRecord (RoutingDecision flattened into
 --                       assigned_reviewer_* / routing_* columns; nested argument
 --                       models stored as JSON strings)
---   review_events    <- ReviewEvent, event_type created|approved|rejected|deferred
+--   review_events    <- ReviewEvent, event_type created|approved|rejected|deferred|
+--                       override|classified|classification_failed
 --   routing_events   <- ReviewEvent, event_type routed (details = RoutingDecision)
 --
 -- Every row: sandbox = true and label = 'Not RCDC / demonstration only',
@@ -24,6 +25,15 @@
 -- appl_id. Catalog commits ('delta.feature.catalogManaged') are enabled so the
 -- portal can write a request and its events in one BEGIN ATOMIC transaction;
 -- readers then need DBR 16.4+ or a SQL warehouse, and access must be by name.
+--
+-- Tables created earlier are brought to this shape by the forward migrations
+-- in scripts/migrations (001_override_decision, then 002_classification_
+-- evidence; run_migration.py). Re-running this file skips constraints that
+-- already exist, so it never widens them. Constraint names match the migrated
+-- shape: rr_status_v2 admits 'override'; re_type_v3 admits 'override',
+-- 'classified' and 'classification_failed'; rr_classification and
+-- rr_decided_classified come from 002 (see its header for the invariants the
+-- application enforces on top of them).
 
 CREATE TABLE IF NOT EXISTS users.conroyri.nitrd_hackathon_v1_review_requests (
   request_id                     STRING    NOT NULL COMMENT 'UUIDv5 of idempotency_key',
@@ -43,13 +53,20 @@ CREATE TABLE IF NOT EXISTS users.conroyri.nitrd_hackathon_v1_review_requests (
   inherited_from_full_project_num STRING            COMMENT 'RoutingDecision.inherited_from.full_project_num',
   inherited_from_fy              INT                COMMENT 'RoutingDecision.inherited_from.fy',
   routing_policy_version         STRING    NOT NULL COMMENT 'RoutingDecision.policy_version',
-  status                         STRING    NOT NULL COMMENT 'pending|approved|rejected|deferred',
+  status                         STRING    NOT NULL COMMENT 'pending|approved|rejected|deferred|override',
   created_at                     TIMESTAMP NOT NULL,
   decided_by                     STRING,
   decision_at                    TIMESTAMP,
   decision_rationale             STRING,
   sandbox                        BOOLEAN   NOT NULL,
   label                          STRING    NOT NULL,
+  corrected_parent_label         BOOLEAN            COMMENT 'override only: reviewer is-NITRD call; NULL otherwise',
+  corrected_pcas                 STRING             COMMENT 'override only: JSON array of reviewer PCAs ([] if not NITRD); NULL otherwise',
+  classification_status          STRING             COMMENT 'operator path: ok | failed; NULL for tool-path requests',
+  classification_evidence        STRING             COMMENT 'ok only: JSON classifier evidence (schema_version 1); NULL otherwise',
+  classification_error           STRING             COMMENT 'failed only: classifier error message; NULL otherwise',
+  classified_at                  TIMESTAMP          COMMENT 'ok only: when the stored evidence was produced; NULL otherwise',
+  classification_attempts        INT                COMMENT 'operator path: attempts so far (>= 1); NULL for tool-path requests',
   CONSTRAINT rr_pk PRIMARY KEY (request_id)
 )
 CLUSTER BY (assigned_reviewer_id, appl_id)
@@ -58,14 +75,17 @@ TBLPROPERTIES ('delta.feature.catalogManaged' = 'supported');
 
 ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_sandbox CHECK (sandbox = true);
 ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_label CHECK (label = 'Not RCDC / demonstration only');
-ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_status CHECK (status IN ('pending', 'approved', 'rejected', 'deferred'));
+ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_status_v2 CHECK (status IN ('pending', 'approved', 'rejected', 'deferred', 'override'));
+ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_override CHECK ((status = 'override' AND corrected_parent_label IS NOT NULL AND corrected_pcas IS NOT NULL) OR (status <> 'override' AND corrected_parent_label IS NULL AND corrected_pcas IS NULL));
 ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_tier CHECK (routing_tier IN ('program_officer', 'ic_rep', 'sia_queue'));
+ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_classification CHECK ((classification_status IS NULL AND classification_evidence IS NULL AND classification_error IS NULL AND classified_at IS NULL AND classification_attempts IS NULL) OR (coalesce(classification_status, '') = 'ok' AND classification_evidence IS NOT NULL AND classification_error IS NULL AND classified_at IS NOT NULL AND coalesce(classification_attempts, 0) >= 1) OR (coalesce(classification_status, '') = 'failed' AND classification_evidence IS NULL AND classification_error IS NOT NULL AND classified_at IS NULL AND coalesce(classification_attempts, 0) >= 1));
+ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_requests ADD CONSTRAINT rr_decided_classified CHECK (status = 'pending' OR coalesce(classification_status, '') <> 'failed');
 
 CREATE TABLE IF NOT EXISTS users.conroyri.nitrd_hackathon_v1_review_events (
   event_id    STRING    NOT NULL COMMENT 'UUIDv5 of request_id + event kind',
   request_id  STRING    NOT NULL,
   appl_id     BIGINT    NOT NULL,
-  event_type  STRING    NOT NULL COMMENT 'created|approved|rejected|deferred',
+  event_type  STRING    NOT NULL COMMENT 'created|approved|rejected|deferred|override|classified|classification_failed',
   actor_id    STRING    NOT NULL COMMENT 'Demo persona that caused the event',
   details     STRING    NOT NULL COMMENT 'JSON event payload',
   at          TIMESTAMP NOT NULL,
@@ -79,7 +99,7 @@ TBLPROPERTIES ('delta.feature.catalogManaged' = 'supported');
 
 ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_events ADD CONSTRAINT re_sandbox CHECK (sandbox = true);
 ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_events ADD CONSTRAINT re_label CHECK (label = 'Not RCDC / demonstration only');
-ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_events ADD CONSTRAINT re_type CHECK (event_type IN ('created', 'approved', 'rejected', 'deferred'));
+ALTER TABLE users.conroyri.nitrd_hackathon_v1_review_events ADD CONSTRAINT re_type_v3 CHECK (event_type IN ('created', 'approved', 'rejected', 'deferred', 'override', 'classified', 'classification_failed'));
 
 CREATE TABLE IF NOT EXISTS users.conroyri.nitrd_hackathon_v1_routing_events (
   event_id    STRING    NOT NULL COMMENT 'UUIDv5 of request_id + routed',

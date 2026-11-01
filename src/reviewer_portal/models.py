@@ -44,14 +44,21 @@ class ReviewStatus(str, Enum):
     APPROVED = "approved"
     REJECTED = "rejected"
     DEFERRED = "deferred"
+    OVERRIDE = "override"
 
 
 class Decision(str, Enum):
-    """Decisions a reviewer can submit."""
+    """Decisions a reviewer can submit. All four are final.
+
+    override = the reviewer replaces the proposal with their own call: a
+    corrected parent label (is NITRD yes/no) and corrected Task 2 PCAs. Only
+    override carries corrections; they are null for the other three.
+    """
 
     APPROVED = "approved"
     REJECTED = "rejected"
     DEFERRED = "deferred"
+    OVERRIDE = "override"
 
 
 class RoutingTier(str, Enum):
@@ -62,8 +69,39 @@ class RoutingTier(str, Enum):
     SIA_QUEUE = "sia_queue"
 
 
-EventType = Literal["created", "routed", "approved", "rejected", "deferred"]
+EventType = Literal[
+    "created",
+    "routed",
+    "approved",
+    "rejected",
+    "deferred",
+    "override",
+    "classified",
+    "classification_failed",
+]
 """'routed' rows live in routing_events; all others in review_events."""
+
+
+class ClassificationStatus(str, Enum):
+    """review_requests.classification_status (operator path only; NULL otherwise).
+
+    ok and failed are the only values. ok is final (its evidence never
+    changes); failed can be retried, and a retry moves it to ok or leaves it
+    failed with one more attempt.
+    """
+
+    OK = "ok"
+    FAILED = "failed"
+
+
+Band = Literal[
+    "high",
+    "positive_near_threshold",
+    "negative_near_threshold",
+    "clear_negative",
+    "abstain",
+]
+"""Where the parent probability sits relative to the model threshold."""
 
 
 # --- Structured arguments of portal_submit_review_request ------------------------
@@ -123,6 +161,70 @@ class Evidence(InputModel):
     )
 
 
+# --- Classifier evidence (operator path; review_requests.classification_evidence)
+
+#: Bump when ClassificationEvidence changes shape; stored rows keep their version.
+EVIDENCE_SCHEMA_VERSION = 1
+
+
+class TermWeight(ResultModel):
+    term: str
+    field: str = Field(description="Text field the term came from.")
+    contribution: float = Field(description="Signed log-odds contribution.")
+
+
+class ParentEvidence(ResultModel):
+    suggestion: Literal["nitrd", "not_nitrd", "abstain"]
+    probability: float | None = Field(ge=0, le=1)
+    threshold: float = Field(ge=0, le=1)
+    model_id: str
+    band: Band
+    cohort: str | None = Field(description="Classifier cohort for this record.")
+
+
+class PcaEvidence(ResultModel):
+    pca: NitrdCode
+    score: float
+    matched_terms: list[str] = Field(max_length=30)
+
+
+class SubcategoryEvidence(ResultModel):
+    # not_requested: the parent call was not NITRD, so the subcategory tool was
+    # not called (PCAs are proposed only for a NITRD parent call).
+    status: Literal["ranked", "no_match", "not_requested"]
+    vocabulary_id: str | None
+    top_pcas: list[PcaEvidence] = Field(max_length=2, description="Top 2 at most.")
+
+
+class ExplainEvidence(ResultModel):
+    toward: list[TermWeight] = Field(max_length=10, description="Toward NITRD.")
+    against: list[TermWeight] = Field(max_length=10, description="Against NITRD.")
+
+
+class PriorYear(ResultModel):
+    fy: int
+    is_nitrd: bool | None = Field(description="null: no NITRD-era label that year.")
+    records: int
+
+
+class PriorYearEvidence(ResultModel):
+    max_fy: int
+    years: list[PriorYear] = Field(description="Oldest first; empty for a new core.")
+    continuing: bool = Field(description="The core has a record before this FY.")
+
+
+class ClassificationEvidence(ResultModel):
+    """What the classifier said when the request was classified. Written once."""
+
+    schema_version: Literal[1] = EVIDENCE_SCHEMA_VERSION
+    appl_id: int
+    fy: int
+    parent: ParentEvidence
+    subcategory: SubcategoryEvidence
+    explain: ExplainEvidence
+    prior_year: PriorYearEvidence
+
+
 # --- Stored records --------------------------------------------------------------
 
 
@@ -172,6 +274,34 @@ class ReviewRequestRecord(ResultModel):
     decided_by: str | None
     decision_at: datetime | None
     decision_rationale: str | None
+    corrected_parent_label: bool | None = Field(
+        description="Override only: the reviewer's is-NITRD call; null otherwise."
+    )
+    corrected_pcas: list[NitrdCode] | None = Field(
+        description=(
+            "Override only: the reviewer's PCAs (empty when the corrected label "
+            "is not NITRD); null otherwise."
+        )
+    )
+    classification_status: ClassificationStatus | None = Field(
+        default=None,
+        description=(
+            "Operator-path requests: ok or failed. null for requests made with "
+            "portal_submit_review_request."
+        ),
+    )
+    classification_evidence: ClassificationEvidence | None = Field(
+        default=None, description="ok only: what the classifier said (immutable)."
+    )
+    classification_error: str | None = Field(
+        default=None, description="failed only: why classification failed."
+    )
+    classified_at: datetime | None = Field(
+        default=None, description="ok only: when the evidence was produced."
+    )
+    classification_attempts: int | None = Field(
+        default=None, description="Operator path: attempts so far (>= 1)."
+    )
     sandbox: Literal[True] = True
     label: Literal["Not RCDC / demonstration only"] = NOT_RCDC
 

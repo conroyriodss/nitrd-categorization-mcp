@@ -38,6 +38,7 @@ EXPECTED_TOOLS = {
         "outputs_get_project_publications",
         "outputs_get_project_datacite",
         "outputs_score_project_intensity",
+        "outputs_find_cohort",
     },
     "nitrd_classifier": {
         "classifier_classify_parent",
@@ -61,6 +62,7 @@ IMPLEMENTED = {
     "outputs_get_project_publications",
     "outputs_get_project_datacite",
     "outputs_score_project_intensity",
+    "outputs_find_cohort",
     "classifier_classify_parent",
     "classifier_classify_subcategory",
     "classifier_explain",
@@ -83,6 +85,7 @@ VALID_ARGS = {
     "outputs_get_project_publications": {"core_project_num": "U24AI171008"},
     "outputs_get_project_datacite": {"core_project_num": "U24AI171008"},
     "outputs_score_project_intensity": {"core_project_num": "U24AI171008"},
+    "outputs_find_cohort": {"fy": 2021, "ic": "NIBIB", "activity": "U01"},
     "classifier_classify_parent": {"appl_id": 10506013},
     "classifier_classify_subcategory": {"appl_id": 10506013},
     "classifier_explain": {"appl_id": 10506013, "task": "parent"},

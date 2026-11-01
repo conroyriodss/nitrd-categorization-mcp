@@ -80,7 +80,13 @@ class Case:
 
 
 def build_cases() -> list[Case]:
-    """Fixed inputs: the demo projects, the negative control and error cases."""
+    """Fixed inputs: the demo projects, the negative control and error cases.
+
+    The FY2022 demo projects and the FY2022 find_projects case are pre-guardrail
+    Gate 4 fixtures (grandfathered; see shared/guardrail.py). They use the
+    per-project / per-category tools, not a guarded surface. The cohort cases
+    use FY2021 only; the one FY2022 cohort case checks that it is refused.
+    """
     projects = [*DEMO_PROJECTS, NEGATIVE_CONTROL]
     appls = [p["appl_id"] for p in projects]
     cores = [p["core_project_num"] for p in projects]
@@ -100,6 +106,22 @@ def build_cases() -> list[Case]:
             "find_projects", {"category": NITRD_CATEGORY, "fy": 2022, "limit": 5}, "ok"
         ),
         out("find_projects", {"category": "Not A Category", "fy": 2022}, "error"),
+        # outputs_find_cohort: cohort, both list modes, zero-return, refusals.
+        out("find_cohort", {"fy": 2021, "ic": "NIBIB", "activity": "U01"}, "ok"),
+        out("find_cohort", {"fy": 2021, "ic": "NIBIB"}, "ok"),
+        out("find_cohort", {"fy": 2021}, "ok"),
+        out("find_cohort", {"fy": 2021, "ic": "NIBIB", "activity": "R35"}, "ok"),
+        out("find_cohort", {"fy": 2022, "ic": "NIBIB", "activity": "U01"}, "error"),
+        out(
+            "find_cohort",
+            {"fy": 2021, "ic": "NIBIB", "activity": "U01", "limit": 51},
+            "error",
+        ),
+        out(
+            "find_cohort",
+            {"fy": 2021, "ic": "NIBIB", "activity": "U01", "limit": 201},
+            "error",
+        ),
         out("get_project_detail", bad_appl, "error"),
         out("get_project_publications", bad_core, "error"),
         out("get_project_datacite", bad_core, None),

@@ -23,8 +23,9 @@ mcp = FastMCP(
         "Sandbox review workflow for NITRD categorization suggestions. Preview "
         "who should review a project (portal_get_reviewer_assignment), submit a "
         "review request with the classifier suggestions and evidence, list a "
-        "reviewer's pending queue, record a decision (approved, rejected or "
-        "deferred), and read a project's review history. Reviewer IDs are "
+        "reviewer's pending queue, record a final decision (approved, rejected, "
+        "deferred, or override with the reviewer's corrected label and PCAs), "
+        "and read a project's review history. Reviewer IDs are "
         "fictional demo personas. Every record is marked sandbox = true and "
         "'Not RCDC / demonstration only'; nothing reaches an NIH system."
     ),

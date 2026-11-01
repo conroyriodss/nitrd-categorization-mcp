@@ -11,6 +11,8 @@ import re
 from typing import Any
 
 from nih_grants_outputs.config import settings
+from shared import prior_year
+from shared.prior_year import PRIOR_YEAR_MAX_CORES, prior_year_sql  # noqa: F401
 from shared.sql import Row, run_query
 from shared.tables import (
     DATACITE_OUTPUTS,
@@ -98,11 +100,9 @@ def clean(value: Any) -> str | None:
 
 # --- Projects -------------------------------------------------------------------
 
-_CATS = (
-    "filter(transform(split(coalesce(nih_spending_cats, ''), ';'), x -> trim(x)), "
-    "x -> x <> '')"
-)
-_MATCH = "(lower(x) = :name_a OR lower(x) = :name_b)"
+# One definition, shared with the prior-year SQL.
+_CATS = prior_year.CATS_SQL
+_MATCH = prior_year.MATCH_SQL
 
 FIND_PROJECTS_SQL = f"""
 WITH p AS (
@@ -142,6 +142,72 @@ async def category_seen(category: str) -> str | None:
         "outputs.category_exists", CATEGORY_EXISTS_SQL, {"name_a": a, "name_b": b}
     )
     return rows[0]["matched_name"] if rows else None
+
+
+# --- Cohorts (outputs_find_cohort) --------------------------------------------
+# The statement text and the bound parameters are returned to the caller as-is
+# (CohortQuery), so the cohort can be re-run and audited exactly. fy is bound
+# as a string: exporter_projects.fy is STRING.
+
+COHORT_SQL = f"""
+SELECT application_id, fy, full_project_num, core_project_num, subproject_id,
+       project_title, activity, administering_ic, pi_names, total_cost,
+       count(*) OVER () AS total_matching
+FROM {EXPORTER_PROJECTS}
+WHERE fy = :fy AND administering_ic = :ic AND activity = :activity
+ORDER BY CAST(application_id AS BIGINT)
+LIMIT :limit
+""".strip()
+
+COMBINATIONS_SQL = f"""
+SELECT administering_ic, activity, count(*) AS records
+FROM {EXPORTER_PROJECTS}
+WHERE fy = :fy
+GROUP BY administering_ic, activity
+ORDER BY administering_ic, activity
+""".strip()
+
+IC_COMBINATIONS_SQL = f"""
+SELECT administering_ic, activity, count(*) AS records
+FROM {EXPORTER_PROJECTS}
+WHERE fy = :fy AND administering_ic = :ic
+GROUP BY administering_ic, activity
+ORDER BY administering_ic, activity
+""".strip()
+
+
+def cohort_query(fy: int, ic: str, activity: str, limit: int) -> tuple[str, dict]:
+    return COHORT_SQL, {"fy": str(fy), "ic": ic, "activity": activity, "limit": limit}
+
+
+def combinations_query(fy: int, ic: str | None) -> tuple[str, dict]:
+    if ic is None:
+        return COMBINATIONS_SQL, {"fy": str(fy)}
+    return IC_COMBINATIONS_SQL, {"fy": str(fy), "ic": ic}
+
+
+async def find_cohort(statement: str, params: dict) -> list[Row]:
+    return await query("outputs.find_cohort", statement, params)
+
+
+async def cohort_combinations(statement: str, params: dict) -> list[Row]:
+    return await query("outputs.cohort_combinations", statement, params)
+
+
+# --- Prior-year RCDC NITRD labels (operator review screen) ---------------------
+# The SQL and rules live in shared.prior_year (the portal reads them too).
+
+
+async def prior_year_nitrd(
+    core_project_num: str | list[str], max_fy: int = 2020
+) -> dict[str, list[dict[str, Any]]]:
+    """{core: [{fy, is_nitrd, records}, ...]} for FY2015..max_fy, oldest first.
+
+    See shared.prior_year.prior_year_nitrd (this app's warehouse + name).
+    """
+    return await prior_year.prior_year_nitrd(
+        core_project_num, max_fy, query=query, query_name="outputs.prior_year_nitrd"
+    )
 
 
 PROJECT_DETAIL_SQL = f"""

@@ -71,6 +71,14 @@
       "po_name_sha256": []
     },
     {
+      "reviewer_id": "demo_ic_rep_nibib",
+      "role": "ic_nitrd_rep",
+      "role_title": "NIBIB NITRD Representative (demo)",
+      "ic": "NIBIB",
+      "active": true,
+      "po_name_sha256": []
+    },
+    {
       "reviewer_id": "demo_sia",
       "role": "sia_queue",
       "role_title": "NITRD SIA Review Queue (demo)",

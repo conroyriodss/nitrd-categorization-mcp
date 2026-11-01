@@ -22,6 +22,7 @@ from nitrd_classifier.app import mcp as classifier_mcp
 from nitrd_classifier.config import settings as classifier_settings
 from reviewer_portal.app import mcp as portal_mcp
 from shared import sql
+from tests import live_guard
 from tests.fake_sql import demo_sql
 
 LIVE = bool(os.getenv("DATABRICKS_WAREHOUSE_ID"))
@@ -54,6 +55,33 @@ def parent_model_file(tmp_path_factory):
         classifier_data.reset_model_cache()
         yield path
     classifier_data.reset_model_cache()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def live_zero_rows_guard():
+    """Read-only live runs leave the review tables at 0 rows (tests/live_guard.py).
+
+    Checked before the first test and after the last, failures included; a
+    nonzero count errors the run: stop and surface.
+    """
+    if not live_guard.read_only_live():
+        yield
+        return
+    before = live_guard.nonzero(live_guard.review_table_counts())
+    if before:
+        pytest.fail(
+            f"Review tables are not empty before a read-only live run: {before}. "
+            "Stop and surface.",
+            pytrace=False,
+        )
+    yield
+    after = live_guard.nonzero(live_guard.review_table_counts())
+    if after:
+        pytest.fail(
+            f"A read-only live run left rows in the review tables: {after}. "
+            "Stop and surface.",
+            pytrace=False,
+        )
 
 
 @pytest.fixture(autouse=True)

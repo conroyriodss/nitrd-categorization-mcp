@@ -6,7 +6,7 @@ from fastmcp import FastMCP
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from reviewer_portal import __version__
+from reviewer_portal import __version__, pages
 
 SERVICE = "reviewer-portal"
 
@@ -19,3 +19,5 @@ def register_routes(mcp: FastMCP) -> None:
     @mcp.custom_route("/version", methods=["GET"])
     async def version(request: Request) -> JSONResponse:
         return JSONResponse({"service": SERVICE, "version": __version__})
+
+    pages.register(mcp)

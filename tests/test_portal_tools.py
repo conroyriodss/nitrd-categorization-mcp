@@ -182,6 +182,8 @@ async def test_pending_then_decision(fictional_po_hashes, fake_sql):
     assert out["request"]["status"] == "approved"
     assert out["request"]["decided_by"] == assignee
     assert out["request"]["decision_rationale"] == decide["rationale"]
+    assert out["request"]["corrected_parent_label"] is None
+    assert out["request"]["corrected_pcas"] is None
     ev = out["event"]
     assert ev["event_type"] == "approved" and ev["actor_id"] == assignee
     assert ev["appl_id"] == DEMO and ev["sandbox"] is True and ev["label"] == NOT_RCDC
@@ -202,6 +204,115 @@ async def test_pending_then_decision(fictional_po_hashes, fake_sql):
         "approved",
     ]
     assert hist["requests"][0]["status"] == "approved"
+
+
+OVERRIDE_RATIONALE = "Reviewer reads this as imaging physics, not NITRD."
+
+
+async def _pending(**kw):
+    req = (await call("portal_submit_review_request", **submit_args(**kw)))["request"]
+    return req["request_id"], req["assignment"]["reviewer_id"]
+
+
+@pytest.mark.parametrize(
+    ("label", "pcas"), [(False, []), (True, ["AI", "LSDMA"])], ids=["no", "yes"]
+)
+async def test_override_records_corrections_and_is_final(
+    fictional_po_hashes, fake_sql, label, pcas
+):
+    rid, assignee = await _pending(task2_suggestion={"pcas": ["EHCS"]})
+    out = await call(
+        "portal_submit_review_decision",
+        request_id=rid,
+        reviewer_id=assignee,
+        decision="override",
+        rationale=OVERRIDE_RATIONALE,
+        corrected_parent_label=label,
+        corrected_pcas=pcas,
+    )
+    req, ev = out["request"], out["event"]
+    assert req["status"] == "override" and req["decided_by"] == assignee
+    assert req["corrected_parent_label"] is label
+    assert req["corrected_pcas"] == pcas
+    assert ev["event_type"] == "override"
+    assert ev["details"]["corrected_parent_label"] is label
+    assert ev["details"]["corrected_pcas"] == pcas
+    assert ev["details"]["proposal"]["task1_suggestion"]["suggestion"] == "nitrd"
+    assert ev["details"]["proposal"]["task2_suggestion"] == {
+        "pcas": ["EHCS"],
+        "vocabulary_id": None,
+    }
+    hist = await call("portal_get_review_history", appl_id=DEMO)
+    assert [e["event_type"] for e in hist["events"]] == [
+        "created",
+        "routed",
+        "override",
+    ]
+    assert hist["requests"][0]["corrected_pcas"] == pcas
+    for second in ("approved", "override"):  # final: any second decision fails
+        extra = (
+            {"corrected_parent_label": True, "corrected_pcas": ["AI"]}
+            if second == "override"
+            else {}
+        )
+        with pytest.raises(ToolError, match="already override"):
+            await call(
+                "portal_submit_review_decision",
+                request_id=rid,
+                reviewer_id=assignee,
+                decision=second,
+                rationale=OVERRIDE_RATIONALE,
+                **extra,
+            )
+    assert len(fake_sql.portal.review_events) == 2  # created + override
+
+
+@pytest.mark.parametrize(
+    ("decision", "extra", "match"),
+    [
+        ("override", {}, "needs both"),
+        ("override", {"corrected_parent_label": True}, "needs both"),
+        ("override", {"corrected_pcas": ["AI"]}, "needs both"),
+        (
+            "override",
+            {"corrected_parent_label": True, "corrected_pcas": []},
+            "at least one PCA",
+        ),
+        (
+            "override",
+            {"corrected_parent_label": False, "corrected_pcas": ["AI"]},
+            "cannot carry PCAs",
+        ),
+        (
+            "override",
+            {"corrected_parent_label": True, "corrected_pcas": ["AI", "AI"]},
+            "must not repeat",
+        ),
+        ("approved", {"corrected_parent_label": True}, "only for override"),
+        ("rejected", {"corrected_pcas": []}, "only for override"),
+        (
+            "deferred",
+            {"corrected_parent_label": False, "corrected_pcas": []},
+            "only for override",
+        ),
+    ],
+)
+async def test_correction_rules_leave_request_pending(
+    fictional_po_hashes, fake_sql, decision, extra, match
+):
+    rid, assignee = await _pending()
+    with pytest.raises(ToolError, match=match):
+        await call(
+            "portal_submit_review_decision",
+            request_id=rid,
+            reviewer_id=assignee,
+            decision=decision,
+            rationale=OVERRIDE_RATIONALE,
+            **extra,
+        )
+    (row,) = fake_sql.portal.requests
+    assert row["status"] == "pending" and row["corrected_pcas"] is None
+    assert [e["event_type"] for e in fake_sql.portal.review_events] == ["created"]
 
 
 async def test_decision_on_unknown_request():

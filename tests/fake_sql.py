@@ -234,6 +234,10 @@ PORTAL_PROJECTS = [
     _routing_row(
         10304125, 2022, "R01GM125981", "5R01GM125981-05", "GM", FAKE_PO["NIGMS"]
     ),
+    # Step G override lifecycle project (FY2021 NIBIB; its PO has no persona).
+    _routing_row(
+        10075931, 2021, "R01EB016064", "5R01EB016064-08", "EB", "NOT A PERSONA, PO"
+    ),
     # Parent award (NIAID, PO matches demo_po_niaid_01) and its subproject.
     _routing_row(
         90000100, 2022, "P01AI000100", "5P01AI000100-02", "AI", FAKE_PO["NIAID"]
@@ -285,11 +289,15 @@ class FakePortal:
         self.requests: list[dict] = []
         self.review_events: list[dict] = []
         self.routing_events: list[dict] = []
+        #: portal.prior_year_nitrd rows: {core_project_num, fy, records,
+        #: labelled, nitrd}; tests add their own.
+        self.prior_rows: list[dict] = []
 
     def install(self, fake: FakeSql) -> FakeSql:
         for name in (
             "project",
             "parent",
+            "prior_year_nitrd",
             "request_by_key",
             "request_by_id",
             "event_by_id",
@@ -298,10 +306,25 @@ class FakePortal:
             "history_events",
             "submit",
             "decide",
+            "submit_cohort",
+            "retry_classification",
+            "cohort_requests",
+            "cohort_events",
         ):
             fake.on(f"portal.{name}", getattr(self, name))
         fake.portal = self
         return fake
+
+    STATUSES = ("pending", "approved", "rejected", "deferred", "override")
+    DECISION_EVENTS = ("approved", "rejected", "deferred", "override")
+    CLASSIFICATION_EVENTS = ("classified", "classification_failed")
+    CLASSIFICATION_COLS = (
+        "classification_status",
+        "classification_evidence",
+        "classification_error",
+        "classified_at",
+        "classification_attempts",
+    )
 
     @staticmethod
     def _check(row: dict, types: tuple[str, ...] | None = None) -> dict:
@@ -311,8 +334,50 @@ class FakePortal:
             assert row["event_type"] in types, "CHECK event_type"
         return row
 
+    @classmethod
+    def _check_request(cls, row: dict) -> dict:
+        cls._check(row)
+        assert row["status"] in cls.STATUSES, "CHECK rr_status"
+        corrected = (row["corrected_parent_label"], row["corrected_pcas"])
+        if row["status"] == "override":
+            assert None not in corrected, "CHECK rr_override (override needs both)"
+        else:
+            assert corrected == (None, None), "CHECK rr_override (others: null)"
+        cs = row["classification_status"]
+        ev, err, at, n = (row[c] for c in cls.CLASSIFICATION_COLS[1:])
+        if cs is None:
+            assert (ev, err, at, n) == (None,) * 4, "CHECK rr_classification (null)"
+        elif cs == "ok":
+            assert ev is not None and err is None and at is not None, (
+                "CHECK rr_classification (ok)"
+            )
+            assert (n or 0) >= 1, "CHECK rr_classification (ok attempts)"
+        elif cs == "failed":
+            assert ev is None and err is not None and at is None, (
+                "CHECK rr_classification (failed)"
+            )
+            assert (n or 0) >= 1, "CHECK rr_classification (failed attempts)"
+        else:
+            raise AssertionError("CHECK rr_classification (status)")
+        assert row["status"] == "pending" or cs != "failed", (
+            "CHECK rr_decided_classified"
+        )
+        return row
+
+    @staticmethod
+    def _bool(value):
+        return None if value is None else {"true": True, "false": False}[value]
+
     def project(self, p, _s):
         return [dict(r) for r in self.projects if r["application_id"] == p["appl_id"]]
+
+    def prior_year_nitrd(self, p, _s):
+        cores = {v for k, v in p.items() if k.startswith("core_")}
+        return [
+            dict(r)
+            for r in self.prior_rows
+            if r["core_project_num"] in cores and p["min_fy"] <= r["fy"] <= p["max_fy"]
+        ]
 
     def parent(self, p, _s):
         return [
@@ -380,8 +445,13 @@ class FakePortal:
                 "decided_by": None,
                 "decision_at": None,
                 "decision_rationale": None,
+                "corrected_parent_label": None,
+                "corrected_pcas": None,
             }
-            self.requests.append(self._check(row))
+            row |= {c: p.get(c) for c in self.CLASSIFICATION_COLS}
+            if row["classification_attempts"] is not None:
+                row["classification_attempts"] = int(row["classification_attempts"])
+            self.requests.append(self._check_request(row))
         if not any(e["event_id"] == p["created_event_id"] for e in self.review_events):
             ev = self._event(
                 p["created_event_id"],
@@ -404,19 +474,99 @@ class FakePortal:
             self.routing_events.append(self._check(ev, ("routed",)))
         return []
 
+    def submit_cohort(self, p, s):
+        self.submit(p, s)
+        if not any(
+            e["event_id"] == p["classification_event_id"] for e in self.review_events
+        ):
+            ev = self._event(
+                p["classification_event_id"],
+                p,
+                p["classification_event_type"],
+                p["requested_by"],
+                p["classification_details"],
+                p["created_at"],
+            )
+            self.review_events.append(self._check(ev, self.CLASSIFICATION_EVENTS))
+        return []
+
+    def retry_classification(self, p, _s):
+        attempt, seen = int(p["attempt"]), int(p["seen_attempts"])
+        for r in self.requests:
+            if (
+                r["request_id"] == p["request_id"]
+                and r["status"] == "pending"
+                and r["classification_status"] == "failed"
+                and r["classification_attempts"] == seen
+            ):
+                new = r | {
+                    "classification_status": p["classification_status"],
+                    "classification_evidence": p["classification_evidence"],
+                    "classification_error": p["classification_error"],
+                    "classified_at": p["classified_at"],
+                    "classification_attempts": attempt,
+                    "task1_suggestion": r["task1_suggestion"] or p["task1_suggestion"],
+                    "task2_suggestion": r["task2_suggestion"] or p["task2_suggestion"],
+                }
+                r |= self._check_request(new)
+        for r in self.requests:
+            if (
+                r["request_id"] == p["request_id"]
+                and r["classification_attempts"] == attempt
+                and r["classification_status"] == p["classification_status"]
+                and not any(e["event_id"] == p["event_id"] for e in self.review_events)
+            ):
+                ev = self._event(
+                    p["event_id"],
+                    p | {"appl_id": r["appl_id"]},
+                    p["event_type"],
+                    p["actor_id"],
+                    p["details"],
+                    p["at"],
+                )
+                self.review_events.append(self._check(ev, self.CLASSIFICATION_EVENTS))
+        return []
+
+    def cohort_events(self, p, _s):
+        ids = {
+            r["request_id"]
+            for r in self.requests
+            if r["idempotency_key"].startswith(p["prefix"])
+        }
+        rows = [
+            e
+            for e in self.review_events + self.routing_events
+            if e["request_id"] in ids
+        ]
+        rows.sort(
+            key=lambda e: (e["at"], _EVENT_ORDER.get(e["event_type"], 2), e["event_id"])
+        )
+        return [dict(e) for e in rows]
+
+    def cohort_requests(self, p, _s):
+        rows = [
+            r for r in self.requests if r["idempotency_key"].startswith(p["prefix"])
+        ]
+        rows.sort(key=lambda r: (r["appl_id"], r["request_id"]))
+        return [dict(r) for r in rows[: p["limit"]]]
+
     def decide(self, p, _s):
         for r in self.requests:
             if (
                 r["request_id"] == p["request_id"]
                 and r["status"] == "pending"
                 and r["assigned_reviewer_id"] == p["reviewer_id"]
+                and r.get("classification_status") != "failed"
             ):
-                r |= {
+                new = r | {
                     "status": p["decision"],
                     "decided_by": p["reviewer_id"],
                     "decision_at": p["at"],
                     "decision_rationale": p["rationale"],
+                    "corrected_parent_label": self._bool(p["corrected_parent_label"]),
+                    "corrected_pcas": p["corrected_pcas"],
                 }
+                r |= self._check_request(new)  # a failing CHECK leaves r as it was
         for r in self.requests:
             if (
                 r["request_id"] == p["request_id"]
@@ -433,10 +583,64 @@ class FakePortal:
                     p["details"],
                     p["at"],
                 )
-                self.review_events.append(
-                    self._check(ev, ("approved", "rejected", "deferred"))
-                )
+                self.review_events.append(self._check(ev, self.DECISION_EVENTS))
         return []
+
+
+# --- Cohorts: synthetic FY2021 records (fictional IDs and names) --------------
+
+
+def _cohort_row(appl: int, ic: str, activity: str, fy: str = "2021") -> dict:
+    return {
+        "application_id": str(appl),
+        "fy": fy,
+        "full_project_num": f"5{activity}{ic}{appl % 1000000:06d}-02",
+        "core_project_num": f"{activity}{ic}{appl % 1000000:06d}",
+        "subproject_id": None,
+        "project_title": f"Synthetic {ic} {activity} project {appl}",
+        "activity": activity,
+        "administering_ic": ic,
+        "pi_names": "EXAMPLE, BLAKE ;SAMPLE, CASEY  (contact)",
+        "total_cost": "500000",
+    }
+
+
+COHORT_ROWS = [
+    *(_cohort_row(950000 + i, "EB", "U01") for i in (3, 1, 2)),  # unsorted
+    _cohort_row(950010, "EB", "R01"),
+    _cohort_row(950020, "CA", "U01"),
+    _cohort_row(950030, "VA", "I01"),  # non-NIH code: no abbreviation
+    _cohort_row(950040, "EB", "U01", fy="2020"),
+]
+
+
+def _cohort(p, _s):
+    rows = sorted(
+        (
+            r
+            for r in COHORT_ROWS
+            if r["fy"] == p["fy"]
+            and r["administering_ic"] == p["ic"]
+            and r["activity"] == p["activity"]
+        ),
+        key=lambda r: int(r["application_id"]),
+    )
+    return [r | {"total_matching": str(len(rows))} for r in rows[: p["limit"]]]
+
+
+def _combinations(p, _s):
+    counts: dict[tuple[str, str], int] = {}
+    for r in COHORT_ROWS:
+        if (
+            r["fy"] == p["fy"]
+            and p.get("ic", r["administering_ic"]) == r["administering_ic"]
+        ):
+            key = (r["administering_ic"], r["activity"])
+            counts[key] = counts.get(key, 0) + 1
+    return [
+        {"administering_ic": ic, "activity": act, "records": str(n)}
+        for (ic, act), n in sorted(counts.items())
+    ]
 
 
 def demo_sql() -> FakeSql:
@@ -444,6 +648,8 @@ def demo_sql() -> FakeSql:
     fake = (
         FakeSql()
         .on("outputs.find_projects", _find)
+        .on("outputs.find_cohort", _cohort)
+        .on("outputs.cohort_combinations", _combinations)
         .on("outputs.category_exists", _category)
         .on("outputs.project_detail", _detail)
         .on("outputs.core_exists", _core)

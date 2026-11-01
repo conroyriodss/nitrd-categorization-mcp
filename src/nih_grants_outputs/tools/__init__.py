@@ -6,6 +6,7 @@ Step 3: input/output schemas are final; bodies raise not_implemented.
     get_project_publications.py   outputs_get_project_publications
     get_project_datacite.py       outputs_get_project_datacite
     score_project_intensity.py    outputs_score_project_intensity
+    find_cohort.py                outputs_find_cohort (FY guardrail; list mode)
 """
 
 from __future__ import annotations
@@ -13,6 +14,7 @@ from __future__ import annotations
 from fastmcp import FastMCP
 
 from nih_grants_outputs.tools import (
+    find_cohort,
     find_projects,
     get_project_datacite,
     get_project_detail,
@@ -26,6 +28,7 @@ MODULES = (
     get_project_publications,
     get_project_datacite,
     score_project_intensity,
+    find_cohort,
 )
 
 
