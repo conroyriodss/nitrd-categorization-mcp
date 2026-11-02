@@ -59,10 +59,12 @@ def parent_model_file(tmp_path_factory):
 
 @pytest.fixture(scope="session", autouse=True)
 def live_zero_rows_guard():
-    """Read-only live runs leave the review tables at 0 rows (tests/live_guard.py).
+    """Read-only live runs leave the review tables at 0 rows and commit nothing
+    to them (tests/live_guard.py).
 
     Checked before the first test and after the last, failures included; a
-    nonzero count errors the run: stop and surface.
+    nonzero count, or any table whose Delta version moved, errors the run:
+    stop and surface.
     """
     if not live_guard.read_only_live():
         yield
@@ -74,12 +76,18 @@ def live_zero_rows_guard():
             "Stop and surface.",
             pytrace=False,
         )
+    versions_before = live_guard.review_table_versions()
     yield
     after = live_guard.nonzero(live_guard.review_table_counts())
+    moved = live_guard.increased(versions_before, live_guard.review_table_versions())
+    problems = []
     if after:
+        problems.append(f"left rows in the review tables: {after}")
+    if moved:
+        problems.append(f"committed to the review tables (Delta version): {moved}")
+    if problems:
         pytest.fail(
-            f"A read-only live run left rows in the review tables: {after}. "
-            "Stop and surface.",
+            f"A read-only live run {'; and '.join(problems)}. Stop and surface.",
             pytrace=False,
         )
 

@@ -43,7 +43,15 @@ migration failure). The sandbox tables held 0 rows after the run.
 | 4 | `tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10388671]` | steps 9, 9b, 10 | same | 001 + 002 |
 | 5 | `tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10445135]` | steps 9, 9b, 10 | same | 001 + 002 |
 
-Items 3-5 fail at the read that precedes the write, so they write nothing.
+Before the migrations, items 3-5 failed at the read that precedes the write,
+so they wrote nothing. **Corrected at G.5 (2026-11-02), together with a code
+fix:** after the migrations they reached step 9, and in a read-only stdio run
+each chain wrote one sandbox request, one review event and one routing event,
+then deleted them (net 0 rows, so the zero-rows guard passed). Since the G.5
+fix, steps 9, 9b and 10 run only with `PORTAL_LIVE_WRITE_TESTS=1`: in a
+read-only run steps 1-8 must pass and the test then skips with that reason.
+The guard also fails on any Delta version change (below).
+
 Counting units: 5 pytest failures; 4 parity cases; 9 contract checks; 9 e2e
 steps.
 
@@ -136,6 +144,11 @@ A nonzero count errors the run, also after test failures. At Step G the
 before-migration run must end with the guard passing; the migration itself
 must preserve rows (run_migration.py verifies), which is a separate check.
 
+Since G.5 the guard also reads each table's latest Delta version
+(`DESCRIBE HISTORY ... LIMIT 1`) before the first test and after the last, and
+errors the run if any version moved: a read-only run commits nothing, not even
+a write it deletes again or a DELETE that matches no rows.
+
 ## Expected after migrations
 
 0 failed. The parity, contract and e2e tests above pass, and
@@ -149,6 +162,40 @@ Now checked as section 1 of `STEP_G_RUNBOOK.md`, before the deploy.
   portal's app.yaml env. Unset, the portal defaults to
   `http://127.0.0.1:8001/mcp` and every operator page shows "Outputs app
   unavailable" (502). The portal SP already has CAN USE on the outputs app.
+
+## G.5 results (2026-11-02, commit 0e6ae7c, stdio, local servers on the live warehouse)
+
+All 11 items pass; every failing check measured before the migrations passes.
+
+| # | Test | Before migrations | G.5 |
+| --- | --- | --- | --- |
+| 1 | `test_parity.py::test_every_tool_matches_in_process` | 4 of 71 cases | 71/71 cases pass |
+| 2 | `test_smoke_contract.py::test_contracts_on_live_apps` | 9 `pending(<persona>)` checks | 9 active personas pass; inactive `demo_po_nhlbi_01` refused; unknown persona a tool error |
+| 3-5 | `test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10506013, 10388671, 10445135]` | steps 9, 9b, 10 each | all strict checks pass (write mode); read-only see below |
+| 6 | `test_portal_submission.py::test_live_fy2021_nibib_u01_submit_writes_exactly_41` | `portal.cohort_requests` | pass (425 s) |
+| 6a-c | `test_portal_lifecycle.py::test_lifecycle_live[10506013, 10388671, 10445135]` | L3, L13 | pass |
+| 6d | `test_portal_lifecycle.py::test_lifecycle_live[10075931]` (override) | L3, L13 incl. corrections | all 23 checks L1-L14 pass |
+| 7 | `test_portal_tools.py::test_live_submit_idempotent_and_decide` | `portal.request_by_key` | pass |
+
+* Read-only (19:14-19:22Z): 465 passed, 7 skipped, 0 failed. Skips: the 6
+  write-mode tests and `test_vendored_engine_matches_upstream`
+  (`UAC_NITRD_ROOT` unset).
+* Write mode (20:58-21:18Z): 471 passed, 1 skipped (the same vendored-engine
+  test), 0 failed. Item 6 at its peak (`review_events` v192, 21:12:41Z): 41
+  requests (41 distinct appl_id, all sandbox, pending, `classification_status`
+  ok, keys `cohort:2021:NIBIB:U01:`), 41 created + 41 classified events, 0
+  classification_failed, 41 routing events. Cleanup reconciles: deleted 49
+  requests (41 cohort + 4 lifecycle + 1 tools + 3 e2e), 95 review events
+  (82 + 8 + 2 + 3), 49 routing events; 0/0/0 after; versions rr 142-205,
+  re 139-202, ro 123-181. Manifest, log and junit:
+  `/Volumes/users/conroyri/nitrd_hackathon_v1_raw/runs/step_g/2026-11-02T2058Z_g5_write_mode/`
+  (`manifest.json` sha256 ca25cad3...).
+* After the fix (21:44-21:51Z), read-only: 464 passed, 10 skipped, 0 failed;
+  items 3-5 skip with "steps 1-8 passed; read-only run: steps 9, 9b and 10
+  write sandbox rows"; guard passed; latest versions unchanged (rr 205, re
+  202, ro 181). Write-mode e2e only: 3 passed, 9/9b/10 checks pass, each chain
+  1 write + 1 delete per table (rr 206-211, re 203-208, ro 182-187), 0/0/0.
+  Logs: `.../runs/step_g/2026-11-02T2144Z_g5_postfix/`.
 
 ## Maintenance
 

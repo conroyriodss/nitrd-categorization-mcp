@@ -698,6 +698,17 @@ def test_zero_rows_guard_scope_and_statement(monkeypatch):
     assert live_guard.nonzero({"a": 0, "b": 2}) == {"b": 2}
 
 
+def test_zero_rows_guard_version_check():
+    assert [t for t, _ in live_guard.VERSION_STATEMENTS] == list(live_guard.TABLES)
+    for table, stmt in live_guard.VERSION_STATEMENTS:
+        assert " ".join(stmt.split()) == f"DESCRIBE HISTORY {table} LIMIT 1"
+    same = {"a": 5, "b": 7}
+    assert live_guard.increased(same, dict(same)) == {}
+    assert live_guard.increased(same, {"a": 5, "b": 8}) == {"b": "7 -> 8"}
+    assert live_guard.increased(same, {"a": 5}) == {"b": "7 -> None"}  # lost read
+    assert live_guard.increased({"a": 5}, same) == {"b": "None -> 7"}
+
+
 # --- Live: the demo cohort ------------------------------------------------------
 
 

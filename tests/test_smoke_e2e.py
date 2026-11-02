@@ -22,11 +22,14 @@ or from NITRD_E2E_TOKEN. A PAT is rejected up front with a clear message.
 http mode writes real sandbox rows, so it also needs PORTAL_LIVE_WRITE_TESTS=1
 and DATABRICKS_WAREHOUSE_ID.
 
-The chain only runs live (DATABRICKS_WAREHOUSE_ID set), and step 9 then writes
-real sandbox rows in every transport. After each project the test checks on
-the warehouse that the step-9 request and its created/routed events persisted,
-then deletes exactly those rows by request_id (NITRD_E2E_KEEP_ROWS=1 keeps
-them).
+The chain only runs live (DATABRICKS_WAREHOUSE_ID set). Step 9 writes real
+sandbox rows, so steps 9, 9b (the idempotent repeat) and 10 (history of the
+step-9 request) run only in write mode (PORTAL_LIVE_WRITE_TESTS=1), in every
+transport. In a read-only run steps 1-8 still run and must pass, then the test
+skips with that reason and writes nothing. In write mode, after each project
+the test checks on the warehouse that the step-9 request and its
+created/routed events persisted, then deletes exactly those rows by request_id
+(NITRD_E2E_KEEP_ROWS=1 keeps them).
 
 Outcome rules:
 * Any call that errors with something other than the skeleton's "not
@@ -80,6 +83,33 @@ FIND_LIMIT = 10
 CALL_TIMEOUT_S = 180
 NOT_IMPLEMENTED = "not implemented yet"
 PARENT_HIGH, PARENT_LOW = 0.7, 0.3
+
+#: Step 9 creates the review request; 9b repeats it and 10 reads it back, so
+#: all three need write mode.
+WRITE_STEPS = (
+    ("9", "reviewer_portal", "portal_submit_review_request"),
+    ("9b", "reviewer_portal", "portal_submit_review_request"),
+    ("10", "reviewer_portal", "portal_get_review_history"),
+)
+WRITE_CHECKS = (
+    "9 review request is sandbox=true and labelled Not RCDC",
+    "9 repeat returns the same request_id with created=false",
+    "10 history holds exactly one row for the request",
+    "10 history shows created + routed events",
+)
+PERSIST_CHECKS = (
+    "9 request row persisted in review_requests (warehouse)",
+    "10 created + routed events persisted (warehouse)",
+)
+READ_ONLY_REASON = (
+    "read-only run: steps 9, 9b and 10 write sandbox rows; "
+    "set PORTAL_LIVE_WRITE_TESTS=1"
+)
+
+
+def _writes_enabled() -> bool:
+    return os.getenv("PORTAL_LIVE_WRITE_TESTS") == "1"
+
 
 # MeSH descriptors that mark a publication as computational (intensity sanity).
 COMPUTATIONAL_MESH = frozenset(
@@ -205,7 +235,7 @@ class Step:
     server: str
     tool: str
     args: dict[str, Any]
-    status: str = "pending"  # ok | not_implemented | error
+    status: str = "pending"  # ok | not_implemented | error | skipped
     message: str = ""
     data: dict[str, Any] | None = None
 
@@ -213,7 +243,7 @@ class Step:
 @dataclass
 class Check:
     name: str
-    outcome: str  # strict: pass | fail | pending; sanity: PASS | WARN | n/a
+    outcome: str  # strict: pass | fail | pending | skip; sanity: PASS | WARN | n/a
     detail: str = ""
 
 
@@ -257,6 +287,14 @@ class Run:
         """Strict check; ok=None means its inputs are not available yet."""
         outcome = "pending" if ok is None else ("pass" if ok else "fail")
         self.strict.append(Check(name, outcome, detail))
+
+    def skip(self, step: str, server: str, tool: str, reason: str) -> None:
+        """Record a step that was deliberately not called (read-only run)."""
+        self.steps.append(Step(step, server, tool, {}, "skipped", reason))
+
+    def skip_check(self, name: str, reason: str) -> None:
+        """Strict check not evaluated on purpose (read-only run)."""
+        self.strict.append(Check(name, "skip", reason))
 
     def observe(self, name: str, ok: bool | None, detail: str = "") -> None:
         """Sanity check; logged only."""
@@ -404,26 +442,35 @@ async def run_scenario(clients: dict[str, Client], project: dict) -> Run:
     preview = await run.call(
         clients, "8", portal, "portal_get_reviewer_assignment", {"appl_id": x}
     )
-    request_args = build_request(project, run)
-    first = await run.call(
-        clients, "9", portal, "portal_submit_review_request", request_args
-    )
-    repeat = await run.call(
-        clients, "9b", portal, "portal_submit_review_request", request_args
-    )
-    history = await run.call(
-        clients, "10", portal, "portal_get_review_history", {"appl_id": x}
-    )
+    writes = _writes_enabled()
+    if writes:
+        request_args = build_request(project, run)
+        first = await run.call(
+            clients, "9", portal, "portal_submit_review_request", request_args
+        )
+        repeat = await run.call(
+            clients, "9b", portal, "portal_submit_review_request", request_args
+        )
+        history = await run.call(
+            clients, "10", portal, "portal_get_review_history", {"appl_id": x}
+        )
+    else:
+        for step, server, tool in WRITE_STEPS:
+            run.skip(step, server, tool, READ_ONLY_REASON)
+        first = repeat = history = None
 
     _strict_checks(
-        run, project, found, detail, datacite, intensity, first, repeat, history
+        run, project, found, detail, datacite, intensity, first, repeat, history, writes
     )
+    if not writes:
+        for name in WRITE_CHECKS:
+            run.skip_check(name, READ_ONLY_REASON)
     _sanity_checks(run, project, pubs, parent, sub, preview, first)
     return run
 
 
 def _strict_checks(
-    run, project, found, detail, datacite, intensity, first, repeat, history
+    run, project, found, detail, datacite, intensity, first, repeat, history, writes
 ) -> None:
     x, core = project["appl_id"], project["core_project_num"]
     run.expect(
@@ -451,6 +498,8 @@ def _strict_checks(
         if intensity is None
         else f"status={intensity['status']} overall={intensity.get('overall')}",
     )
+    if not writes:
+        return  # read-only run: run_scenario records the step 9-10 checks as skip
     request = (first or {}).get("request")
     run.expect(
         "9 review request is sandbox=true and labelled Not RCDC",
@@ -586,11 +635,17 @@ async def test_prompt_bj_ten_step_chain(project, capsys, live_sql):
         pytest.skip("http mode writes sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1")
     async with three_clients() as clients:
         run = await run_scenario(clients, project)
-    # live_sql guarantees a real warehouse, so step 9 wrote real sandbox rows
-    # whatever the transport; verify and remove them.
-    _verify_persisted_and_clean_up(run)
+    if _writes_enabled():
+        # live_sql guarantees a real warehouse, so step 9 wrote real sandbox
+        # rows whatever the transport; verify and remove them.
+        _verify_persisted_and_clean_up(run)
+    else:
+        for name in PERSIST_CHECKS:
+            run.skip_check(name, READ_ONLY_REASON)
     RUNS[project["appl_id"]] = run
     run.finish(capsys)
+    if not _writes_enabled():
+        pytest.skip(f"steps 1-8 passed; {READ_ONLY_REASON}")
 
 
 async def test_negative_control_parent_probability(capsys, live_sql):
@@ -649,9 +704,11 @@ def test_intensity_tracks_computational_publications(capsys):
 # --- Harness self-test --------------------------------------------------------
 
 
-def _fake_servers(project: dict) -> dict[str, Any]:
+def _fake_servers(project: dict, calls: list[str] | None = None) -> dict[str, Any]:
     """In-memory stand-ins with the real tool names and the result shapes the
-    harness reads, so the pass path is proven before the real tools land."""
+    harness reads, so the pass path is proven before the real tools land.
+    Portal calls are appended to `calls` when given."""
+    calls = [] if calls is None else calls
     from uuid import uuid4
 
     from fastmcp import FastMCP
@@ -715,6 +772,7 @@ def _fake_servers(project: dict) -> dict[str, Any]:
         task1_suggestion: dict | None = None,
         task2_suggestion: dict | None = None,
     ) -> dict:
+        calls.append("portal_submit_review_request")
         key = json.dumps(
             [appl_id, evidence, reviewer_id, task1_suggestion, task2_suggestion],
             sort_keys=True,
@@ -735,6 +793,7 @@ def _fake_servers(project: dict) -> dict[str, Any]:
 
     @portal.tool
     def portal_get_review_history(appl_id: int) -> dict:
+        calls.append("portal_get_review_history")
         return {
             "appl_id": appl_id,
             "requests": list(requests.values()),
@@ -748,15 +807,55 @@ def _fake_servers(project: dict) -> dict[str, Any]:
     }
 
 
-async def test_harness_passes_when_every_tool_answers():
-    project = DEMO_PROJECTS[0]
+async def _fake_run(project: dict, calls: list[str]) -> Run:
     async with AsyncExitStack() as stack:
         clients = {
             name: await stack.enter_async_context(Client(server))
-            for name, server in _fake_servers(project).items()
+            for name, server in _fake_servers(project, calls).items()
         }
-        run = await run_scenario(clients, project)
+        return await run_scenario(clients, project)
+
+
+async def test_harness_passes_when_every_tool_answers(monkeypatch):
+    monkeypatch.setenv("PORTAL_LIVE_WRITE_TESTS", "1")
+    project, calls = DEMO_PROJECTS[0], []
+    run = await _fake_run(project, calls)
+    assert calls == [
+        "portal_submit_review_request",
+        "portal_submit_review_request",
+        "portal_get_review_history",
+    ]
     assert [s.status for s in run.steps] == ["ok"] * 11, run.render()
     assert {c.outcome for c in run.strict} == {"pass"}, run.render()
     assert {c.outcome for c in run.sanity} == {"PASS"}, run.render()
     assert _computational_pubs(run.get("3")) == 12
+
+
+async def test_harness_read_only_never_calls_the_write_steps(monkeypatch):
+    monkeypatch.delenv("PORTAL_LIVE_WRITE_TESTS", raising=False)
+    project, calls = DEMO_PROJECTS[0], []
+    run = await _fake_run(project, calls)
+    assert calls == [], run.render()  # no submit, no history
+    assert [(s.step, s.status) for s in run.steps] == [
+        *((str(n), "ok") for n in range(1, 9)),
+        ("9", "skipped"),
+        ("9b", "skipped"),
+        ("10", "skipped"),
+    ], run.render()
+    outcome = {c.name: c.outcome for c in run.strict}
+    assert {outcome[n] for n in WRITE_CHECKS} == {"skip"}, run.render()
+    assert {o for n, o in outcome.items() if n not in WRITE_CHECKS} == {"pass"}
+    assert READ_ONLY_REASON in run.render()
+    for name in PERSIST_CHECKS:  # what the live test adds before finish()
+        run.skip_check(name, READ_ONLY_REASON)
+    run.finish(_NoCapture())  # passes: skip is neither fail nor pending
+
+
+class _NoCapture:
+    """capsys stand-in for calling Run.finish outside a live test."""
+
+    @staticmethod
+    def disabled():
+        from contextlib import nullcontext
+
+        return nullcontext()
