@@ -12,8 +12,8 @@ from typing import Any
 
 from nih_grants_outputs.config import settings
 from shared import prior_year
-from shared.prior_year import PRIOR_YEAR_MAX_CORES, prior_year_sql  # noqa: F401
-from shared.sql import Row, run_query
+from shared.prior_year import PRIOR_YEAR_MAX_CORES, PRIOR_YEAR_SQL  # noqa: F401
+from shared.sql import Row, json_array_param, run_query
 from shared.tables import (
     DATACITE_OUTPUTS,
     EXPORTER_ABSTRACTS,
@@ -268,9 +268,19 @@ LIMIT :limit
 """
 
 
-def _pmid_list(pmids: list[int]) -> str:
-    # pmids are ints from our own query, so formatting them is injection-safe.
-    return ", ".join(str(int(p)) for p in pmids)
+# The PMIDs travel as ONE bound JSON parameter (json_array_param), never as
+# SQL text: the statements below are fixed strings.
+MESH_SQL = f"""
+SELECT pmid, descriptor_ui, descriptor_name, major_topic FROM {PUBMED_MESH}
+WHERE array_contains(from_json(:pmids, 'ARRAY<BIGINT>'), pmid)
+ORDER BY pmid, descriptor_ui
+""".strip()
+
+PUBTYPES_SQL = f"""
+SELECT pmid, pubtype_name FROM {PUBMED_PUBTYPES}
+WHERE array_contains(from_json(:pmids, 'ARRAY<BIGINT>'), pmid)
+ORDER BY pmid, pubtype_name
+""".strip()
 
 
 async def fetch_publications(core: str, limit: int) -> tuple[int, list[Row]]:
@@ -281,17 +291,9 @@ async def fetch_publications(core: str, limit: int) -> tuple[int, list[Row]]:
     if not rows:
         return 0, []
     total = int(rows[0]["total_linked"])
-    ids = _pmid_list([r["pmid"] for r in rows])
-    mesh_rows = await query(
-        "outputs.mesh",
-        f"SELECT pmid, descriptor_ui, descriptor_name, major_topic FROM {PUBMED_MESH} "
-        f"WHERE pmid IN ({ids}) ORDER BY pmid, descriptor_ui",
-    )
-    type_rows = await query(
-        "outputs.pubtypes",
-        f"SELECT pmid, pubtype_name FROM {PUBMED_PUBTYPES} "
-        f"WHERE pmid IN ({ids}) ORDER BY pmid, pubtype_name",
-    )
+    pmids = json_array_param([r["pmid"] for r in rows], "pmids", int)
+    mesh_rows = await query("outputs.mesh", MESH_SQL, {"pmids": pmids})
+    type_rows = await query("outputs.pubtypes", PUBTYPES_SQL, {"pmids": pmids})
     mesh: dict[int, list[dict]] = {}
     for m in mesh_rows:
         mesh.setdefault(m["pmid"], []).append(

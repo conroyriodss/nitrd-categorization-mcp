@@ -20,7 +20,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any
 
 from shared.guardrail import require_build_fy
-from shared.sql import Row
+from shared.sql import Row, json_array_param
 from shared.tables import EXPORTER_PROJECTS, FIRST_FY, NITRD_CATEGORY_NAMES
 
 PRIOR_YEAR_MAX_CORES = 200
@@ -36,15 +36,15 @@ NITRD_LOWER = tuple(n.lower() for n in NITRD_CATEGORY_NAMES)
 Query = Callable[[str, str, dict[str, Any]], Awaitable[list[Row]]]
 
 
-def prior_year_sql(n_cores: int) -> str:
-    cores = ", ".join(f":core_{i}" for i in range(n_cores))
-    return f"""
+#: Fixed statement: the cores travel as ONE bound JSON parameter (:cores, built
+#: by json_array_param), never as SQL text or generated placeholder names.
+PRIOR_YEAR_SQL = f"""
 WITH p AS (
   SELECT core_project_num, CAST(fy AS INT) AS fy,
          coalesce(trim(nih_spending_cats), '') <> '' AS labelled,
          exists({CATS_SQL}, x -> {MATCH_SQL}) AS nitrd
   FROM {EXPORTER_PROJECTS}
-  WHERE core_project_num IN ({cores})
+  WHERE array_contains(from_json(:cores, 'ARRAY<STRING>'), core_project_num)
     AND CAST(fy AS INT) BETWEEN :min_fy AND :max_fy
 )
 SELECT core_project_num, fy, count(*) AS records,
@@ -81,9 +81,14 @@ async def prior_year_nitrd(
     if not cores or max_fy < FIRST_FY:
         return out
     name_a, name_b = NITRD_LOWER
-    params: dict[str, Any] = {f"core_{i}": c for i, c in enumerate(cores)}
-    params |= {"min_fy": FIRST_FY, "max_fy": max_fy, "name_a": name_a, "name_b": name_b}
-    rows = await query(query_name, prior_year_sql(len(cores)), params)
+    params: dict[str, Any] = {
+        "cores": json_array_param(cores, "cores", str),
+        "min_fy": FIRST_FY,
+        "max_fy": max_fy,
+        "name_a": name_a,
+        "name_b": name_b,
+    }
+    rows = await query(query_name, PRIOR_YEAR_SQL, params)
     for r in rows:
         nitrd, labelled = int(r["nitrd"]), int(r["labelled"])
         out[r["core_project_num"].upper()].append(

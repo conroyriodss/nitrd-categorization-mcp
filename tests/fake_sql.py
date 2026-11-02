@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Callable, Mapping
 from typing import Any
@@ -32,9 +33,32 @@ class FakeSql:
         return [n for n, _ in self.calls]
 
 
-def pmids_in(statement: str) -> set[int]:
-    match = re.search(r"IN \(([\d, ]+)\)", statement)
-    return {int(x) for x in match.group(1).split(",")} if match else set()
+def pmids_in(params: dict, statement: str) -> set[int]:
+    """The PMIDs of a MeSH / pub-type lookup, read from its bound :pmids JSON
+    parameter. Refuses a statement that inlines values instead (the pattern
+    the deployment scan flags) or that does not read :pmids via from_json."""
+    if re.search(r"\bIN\s*\(\s*\d", statement):
+        raise AssertionError("PMIDs inlined into SQL text; bind :pmids instead")
+    if "from_json(:pmids, 'ARRAY<BIGINT>')" not in statement:
+        raise AssertionError("lookup does not read :pmids via from_json")
+    items = json.loads(params["pmids"])
+    assert isinstance(items, list) and all(type(p) is int for p in items), items
+    return set(items)
+
+
+def cores_in(params: dict, statement: str) -> set[str]:
+    """The cores of a prior-year lookup, read from its bound :cores JSON
+    parameter. Refuses generated :core_<i> placeholders or inlined values
+    (the old patterns) and a statement that does not read :cores via from_json."""
+    if re.search(r":core_\d|\bIN\s*\(\s*['\"]", statement) or any(
+        k.startswith("core_") for k in params
+    ):
+        raise AssertionError("cores not bound as one :cores parameter")
+    if "from_json(:cores, 'ARRAY<STRING>')" not in statement:
+        raise AssertionError("lookup does not read :cores via from_json")
+    items = json.loads(params["cores"])
+    assert isinstance(items, list) and all(type(c) is str for c in items), items
+    return set(items)
 
 
 # --- Demo data: values copied from the live tables for the demo award ----------
@@ -371,8 +395,8 @@ class FakePortal:
     def project(self, p, _s):
         return [dict(r) for r in self.projects if r["application_id"] == p["appl_id"]]
 
-    def prior_year_nitrd(self, p, _s):
-        cores = {v for k, v in p.items() if k.startswith("core_")}
+    def prior_year_nitrd(self, p, s):
+        cores = cores_in(p, s)
         return [
             dict(r)
             for r in self.prior_rows
@@ -656,11 +680,11 @@ def demo_sql() -> FakeSql:
         .on("outputs.publications", _pubs)
         .on(
             "outputs.mesh",
-            lambda _p, s: [m for m in DEMO_MESH if m["pmid"] in pmids_in(s)],
+            lambda p, s: [m for m in DEMO_MESH if m["pmid"] in pmids_in(p, s)],
         )
         .on(
             "outputs.pubtypes",
-            lambda _p, s: [t for t in DEMO_TYPES if t["pmid"] in pmids_in(s)],
+            lambda p, s: [t for t in DEMO_TYPES if t["pmid"] in pmids_in(p, s)],
         )
         .on("outputs.datacite_table", [{"n": 0}])
         .on("classifier.project_text", _text)

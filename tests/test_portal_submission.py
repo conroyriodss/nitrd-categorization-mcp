@@ -276,7 +276,7 @@ async def test_submit_classifies_routes_and_writes_all_41(apps, portal, fake_sql
     assert [c["limit"] for c in outputs.calls] == [1, N]
     prior = [p for n, p in fake_sql.calls if n == "portal.prior_year_nitrd"]
     assert len(prior) == 1 and prior[0]["max_fy"] == 2020
-    assert len([k for k in prior[0] if k.startswith("core_")]) == 37
+    assert len(json.loads(prior[0]["cores"])) == 37
     # The review placeholder reads the same rows back.
     review = await get(link.group(1).replace("&amp;", "&"))
     assert review.status_code == 200

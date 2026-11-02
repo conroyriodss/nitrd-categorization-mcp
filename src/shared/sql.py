@@ -13,6 +13,7 @@ setting or, failing that, DATABRICKS_WAREHOUSE_ID.
 
 from __future__ import annotations
 
+import json
 import os
 import time
 from collections.abc import Mapping
@@ -63,6 +64,40 @@ def _param_type(value: Any) -> str:
     if isinstance(value, float):
         return "DOUBLE"
     return "STRING"
+
+
+def json_array_param(items: Any, name: str, item_type: type | None = None) -> str:
+    """Serialize a list for one bound parameter read as
+    ``from_json(:name, 'ARRAY<...>')``.
+
+    The Statement Execution API has no array parameter type, so a list goes as
+    one STRING parameter holding JSON. from_json returns NULL for malformed
+    JSON, and array_contains(NULL, x) is NULL, so a bad value would look like
+    an empty result. Everything is therefore checked here, before any SQL runs:
+    a list or tuple (not a string), no None items, items of item_type when
+    given (bool is not an int), finite numbers only. Raises ValueError.
+    """
+    if items is None:
+        raise ValueError(f"{name}: list is None")
+    if isinstance(items, (str, bytes)) or not isinstance(items, (list, tuple)):
+        raise ValueError(f"{name}: expected a list, got {type(items).__name__}")
+    if any(item is None for item in items):
+        raise ValueError(f"{name}: list contains None")
+    if item_type is not None:
+        bad = [
+            item
+            for item in items
+            if not isinstance(item, item_type)
+            or (item_type is int and isinstance(item, bool))
+        ]
+        if bad:
+            raise ValueError(
+                f"{name}: expected {item_type.__name__} items, got {bad[:3]!r}"
+            )
+    try:
+        return json.dumps(list(items), allow_nan=False)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{name}: not JSON-serializable: {exc}") from exc
 
 
 class StatementExecutionBackend:

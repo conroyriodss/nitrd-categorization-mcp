@@ -9,6 +9,12 @@ from fastmcp.exceptions import ToolError
 from nih_grants_outputs import data
 from nih_grants_outputs.app import mcp
 from shared import sql
+from shared.tables import (
+    NITRD_PUB_LINKS,
+    PUBMED_ARTICLES,
+    PUBMED_MESH,
+    PUBMED_PUBTYPES,
+)
 from tests.conftest import needs_scorer
 from tests.fake_sql import DEMO_APPL, DEMO_CORE, NITRD_2022
 
@@ -117,6 +123,23 @@ async def test_publications_known_core_without_links_is_empty():
     assert out["total_linked"] == 0 and out["publications"] == []
 
 
+@pytest.mark.parametrize("bad", [None, "36000002", True])
+async def test_publications_refuse_a_bad_pmid_before_any_lookup(fake_sql, bad):
+    """PMIDs reach the MeSH / pub-type lookups as one bound JSON parameter;
+    a None, string or bool PMID is refused in Python, so neither lookup runs
+    (from_json would turn a bad parameter into NULL: silently no MeSH)."""
+    fake_sql.on(
+        "outputs.publications",
+        [
+            {"pmid": 36000001, "total_linked": 2, "has_mesh": True},
+            {"pmid": bad, "total_linked": 2, "has_mesh": False},
+        ],
+    )
+    with pytest.raises(ValueError, match=r"^pmids: "):
+        await data.fetch_publications(DEMO_CORE, 50)
+    assert fake_sql.names() == ["outputs.publications"]
+
+
 async def test_publications_unknown_core_is_an_error():
     with pytest.raises(ToolError, match="not in the FY2015-2023"):
         await call("outputs_get_project_publications", {"core_project_num": "ZZZ999"})
@@ -206,3 +229,34 @@ async def test_live_demo_award_end_to_end(live_sql):
         },
     )
     assert found["total_matching"] == 1978  # FY2016 NITRD rows in the snapshot
+
+
+async def test_live_publication_lookups_match_an_independent_join(live_sql):
+    """The bound-parameter MeSH and pub-type lookups return exactly what a
+    plain join from the core's links returns: catches a containment predicate
+    that silently matches nothing (the offline fake does not execute SQL)."""
+    out = await call(
+        "outputs_get_project_publications", {"core_project_num": DEMO_CORE}
+    )
+    assert out["truncated"] is False and out["total_linked"] >= 10
+    mesh = sum(len(p["mesh"]) for p in out["publications"] if p["mesh"] is not None)
+    types = sum(len(p["publication_types"]) for p in out["publications"])
+    row = (
+        await data.query(
+            "test.publication_join",
+            f"""
+            WITH l AS (
+              SELECT DISTINCT pmid FROM {NITRD_PUB_LINKS}
+              WHERE core_project_num = :core)
+            SELECT
+              (SELECT count(*) FROM l JOIN {PUBMED_MESH} m ON m.pmid = l.pmid
+               JOIN {PUBMED_ARTICLES} a ON a.pmid = l.pmid
+               WHERE a.has_mesh) AS mesh,
+              (SELECT count(*) FROM l
+               JOIN {PUBMED_PUBTYPES} t ON t.pmid = l.pmid) AS types
+            """,
+            {"core": DEMO_CORE},
+        )
+    )[0]
+    assert mesh > 0 and types > 0
+    assert (mesh, types) == (row["mesh"], row["types"])
