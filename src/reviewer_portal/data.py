@@ -87,6 +87,75 @@ _EVENT_COLS = (
     "event_id, request_id, appl_id, event_type, actor_id, details, at, sandbox, label"
 )
 
+# SQL text: the read statements below are fixed strings, built once at import
+# from module constants (column lists, table names). Every value is a bound
+# :parameter; nothing from a request is ever formatted into the text.
+PROJECT_SQL = f"""
+SELECT {_PROJECT_COLS} FROM {EXPORTER_PROJECTS}
+WHERE application_id = :appl_id LIMIT 2
+"""
+
+PARENT_SQL = f"""
+SELECT {_PROJECT_COLS} FROM {EXPORTER_PROJECTS}
+WHERE full_project_num = :full_project_num AND fy = :fy
+AND coalesce(trim(subproject_id), '') = '' LIMIT 3
+"""
+
+REQUEST_BY_KEY_SQL = f"""
+SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS}
+WHERE idempotency_key = :idempotency_key
+"""
+
+REQUEST_BY_ID_SQL = f"""
+SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS}
+WHERE request_id = :request_id
+"""
+
+EVENT_BY_ID_SQL = f"""
+SELECT {_EVENT_COLS} FROM {REVIEW_EVENTS}
+WHERE event_id = :event_id
+"""
+
+PENDING_SQL = f"""
+SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS}
+WHERE assigned_reviewer_id = :reviewer_id AND status = 'pending'
+ORDER BY created_at, request_id LIMIT :limit
+"""
+
+COHORT_REQUESTS_SQL = f"""
+SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS}
+WHERE startswith(idempotency_key, :prefix)
+ORDER BY appl_id, request_id LIMIT :limit
+"""
+
+# Audit order (as history): by time, created before routed before the rest.
+COHORT_EVENTS_SQL = f"""
+SELECT {_EVENT_COLS} FROM (
+SELECT {_EVENT_COLS} FROM {REVIEW_EVENTS}
+WHERE request_id IN (
+SELECT request_id FROM {REVIEW_REQUESTS} WHERE startswith(idempotency_key, :prefix)
+)
+UNION ALL SELECT {_EVENT_COLS} FROM {ROUTING_EVENTS}
+WHERE request_id IN (
+SELECT request_id FROM {REVIEW_REQUESTS} WHERE startswith(idempotency_key, :prefix)
+)
+) ORDER BY at, CASE event_type WHEN 'created' THEN 0 WHEN 'routed' THEN 1
+ELSE 2 END, event_id
+"""
+
+HISTORY_REQUESTS_SQL = f"""
+SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS}
+WHERE appl_id = :appl_id ORDER BY created_at, request_id
+"""
+
+HISTORY_EVENTS_SQL = f"""
+SELECT {_EVENT_COLS} FROM (
+SELECT {_EVENT_COLS} FROM {REVIEW_EVENTS} WHERE appl_id = :appl_id
+UNION ALL SELECT {_EVENT_COLS} FROM {ROUTING_EVENTS} WHERE appl_id = :appl_id
+) ORDER BY at, CASE event_type WHEN 'created' THEN 0 WHEN 'routed' THEN 1
+ELSE 2 END, event_id
+"""
+
 
 async def query(name: str, statement: str, params: dict[str, Any] | None = None):
     return await run_query(
@@ -133,12 +202,7 @@ async def resolve_routing(
     appl_id: int,
 ) -> tuple[routing.ProjectRouting, RoutingDecision]:
     """Look up the record (and a subproject's parent) and route it."""
-    rows = await query(
-        "portal.project",
-        f"SELECT {_PROJECT_COLS} FROM {EXPORTER_PROJECTS} "
-        "WHERE application_id = :appl_id LIMIT 2",
-        {"appl_id": str(appl_id)},
-    )
+    rows = await query("portal.project", PROJECT_SQL, {"appl_id": str(appl_id)})
     if not rows:
         raise tool_error(
             f"No ExPORTER record for appl_id {appl_id}.",
@@ -152,9 +216,7 @@ async def resolve_routing(
         if project.full_project_num:
             parents = await query(
                 "portal.parent",
-                f"SELECT {_PROJECT_COLS} FROM {EXPORTER_PROJECTS} "
-                "WHERE full_project_num = :full_project_num AND fy = :fy "
-                "AND coalesce(trim(subproject_id), '') = '' LIMIT 3",
+                PARENT_SQL,
                 {"full_project_num": project.full_project_num, "fy": str(project.fy)},
             )
         if len(parents) == 1:
@@ -328,8 +390,7 @@ def event_from_row(row: Row) -> ReviewEvent:
 async def request_by_key(idempotency_key: str) -> ReviewRequestRecord | None:
     rows = await query(
         "portal.request_by_key",
-        f"SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS} "
-        "WHERE idempotency_key = :idempotency_key",
+        REQUEST_BY_KEY_SQL,
         {"idempotency_key": idempotency_key},
     )
     return record_from_row(rows[0]) if rows else None
@@ -338,7 +399,7 @@ async def request_by_key(idempotency_key: str) -> ReviewRequestRecord | None:
 async def request_by_id(request_id: UUID) -> ReviewRequestRecord | None:
     rows = await query(
         "portal.request_by_id",
-        f"SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS} WHERE request_id = :request_id",
+        REQUEST_BY_ID_SQL,
         {"request_id": str(request_id)},
     )
     return record_from_row(rows[0]) if rows else None
@@ -347,7 +408,7 @@ async def request_by_id(request_id: UUID) -> ReviewRequestRecord | None:
 async def review_event_by_id(event_id: UUID) -> ReviewEvent | None:
     rows = await query(
         "portal.event_by_id",
-        f"SELECT {_EVENT_COLS} FROM {REVIEW_EVENTS} WHERE event_id = :event_id",
+        EVENT_BY_ID_SQL,
         {"event_id": str(event_id)},
     )
     return event_from_row(rows[0]) if rows else None
@@ -356,9 +417,7 @@ async def review_event_by_id(event_id: UUID) -> ReviewEvent | None:
 async def pending_for(reviewer_id: str) -> list[ReviewRequestRecord]:
     rows = await query(
         "portal.pending",
-        f"SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS} "
-        "WHERE assigned_reviewer_id = :reviewer_id AND status = 'pending' "
-        "ORDER BY created_at, request_id LIMIT :limit",
+        PENDING_SQL,
         {"reviewer_id": reviewer_id, "limit": PENDING_LIMIT},
     )
     return [record_from_row(r) for r in rows]
@@ -368,9 +427,7 @@ async def cohort_requests(fy: int, ic: str, activity: str) -> list[ReviewRequest
     """Every operator-path request already written for this cohort (by key)."""
     rows = await query(
         "portal.cohort_requests",
-        f"SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS} "
-        "WHERE startswith(idempotency_key, :prefix) "
-        "ORDER BY appl_id, request_id LIMIT :limit",
+        COHORT_REQUESTS_SQL,
         {"prefix": cohort_prefix(fy, ic, activity), "limit": COHORT_READ_LIMIT},
     )
     return [record_from_row(r) for r in rows]
@@ -379,18 +436,9 @@ async def cohort_requests(fy: int, ic: str, activity: str) -> list[ReviewRequest
 async def cohort_events(fy: int, ic: str, activity: str) -> list[ReviewEvent]:
     """Every review and routing event of this cohort's requests, in audit
     order (as history: by time, created before routed before the rest)."""
-    ids = (
-        f"SELECT request_id FROM {REVIEW_REQUESTS} "
-        "WHERE startswith(idempotency_key, :prefix)"
-    )
     rows = await query(
         "portal.cohort_events",
-        f"SELECT {_EVENT_COLS} FROM ("
-        f"SELECT {_EVENT_COLS} FROM {REVIEW_EVENTS} WHERE request_id IN ({ids}) "
-        f"UNION ALL SELECT {_EVENT_COLS} FROM {ROUTING_EVENTS} "
-        f"WHERE request_id IN ({ids})"
-        ") ORDER BY at, CASE event_type WHEN 'created' THEN 0 WHEN 'routed' THEN 1 "
-        "ELSE 2 END, event_id",
+        COHORT_EVENTS_SQL,
         {"prefix": cohort_prefix(fy, ic, activity)},
     )
     return [event_from_row(e) for e in rows]
@@ -399,17 +447,12 @@ async def cohort_events(fy: int, ic: str, activity: str) -> list[ReviewEvent]:
 async def history(appl_id: int) -> tuple[list[ReviewRequestRecord], list[ReviewEvent]]:
     requests = await query(
         "portal.history_requests",
-        f"SELECT {_REQUEST_COLS} FROM {REVIEW_REQUESTS} "
-        "WHERE appl_id = :appl_id ORDER BY created_at, request_id",
+        HISTORY_REQUESTS_SQL,
         {"appl_id": appl_id},
     )
     events = await query(
         "portal.history_events",
-        f"SELECT {_EVENT_COLS} FROM ("
-        f"SELECT {_EVENT_COLS} FROM {REVIEW_EVENTS} WHERE appl_id = :appl_id "
-        f"UNION ALL SELECT {_EVENT_COLS} FROM {ROUTING_EVENTS} WHERE appl_id = :appl_id"
-        ") ORDER BY at, CASE event_type WHEN 'created' THEN 0 WHEN 'routed' THEN 1 "
-        "ELSE 2 END, event_id",
+        HISTORY_EVENTS_SQL,
         {"appl_id": appl_id},
     )
     return [record_from_row(r) for r in requests], [event_from_row(e) for e in events]
