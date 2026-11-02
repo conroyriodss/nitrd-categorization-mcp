@@ -18,6 +18,15 @@ from shared.tables import REVIEW_EVENTS, REVIEW_REQUESTS, ROUTING_EVENTS
 
 TABLES = (REVIEW_REQUESTS, REVIEW_EVENTS, ROUTING_EVENTS)
 
+# SQL text: one fixed statement built once at import from the table-name
+# constants. conftest runs this guard in every live pytest session, including
+# the runner's pytest jobs, so it follows the servers' module-level *_SQL layout.
+COUNT_SQL = f"""
+SELECT '{REVIEW_REQUESTS}' AS table_name, count(*) AS n FROM {REVIEW_REQUESTS}
+UNION ALL SELECT '{REVIEW_EVENTS}' AS table_name, count(*) AS n FROM {REVIEW_EVENTS}
+UNION ALL SELECT '{ROUTING_EVENTS}' AS table_name, count(*) AS n FROM {ROUTING_EVENTS}
+"""
+
 
 def read_only_live() -> bool:
     return bool(os.getenv("DATABRICKS_WAREHOUSE_ID")) and (
@@ -26,9 +35,7 @@ def read_only_live() -> bool:
 
 
 def count_statement() -> str:
-    return " UNION ALL ".join(
-        f"SELECT '{t}' AS table_name, count(*) AS n FROM {t}" for t in TABLES
-    )
+    return COUNT_SQL
 
 
 def review_table_counts(warehouse_id: str | None = None) -> dict[str, int]:

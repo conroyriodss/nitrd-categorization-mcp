@@ -88,6 +88,36 @@ URL_ENV = {
 EXPECTED_TOOLS = {"nih_grants_outputs": 5, "nitrd_classifier": 3, "reviewer_portal": 5}
 SMOKE_APPL, SMOKE_REVIEWER = 10388671, "demo_po_ninr_01"
 RESULTS = table("e2e_runs")
+
+# SQL text: fixed strings built once at import from table-name constants; every
+# value is a bound :parameter (same layout as the servers' *_SQL constants).
+COUNT_REVIEW_REQUESTS_SQL = f"""
+SELECT count(*) AS n FROM {REVIEW_REQUESTS}
+"""
+
+COUNT_REVIEW_EVENTS_SQL = f"""
+SELECT count(*) AS n FROM {REVIEW_EVENTS}
+"""
+
+COUNT_ROUTING_EVENTS_SQL = f"""
+SELECT count(*) AS n FROM {ROUTING_EVENTS}
+"""
+
+#: (table, its count statement), in the order rows_left reports them.
+ROWS_LEFT_COUNTS = (
+    (REVIEW_REQUESTS, COUNT_REVIEW_REQUESTS_SQL),
+    (REVIEW_EVENTS, COUNT_REVIEW_EVENTS_SQL),
+    (ROUTING_EVENTS, COUNT_ROUTING_EVENTS_SQL),
+)
+
+RECORD_SQL = f"""
+INSERT INTO {RESULTS} (run_id, kind, git_commit, started_at, finished_at,
+exit_code, passed, summary, report, rows_left) VALUES (:run_id, :kind,
+:git_commit, CAST(:started_at AS TIMESTAMP), CAST(:finished_at AS TIMESTAMP),
+CAST(:exit_code AS INT), CAST(:passed AS BOOLEAN), :summary, :report,
+:rows_left)
+"""
+
 E2E_TIMEOUT_S = 1500
 # Response headers worth showing for an auth failure (none carry secrets).
 DIAG_HEADERS = ("www-authenticate", "location", "content-type", "x-request-id")
@@ -164,21 +194,15 @@ def _commit() -> str:
 def _rows_left() -> dict[str, int]:
     db = _db()
     return {
-        name.rsplit("_v1_", 1)[-1]: int(
-            db.query("runner.count", f"SELECT count(*) AS n FROM {name}")[0]["n"]
-        )
-        for name in (REVIEW_REQUESTS, REVIEW_EVENTS, ROUTING_EVENTS)
+        name.rsplit("_v1_", 1)[-1]: int(db.query("runner.count", statement)[0]["n"])
+        for name, statement in ROWS_LEFT_COUNTS
     }
 
 
 def _record(state: dict[str, Any]) -> None:
     _db().query(
         "runner.record",
-        f"INSERT INTO {RESULTS} (run_id, kind, git_commit, started_at, finished_at, "
-        "exit_code, passed, summary, report, rows_left) VALUES (:run_id, :kind, "
-        ":git_commit, CAST(:started_at AS TIMESTAMP), CAST(:finished_at AS TIMESTAMP), "
-        "CAST(:exit_code AS INT), CAST(:passed AS BOOLEAN), :summary, :report, "
-        ":rows_left)",
+        RECORD_SQL,
         {
             "run_id": state["run_id"],
             "kind": state["kind"],
