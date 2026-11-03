@@ -29,7 +29,11 @@ transport. In a read-only run steps 1-8 still run and must pass, then the test
 skips with that reason and writes nothing. In write mode, after each project
 the test checks on the warehouse that the step-9 request and its
 created/routed events persisted, then deletes exactly those rows by request_id
-(NITRD_E2E_KEEP_ROWS=1 keeps them).
+(NITRD_E2E_KEEP_ROWS=1 keeps them). The request_id is fixed BEFORE the write:
+step 9 sends an explicit per-run idempotency_key, and its UUIDv5 request_id is
+registered for cleanup first. The whole write lifecycle runs inside try/finally,
+so the cleanup runs even if a step, a check or the transport fails, and no row
+is left orphaned because its response never arrived.
 
 Outcome rules:
 * Any call that errors with something other than the skeleton's "not
@@ -64,6 +68,7 @@ from contextlib import AsyncExitStack, asynccontextmanager
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 import pytest
 from fastmcp import Client
@@ -92,6 +97,7 @@ WRITE_STEPS = (
     ("10", "reviewer_portal", "portal_get_review_history"),
 )
 WRITE_CHECKS = (
+    "9 request_id is the pre-registered UUIDv5 of the run's key",
     "9 review request is sandbox=true and labelled Not RCDC",
     "9 repeat returns the same request_id with created=false",
     "10 history holds exactly one row for the request",
@@ -255,6 +261,8 @@ class Run:
     steps: list[Step] = field(default_factory=list)
     strict: list[Check] = field(default_factory=list)
     sanity: list[Check] = field(default_factory=list)
+    #: request_ids registered for cleanup BEFORE the write that creates them.
+    cleanup_request_ids: list[str] = field(default_factory=list)
 
     def get(self, step: str) -> dict[str, Any] | None:
         for s in self.steps:
@@ -405,9 +413,28 @@ def build_request(project: dict, run: Run) -> dict[str, Any]:
     return args
 
 
-async def run_scenario(clients: dict[str, Client], project: dict) -> Run:
+def register_write(run: Run, request_args: dict[str, Any]) -> str:
+    """Give step 9 a per-run idempotency_key and register its request_id for
+    cleanup before anything is written (request_id = UUIDv5 of the key)."""
+    from reviewer_portal.data import request_id_for
+
+    key = f"e2e:{run.appl_id}:{uuid4().hex}"
+    request_args["idempotency_key"] = key
+    rid = str(request_id_for(key))
+    run.cleanup_request_ids.append(rid)
+    return rid
+
+
+async def run_scenario(
+    clients: dict[str, Client], project: dict, cleanup: list[str] | None = None
+) -> Run:
+    """Run the chain. `cleanup` (if given) is the caller's list; step 9's
+    request_id is appended to it before the write, so the caller can delete
+    the rows even if this coroutine raises."""
     x, core = project["appl_id"], project["core_project_num"]
     run = Run(f"appl {x} {core} ({project['administering_ic']})", x, core)
+    if cleanup is not None:
+        run.cleanup_request_ids = cleanup
     out, clf, portal = "nih_grants_outputs", "nitrd_classifier", "reviewer_portal"
 
     found = await run.call(
@@ -445,6 +472,7 @@ async def run_scenario(clients: dict[str, Client], project: dict) -> Run:
     writes = _writes_enabled()
     if writes:
         request_args = build_request(project, run)
+        register_write(run, request_args)
         first = await run.call(
             clients, "9", portal, "portal_submit_review_request", request_args
         )
@@ -501,6 +529,12 @@ def _strict_checks(
     if not writes:
         return  # read-only run: run_scenario records the step 9-10 checks as skip
     request = (first or {}).get("request")
+    registered = run.cleanup_request_ids[-1] if run.cleanup_request_ids else None
+    run.expect(
+        "9 request_id is the pre-registered UUIDv5 of the run's key",
+        None if request is None else str(request["request_id"]) == registered,
+        "" if request is None else f"registered={registered}",
+    )
     run.expect(
         "9 review request is sandbox=true and labelled Not RCDC",
         None
@@ -579,73 +613,116 @@ def _sanity_checks(run, project, pubs, parent, sub, preview, first) -> None:
 # --- Tests ------------------------------------------------------------------
 
 
-def _verify_persisted_and_clean_up(run: Run) -> None:
-    """Confirm on the warehouse that step 9's request and its created/routed
-    events persisted, then delete exactly those rows (any transport)."""
+def _warehouse():
     from shared.sql import StatementExecutionBackend
+
+    return StatementExecutionBackend(os.environ["DATABRICKS_WAREHOUSE_ID"])
+
+
+def _verify_persisted(run: Run) -> None:
+    """Confirm on the warehouse that step 9's request and its created/routed
+    events persisted (any transport). Cleanup is separate (_clean_up)."""
     from shared.tables import REVIEW_EVENTS, REVIEW_REQUESTS, ROUTING_EVENTS
 
-    request = (run.get("9") or {}).get("request") or {}
-    if not request.get("request_id"):
+    if not run.cleanup_request_ids:
         run.expect("9 request row persisted in review_requests (warehouse)", None)
         run.expect("10 created + routed events persisted (warehouse)", None)
         return
-    db = StatementExecutionBackend(os.environ["DATABRICKS_WAREHOUSE_ID"])
-    params = {"rid": str(request["request_id"])}
-    try:
-        rows = db.query(
-            "e2e.persisted_request",
-            f"SELECT appl_id, sandbox FROM {REVIEW_REQUESTS} WHERE request_id = :rid",
-            params,
-        )
-        run.expect(
-            "9 request row persisted in review_requests (warehouse)",
-            len(rows) == 1
-            and rows[0]["sandbox"] is True
-            and int(rows[0]["appl_id"]) == run.appl_id,
-            f"rows={len(rows)}",
-        )
-        events = db.query(
-            "e2e.persisted_events",
-            f"SELECT event_type FROM {REVIEW_EVENTS} WHERE request_id = :rid "
-            "UNION ALL "
-            f"SELECT event_type FROM {ROUTING_EVENTS} WHERE request_id = :rid",
-            params,
-        )
-        types = sorted(e["event_type"] for e in events)
-        run.expect(
-            "10 created + routed events persisted (warehouse)",
-            types.count("created") == 1 and "routed" in types,
-            f"events={types}",
-        )
-    finally:
-        if os.getenv("NITRD_E2E_KEEP_ROWS") != "1":
-            for table in (REVIEW_EVENTS, ROUTING_EVENTS, REVIEW_REQUESTS):
+    db = _warehouse()
+    params = {"rid": run.cleanup_request_ids[-1]}
+    rows = db.query(
+        "e2e.persisted_request",
+        f"SELECT appl_id, sandbox FROM {REVIEW_REQUESTS} WHERE request_id = :rid",
+        params,
+    )
+    run.expect(
+        "9 request row persisted in review_requests (warehouse)",
+        len(rows) == 1
+        and rows[0]["sandbox"] is True
+        and int(rows[0]["appl_id"]) == run.appl_id,
+        f"rows={len(rows)}",
+    )
+    events = db.query(
+        "e2e.persisted_events",
+        f"SELECT event_type FROM {REVIEW_EVENTS} WHERE request_id = :rid "
+        "UNION ALL "
+        f"SELECT event_type FROM {ROUTING_EVENTS} WHERE request_id = :rid",
+        params,
+    )
+    types = sorted(e["event_type"] for e in events)
+    run.expect(
+        "10 created + routed events persisted (warehouse)",
+        types.count("created") == 1 and "routed" in types,
+        f"events={types}",
+    )
+
+
+def _clean_up(request_ids: list[str]) -> None:
+    """Delete every registered request's rows from the three sandbox tables,
+    then confirm none remain. Runs from a finally block: it tries every
+    (request, table) pair before raising, so one failure cannot leave the rest."""
+    from shared.tables import REVIEW_EVENTS, REVIEW_REQUESTS, ROUTING_EVENTS
+
+    if not request_ids:
+        return
+    if os.getenv("NITRD_E2E_KEEP_ROWS") == "1":
+        log.info("NITRD_E2E_KEEP_ROWS=1: kept sandbox rows for %s", request_ids)
+        return
+    db = _warehouse()
+    tables = (REVIEW_EVENTS, ROUTING_EVENTS, REVIEW_REQUESTS)
+    failures: list[str] = []
+    for rid in request_ids:
+        for table in tables:
+            try:
                 db.query(
                     "e2e.cleanup",
                     f"DELETE FROM {table} WHERE request_id = :rid",
-                    params,
+                    {"rid": rid},
                 )
-            log.info("cleaned up sandbox rows for request %s", params["rid"])
+            except Exception as exc:  # noqa: BLE001 - try every pair first
+                failures.append(f"{table} {rid}: {type(exc).__name__}: {exc}")
+    for rid in request_ids:
+        for table in tables:
+            try:
+                left = db.query(
+                    "e2e.cleanup_check",
+                    f"SELECT count(*) AS n FROM {table} WHERE request_id = :rid",
+                    {"rid": rid},
+                )[0]["n"]
+            except Exception as exc:  # noqa: BLE001
+                failures.append(f"check {table} {rid}: {type(exc).__name__}")
+                continue
+            if left:
+                failures.append(f"{table} {rid}: {left} row(s) remain")
+    if failures:
+        raise AssertionError("e2e cleanup incomplete: " + "; ".join(failures))
+    log.info("cleaned up sandbox rows for requests %s", request_ids)
 
 
 @pytest.mark.parametrize("project", DEMO_PROJECTS, ids=lambda p: str(p["appl_id"]))
 async def test_prompt_bj_ten_step_chain(project, capsys, live_sql):
     if TRANSPORT == "http" and os.getenv("PORTAL_LIVE_WRITE_TESTS") != "1":
         pytest.skip("http mode writes sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1")
-    async with three_clients() as clients:
-        run = await run_scenario(clients, project)
-    if _writes_enabled():
-        # live_sql guarantees a real warehouse, so step 9 wrote real sandbox
-        # rows whatever the transport; verify and remove them.
-        _verify_persisted_and_clean_up(run)
-    else:
-        for name in PERSIST_CHECKS:
-            run.skip_check(name, READ_ONLY_REASON)
-    RUNS[project["appl_id"]] = run
-    run.finish(capsys)
-    if not _writes_enabled():
-        pytest.skip(f"steps 1-8 passed; {READ_ONLY_REASON}")
+    writes = _writes_enabled()
+    pending: list[str] = []  # filled by run_scenario BEFORE step 9 writes
+    try:
+        async with three_clients() as clients:
+            run = await run_scenario(clients, project, cleanup=pending)
+        if writes:
+            # live_sql guarantees a real warehouse, so step 9 wrote real
+            # sandbox rows whatever the transport; verify them here and
+            # remove them in the finally block.
+            _verify_persisted(run)
+        else:
+            for name in PERSIST_CHECKS:
+                run.skip_check(name, READ_ONLY_REASON)
+        RUNS[project["appl_id"]] = run
+        run.finish(capsys)
+        if not writes:
+            pytest.skip(f"steps 1-8 passed; {READ_ONLY_REASON}")
+    finally:
+        if writes:
+            _clean_up(pending)
 
 
 async def test_negative_control_parent_probability(capsys, live_sql):
@@ -704,13 +781,14 @@ def test_intensity_tracks_computational_publications(capsys):
 # --- Harness self-test --------------------------------------------------------
 
 
-def _fake_servers(project: dict, calls: list[str] | None = None) -> dict[str, Any]:
+def _fake_servers(
+    project: dict, calls: list[str] | None = None, fail_submit: bool = False
+) -> dict[str, Any]:
     """In-memory stand-ins with the real tool names and the result shapes the
     harness reads, so the pass path is proven before the real tools land.
-    Portal calls are appended to `calls` when given."""
+    Portal calls are appended to `calls` when given. fail_submit makes the
+    submit tool error AFTER it would have written (a lost response)."""
     calls = [] if calls is None else calls
-    from uuid import uuid4
-
     from fastmcp import FastMCP
 
     x, core = project["appl_id"], project["core_project_num"]
@@ -771,15 +849,20 @@ def _fake_servers(project: dict, calls: list[str] | None = None) -> dict[str, An
         reviewer_id: str,
         task1_suggestion: dict | None = None,
         task2_suggestion: dict | None = None,
+        idempotency_key: str | None = None,
     ) -> dict:
+        from reviewer_portal.data import request_id_for
+
         calls.append("portal_submit_review_request")
-        key = json.dumps(
+        if fail_submit:
+            raise RuntimeError("connection dropped after the write")
+        key = idempotency_key or json.dumps(
             [appl_id, evidence, reviewer_id, task1_suggestion, task2_suggestion],
             sort_keys=True,
         )
         created = key not in requests
         if created:
-            rid = str(uuid4())
+            rid = str(request_id_for(key)) if idempotency_key else str(uuid4())
             requests[key] = {
                 "request_id": rid,
                 "sandbox": True,
@@ -807,13 +890,90 @@ def _fake_servers(project: dict, calls: list[str] | None = None) -> dict[str, An
     }
 
 
-async def _fake_run(project: dict, calls: list[str]) -> Run:
+async def _fake_run(
+    project: dict,
+    calls: list[str],
+    cleanup: list[str] | None = None,
+    fail_submit: bool = False,
+) -> Run:
     async with AsyncExitStack() as stack:
         clients = {
             name: await stack.enter_async_context(Client(server))
-            for name, server in _fake_servers(project, calls).items()
+            for name, server in _fake_servers(project, calls, fail_submit).items()
         }
-        return await run_scenario(clients, project)
+        return await run_scenario(clients, project, cleanup=cleanup)
+
+
+async def test_request_id_is_registered_before_the_write(monkeypatch):
+    """A submit whose response is lost still leaves its request_id registered,
+    so the finally-block cleanup can delete the row it may have written."""
+    from reviewer_portal.data import request_id_for
+
+    monkeypatch.setenv("PORTAL_LIVE_WRITE_TESTS", "1")
+    project, calls, pending = DEMO_PROJECTS[0], [], []
+    run = await _fake_run(project, calls, cleanup=pending, fail_submit=True)
+    assert calls[0] == "portal_submit_review_request"
+    assert run.get("9") is None and len(pending) == 1  # registered, no response
+    key = next(s for s in run.steps if s.step == "9").args["idempotency_key"]
+    assert pending == [str(request_id_for(key))]
+    assert run.cleanup_request_ids is pending
+
+
+class _FakeWarehouse:
+    def __init__(self, fail_on: str | None = None) -> None:
+        self.statements: list[str] = []
+        self.fail_on = fail_on
+
+    def query(self, name, statement, params=None):
+        self.statements.append(statement)
+        if self.fail_on and self.fail_on in statement and "DELETE" in statement:
+            raise RuntimeError("warehouse unavailable")
+        return [{"n": 0}] if statement.startswith("SELECT count") else []
+
+
+def test_clean_up_deletes_every_table_and_checks_zero(monkeypatch):
+    db = _FakeWarehouse()
+    monkeypatch.setattr(sys.modules[__name__], "_warehouse", lambda: db)
+    monkeypatch.delenv("NITRD_E2E_KEEP_ROWS", raising=False)
+    _clean_up(["r1", "r2"])
+    deletes = [s for s in db.statements if s.startswith("DELETE")]
+    checks = [s for s in db.statements if s.startswith("SELECT count")]
+    assert len(deletes) == 6 and len(checks) == 6
+
+
+def test_clean_up_tries_every_pair_before_raising(monkeypatch):
+    from shared.tables import ROUTING_EVENTS
+
+    db = _FakeWarehouse(fail_on=ROUTING_EVENTS)
+    monkeypatch.setattr(sys.modules[__name__], "_warehouse", lambda: db)
+    monkeypatch.delenv("NITRD_E2E_KEEP_ROWS", raising=False)
+    with pytest.raises(AssertionError, match="cleanup incomplete"):
+        _clean_up(["r1"])
+    assert len([s for s in db.statements if s.startswith("DELETE")]) == 3
+
+
+async def test_live_chain_cleans_up_when_the_run_raises(monkeypatch):
+    """The live test's try/finally: a failure after registration still runs
+    _clean_up with the registered id."""
+    monkeypatch.setenv("PORTAL_LIVE_WRITE_TESTS", "1")
+    mod = sys.modules[__name__]
+    cleaned: list[list[str]] = []
+
+    async def scenario_then_crash(clients, project, cleanup=None):
+        cleanup.append("registered-id")
+        raise RuntimeError("transport died mid-run")
+
+    @asynccontextmanager
+    async def no_clients():
+        yield {}
+
+    monkeypatch.setattr(mod, "_clean_up", lambda ids: cleaned.append(list(ids)))
+    monkeypatch.setattr(mod, "run_scenario", scenario_then_crash)
+    monkeypatch.setattr(mod, "three_clients", no_clients)
+    monkeypatch.setattr(mod, "TRANSPORT", "memory")
+    with pytest.raises(RuntimeError, match="mid-run"):
+        await test_prompt_bj_ten_step_chain(DEMO_PROJECTS[0], _NoCapture(), None)
+    assert cleaned == [["registered-id"]]
 
 
 async def test_harness_passes_when_every_tool_answers(monkeypatch):

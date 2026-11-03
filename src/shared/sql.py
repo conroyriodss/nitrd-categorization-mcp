@@ -9,12 +9,28 @@ Databricks App the App's service principal (DATABRICKS_CLIENT_ID/SECRET);
 locally DATABRICKS_HOST + DATABRICKS_TOKEN or a ~/.databrickscfg profile.
 The warehouse comes from the server's own <PREFIX>_DATABRICKS_WAREHOUSE_ID
 setting or, failing that, DATABRICKS_WAREHOUSE_ID.
+
+Failure contract (every failure reaches the caller as a sanitized ToolError;
+no SDK exception, URL, host name or token escapes):
+
+* One deadline (NITRD_SQL_DEADLINE_S, default 150 s, below the 180 s client
+  timeout) covers submission, polling and result-chunk retrieval together.
+* Credential or client construction failure: nothing ran.
+* Rejected at submission (bad request, auth refused): nothing ran.
+* A statement that reached FAILED or CANCELED: not applied (a statement,
+  including a portal BEGIN ATOMIC block, commits all or nothing), so a read
+  or a write may be retried.
+* A WRITE whose outcome was not observed (transport failure after sending,
+  deadline passed while running): outcome UNKNOWN. The caller is told to read
+  back (review history / the stored request) before retrying, never to assume
+  it failed. A READ in the same situation is simply retryable.
 """
 
 from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from collections.abc import Mapping
 from typing import Any, Protocol
@@ -35,7 +51,74 @@ class SqlBackend(Protocol):
 
 
 class SqlError(RuntimeError):
-    """A statement failed on the warehouse."""
+    """A statement failed. Definite: for a write, this statement was not applied."""
+
+
+class SqlUnavailable(SqlError):
+    """The warehouse refused the credentials before accepting the statement;
+    nothing ran, and retrying will not help until access is fixed."""
+
+
+class SqlOutcomeUnknown(SqlError):
+    """A write was sent but its outcome was not observed; it may have committed."""
+
+
+DEFAULT_DEADLINE_S = 150.0
+_WRITE_RE = re.compile(r"^\s*(?:BEGIN|INSERT|UPDATE|MERGE|DELETE)\b", re.IGNORECASE)
+_SANITIZE = (
+    (re.compile(r"https?://\S+"), "<url>"),
+    (re.compile(r"\b[\w.-]+\.(?:cloud\.)?databricks(?:apps)?\.com\b", re.I), "<host>"),
+    (re.compile(r"\bBearer\s+\S+", re.I), "Bearer <token>"),
+    (re.compile(r"\b(?:dapi|dose|dkea)[0-9a-f]{16,}\b"), "<token>"),
+)
+
+
+def is_write(statement: str) -> bool:
+    """True for a BEGIN ATOMIC block (every portal write) or a bare
+    INSERT / UPDATE / MERGE / DELETE (test cleanup)."""
+    return bool(_WRITE_RE.match(statement))
+
+
+def sanitize(text: str, limit: int = 300) -> str:
+    """Strip URLs, workspace host names and tokens; cap the length."""
+    for pattern, repl in _SANITIZE:
+        text = pattern.sub(repl, text)
+    text = " ".join(text.split())
+    return text if len(text) <= limit else text[: limit - 3] + "..."
+
+
+def _deadline_s() -> float:
+    try:
+        value = float(os.getenv("NITRD_SQL_DEADLINE_S", DEFAULT_DEADLINE_S))
+    except ValueError:
+        return DEFAULT_DEADLINE_S
+    return value if value > 0 else DEFAULT_DEADLINE_S
+
+
+def _refused_at_submit(exc: BaseException) -> str | None:
+    """'auth' / 'rejected' when the API definitely refused the statement."""
+    try:
+        from databricks.sdk import errors
+    except ImportError:  # pragma: no cover - the SDK is a dependency
+        return None
+    if isinstance(exc, (errors.Unauthenticated, errors.PermissionDenied)):
+        return "auth"
+    if isinstance(exc, (errors.BadRequest, errors.NotFound)):
+        return "rejected"
+    return None
+
+
+def _failure(name: str, exc: BaseException, write: bool, phase: str) -> SqlError:
+    """Map an SDK / transport exception to the failure contract above."""
+    detail = f"{type(exc).__name__}: {sanitize(str(exc), 200)}"
+    refused = _refused_at_submit(exc) if phase == "submit" else None
+    if refused == "auth":
+        return SqlUnavailable(f"{name}: credentials refused ({detail})")
+    if refused == "rejected":
+        return SqlError(f"{name}: statement rejected ({detail})")
+    if write:
+        return SqlOutcomeUnknown(f"{name}: no outcome after {phase} failed ({detail})")
+    return SqlError(f"{name}: {phase} failed ({detail})")
 
 
 _INT_TYPES = {"BYTE", "SHORT", "INT", "LONG", "BIGINT", "INTEGER", "TINYINT"}
@@ -105,22 +188,42 @@ class StatementExecutionBackend:
 
     _TERMINAL = {"SUCCEEDED", "FAILED", "CANCELED", "CLOSED"}
 
-    def __init__(self, warehouse_id: str, client: Any | None = None) -> None:
+    def __init__(
+        self,
+        warehouse_id: str,
+        client: Any | None = None,
+        deadline_s: float | None = None,
+    ) -> None:
         if client is None:
             from databricks.sdk import WorkspaceClient
 
             client = WorkspaceClient()
         self.client = client
         self.warehouse_id = warehouse_id
+        self.deadline_s = deadline_s or _deadline_s()
+
+    def _cancel(self, statement_id: str) -> None:
+        try:
+            self.client.statement_execution.cancel_execution(statement_id)
+        except Exception:  # noqa: BLE001 - best effort; the deadline error stands
+            pass
 
     def query(
         self, name: str, statement: str, params: Mapping[str, Any] | None = None
     ) -> list[Row]:
+        """Run one statement under one deadline; raise SqlError (or a subclass)
+        per the module's failure contract, never a raw SDK exception."""
         from databricks.sdk.service.sql import (
             Disposition,
             Format,
             StatementParameterListItem,
         )
+
+        write = is_write(statement)
+        deadline = time.monotonic() + self.deadline_s
+
+        def remaining() -> float:
+            return deadline - time.monotonic()
 
         parameters = [
             StatementParameterListItem(
@@ -131,24 +234,38 @@ class StatementExecutionBackend:
             for k, v in (params or {}).items()
         ]
         api = self.client.statement_execution
-        response = api.execute_statement(
-            statement=statement,
-            warehouse_id=self.warehouse_id,
-            parameters=parameters or None,
-            disposition=Disposition.INLINE,
-            format=Format.JSON_ARRAY,
-            wait_timeout="30s",
-        )
-        deadline = time.monotonic() + 300
+        # The API accepts 0 or 5-50 s; a statement still running after that
+        # continues and is polled below, inside the same deadline.
+        wait = int(min(30, max(5, remaining())))
+        try:
+            response = api.execute_statement(
+                statement=statement,
+                warehouse_id=self.warehouse_id,
+                parameters=parameters or None,
+                disposition=Disposition.INLINE,
+                format=Format.JSON_ARRAY,
+                wait_timeout=f"{wait}s",
+            )
+        except Exception as exc:  # noqa: BLE001 - mapped to the contract
+            raise _failure(name, exc, write, "submit") from exc
+        statement_id = response.statement_id
         while response.status.state.value not in self._TERMINAL:
-            if time.monotonic() > deadline:
-                api.cancel_execution(response.statement_id)
-                raise SqlError(f"{name}: timed out after 300 s")
-            time.sleep(1)
-            response = api.get_statement(response.statement_id)
+            if remaining() <= 0:
+                self._cancel(statement_id)
+                cls = SqlOutcomeUnknown if write else SqlError
+                raise cls(
+                    f"{name}: no result within {self.deadline_s:.0f} s "
+                    "(cancel requested)"
+                )
+            time.sleep(min(1.0, max(0.0, remaining())))
+            try:
+                response = api.get_statement(statement_id)
+            except Exception as exc:  # noqa: BLE001
+                raise _failure(name, exc, write, "poll") from exc
         if response.status.state.value != "SUCCEEDED":
             err = response.status.error
-            raise SqlError(f"{name}: {err.message if err else response.status.state}")
+            text = err.message if err and err.message else response.status.state.value
+            raise SqlError(f"{name}: {sanitize(str(text))}")
 
         columns = (
             response.manifest.schema.columns
@@ -169,9 +286,15 @@ class StatementExecutionBackend:
                 )
             if result.next_chunk_index is None:
                 break
-            result = api.get_statement_result_chunk_n(
-                response.statement_id, result.next_chunk_index
-            )
+            if remaining() <= 0:
+                cls = SqlOutcomeUnknown if write else SqlError
+                raise cls(f"{name}: result not read within {self.deadline_s:.0f} s")
+            try:
+                result = api.get_statement_result_chunk_n(
+                    statement_id, result.next_chunk_index
+                )
+            except Exception as exc:  # noqa: BLE001
+                raise _failure(name, exc, write, "chunk") from exc
         return rows
 
 
@@ -197,7 +320,17 @@ def get_backend(warehouse_id: str = "") -> SqlBackend:
                     "<PREFIX>_DATABRICKS_WAREHOUSE_ID) and Databricks credentials."
                 ),
             )
-        _backend = StatementExecutionBackend(warehouse)
+        try:
+            _backend = StatementExecutionBackend(warehouse)
+        except Exception as exc:  # noqa: BLE001 - no SDK detail to the caller
+            raise tool_error(
+                "Databricks credentials could not be loaded for table reads "
+                f"({type(exc).__name__}). Nothing was run.",
+                hint=(
+                    "In a Databricks App check its service principal; locally set "
+                    "DATABRICKS_HOST with a token, or a config profile."
+                ),
+            ) from exc
     return _backend
 
 
@@ -208,14 +341,38 @@ async def run_query(
     *,
     warehouse_id: str = "",
 ) -> list[Row]:
-    """Run a named statement off the event loop; warehouse errors -> ToolError."""
+    """Run a named statement off the event loop; failures -> sanitized ToolError
+    that says whether a retry is safe (see the module docstring)."""
     backend = get_backend(warehouse_id)
+    write = is_write(statement)
     try:
         return await anyio.to_thread.run_sync(
             lambda: backend.query(name, statement, params)
         )
-    except SqlError as exc:
+    except SqlOutcomeUnknown as exc:
         raise tool_error(
-            f"The data query failed ({exc}).",
+            f"The write may or may not have been applied ({sanitize(str(exc))}).",
+            hint=(
+                "Do not assume it failed. Read back first: "
+                "portal_get_review_history for the award shows what was stored. "
+                "Resubmitting a review request with the same arguments is safe "
+                "(idempotent); a decision that was stored is refused a second time."
+            ),
+        ) from exc
+    except SqlUnavailable as exc:
+        raise tool_error(
+            f"The SQL warehouse refused the credentials ({sanitize(str(exc))}). "
+            "Nothing was run.",
+            hint="Check the service principal's warehouse and table grants.",
+        ) from exc
+    except SqlError as exc:
+        if write:
+            raise tool_error(
+                f"The write failed and was not applied ({sanitize(str(exc))}).",
+                hint="Safe to retry once; if it fails again the warehouse may be "
+                "stopped.",
+            ) from exc
+        raise tool_error(
+            f"The data query failed ({sanitize(str(exc))}).",
             hint="Retry once; if it fails again the warehouse may be stopped.",
         ) from exc
