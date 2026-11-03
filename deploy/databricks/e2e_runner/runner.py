@@ -85,7 +85,7 @@ URL_ENV = {
     "nitrd_classifier": "NITRD_E2E_URL_CLASSIFIER",
     "reviewer_portal": "NITRD_E2E_URL_PORTAL",
 }
-EXPECTED_TOOLS = {"nih_grants_outputs": 5, "nitrd_classifier": 3, "reviewer_portal": 5}
+EXPECTED_TOOLS = {"nih_grants_outputs": 6, "nitrd_classifier": 3, "reviewer_portal": 5}
 SMOKE_APPL, SMOKE_REVIEWER = 10388671, "demo_po_ninr_01"
 RESULTS = table("e2e_runs")
 

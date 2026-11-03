@@ -73,6 +73,42 @@ fitting, calibration, or threshold choice. PR-AUC here is average precision
 | [`pi_history.md`](../docs/analysis/pi_history.md) | Should PI or project history be used? | PI history: no ranking gain, lowers new-PI recall (95% CI −0.047 to −0.017). Project history: +0.020 to +0.039, only on continuing awards. Neither is used by the shipped model. |
 | [`subcategory_ranking.md`](../docs/analysis/subcategory_ranking.md) | What does the PCA engine rank first on public NITRD awards? | Descriptive only: EHCS, LSDMA, and EdW take 70% of first places; AI is ranked first for 0.6% of records. No accuracy figure. |
 
+### Deployed state after Step G (2026-11-02)
+
+The commit numbers above are from 2026-10-29. After Step G (review-table
+migrations 001 and 002, redeploys, post-deploy acceptance) the four Databricks
+Apps run these commits. Code at `main` HEAD is `21d98b9`.
+
+| App | Deployed commit | Shipped code vs HEAD | Security scan |
+|---|---|---|---|
+| `mcp-nih-grants-outputs` | `daa101d` | identical | clean |
+| `mcp-nitrd-reviewer-portal` | `eb64604` | identical | 2 findings, both resolved (HTML `<select>` tags in `pages.py`, not SQL) |
+| `mcp-nitrd-e2e-runner` | `0e6ae7c` | differs only in `tests/`: the read-only gate and version guard added in `21d98b9`. Its one job that runs the e2e chain (`/api/start/e2e`) sets write mode, so its jobs behave the same | 2 findings, both resolved (same `pages.py` lines) |
+| `mcp-nitrd-classifier` | `2c37f87` | its own code (`src/nitrd_classifier`, deploy files) identical; `src/shared` older (see below) | clean (first scan, redeploy of the same content on 2026-11-02) |
+
+The classifier stays at `2c37f87` by decision. Since that commit, `src/shared`
+gained four modules (`guardrail.py`, `ics.py`, `prior_year.py`, `urls.py`) and
+one function (`sql.json_array_param`), with nothing removed or edited. The
+classifier uses none of them, so the deployed classifier ships an older
+`src/shared` without the new, unused modules. Equivalence with the current code
+is shown by the parity suite (`tests/test_parity.py`): every tool, the
+classifier's included, gives byte-identical output in-process and through a
+server. Against the deployed Apps (runner job, 2026-11-03 13:50Z, in-process
+code at `0e6ae7c`): 71 of 71 cases byte-identical, classifier included.
+
+Deployed-path run (runner, HTTP, 2026-11-03): the ten-step e2e chain passed on
+all three demo projects (13:58Z), with 0 rows left in the review tables. Its
+four WARN lines are kept on purpose; they are the cases a human reviewer should
+see: two known-NITRD projects with parent probability below 0.7 (NINR 0.58;
+NCI 0.275, which the classifier suggests as not NITRD), and for the same two,
+AI not among the top three PCAs.
+The smoke job (13:54Z) failed one check because the runner still expected 5
+outputs tools after `outputs_find_cohort` made it 6; fixed in the runner.
+
+Post-deploy acceptance (G.5, live warehouse): read-only 465 passed / 7 skipped
+/ 0 failed; write mode 471 passed / 1 skipped / 0 failed; per-test results in
+[`STEP_G_ACCEPTANCE.md`](../scripts/migrations/STEP_G_ACCEPTANCE.md).
+
 ## 2. Performance metrics
 
 ### Parent classifier (`nitrd-parent-v2-ba10594d9581`), FY2019 validation half
@@ -109,7 +145,7 @@ covers one validation year.
 | Agent answer grounding, clarification quality, LLM-as-judge scores | **Not measured**: draft rubrics and harness only. |
 | Agent resistance to hostile metadata, approval bypass, interruption/retry failures | **Not measured**. |
 | Independent human-labelled PCA agreement | **Not measured**: no public PCA labels. |
-| All ten end-to-end steps against the deployed Apps | **Not measured**: passes in-process; the HTTP run needs an OAuth identity (user login or the e2e runner App). |
+| All ten end-to-end steps against the deployed Apps | **Measured 2026-11-03**: passed over HTTP through the e2e runner App on all three demo projects (see "Deployed state after Step G"). |
 | Reliability beyond the three demo projects | **Not measured**. |
 | Latency, throughput, concurrency, cost per review | **Not measured**. |
 | Reviewer time saved, correction burden, workload reduction | **Not measured**. |
@@ -150,6 +186,14 @@ after the turn was interrupted. An interrupted turn is therefore not a
 confirmed cancellation. The reviewer portal's design responds with a durable
 `request_id`, an `idempotency_key` on submission, and a history lookup before
 retry; fault-injection testing of those paths has not been run.
+
+Residual in the live tests (2026-11-02): an interrupted write-mode run can leave
+sandbox rows in the review tables, because the e2e test's cleanup runs after
+the whole chain returns, not in a `finally` around the write at step 9.
+Read-only runs cannot write (steps 9, 9b and 10 need
+`PORTAL_LIVE_WRITE_TESTS=1`), and their session guard fails on any leftover
+row and on any Delta version change, so the next read-only run stops on such
+leftovers instead of passing over them.
 
 Credential-disclosure resistance, authorization isolation, and production
 security readiness are **Not measured**. Broader deployment would need
