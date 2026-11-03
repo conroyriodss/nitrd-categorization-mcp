@@ -19,7 +19,7 @@ Jobs run one at a time, started from the browser:
                     of each MCP app to /health and an MCP initialize
                     request, per candidate Authorization header. Token
                     values are never stored or shown.
-  /api/start/parity tests/test_parity.py with NITRD_E2E_TRANSPORT=http: all 13
+  /api/start/parity tests/test_parity.py with NITRD_E2E_TRANSPORT=http: all 14
                     tools on fixed inputs (demo projects, negative control,
                     error cases), deployed answer compared byte-for-byte with
                     the in-process answer from the same commit, plus latency.
@@ -657,7 +657,7 @@ async def index(request: Request) -> HTMLResponse:
         "<h2>NITRD Gate 4 e2e runner (sandbox)</h2>"
         '<p><a href="api/start/smoke">Start smoke (sub-gate D)</a> | '
         '<a href="api/start/e2e">Start e2e (sub-gate E, writes + cleans up '
-        'sandbox rows)</a> | <a href="api/start/parity">Start parity (all 13 '
+        'sandbox rows)</a> | <a href="api/start/parity">Start parity (all 14 '
         'tools, read-only)</a> | <a href="api/start/lifecycle">Start portal '
         "lifecycle (writes + cleans up sandbox rows)</a> | "
         '<a href="api/start/contract">Start extended smoke (contracts + '
