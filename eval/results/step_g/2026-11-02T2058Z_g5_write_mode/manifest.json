@@ -1,0 +1,162 @@
+{
+  "run": "Step G.5 part 2, write mode",
+  "commit": "0e6ae7cc4c21465b6ab1c768863a22f4d72022aa",
+  "started": "2026-11-02T20:58:44Z",
+  "finished": "2026-11-02T21:18:02Z",
+  "transport": "stdio",
+  "env": {
+    "DATABRICKS_WAREHOUSE_ID": "<warehouse-id>",
+    "PORTAL_LIVE_WRITE_TESTS": "1",
+    "OUTPUTS_DATABRICKS_WAREHOUSE_ID": "unset"
+  },
+  "totals": {
+    "passed": 471,
+    "skipped": 1,
+    "failed": 0
+  },
+  "acceptance_tests": [
+    {
+      "id": "tests/test_parity.py::test_every_tool_matches_in_process",
+      "outcome": "passed",
+      "seconds": 170.8
+    },
+    {
+      "id": "tests/test_portal_lifecycle.py::test_lifecycle_live[10506013]",
+      "outcome": "passed",
+      "seconds": 40.9
+    },
+    {
+      "id": "tests/test_portal_lifecycle.py::test_lifecycle_live[10388671]",
+      "outcome": "passed",
+      "seconds": 38.4
+    },
+    {
+      "id": "tests/test_portal_lifecycle.py::test_lifecycle_live[10445135]",
+      "outcome": "passed",
+      "seconds": 39.6
+    },
+    {
+      "id": "tests/test_portal_lifecycle.py::test_lifecycle_live[10075931]",
+      "outcome": "passed",
+      "seconds": 40.8
+    },
+    {
+      "id": "tests/test_portal_submission.py::test_live_fy2021_nibib_u01_submit_writes_exactly_41",
+      "outcome": "passed",
+      "seconds": 425.1
+    },
+    {
+      "id": "tests/test_portal_tools.py::test_live_submit_idempotent_and_decide",
+      "outcome": "passed",
+      "seconds": 19.6
+    },
+    {
+      "id": "tests/test_smoke_contract.py::test_contracts_on_live_apps",
+      "outcome": "passed",
+      "seconds": 71.0
+    },
+    {
+      "id": "tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10506013]",
+      "outcome": "passed",
+      "seconds": 57.5
+    },
+    {
+      "id": "tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10388671]",
+      "outcome": "passed",
+      "seconds": 58.5
+    },
+    {
+      "id": "tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10445135]",
+      "outcome": "passed",
+      "seconds": 55.3
+    }
+  ],
+  "skipped": [
+    "tests/test_classifier_tools.py::test_vendored_engine_matches_upstream"
+  ],
+  "cohort_peak": {
+    "review_events_version": 192,
+    "at": "2026-11-02T21:12:41Z",
+    "review_requests": {
+      "rows": 41,
+      "distinct_appl_id": 41,
+      "classification_status": {
+        "ok": 41
+      },
+      "sandbox": true,
+      "status": {
+        "pending": 41
+      },
+      "key_prefix": "cohort:2021:NIBIB:U01:"
+    },
+    "review_events": {
+      "created": 41,
+      "classified": 41,
+      "classification_failed": 0
+    },
+    "routing_events": {
+      "rows": 41
+    }
+  },
+  "tables": {
+    "review_requests": {
+      "versions": [
+        142,
+        205
+      ],
+      "commits": 64,
+      "operations": {
+        "DELETE": 10,
+        "TRANSACTION": 54
+      },
+      "rows_deleted": 49,
+      "rows_after": 0
+    },
+    "review_events": {
+      "versions": [
+        139,
+        202
+      ],
+      "commits": 64,
+      "operations": {
+        "DELETE": 10,
+        "TRANSACTION": 54
+      },
+      "rows_deleted": 95,
+      "rows_after": 0
+    },
+    "routing_events": {
+      "versions": [
+        123,
+        181
+      ],
+      "commits": 59,
+      "operations": {
+        "DELETE": 10,
+        "TRANSACTION": 49
+      },
+      "rows_deleted": 49,
+      "rows_after": 0
+    }
+  },
+  "cleanup_reconciliation": {
+    "review_requests": "41 cohort + 4 lifecycle + 1 tools + 3 e2e = 49",
+    "review_events": "82 cohort + 8 lifecycle + 2 tools + 3 e2e = 95",
+    "routing_events": "41 + 4 + 1 + 3 = 49"
+  },
+  "files": {
+    "g5_wm.log": {
+      "sha256": "93416b996b1bd6812e7901ec724c3bed970e36ca64b4ac84428e6a6acfa68f7c",
+      "bytes": 81508
+    },
+    "g5_wm.xml": {
+      "sha256": "0964cda134be6efd672633141f1f95566fd4b986357bdc9bacfa5bc20a339b56",
+      "bytes": 57998
+    },
+    "g5_wm.start": {
+      "sha256": "bfdac912f6873ee169f8c9620bd1624655af5487baacf618f838e53a7be18bf8",
+      "bytes": 21
+    }
+  },
+  "volume_dir": "/Volumes/users/conroyri/nitrd_hackathon_v1_raw/runs/step_g/2026-11-02T2058Z_g5_write_mode"
+}

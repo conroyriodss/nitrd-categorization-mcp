@@ -1,0 +1,120 @@
+
+Prompt BJ e2e | appl 10506013 U24AI171008 (NIAID) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.15825
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [PASS] 6 known-NITRD parent probability > 0.7 p=0.986275 suggestion=nitrd
+    [PASS] 7 plausible PCA (LSDMA) in top 3 top3=['CHuman', 'LSDMA', 'EdW']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_niaid_01 (fixture expects program_officer -> demo_po_niaid_01)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=40
+.
+Prompt BJ e2e | appl 10388671 R01NR013912 (NINR) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.28581081081081083
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [WARN] 6 known-NITRD parent probability > 0.7 p=0.580214 suggestion=nitrd
+    [WARN] 7 plausible PCA (AI) in top 3 top3=['ENIT', 'IRAS', 'SPSQ']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_ninr_01 (fixture expects program_officer -> demo_po_ninr_01)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=40
+.
+Prompt BJ e2e | appl 10445135 R01CA258987 (NCI) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.2941711956521739
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [WARN] 6 known-NITRD parent probability > 0.7 p=0.275149 suggestion=not_nitrd
+    [WARN] 7 plausible PCA (AI) in top 3 top3=['LSDMA', 'EHCS', 'SPSQ']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) ic_rep -> demo_ic_rep_nci (fixture expects ic_rep -> demo_ic_rep_nci)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=46
+.
+Prompt BJ e2e | negative control appl 10304125 | transport=http
+  step  tool                               status           note
+  6     classifier_classify_parent         ok               
+  sanity checks (logged, not asserted):
+    [PASS] 6 known non-NITRD parent probability < 0.3 p=0.000644 suggestion=not_nitrd
+.
+Prompt BJ e2e | cross-project intensity | transport=http
+  step  tool                               status           note
+  sanity checks (logged, not asserted):
+    [PASS] 5 intensity higher for more computational publications appl 10388671: comp_pubs=14 overall=0.286; appl 10445135: comp_pubs=29 overall=0.294; appl 10506013: comp_pubs=10 overall=0.158
+..
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10506013]
+PASSED tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10388671]
+PASSED tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10445135]
+PASSED tests/test_smoke_e2e.py::test_negative_control_parent_probability
+PASSED tests/test_smoke_e2e.py::test_intensity_tracks_computational_publications
+PASSED tests/test_smoke_e2e.py::test_harness_passes_when_every_tool_answers
+6 passed, 1 warning in 71.33s (0:01:11)

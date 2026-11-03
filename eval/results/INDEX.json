@@ -1,0 +1,92 @@
+{
+ "files": {
+  "runs/20261103T1350Z_parity_5704d50c/report.log": {
+   "bytes": 12351,
+   "sha256": "6730707424d28a4756100d4090813e2124657c74ca55b80ef9c0341ff830ca84"
+  },
+  "runs/20261103T1350Z_parity_5704d50c/run.json": {
+   "bytes": 1206,
+   "sha256": "1741b3341c69902d1ef251148e40648d39a9c1edcb59db9fbee748d5a87243a3"
+  },
+  "runs/20261103T1354Z_smoke_a9204bb7/report.log": {
+   "bytes": 5665,
+   "sha256": "448dffb54cd1ba2d64aabd5e22db133dba00de89eca796a5f2d9c91c127f9fe2"
+  },
+  "runs/20261103T1354Z_smoke_a9204bb7/run.json": {
+   "bytes": 7842,
+   "sha256": "61c44727408bc418e2ee187ba25465066809a1778a8751c7e3bb416d3384ba95"
+  },
+  "runs/20261103T1358Z_e2e_778bd3ab/report.log": {
+   "bytes": 7939,
+   "sha256": "d7a3fcaacef34ea967f5c7aa39ad237c474ed65a651dc67eef8a35103b80a75d"
+  },
+  "runs/20261103T1358Z_e2e_778bd3ab/run.json": {
+   "bytes": 4304,
+   "sha256": "b2c1b997ee593bc2756226e589cc1c9d2fe3a63d1946026aaac24aeebba989a5"
+  },
+  "step_g/2026-11-02T2058Z_g5_write_mode/g5_wm.log": {
+   "bytes": 81508,
+   "sha256": "93416b996b1bd6812e7901ec724c3bed970e36ca64b4ac84428e6a6acfa68f7c"
+  },
+  "step_g/2026-11-02T2058Z_g5_write_mode/g5_wm.start": {
+   "bytes": 21,
+   "sha256": "bfdac912f6873ee169f8c9620bd1624655af5487baacf618f838e53a7be18bf8"
+  },
+  "step_g/2026-11-02T2058Z_g5_write_mode/g5_wm.xml": {
+   "bytes": 57998,
+   "sha256": "0964cda134be6efd672633141f1f95566fd4b986357bdc9bacfa5bc20a339b56"
+  },
+  "step_g/2026-11-02T2058Z_g5_write_mode/manifest.json": {
+   "bytes": 4061,
+   "sha256": "99ee40834d4f0e41263dd55177c5cb5537267103960e1768834cfa236cc6b13b"
+  },
+  "step_g/2026-11-02T2144Z_g5_postfix/g5b_e2e_wm.log": {
+   "bytes": 7078,
+   "sha256": "c7d91473b98b29fb36dd6aa045bc8de1fbd669a04393364381256fc18def36a9"
+  },
+  "step_g/2026-11-02T2144Z_g5_postfix/g5b_ro.log": {
+   "bytes": 79312,
+   "sha256": "f38e17f7f03cbb5ba3e549fa7e8413725fde815f03d451eef7e1e8785708e1c3"
+  },
+  "step_g/2026-11-02T2144Z_g5_postfix/g5b_ro.start": {
+   "bytes": 21,
+   "sha256": "0f95652b42c2e4fe62037d4a6757cf847764b6c4e12fb0a38e662082a3c45f69"
+  },
+  "step_g/2026-11-02T2144Z_g5_postfix/g5b_ro.xml": {
+   "bytes": 60642,
+   "sha256": "358073a0575ca18578fc31370287089efc637c8a7cf19ed05ee0ceddc9d859a2"
+  },
+  "tool_utilization.json": {
+   "bytes": 3602,
+   "sha256": "f5669f22a93f019b673de8166a235437d2c7f808a8018c284a09577507b50bf5"
+  },
+  "tool_utilization.md": {
+   "bytes": 1712,
+   "sha256": "6f716c138bd970ada19d7d40e093b258259afb60dc948ff76f35108bc80dec4c"
+  }
+ },
+ "generated_utc": "2026-11-03T17:53:37Z",
+ "generator": "scripts/export_evidence.py",
+ "redactions": {
+  "runs/20261103T1354Z_smoke_a9204bb7/report.log": {
+   "<service-principal-id>": 5,
+   "<workspace-host>": 3
+  },
+  "runs/20261103T1354Z_smoke_a9204bb7/run.json": {
+   "<service-principal-id>": 5,
+   "<workspace-host>": 3
+  },
+  "step_g/2026-11-02T2058Z_g5_write_mode/manifest.json": {
+   "<warehouse-id>": 1
+  }
+ },
+ "secret_scan": [
+  "aws_key",
+  "bearer_value",
+  "databricks_pat",
+  "github_token",
+  "jwt",
+  "private_key",
+  "slack_token"
+ ]
+}

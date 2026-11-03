@@ -18,6 +18,37 @@ The multi-server MLflow path is blocked on a workspace administrator
 provisioning a service principal. This is a public-data, sandbox-write
 prototype, not an operational NIH categorization system.
 
+## 0. Claim-to-artifact map (verifiable from this repository)
+
+Judges see the repositories, not the Databricks workspace. Every measured claim below points at a
+committed file. Run records were exported verbatim from the workspace by
+[`scripts/export_evidence.py`](../scripts/export_evidence.py) (credential scan before writing; a hit
+aborts the export) and are hashed in [`results/INDEX.json`](results/INDEX.json). Three workspace
+identifiers that are not credentials (workspace host name, Apps service-principal IDs, warehouse ID)
+are replaced by placeholders such as `<workspace-host>`. Each replacement is counted per file under
+`redactions` in INDEX.json; no other byte is changed.
+
+**Benchmark question set.** The fixed questions the system is measured on are: (1) the parity suite,
+71 cases over all 14 tools ([`tests/test_parity.py`](../tests/test_parity.py)); (2) the ten-step
+end-to-end scenario on three demo projects plus a negative control
+([`tests/test_smoke_e2e.py`](../tests/test_smoke_e2e.py)); (3) the parent-classifier validation set,
+the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifier_evaluation.md)).
+
+| Claim | Artifact (committed) | What a reader can check |
+|---|---|---|
+| All 14 deployed tools answer byte-identically to in-process code (71/71 cases) | [`results/runs/20261103T1350Z_parity_5704d50c/`](results/runs/20261103T1350Z_parity_5704d50c/) (`run.json`, `report.log`) | per-case lines, commit `0e6ae7c`, 0 review-table rows left |
+| Tool utilization: 14 tools exercised, cases and latency per tool | [`results/tool_utilization.md`](results/tool_utilization.md) (+ `.json`) | derived from the parity log above; parser checks its per-tool maxima against the run summary |
+| Ten-step chain passes over HTTP on all three demo projects; 4 WARN lines kept as review cases | [`results/runs/20261103T1358Z_e2e_778bd3ab/`](results/runs/20261103T1358Z_e2e_778bd3ab/) | step-by-step PASS/WARN lines, 0 rows left |
+| Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is added here when recorded |
+| G.5 write-mode acceptance: 471 passed, 1 skipped, 0 failed (472 tests) | [`results/step_g/2026-11-02T2058Z_g5_write_mode/`](results/step_g/2026-11-02T2058Z_g5_write_mode/) (`g5_wm.xml` junit, `g5_wm.log`, `manifest.json`) | junit totals. The original manifest's sha256 `ca25cad3...` is the one in [`DECISIONS_LOG.md`](../docs/DECISIONS_LOG.md); the committed copy differs only by its one warehouse-ID redaction (INDEX.json) |
+| G.5 post-fix read-only run: 464 passed, 10 skipped, 0 failed (474 tests); post-fix e2e write mode 3 passed | [`results/step_g/2026-11-02T2144Z_g5_postfix/`](results/step_g/2026-11-02T2144Z_g5_postfix/) | junit totals and logs |
+| Parent classifier PR-AUC 0.862 (FY2019 validation half) | [`classifier_evaluation.md`](classifier_evaluation.md) | protocol and tables; the per-record validation predictions are not committed (they are built from the Unity Catalog ExPORTER tables) |
+| Offline test suite passes in CI | GitHub Actions on `main` (public run logs) | rerun locally with `uv run pytest` |
+
+Environment-bound and why: the Unity Catalog tables (public ExPORTER, iCite and PubMed bulk data
+staged in the workspace, too large to version here), the deployed Apps (behind workspace OAuth), and the sandbox review tables
+(emptied by every test run). The exported run records above stand in for them.
+
 ## 1. Testing methodology
 
 ### Software tests, model evaluation, and agent evaluation are separate

@@ -1,0 +1,856 @@
+[1m============================= test session starts ==============================[0m
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /Workspace/Users/conroyri@nih.gov/nitrd-mcp/.venv/bin/python
+rootdir: /Workspace/Users/conroyri@nih.gov/nitrd-mcp
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.12.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+[1mcollecting ... [0mcollected 472 items
+
+tests/test_classifier_tools.py::test_parent_result_shape_and_model_info [32mPASSED[0m[32m [  0%][0m
+tests/test_classifier_tools.py::test_parent_top_features_push_toward_nitrd_largest_first [32mPASSED[0m[32m [  0%][0m
+tests/test_classifier_tools.py::test_parent_cohort[90000016-training] [32mPASSED[0m[32m [  0%][0m
+tests/test_classifier_tools.py::test_parent_cohort[90000019-threshold_selection] [32mPASSED[0m[32m [  0%][0m
+tests/test_classifier_tools.py::test_parent_cohort[10506013-None] [32mPASSED[0m[32m [  1%][0m
+tests/test_classifier_tools.py::test_parent_separates_synthetic_it_from_bio [32mPASSED[0m[32m [  1%][0m
+tests/test_classifier_tools.py::test_parent_abstains_without_vocabulary [32mPASSED[0m[32m [  1%][0m
+tests/test_classifier_tools.py::test_unknown_appl_id_is_a_tool_error [32mPASSED[0m[32m [  1%][0m
+tests/test_classifier_tools.py::test_missing_model_is_a_tool_error [32mPASSED[0m[32m [  1%][0m
+tests/test_classifier_tools.py::test_explain_parent_contributions_reconstruct_the_logit [32mPASSED[0m[32m [  2%][0m
+tests/test_classifier_tools.py::test_explain_parent_flags_development_cohort [32mPASSED[0m[32m [  2%][0m
+tests/test_classifier_tools.py::test_vendored_scope_file_is_byte_identical_to_the_pinned_sha [32mPASSED[0m[32m [  2%][0m
+tests/test_classifier_tools.py::test_subcategory_ranks_demo_project [32mPASSED[0m[32m [  2%][0m
+tests/test_classifier_tools.py::test_subcategory_no_match [32mPASSED[0m[32m         [  2%][0m
+tests/test_classifier_tools.py::test_explain_subcategory_matches_classify [32mPASSED[0m[32m [  3%][0m
+tests/test_classifier_tools.py::test_aian_is_not_artificial_intelligence [32mPASSED[0m[32m [  3%][0m
+tests/test_classifier_tools.py::test_vendored_engine_matches_upstream [33mSKIPPED[0m[32m [  3%][0m
+tests/test_datacite.py::test_funder_id_set_is_32_with_arpa_h_excluded [32mPASSED[0m[32m [  3%][0m
+tests/test_datacite.py::test_normalize_funder_id_spellings[https://doi.org/10.13039/100000002] [32mPASSED[0m[32m [  4%][0m
+tests/test_datacite.py::test_normalize_funder_id_spellings[http://dx.doi.org/10.13039/100000002] [32mPASSED[0m[32m [  4%][0m
+tests/test_datacite.py::test_normalize_funder_id_spellings[10.13039/100000002] [32mPASSED[0m[32m [  4%][0m
+tests/test_datacite.py::test_normalize_funder_id_spellings[ 100000002 ] [32mPASSED[0m[32m [  4%][0m
+tests/test_datacite.py::test_normalize_funder_id_rejects_non_crossref[None] [32mPASSED[0m[32m [  4%][0m
+tests/test_datacite.py::test_normalize_funder_id_rejects_non_crossref[] [32mPASSED[0m[32m [  5%][0m
+tests/test_datacite.py::test_normalize_funder_id_rejects_non_crossref[https://ror.org/01cwqze88] [32mPASSED[0m[32m [  5%][0m
+tests/test_datacite.py::test_normalize_funder_id_rejects_non_crossref[NIH] [32mPASSED[0m[32m [  5%][0m
+tests/test_datacite.py::test_parse_award[R01 HD100471-key0] [32mPASSED[0m[32m       [  5%][0m
+tests/test_datacite.py::test_parse_award[1U24AI171008-01-key1] [32mPASSED[0m[32m    [  5%][0m
+tests/test_datacite.py::test_parse_award[5R01NR013912-08-key2] [32mPASSED[0m[32m    [  6%][0m
+tests/test_datacite.py::test_parse_award[R01NR01391208-key3] [32mPASSED[0m[32m      [  6%][0m
+tests/test_datacite.py::test_parse_award[171008-key4] [32mPASSED[0m[32m             [  6%][0m
+tests/test_datacite.py::test_parse_award_rejects_contracts_and_text[HHSN261200800001E] [32mPASSED[0m[32m [  6%][0m
+tests/test_datacite.py::test_parse_award_rejects_contracts_and_text[grant from NIH] [32mPASSED[0m[32m [  6%][0m
+tests/test_datacite.py::test_parse_award_rejects_contracts_and_text[] [32mPASSED[0m[32m [  7%][0m
+tests/test_datacite.py::test_name_fallback_is_whole_phrase [32mPASSED[0m[32m        [  7%][0m
+tests/test_datacite.py::test_tiers [32mPASSED[0m[32m                                [  7%][0m
+tests/test_datacite.py::test_serial_only_must_be_unique [32mPASSED[0m[32m           [  7%][0m
+tests/test_datacite.py::test_arpa_h_excluded_per_funding_reference [32mPASSED[0m[32m [  8%][0m
+tests/test_datacite.py::test_non_nih_funder_and_multi_award_split [32mPASSED[0m[32m [  8%][0m
+tests/test_datacite.py::test_queries_cover_every_funder_id [32mPASSED[0m[32m        [  8%][0m
+tests/test_datacite.py::test_pagination_retry_and_harvest [32mPASSED[0m[32m         [  8%][0m
+tests/test_datacite.py::test_unsafe_next_link_rejected [32mPASSED[0m[32m            [  8%][0m
+tests/test_datacite.py::test_non_retryable_error_raises [32mPASSED[0m[32m           [  9%][0m
+tests/test_find_cohort.py::test_guardrail_reserves_2022_through_2026_with_reasons [32mPASSED[0m[32m [  9%][0m
+tests/test_find_cohort.py::test_ic_map_is_shared_and_resolves_both_ways [32mPASSED[0m[32m [  9%][0m
+tests/test_find_cohort.py::test_cohort_returns_records_total_and_exact_sql[NIBIB] [32mPASSED[0m[32m [  9%][0m
+tests/test_find_cohort.py::test_cohort_returns_records_total_and_exact_sql[nibib] [32mPASSED[0m[32m [  9%][0m
+tests/test_find_cohort.py::test_cohort_returns_records_total_and_exact_sql[EB] [32mPASSED[0m[32m [ 10%][0m
+tests/test_find_cohort.py::test_cohort_limit_truncates_but_reports_total [32mPASSED[0m[32m [ 10%][0m
+tests/test_find_cohort.py::test_zero_return_cohort_is_empty_not_an_error [32mPASSED[0m[32m [ 10%][0m
+tests/test_find_cohort.py::test_large_limit_needs_confirmation[51] [32mPASSED[0m[32m [ 10%][0m
+tests/test_find_cohort.py::test_large_limit_needs_confirmation[200] [32mPASSED[0m[32m [ 11%][0m
+tests/test_find_cohort.py::test_out_of_range_limit_is_rejected_even_confirmed[0-below 1] [32mPASSED[0m[32m [ 11%][0m
+tests/test_find_cohort.py::test_out_of_range_limit_is_rejected_even_confirmed[-5-below 1] [32mPASSED[0m[32m [ 11%][0m
+tests/test_find_cohort.py::test_out_of_range_limit_is_rejected_even_confirmed[201-hard cap of 200] [32mPASSED[0m[32m [ 11%][0m
+tests/test_find_cohort.py::test_combinations_for_every_ic [32mPASSED[0m[32m         [ 11%][0m
+tests/test_find_cohort.py::test_combinations_for_one_ic [32mPASSED[0m[32m           [ 12%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{}-2022] [32mPASSED[0m[32m [ 12%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{}-2023] [32mPASSED[0m[32m [ 12%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{}-2024] [32mPASSED[0m[32m [ 12%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{}-2025] [32mPASSED[0m[32m [ 12%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{}-2026] [32mPASSED[0m[32m [ 13%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB'}-2022] [32mPASSED[0m[32m [ 13%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB'}-2023] [32mPASSED[0m[32m [ 13%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB'}-2024] [32mPASSED[0m[32m [ 13%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB'}-2025] [32mPASSED[0m[32m [ 13%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB'}-2026] [32mPASSED[0m[32m [ 14%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB', 'activity': 'U01'}-2022] [32mPASSED[0m[32m [ 14%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB', 'activity': 'U01'}-2023] [32mPASSED[0m[32m [ 14%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB', 'activity': 'U01'}-2024] [32mPASSED[0m[32m [ 14%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB', 'activity': 'U01'}-2025] [32mPASSED[0m[32m [ 15%][0m
+tests/test_find_cohort.py::test_reserved_fy_is_refused_in_every_mode_without_sql[{'ic': 'NIBIB', 'activity': 'U01'}-2026] [32mPASSED[0m[32m [ 15%][0m
+tests/test_find_cohort.py::test_fy_after_reserved_range_and_before_data_are_refused [32mPASSED[0m[32m [ 15%][0m
+tests/test_find_cohort.py::test_bad_selectors_are_errors_naming_the_value[args0-needs ic as well] [32mPASSED[0m[32m [ 15%][0m
+tests/test_find_cohort.py::test_bad_selectors_are_errors_naming_the_value[args1-Unknown administering IC 'NIBBB'] [32mPASSED[0m[32m [ 15%][0m
+tests/test_find_cohort.py::test_bad_selectors_are_errors_naming_the_value[args2-not three letters/digits] [32mPASSED[0m[32m [ 16%][0m
+tests/test_migrations.py::test_statement_counts_and_targets [32mPASSED[0m[32m       [ 16%][0m
+tests/test_migrations.py::test_002_widens_event_type_before_dropping_the_narrow_check [32mPASSED[0m[32m [ 16%][0m
+tests/test_migrations.py::test_fresh_install_is_the_post_002_shape [32mPASSED[0m[32m [ 16%][0m
+tests/test_migrations.py::test_runner_row_checks_are_the_constraint_expressions [32mPASSED[0m[32m [ 16%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row0-True] [32mPASSED[0m[32m [ 17%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row1-True] [32mPASSED[0m[32m [ 17%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row2-True] [32mPASSED[0m[32m [ 17%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row3-True] [32mPASSED[0m[32m [ 17%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row4-True] [32mPASSED[0m[32m [ 18%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row5-True] [32mPASSED[0m[32m [ 18%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row6-False] [32mPASSED[0m[32m [ 18%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row7-False] [32mPASSED[0m[32m [ 18%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row8-False] [32mPASSED[0m[32m [ 18%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row9-False] [32mPASSED[0m[32m [ 19%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row10-False] [32mPASSED[0m[32m [ 19%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row11-False] [32mPASSED[0m[32m [ 19%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row12-False] [32mPASSED[0m[32m [ 19%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row13-False] [32mPASSED[0m[32m [ 19%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row14-False] [32mPASSED[0m[32m [ 20%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row15-False] [32mPASSED[0m[32m [ 20%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row16-False] [32mPASSED[0m[32m [ 20%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row17-False] [32mPASSED[0m[32m [ 20%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row18-False] [32mPASSED[0m[32m [ 20%][0m
+tests/test_migrations.py::test_rr_classification_truth_table_is_never_null[row19-False] [32mPASSED[0m[32m [ 21%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[pending-failed-True] [32mPASSED[0m[32m [ 21%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[approved-failed-False] [32mPASSED[0m[32m [ 21%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[override-failed-False] [32mPASSED[0m[32m [ 21%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[rejected-failed-False] [32mPASSED[0m[32m [ 22%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[deferred-failed-False] [32mPASSED[0m[32m [ 22%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[approved-ok-True] [32mPASSED[0m[32m [ 22%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[approved-None-True] [32mPASSED[0m[32m [ 22%][0m
+tests/test_migrations.py::test_rr_decided_classified_truth_table[pending-None-True] [32mPASSED[0m[32m [ 22%][0m
+tests/test_migrations.py::test_shapes_for_each_version [32mPASSED[0m[32m            [ 23%][0m
+tests/test_migrations.py::test_dry_run_all_from_v1_lists_both_and_executes_nothing [32mPASSED[0m[32m [ 23%][0m
+tests/test_migrations.py::test_002_alone_refuses_before_001 [32mPASSED[0m[32m       [ 23%][0m
+tests/test_migrations.py::test_already_applied_is_left_alone [32mPASSED[0m[32m      [ 23%][0m
+tests/test_migrations.py::test_verify_002_passes_and_catches_each_fault [32mPASSED[0m[32m [ 23%][0m
+tests/test_models.py::test_vocabularies_are_fixed [32mPASSED[0m[32m                 [ 24%][0m
+tests/test_models.py::test_core_project_num_normalizes[U24AI171008-U24AI171008] [32mPASSED[0m[32m [ 24%][0m
+tests/test_models.py::test_core_project_num_normalizes[ u24ai171008 -U24AI171008] [32mPASSED[0m[32m [ 24%][0m
+tests/test_models.py::test_core_project_num_normalizes[N01HC012345-N01HC012345] [32mPASSED[0m[32m [ 24%][0m
+tests/test_models.py::test_core_project_num_normalizes[NOV200003894610_YCA3-NOV200003894610_YCA3] [32mPASSED[0m[32m [ 25%][0m
+tests/test_models.py::test_core_project_num_rejects_junk[] [32mPASSED[0m[32m        [ 25%][0m
+tests/test_models.py::test_core_project_num_rejects_junk[U2] [32mPASSED[0m[32m      [ 25%][0m
+tests/test_models.py::test_core_project_num_rejects_junk[U24 AI171008] [32mPASSED[0m[32m [ 25%][0m
+tests/test_models.py::test_core_project_num_rejects_junk[U24AI171008/02] [32mPASSED[0m[32m [ 25%][0m
+tests/test_models.py::test_fiscal_year_limited_to_loaded_years[2014] [32mPASSED[0m[32m [ 26%][0m
+tests/test_models.py::test_fiscal_year_limited_to_loaded_years[2024] [32mPASSED[0m[32m [ 26%][0m
+tests/test_models.py::test_fiscal_year_limited_to_loaded_years[2025] [32mPASSED[0m[32m [ 26%][0m
+tests/test_models.py::test_persona_ids_accepted[demo_po_lsdma_01] [32mPASSED[0m[32m [ 26%][0m
+tests/test_models.py::test_persona_ids_accepted[demo_ic_rep_nlm] [32mPASSED[0m[32m  [ 26%][0m
+tests/test_models.py::test_persona_ids_accepted[demo_ic_rep_nci_02] [32mPASSED[0m[32m [ 27%][0m
+tests/test_models.py::test_persona_ids_accepted[demo_sia] [32mPASSED[0m[32m         [ 27%][0m
+tests/test_models.py::test_persona_ids_accepted[DEMO_SIA] [32mPASSED[0m[32m         [ 27%][0m
+tests/test_models.py::test_persona_ids_rejected[demo-po-nci-1] [32mPASSED[0m[32m    [ 27%][0m
+tests/test_models.py::test_persona_ids_rejected[jane.doe@example.invalid] [32mPASSED[0m[32m [ 27%][0m
+tests/test_models.py::test_persona_ids_rejected[demo_po_lsdma] [32mPASSED[0m[32m    [ 28%][0m
+tests/test_models.py::test_persona_ids_rejected[sia] [32mPASSED[0m[32m              [ 28%][0m
+tests/test_models.py::test_task2_rejects_repeats_and_unknown_codes [32mPASSED[0m[32m [ 28%][0m
+tests/test_models.py::test_evidence_is_closed_and_bounded [32mPASSED[0m[32m         [ 28%][0m
+tests/test_models.py::test_stored_records_are_always_sandbox [32mPASSED[0m[32m      [ 29%][0m
+tests/test_outputs_tools.py::test_split_categories_and_nitrd_flag [32mPASSED[0m[32m [ 29%][0m
+tests/test_outputs_tools.py::test_category_aliases_cover_both_nitrd_names [32mPASSED[0m[32m [ 29%][0m
+tests/test_outputs_tools.py::test_pi_names_contact_first_and_numbers [32mPASSED[0m[32m [ 29%][0m
+tests/test_outputs_tools.py::test_find_projects_returns_page_and_total [32mPASSED[0m[32m [ 29%][0m
+tests/test_outputs_tools.py::test_find_projects_known_category_with_no_rows_is_empty [32mPASSED[0m[32m [ 30%][0m
+tests/test_outputs_tools.py::test_find_projects_unknown_category_is_an_error [32mPASSED[0m[32m [ 30%][0m
+tests/test_outputs_tools.py::test_project_detail_parses_exporter_strings [32mPASSED[0m[32m [ 30%][0m
+tests/test_outputs_tools.py::test_project_detail_unknown_appl_is_an_error [32mPASSED[0m[32m [ 30%][0m
+tests/test_outputs_tools.py::test_publications_mesh_null_vs_list [32mPASSED[0m[32m  [ 30%][0m
+tests/test_outputs_tools.py::test_publications_known_core_without_links_is_empty [32mPASSED[0m[32m [ 31%][0m
+tests/test_outputs_tools.py::test_publications_refuse_a_bad_pmid_before_any_lookup[None] [32mPASSED[0m[32m [ 31%][0m
+tests/test_outputs_tools.py::test_publications_refuse_a_bad_pmid_before_any_lookup[36000002] [32mPASSED[0m[32m [ 31%][0m
+tests/test_outputs_tools.py::test_publications_refuse_a_bad_pmid_before_any_lookup[True] [32mPASSED[0m[32m [ 31%][0m
+tests/test_outputs_tools.py::test_publications_unknown_core_is_an_error [32mPASSED[0m[32m [ 31%][0m
+tests/test_outputs_tools.py::test_datacite_not_available_until_table_exists [32mPASSED[0m[32m [ 32%][0m
+tests/test_outputs_tools.py::test_intensity_scores_publications_with_vendored_scorer [32mPASSED[0m[32m [ 32%][0m
+tests/test_outputs_tools.py::test_intensity_with_no_publications_is_null_not_zero [32mPASSED[0m[32m [ 32%][0m
+tests/test_outputs_tools.py::test_missing_warehouse_is_a_clear_tool_error [32mPASSED[0m[32m [ 32%][0m
+tests/test_outputs_tools.py::test_statement_backend_converts_types_and_params [32mPASSED[0m[32m [ 33%][0m
+tests/test_outputs_tools.py::test_live_demo_award_end_to_end [32mPASSED[0m[32m      [ 33%][0m
+tests/test_outputs_tools.py::test_live_publication_lookups_match_an_independent_join [32mPASSED[0m[32m [ 33%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[Bioengineering;Networking and Information Technology R&D (NITRD);Cancer-1] [32mPASSED[0m[32m [ 33%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[Networking and Information Technology R&D (NITRD)-1] [32mPASSED[0m[32m [ 33%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[Cancer;Genetics-0] [32mPASSED[0m[32m [ 34%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[Cancer;Networking and Information Technology R&D-1] [32mPASSED[0m[32m [ 34%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[Networking and Information Technology-0] [32mPASSED[0m[32m [ 34%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[None-None] [32mPASSED[0m[32m [ 34%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[-None] [32mPASSED[0m[32m [ 34%][0m
+tests/test_parent_classifier.py::test_labels_from_category_names[ ; ;-None] [32mPASSED[0m[32m [ 35%][0m
+tests/test_parent_classifier.py::test_fy2019_half_is_stable_and_balanced [32mPASSED[0m[32m [ 35%][0m
+tests/test_parent_classifier.py::test_split_exclusions_and_cohorts [32mPASSED[0m[32m [ 35%][0m
+tests/test_parent_classifier.py::test_fy2019_halves_share_no_core [32mPASSED[0m[32m [ 35%][0m
+tests/test_parent_classifier.py::test_select_threshold_ties_take_largest [32mPASSED[0m[32m [ 36%][0m
+tests/test_parent_classifier.py::test_training_needs_both_classes_per_fold [32mPASSED[0m[32m [ 36%][0m
+tests/test_parent_classifier.py::test_end_to_end_metrics [32mPASSED[0m[32m          [ 36%][0m
+tests/test_parent_classifier.py::test_predict_and_abstain [32mPASSED[0m[32m         [ 36%][0m
+tests/test_parent_classifier.py::test_explanation_reconstructs_logit [32mPASSED[0m[32m [ 36%][0m
+tests/test_parent_classifier.py::test_save_load_roundtrip [32mPASSED[0m[32m         [ 37%][0m
+tests/test_parity.py::test_every_tool_matches_in_process 
+Parity | transport=stdio | 71 cases
+  [pass] outputs_find_projects({"category": "Networking and Information Technology R&D (NITRD)", "fy": 2022, "limit": 5 -> ok/ok 3718B 7627/685ms
+  [pass] outputs_find_projects({"category": "Not A Category", "fy": 2022}) -> error/error 218B 806/753ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB"}) -> ok/ok 38870B 554/530ms
+  [pass] outputs_find_cohort({"fy": 2021, "ic": "NIBIB"}) -> ok/ok 7371B 597/545ms
+  [pass] outputs_find_cohort({"fy": 2021}) -> ok/ok 189773B 636/638ms
+  [pass] outputs_find_cohort({"activity": "R35", "fy": 2021, "ic": "NIBIB"}) -> ok/ok 1988B 365/393ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2022, "ic": "NIBIB"}) -> error/error 177B 4/2ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB", "limit": 51}) -> error/error 159B 3/2ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB", "limit": 201}) -> error/error 154B 3/2ms
+  [pass] outputs_get_project_detail({"appl_id": 1}) -> error/error 160B 440/409ms
+  [pass] outputs_get_project_publications({"core_project_num": "Z99ZZ999999"}) -> error/error 211B 1021/972ms
+  [pass] outputs_get_project_datacite({"core_project_num": "Z99ZZ999999"}) -> ok/ok 855B 884/742ms
+  [pass] outputs_score_project_intensity({"core_project_num": "Z99ZZ999999"}) -> error/error 211B 1068/927ms
+  [pass] classifier_classify_parent({"appl_id": 1}) -> error/error 160B 3948/386ms
+  [pass] classifier_classify_subcategory({"appl_id": 1}) -> error/error 160B 350/466ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "bogus"}) -> error/error 274B 6/4ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 1}) -> error/error 154B 3432/330ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "nobody"}) -> error/error 371B 8/3ms
+  [pass] portal_get_review_history({"appl_id": 1}) -> ok/ok 629B 1077/820ms
+  [pass] portal_submit_review_decision({"decision": "approved", "rationale": "parity probe: request does not exist", "r -> error/error 163B 565/356ms
+  [pass] portal_submit_review_request({"appl_id": 10388671, "evidence": {}, "reviewer_id": "nobody"}) -> error/error 535B 7/4ms
+  [pass] portal_submit_review_request({"appl_id": 1, "evidence": {}, "reviewer_id": "demo_sia"}) -> error/error 271B 4/4ms
+  [pass] outputs_get_project_detail({"appl_id": 10506013}) -> ok/ok 10158B 563/692ms
+  [pass] classifier_classify_parent({"appl_id": 10506013}) -> ok/ok 3063B 22024/2633ms
+  [pass] classifier_classify_subcategory({"appl_id": 10506013}) -> ok/ok 2393B 636/692ms
+  [pass] classifier_explain({"appl_id": 10506013, "task": "parent"}) -> ok/ok 6361B 591/545ms
+  [pass] classifier_explain({"appl_id": 10506013, "task": "subcategory"}) -> ok/ok 3431B 506/503ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10506013}) -> ok/ok 1170B 517/532ms
+  [pass] portal_get_review_history({"appl_id": 10506013}) -> ok/ok 643B 1003/766ms
+  [pass] outputs_get_project_detail({"appl_id": 10388671}) -> ok/ok 9702B 599/472ms
+  [pass] classifier_classify_parent({"appl_id": 10388671}) -> ok/ok 2983B 516/497ms
+  [pass] classifier_classify_subcategory({"appl_id": 10388671}) -> ok/ok 2157B 639/623ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "parent"}) -> ok/ok 6231B 591/510ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "subcategory"}) -> ok/ok 3151B 460/634ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10388671}) -> ok/ok 1162B 476/484ms
+  [pass] portal_get_review_history({"appl_id": 10388671}) -> ok/ok 643B 1188/746ms
+  [pass] outputs_get_project_detail({"appl_id": 10445135}) -> ok/ok 10078B 574/537ms
+  [pass] classifier_classify_parent({"appl_id": 10445135}) -> ok/ok 2983B 629/492ms
+  [pass] classifier_classify_subcategory({"appl_id": 10445135}) -> ok/ok 2128B 487/611ms
+  [pass] classifier_explain({"appl_id": 10445135, "task": "parent"}) -> ok/ok 6293B 583/526ms
+  [pass] classifier_explain({"appl_id": 10445135, "task": "subcategory"}) -> ok/ok 3114B 455/463ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10445135}) -> ok/ok 1222B 744/530ms
+  [pass] portal_get_review_history({"appl_id": 10445135}) -> ok/ok 643B 1051/922ms
+  [pass] outputs_get_project_detail({"appl_id": 10304125}) -> ok/ok 8431B 552/606ms
+  [pass] classifier_classify_parent({"appl_id": 10304125}) -> ok/ok 3017B 568/742ms
+  [pass] classifier_classify_subcategory({"appl_id": 10304125}) -> ok/ok 2001B 534/701ms
+  [pass] classifier_explain({"appl_id": 10304125, "task": "parent"}) -> ok/ok 6405B 498/494ms
+  [pass] classifier_explain({"appl_id": 10304125, "task": "subcategory"}) -> ok/ok 2943B 598/485ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10304125}) -> ok/ok 1238B 521/454ms
+  [pass] portal_get_review_history({"appl_id": 10304125}) -> ok/ok 643B 921/791ms
+  [pass] outputs_get_project_publications({"core_project_num": "U24AI171008"}) -> ok/ok 54736B 1646/1565ms
+  [pass] outputs_get_project_datacite({"core_project_num": "U24AI171008"}) -> ok/ok 855B 836/748ms
+  [pass] outputs_score_project_intensity({"core_project_num": "U24AI171008"}) -> ok/ok 11861B 1609/1701ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01NR013912"}) -> ok/ok 84655B 1960/1829ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01NR013912"}) -> ok/ok 855B 822/844ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01NR013912"}) -> ok/ok 12739B 1780/1711ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01CA258987"}) -> ok/ok 65080B 1694/1534ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01CA258987"}) -> ok/ok 855B 712/772ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01CA258987"}) -> ok/ok 12233B 1611/1691ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01GM125981"}) -> ok/ok 1159B 937/1055ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01GM125981"}) -> ok/ok 855B 759/846ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01GM125981"}) -> ok/ok 5408B 1311/898ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_niaid_01"}) -> ok/ok 459B 639/412ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_ninr_01"}) -> ok/ok 457B 465/392ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_nci_01"}) -> ok/ok 455B 540/428ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_nhlbi_01"}) -> error/error 275B 3/2ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nci"}) -> ok/ok 457B 510/359ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nigms"}) -> ok/ok 461B 480/404ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_niaid"}) -> ok/ok 461B 442/471ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nimh"}) -> ok/ok 459B 434/473ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_sia"}) -> ok/ok 443B 454/377ms
+  review table counts before={'users.conroyri.nitrd_hackathon_v1_review_requests': 0, 'users.conroyri.nitrd_hackathon_v1_review_events': 0, 'users.conroyri.nitrd_hackathon_v1_routing_events': 0} after={'users.conroyri.nitrd_hackathon_v1_review_requests': 0, 'users.conroyri.nitrd_hackathon_v1_review_events': 0, 'users.conroyri.nitrd_hackathon_v1_routing_events': 0}
+[32mPASSED[0m[32m          [ 37%][0m
+tests/test_parity.py::test_cases_cover_every_tool [32mPASSED[0m[32m                 [ 37%][0m
+tests/test_parity.py::test_write_tools_are_only_probed_with_failing_inputs [32mPASSED[0m[32m [ 37%][0m
+tests/test_parity.py::test_case_labels_are_unique [32mPASSED[0m[32m                 [ 37%][0m
+tests/test_parity.py::test_harness_compares_and_flags_differences [32mPASSED[0m[32m [ 38%][0m
+tests/test_portal_classification.py::test_band_edges[0.986-high] [32mPASSED[0m[32m  [ 38%][0m
+tests/test_portal_classification.py::test_band_edges[0.7-high] [32mPASSED[0m[32m    [ 38%][0m
+tests/test_portal_classification.py::test_band_edges[0.58-positive_near_threshold] [32mPASSED[0m[32m [ 38%][0m
+tests/test_portal_classification.py::test_band_edges[0.3893682055460409-positive_near_threshold] [32mPASSED[0m[32m [ 38%][0m
+tests/test_portal_classification.py::test_band_edges[0.275-negative_near_threshold] [32mPASSED[0m[32m [ 39%][0m
+tests/test_portal_classification.py::test_band_edges[0.1-negative_near_threshold] [32mPASSED[0m[32m [ 39%][0m
+tests/test_portal_classification.py::test_band_edges[0.0006-clear_negative] [32mPASSED[0m[32m [ 39%][0m
+tests/test_portal_classification.py::test_band_edges[None-abstain] [32mPASSED[0m[32m [ 39%][0m
+tests/test_portal_classification.py::test_evidence_from_results [32mPASSED[0m[32m   [ 40%][0m
+tests/test_portal_classification.py::test_evidence_refuses_mixed_records [32mPASSED[0m[32m [ 40%][0m
+tests/test_portal_classification.py::test_outcome_is_exactly_one_of_evidence_or_error [32mPASSED[0m[32m [ 40%][0m
+tests/test_portal_classification.py::test_attempt_soft_fails [32mPASSED[0m[32m      [ 40%][0m
+tests/test_portal_classification.py::test_proposal[<lambda>-nitrd-task20] [32mPASSED[0m[32m [ 40%][0m
+tests/test_portal_classification.py::test_proposal[<lambda>-not_nitrd-None] [32mPASSED[0m[32m [ 41%][0m
+tests/test_portal_classification.py::test_proposal[<lambda>-None-None0] [32mPASSED[0m[32m [ 41%][0m
+tests/test_portal_classification.py::test_proposal[<lambda>-nitrd-None] [32mPASSED[0m[32m [ 41%][0m
+tests/test_portal_classification.py::test_proposal[<lambda>-None-None1] [32mPASSED[0m[32m [ 41%][0m
+tests/test_portal_classification.py::test_create_ok_writes_evidence_and_one_classified_event [32mPASSED[0m[32m [ 41%][0m
+tests/test_portal_classification.py::test_create_failed_records_the_error [32mPASSED[0m[32m [ 42%][0m
+tests/test_portal_classification.py::test_resubmitting_a_cohort_member_writes_nothing [32mPASSED[0m[32m [ 42%][0m
+tests/test_portal_classification.py::test_tool_path_requests_have_no_classification [32mPASSED[0m[32m [ 42%][0m
+tests/test_portal_classification.py::test_retry_failed_to_ok [32mPASSED[0m[32m      [ 42%][0m
+tests/test_portal_classification.py::test_retry_failed_again_then_ok_counts_every_attempt [32mPASSED[0m[32m [ 43%][0m
+tests/test_portal_classification.py::test_retry_refuses_ok_without_writing [32mPASSED[0m[32m [ 43%][0m
+tests/test_portal_classification.py::test_retry_refuses_tool_path_and_unknown [32mPASSED[0m[32m [ 43%][0m
+tests/test_portal_classification.py::test_data_layer_refuses_retry_from_ok [32mPASSED[0m[32m [ 43%][0m
+tests/test_portal_classification.py::test_sql_guard_leaves_ok_row_alone_even_with_a_forged_read [32mPASSED[0m[32m [ 43%][0m
+tests/test_portal_classification.py::test_concurrent_retry_loses_cleanly [32mPASSED[0m[32m [ 44%][0m
+tests/test_portal_classification.py::test_concurrent_retry_that_also_failed_is_not_overwritten [32mPASSED[0m[32m [ 44%][0m
+tests/test_portal_classification.py::test_sql_carries_every_guard [32mPASSED[0m[32m [ 44%][0m
+tests/test_portal_classification.py::test_failed_request_cannot_be_decided_until_retried [32mPASSED[0m[32m [ 44%][0m
+tests/test_portal_classification.py::test_sql_guard_refuses_decision_on_failed [32mPASSED[0m[32m [ 44%][0m
+tests/test_portal_classification.py::test_cohort_read_is_scoped_to_the_cohort [32mPASSED[0m[32m [ 45%][0m
+tests/test_portal_classification.py::test_duplicate_and_partial_responses [32mPASSED[0m[32m [ 45%][0m
+tests/test_portal_classification.py::test_existing_counts_by_decision [32mPASSED[0m[32m [ 45%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_live[10506013] 
+Portal lifecycle | appl 10506013 | approved | transport=stdio
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (approved) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L14 cleanup left no rows for the request
+[32mPASSED[0m[32m     [ 45%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_live[10388671] 
+Portal lifecycle | appl 10388671 | rejected | transport=stdio
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (rejected) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L14 cleanup left no rows for the request
+[32mPASSED[0m[32m     [ 45%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_live[10445135] 
+Portal lifecycle | appl 10445135 | deferred | transport=stdio
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (deferred) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L14 cleanup left no rows for the request
+[32mPASSED[0m[32m     [ 46%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_live[10075931] 
+Portal lifecycle | appl 10075931 | override | transport=stdio
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L7 override to NITRD with no PCAs is an error (biconditional)
+  [pass] L7 override to not-NITRD with PCAs is an error (biconditional)
+  [pass] L7 override with no corrected label is an error (biconditional)
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (override) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L12 the override event carries the corrections
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L13 warehouse request row has the corrections
+  [pass] L14 cleanup left no rows for the request
+[32mPASSED[0m[32m     [ 46%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_offline[10506013] [32mPASSED[0m[32m  [ 46%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_offline[10388671] [32mPASSED[0m[32m  [ 46%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_offline[10445135] [32mPASSED[0m[32m  [ 47%][0m
+tests/test_portal_lifecycle.py::test_lifecycle_offline[10075931] [32mPASSED[0m[32m  [ 47%][0m
+tests/test_portal_lifecycle.py::test_each_demo_project_has_a_distinct_decision [32mPASSED[0m[32m [ 47%][0m
+tests/test_portal_lifecycle.py::test_override_project_is_build_year_and_routes_to_nibib_rep [32mPASSED[0m[32m [ 47%][0m
+tests/test_portal_review.py::test_empty_cohort_page [32mPASSED[0m[32m               [ 47%][0m
+tests/test_portal_review.py::test_default_view_is_read_only_with_every_card [32mPASSED[0m[32m [ 48%][0m
+tests/test_portal_review.py::test_card_identity_and_reporter_link_from_shared_urls [32mPASSED[0m[32m [ 48%][0m
+tests/test_portal_review.py::test_nitrd_card_shows_call_pcas_rationale_prior_year [32mPASSED[0m[32m [ 48%][0m
+tests/test_portal_review.py::test_not_nitrd_and_new_core_cards [32mPASSED[0m[32m    [ 48%][0m
+tests/test_portal_review.py::test_persona_view_enables_controls_only_for_assignee [32mPASSED[0m[32m [ 48%][0m
+tests/test_portal_review.py::test_override_form_twelve_codes_suggested_not_ticked [32mPASSED[0m[32m [ 49%][0m
+tests/test_portal_review.py::test_unknown_view_values_refused [32mPASSED[0m[32m     [ 49%][0m
+tests/test_portal_review.py::test_outputs_down_cards_still_render [32mPASSED[0m[32m [ 49%][0m
+tests/test_portal_review.py::test_outputs_text_is_escaped [32mPASSED[0m[32m         [ 49%][0m
+tests/test_portal_review.py::test_page_script_carries_the_ui_guards [32mPASSED[0m[32m [ 50%][0m
+tests/test_portal_review.py::test_tool_schema_advertises_rationale_bounds [32mPASSED[0m[32m [ 50%][0m
+tests/test_portal_review.py::test_each_decision_type_end_to_end[approved] [32mPASSED[0m[32m [ 50%][0m
+tests/test_portal_review.py::test_each_decision_type_end_to_end[rejected] [32mPASSED[0m[32m [ 50%][0m
+tests/test_portal_review.py::test_each_decision_type_end_to_end[deferred] [32mPASSED[0m[32m [ 50%][0m
+tests/test_portal_review.py::test_each_decision_type_end_to_end[override] [32mPASSED[0m[32m [ 51%][0m
+tests/test_portal_review.py::test_override_to_not_nitrd_with_no_boxes [32mPASSED[0m[32m [ 51%][0m
+tests/test_portal_review.py::test_decision_is_final [32mPASSED[0m[32m               [ 51%][0m
+tests/test_portal_review.py::test_state_filter_after_decisions [32mPASSED[0m[32m    [ 51%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[override to NITRD, no PCAs] [32mPASSED[0m[32m [ 51%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[override to not NITRD with PCAs] [32mPASSED[0m[32m [ 52%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[override, PCAs but no label] [32mPASSED[0m[32m [ 52%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[override, nothing] [32mPASSED[0m[32m [ 52%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[approve with a correction] [32mPASSED[0m[32m [ 52%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[repeated PCA] [32mPASSED[0m[32m [ 52%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[rationale under 10 characters] [32mPASSED[0m[32m [ 53%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[rationale only whitespace] [32mPASSED[0m[32m [ 53%][0m
+tests/test_portal_review.py::test_page_and_tool_refuse_identically[wrong persona (not the assignee)] [32mPASSED[0m[32m [ 53%][0m
+tests/test_portal_review.py::test_no_rationale_field_at_all_refused [32mPASSED[0m[32m [ 53%][0m
+tests/test_portal_review.py::test_unknown_pca_and_decision_refused_by_service [32mPASSED[0m[32m [ 54%][0m
+tests/test_portal_review.py::test_persona_in_post_body_is_what_is_checked [32mPASSED[0m[32m [ 54%][0m
+tests/test_portal_review.py::test_query_string_persona_grants_nothing [32mPASSED[0m[32m [ 54%][0m
+tests/test_portal_review.py::test_bad_back_fields_cannot_redirect_elsewhere [32mPASSED[0m[32m [ 54%][0m
+tests/test_portal_review.py::test_failed_card_has_retry_and_no_decision [32mPASSED[0m[32m [ 54%][0m
+tests/test_portal_review.py::test_retry_success_then_decide [32mPASSED[0m[32m       [ 55%][0m
+tests/test_portal_review.py::test_retry_fails_again_shows_next_attempt [32mPASSED[0m[32m [ 55%][0m
+tests/test_portal_review.py::test_retry_refusals_make_no_calls [32mPASSED[0m[32m    [ 55%][0m
+tests/test_portal_review.py::test_decision_tool_is_a_thin_wrapper [32mPASSED[0m[32m [ 55%][0m
+tests/test_portal_review.py::test_pages_apply_no_decision_rule_themselves [32mPASSED[0m[32m [ 55%][0m
+tests/test_portal_selector.py::test_bounds_match_the_cohort_tool_and_guardrail [32mPASSED[0m[32m [ 56%][0m
+tests/test_portal_selector.py::test_fresh_page_defaults_to_fy2021_and_lists_nih_ics [32mPASSED[0m[32m [ 56%][0m
+tests/test_portal_selector.py::test_mode_radio_validate_existing_is_disabled_with_tooltip [32mPASSED[0m[32m [ 56%][0m
+tests/test_portal_selector.py::test_fy_change_reloads_that_years_ics [32mPASSED[0m[32m [ 56%][0m
+tests/test_portal_selector.py::test_ic_absent_in_new_fy_is_dropped_with_a_notice [32mPASSED[0m[32m [ 56%][0m
+tests/test_portal_selector.py::test_fy_and_ic_list_activities_with_record_counts [32mPASSED[0m[32m [ 57%][0m
+tests/test_portal_selector.py::test_activity_list_equals_the_per_ic_tool_call [32mPASSED[0m[32m [ 57%][0m
+tests/test_portal_selector.py::test_all_four_set_shows_preview_count_sql_and_titles [32mPASSED[0m[32m [ 57%][0m
+tests/test_portal_selector.py::test_no_such_combination_previews_zero_with_sql_and_no_submit [32mPASSED[0m[32m [ 57%][0m
+tests/test_portal_selector.py::test_preview_scales_with_cohort_size[0-0-False-True-no records] [32mPASSED[0m[32m [ 58%][0m
+tests/test_portal_selector.py::test_preview_scales_with_cohort_size[7-7-False-False-] [32mPASSED[0m[32m [ 58%][0m
+tests/test_portal_selector.py::test_preview_scales_with_cohort_size[50-10-False-False-] [32mPASSED[0m[32m [ 58%][0m
+tests/test_portal_selector.py::test_preview_scales_with_cohort_size[51-20-True-True-Tick confirm_large] [32mPASSED[0m[32m [ 58%][0m
+tests/test_portal_selector.py::test_preview_scales_with_cohort_size[200-20-True-True-Tick confirm_large] [32mPASSED[0m[32m [ 58%][0m
+tests/test_portal_selector.py::test_preview_scales_with_cohort_size[201-20-False-True-Cohort exceeds 200 projects; narrow by activity code] [32mPASSED[0m[32m [ 59%][0m
+tests/test_portal_selector.py::test_cache_miss_then_hit_then_expiry_per_fy [32mPASSED[0m[32m [ 59%][0m
+tests/test_portal_selector.py::test_cache_does_not_keep_failures [32mPASSED[0m[32m  [ 59%][0m
+tests/test_portal_selector.py::test_pages_share_the_cached_fy_call [32mPASSED[0m[32m [ 59%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2022', 'ic': 'NIBIB', 'activity'-reserved_year-FY2022 is reserved (the blinded judging ] [32mPASSED[0m[32m [ 59%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2024', 'ic': 'NIBIB', 'activity'-reserved_year-FY2024 is reserved (the sealed scoring y] [32mPASSED[0m[32m [ 60%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2027', 'ic': 'NIBIB', 'activity'-reserved_year-FY2027 is after FY2021] [32mPASSED[0m[32m [ 60%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '20x1', 'ic': 'NIBIB', 'activity'-fiscal_year-'20x1' is not a year] [32mPASSED[0m[32m [ 60%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2014', 'ic': 'NIBIB', 'activity'-fiscal_year-FY2014 is before FY2015] [32mPASSED[0m[32m [ 60%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'ic': 'NIBIB', 'activity': 'U01', 'mode-fiscal_year-Fiscal year is required] [32mPASSED[0m[32m [ 61%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'VA', 'activity': '-ic_not_nih-IC code 'VA' has no NIH abbreviation] [32mPASSED[0m[32m [ 61%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'NOT-AN-IC', 'activ-ic_unknown-Unknown administering IC 'NOT-AN-IC'] [32mPASSED[0m[32m [ 61%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': '', 'activity': 'U0-ic-IC is required] [32mPASSED[0m[32m [ 61%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'NIBIB', 'activity'-activity_format-'U1' is not three letters/digits] [32mPASSED[0m[32m [ 61%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'NIBIB', 'activity'-mode_unavailable-Available in Step F.] [32mPASSED[0m[32m [ 62%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'NIBIB', 'activity'-mode_unknown-Unknown mode 'anything'] [32mPASSED[0m[32m [ 62%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2022', 'ic': 'VA', 'activity': '-reserved_year-FY2022] [32mPASSED[0m[32m [ 62%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'VA', 'activity': '-ic_not_nih-'VA'] [32mPASSED[0m[32m [ 62%][0m
+tests/test_portal_selector.py::test_post_refused_before_any_outputs_call[{'fy': '2021', 'ic': 'NIBIB', 'activity'-activity_format-'U1'] [32mPASSED[0m[32m [ 62%][0m
+tests/test_portal_selector.py::test_reserved_year_refusal_has_the_cohort_tool_error_shape [32mPASSED[0m[32m [ 63%][0m
+tests/test_portal_selector.py::test_non_nih_ic_still_served_by_the_cohort_tool [32mPASSED[0m[32m [ 63%][0m
+tests/test_portal_selector.py::test_get_with_reserved_year_is_refused_too [32mPASSED[0m[32m [ 63%][0m
+tests/test_portal_selector.py::test_get_with_non_nih_ic_is_refused [32mPASSED[0m[32m [ 63%][0m
+tests/test_portal_selector.py::test_post_empty_cohort_refused_after_one_count_call [32mPASSED[0m[32m [ 63%][0m
+tests/test_portal_selector.py::test_post_size_rules_use_the_servers_count[50-None-200-None-None] [32mPASSED[0m[32m [ 64%][0m
+tests/test_portal_selector.py::test_post_size_rules_use_the_servers_count[51-None-422-confirm_large_required-Cohort has 51 projects, more than 50; tick confirm_large] [32mPASSED[0m[32m [ 64%][0m
+tests/test_portal_selector.py::test_post_size_rules_use_the_servers_count[51-false-422-confirm_large_required-tick confirm_large] [32mPASSED[0m[32m [ 64%][0m
+tests/test_portal_selector.py::test_post_size_rules_use_the_servers_count[51-true-200-None-None] [32mPASSED[0m[32m [ 64%][0m
+tests/test_portal_selector.py::test_post_size_rules_use_the_servers_count[200-true-200-None-None] [32mPASSED[0m[32m [ 65%][0m
+tests/test_portal_selector.py::test_post_size_rules_use_the_servers_count[201-true-422-cohort_over_cap-Cohort exceeds 200 projects; narrow by activity code (201 records).] [32mPASSED[0m[32m [ 65%][0m
+tests/test_portal_selector.py::test_outputs_down_is_a_502_page_not_a_refusal [32mPASSED[0m[32m [ 65%][0m
+tests/test_portal_selector.py::test_valid_submit_streams_the_progress_page [32mPASSED[0m[32m [ 65%][0m
+tests/test_portal_selector.py::test_review_url_is_validated_too [32mPASSED[0m[32m   [ 65%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[fresh] [32mPASSED[0m[32m [ 66%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[fy + ic] [32mPASSED[0m[32m [ 66%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[fy only] [32mPASSED[0m[32m [ 66%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[preview] [32mPASSED[0m[32m [ 66%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[progress] [32mPASSED[0m[32m [ 66%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[refused get] [32mPASSED[0m[32m [ 67%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[refused post] [32mPASSED[0m[32m [ 67%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[refused review] [32mPASSED[0m[32m [ 67%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[review] [32mPASSED[0m[32m [ 67%][0m
+tests/test_portal_selector.py::test_every_page_carries_the_three_labels[zero preview] [32mPASSED[0m[32m [ 68%][0m
+tests/test_portal_selector.py::test_outputs_error_page_carries_the_labels [32mPASSED[0m[32m [ 68%][0m
+tests/test_portal_selector.py::test_operator_root_redirects_to_selector [32mPASSED[0m[32m [ 68%][0m
+tests/test_portal_selector.py::test_refusal_log_entry_fields [32mPASSED[0m[32m      [ 68%][0m
+tests/test_portal_selector.py::test_missing_fields_are_logged_as_null [32mPASSED[0m[32m [ 68%][0m
+tests/test_portal_selector.py::test_client_sends_a_token_only_to_https_targets [32mPASSED[0m[32m [ 69%][0m
+tests/test_portal_selector.py::test_client_reports_an_unreachable_server [32mPASSED[0m[32m [ 69%][0m
+tests/test_portal_selector.py::test_zero_rows_guard_scope_and_statement [32mPASSED[0m[32m [ 69%][0m
+tests/test_portal_selector.py::test_live_fy2021_nibib_u01_preview [32mPASSED[0m[32m [ 69%][0m
+tests/test_portal_submission.py::test_submit_classifies_routes_and_writes_all_41 [32mPASSED[0m[32m [ 69%][0m
+tests/test_portal_submission.py::test_calls_per_project_follow_the_parent_call [32mPASSED[0m[32m [ 70%][0m
+tests/test_portal_submission.py::test_stored_evidence_and_suggestions [32mPASSED[0m[32m [ 70%][0m
+tests/test_portal_submission.py::test_one_broken_project_is_recorded_failed_and_the_rest_complete [32mPASSED[0m[32m [ 70%][0m
+tests/test_portal_submission.py::test_all_41_broken_still_finishes_and_redirects [32mPASSED[0m[32m [ 70%][0m
+tests/test_portal_submission.py::test_classifier_unreachable_at_connect_is_a_soft_fail_too [32mPASSED[0m[32m [ 70%][0m
+tests/test_portal_submission.py::test_resubmit_same_cohort_is_already_submitted_with_no_writes [32mPASSED[0m[32m [ 71%][0m
+tests/test_portal_submission.py::test_resubmit_with_one_new_member_is_partially_submitted [32mPASSED[0m[32m [ 71%][0m
+tests/test_portal_submission.py::test_closing_the_tab_stops_at_the_next_project [32mPASSED[0m[32m [ 71%][0m
+tests/test_portal_submission.py::test_failure_text_groups_by_error_in_first_seen_order [32mPASSED[0m[32m [ 71%][0m
+tests/test_portal_submission.py::test_closed_stream_releases_the_lock_and_logs_interrupted [32mPASSED[0m[32m [ 72%][0m
+tests/test_portal_submission.py::test_cancel_mid_project_leaves_no_partial_member [32mPASSED[0m[32m [ 72%][0m
+tests/test_portal_submission.py::test_concurrent_submission_is_detected_on_read_back [32mPASSED[0m[32m [ 72%][0m
+tests/test_portal_submission.py::test_unroutable_member_is_not_written_and_retried_on_resubmit [32mPASSED[0m[32m [ 72%][0m
+tests/test_portal_submission.py::test_write_failure_stops_the_run [32mPASSED[0m[32m [ 72%][0m
+tests/test_portal_submission.py::test_failure_before_any_write_is_an_error_page [32mPASSED[0m[32m [ 73%][0m
+tests/test_portal_submission.py::test_running_cohort_is_refused_with_409 [32mPASSED[0m[32m [ 73%][0m
+tests/test_portal_submission.py::test_refused_input_still_refused_before_any_fetch [32mPASSED[0m[32m [ 73%][0m
+tests/test_portal_submission.py::test_every_item4_page_carries_the_three_labels[progress] [32mPASSED[0m[32m [ 73%][0m
+tests/test_portal_submission.py::test_every_item4_page_carries_the_three_labels[already] [32mPASSED[0m[32m [ 73%][0m
+tests/test_portal_submission.py::test_every_item4_page_carries_the_three_labels[review] [32mPASSED[0m[32m [ 74%][0m
+tests/test_portal_submission.py::test_every_item4_page_carries_the_three_labels[error] [32mPASSED[0m[32m [ 74%][0m
+tests/test_portal_submission.py::test_every_item4_page_carries_the_three_labels[busy] [32mPASSED[0m[32m [ 74%][0m
+tests/test_portal_submission.py::test_submission_audit_line [32mPASSED[0m[32m       [ 74%][0m
+tests/test_portal_submission.py::test_live_fy2021_nibib_u01_submit_writes_exactly_41 [32mPASSED[0m[32m [ 75%][0m
+tests/test_portal_tools.py::test_assignment_preview[10506013-program_officer-demo_po_niaid_01] [32mPASSED[0m[32m [ 75%][0m
+tests/test_portal_tools.py::test_assignment_preview[10388671-program_officer-demo_po_ninr_01] [32mPASSED[0m[32m [ 75%][0m
+tests/test_portal_tools.py::test_assignment_preview[10445135-ic_rep-demo_ic_rep_nci] [32mPASSED[0m[32m [ 75%][0m
+tests/test_portal_tools.py::test_assignment_preview[10304125-ic_rep-demo_ic_rep_nigms] [32mPASSED[0m[32m [ 75%][0m
+tests/test_portal_tools.py::test_assignment_preview[90000101-program_officer-demo_po_niaid_01] [32mPASSED[0m[32m [ 76%][0m
+tests/test_portal_tools.py::test_assignment_preview[90000102-sia_queue-demo_sia] [32mPASSED[0m[32m [ 76%][0m
+tests/test_portal_tools.py::test_assignment_unknown_appl_is_an_error [32mPASSED[0m[32m [ 76%][0m
+tests/test_portal_tools.py::test_submit_is_idempotent [32mPASSED[0m[32m             [ 76%][0m
+tests/test_portal_tools.py::test_different_payload_is_a_new_request [32mPASSED[0m[32m [ 76%][0m
+tests/test_portal_tools.py::test_explicit_idempotency_key [32mPASSED[0m[32m         [ 77%][0m
+tests/test_portal_tools.py::test_submit_errors_write_nothing[args0-no suggestion] [32mPASSED[0m[32m [ 77%][0m
+tests/test_portal_tools.py::test_submit_errors_write_nothing[args1-Unknown or inactive] [32mPASSED[0m[32m [ 77%][0m
+tests/test_portal_tools.py::test_submit_errors_write_nothing[args2-No ExPORTER record] [32mPASSED[0m[32m [ 77%][0m
+tests/test_portal_tools.py::test_submit_errors_write_nothing[args3-pattern] [32mPASSED[0m[32m [ 77%][0m
+tests/test_portal_tools.py::test_pending_then_decision [32mPASSED[0m[32m            [ 78%][0m
+tests/test_portal_tools.py::test_override_records_corrections_and_is_final[no] [32mPASSED[0m[32m [ 78%][0m
+tests/test_portal_tools.py::test_override_records_corrections_and_is_final[yes] [32mPASSED[0m[32m [ 78%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[override-extra0-needs both] [32mPASSED[0m[32m [ 78%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[override-extra1-needs both] [32mPASSED[0m[32m [ 79%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[override-extra2-needs both] [32mPASSED[0m[32m [ 79%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[override-extra3-at least one PCA] [32mPASSED[0m[32m [ 79%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[override-extra4-cannot carry PCAs] [32mPASSED[0m[32m [ 79%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[override-extra5-must not repeat] [32mPASSED[0m[32m [ 79%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[approved-extra6-only for override] [32mPASSED[0m[32m [ 80%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[rejected-extra7-only for override] [32mPASSED[0m[32m [ 80%][0m
+tests/test_portal_tools.py::test_correction_rules_leave_request_pending[deferred-extra8-only for override] [32mPASSED[0m[32m [ 80%][0m
+tests/test_portal_tools.py::test_decision_on_unknown_request [32mPASSED[0m[32m      [ 80%][0m
+tests/test_portal_tools.py::test_pending_unknown_persona_and_empty_history [32mPASSED[0m[32m [ 80%][0m
+tests/test_portal_tools.py::test_live_routing_demo_projects [32mPASSED[0m[32m       [ 81%][0m
+tests/test_portal_tools.py::test_live_submit_idempotent_and_decide [32mPASSED[0m[32m [ 81%][0m
+tests/test_prior_year.py::test_both_names_count_and_years_stop_at_max_fy [32mPASSED[0m[32m [ 81%][0m
+tests/test_prior_year.py::test_batch_is_one_query_with_every_core_a_key [32mPASSED[0m[32m [ 81%][0m
+tests/test_prior_year.py::test_sql_is_fixed_and_binds_the_cores_as_one_parameter [32mPASSED[0m[32m [ 81%][0m
+tests/test_prior_year.py::test_reserved_max_fy_is_refused_before_sql[2022] [32mPASSED[0m[32m [ 82%][0m
+tests/test_prior_year.py::test_reserved_max_fy_is_refused_before_sql[2023] [32mPASSED[0m[32m [ 82%][0m
+tests/test_prior_year.py::test_reserved_max_fy_is_refused_before_sql[2024] [32mPASSED[0m[32m [ 82%][0m
+tests/test_prior_year.py::test_reserved_max_fy_is_refused_before_sql[2025] [32mPASSED[0m[32m [ 82%][0m
+tests/test_prior_year.py::test_reserved_max_fy_is_refused_before_sql[2026] [32mPASSED[0m[32m [ 83%][0m
+tests/test_prior_year.py::test_empty_and_oversize_inputs [32mPASSED[0m[32m          [ 83%][0m
+tests/test_prior_year.py::test_live_batch_matches_one_plain_query_per_core [32mPASSED[0m[32m [ 83%][0m
+tests/test_routing.py::test_bundled_personas_are_ten_and_valid [32mPASSED[0m[32m    [ 83%][0m
+tests/test_routing.py::test_bundled_nibib_routes_to_its_ic_rep [32mPASSED[0m[32m    [ 83%][0m
+tests/test_routing.py::test_name_normalization [32mPASSED[0m[32m                    [ 84%][0m
+tests/test_routing.py::test_tier1_program_officer [32mPASSED[0m[32m                 [ 84%][0m
+tests/test_routing.py::test_tier2_ic_rep_when_po_fails[kw0] [32mPASSED[0m[32m       [ 84%][0m
+tests/test_routing.py::test_tier2_ic_rep_when_po_fails[kw1] [32mPASSED[0m[32m       [ 84%][0m
+tests/test_routing.py::test_tier2_ic_rep_when_po_fails[kw2] [32mPASSED[0m[32m       [ 84%][0m
+tests/test_routing.py::test_po_persona_must_be_active_and_in_the_ic [32mPASSED[0m[32m [ 85%][0m
+tests/test_routing.py::test_tier3_sia_queue[GM] [32mPASSED[0m[32m                   [ 85%][0m
+tests/test_routing.py::test_tier3_sia_queue[] [32mPASSED[0m[32m                     [ 85%][0m
+tests/test_routing.py::test_tier3_sia_queue[ZZ] [32mPASSED[0m[32m                   [ 85%][0m
+tests/test_routing.py::test_two_ic_reps_fall_to_queue [32mPASSED[0m[32m             [ 86%][0m
+tests/test_routing.py::test_subproject_inherits_parent [32mPASSED[0m[32m            [ 86%][0m
+tests/test_routing.py::test_subproject_without_unique_parent_goes_to_queue[0] [32mPASSED[0m[32m [ 86%][0m
+tests/test_routing.py::test_subproject_without_unique_parent_goes_to_queue[2] [32mPASSED[0m[32m [ 86%][0m
+tests/test_routing.py::test_directory_validation [32mPASSED[0m[32m                  [ 86%][0m
+tests/test_routing.py::test_routing_event_row [32mPASSED[0m[32m                     [ 87%][0m
+tests/test_scaffold.py::test_server_imports_with_its_own_name[nih_grants_outputs-nih-grants-outputs] [32mPASSED[0m[32m [ 87%][0m
+tests/test_scaffold.py::test_server_imports_with_its_own_name[nitrd_classifier-nitrd-classifier] [32mPASSED[0m[32m [ 87%][0m
+tests/test_scaffold.py::test_server_imports_with_its_own_name[reviewer_portal-reviewer-portal] [32mPASSED[0m[32m [ 87%][0m
+tests/test_scaffold.py::test_server_publishes_exactly_its_mvp_tools[nih_grants_outputs-nih-grants-outputs] [32mPASSED[0m[32m [ 87%][0m
+tests/test_scaffold.py::test_server_publishes_exactly_its_mvp_tools[nitrd_classifier-nitrd-classifier] [32mPASSED[0m[32m [ 88%][0m
+tests/test_scaffold.py::test_server_publishes_exactly_its_mvp_tools[reviewer_portal-reviewer-portal] [32mPASSED[0m[32m [ 88%][0m
+tests/test_scaffold.py::test_skeletons_validate_then_raise_not_implemented[nih_grants_outputs-nih-grants-outputs] [32mPASSED[0m[32m [ 88%][0m
+tests/test_scaffold.py::test_skeletons_validate_then_raise_not_implemented[nitrd_classifier-nitrd-classifier] [32mPASSED[0m[32m [ 88%][0m
+tests/test_scaffold.py::test_skeletons_validate_then_raise_not_implemented[reviewer_portal-reviewer-portal] [32mPASSED[0m[32m [ 88%][0m
+tests/test_scaffold.py::test_invalid_arguments_are_rejected_before_the_body [32mPASSED[0m[32m [ 89%][0m
+tests/test_scaffold.py::test_health_and_version_routes[nih_grants_outputs-nih-grants-outputs] [32mPASSED[0m[32m [ 89%][0m
+tests/test_scaffold.py::test_health_and_version_routes[nitrd_classifier-nitrd-classifier] [32mPASSED[0m[32m [ 89%][0m
+tests/test_scaffold.py::test_health_and_version_routes[reviewer_portal-reviewer-portal] [32mPASSED[0m[32m [ 89%][0m
+tests/test_scaffold.py::test_reviewer_portal_is_sandbox_only [32mPASSED[0m[32m      [ 90%][0m
+tests/test_smoke.py::test_initialize_and_list_tools[nih_grants_outputs] [32mPASSED[0m[32m [ 90%][0m
+tests/test_smoke.py::test_initialize_and_list_tools[nitrd_classifier] [32mPASSED[0m[32m [ 90%][0m
+tests/test_smoke.py::test_initialize_and_list_tools[reviewer_portal] [32mPASSED[0m[32m [ 90%][0m
+tests/test_smoke.py::test_every_tool_answers_over_mcp[nih_grants_outputs] [32mPASSED[0m[32m [ 90%][0m
+tests/test_smoke.py::test_every_tool_answers_over_mcp[nitrd_classifier] [32mPASSED[0m[32m [ 91%][0m
+tests/test_smoke.py::test_every_tool_answers_over_mcp[reviewer_portal] [32mPASSED[0m[32m [ 91%][0m
+tests/test_smoke.py::test_bad_arguments_are_errors_not_crashes[nih_grants_outputs] [32mPASSED[0m[32m [ 91%][0m
+tests/test_smoke.py::test_bad_arguments_are_errors_not_crashes[nitrd_classifier] [32mPASSED[0m[32m [ 91%][0m
+tests/test_smoke.py::test_bad_arguments_are_errors_not_crashes[reviewer_portal] [32mPASSED[0m[32m [ 91%][0m
+tests/test_smoke.py::test_health_route[nih_grants_outputs] [32mPASSED[0m[32m        [ 92%][0m
+tests/test_smoke.py::test_health_route[nitrd_classifier] [32mPASSED[0m[32m          [ 92%][0m
+tests/test_smoke.py::test_health_route[reviewer_portal] [32mPASSED[0m[32m           [ 92%][0m
+tests/test_smoke.py::test_demo_projects_fixture [32mPASSED[0m[32m                   [ 92%][0m
+tests/test_smoke_contract.py::test_contracts_on_live_apps 
+Extended smoke | transport=stdio | 90 checks
+  [pass] outputs: unknown appl_id is a tool error naming it
+  [pass] outputs: outputs_get_project_publications: unknown core is a tool error naming it
+  [pass] outputs: outputs_score_project_intensity: unknown core is a tool error naming it
+  [pass] outputs: datacite: unknown core answers with a status, no crash
+  [pass] outputs: unknown category is a tool error naming it
+  [pass] outputs: limit=0 is rejected
+  [pass] outputs: limit=501 is rejected
+  [pass] outputs: independent SQL count of the small result is 2..50
+  [pass] outputs: limit=2: returned=2, total=5, truncated=True
+  [pass] outputs: limit=5: returned=5, total=5, truncated=False
+  [pass] outputs: limit=500: returned=5, total=5, truncated=False
+  [pass] outputs: results ordered by appl_id, no duplicates
+  [pass] outputs: limit=2 is the prefix of the full result
+  [pass] outputs: matched category echoed as in the data
+  [pass] outputs: empty case: category exists, no rows that year (SQL)
+  [pass] outputs: valid category with no rows that year is an empty list
+  [pass] cohort: independent SQL count of FY2021 NIBIB U01 is 41
+  [pass] cohort: cohort: total = returned = SQL count, not truncated
+  [pass] cohort: every record is FY2021 / EB (NIBIB) / U01; ordered, unique
+  [pass] cohort: exact-SQL round-trip: returned SQL + params re-run give the same records and total
+  [pass] cohort: limit=10: first 10 records, total still reported, truncated
+  [pass] cohort: zero-return cohort (NIBIB R35, SQL count 0) is an empty list
+  [pass] cohort: list mode (fy only): every IC x activity combination, counts as SQL
+  [pass] cohort: list mode (fy + ic): only NIBIB combinations, U01 among them
+  [pass] cohort: FY2022 is refused, naming the year and the reason
+  [pass] cohort: FY2023 is refused, naming the year and the reason
+  [pass] cohort: FY2024 is refused, naming the year and the reason
+  [pass] cohort: FY2025 is refused, naming the year and the reason
+  [pass] cohort: FY2026 is refused, naming the year and the reason
+  [pass] cohort: FY2022 is refused in list mode too
+  [pass] cohort: limit=0 confirm=False is rejected
+  [pass] cohort: limit=51 confirm=False is rejected
+  [pass] cohort: limit=201 confirm=True is rejected
+  [pass] cohort: limit=51 with confirm_large is accepted
+  [pass] classifier: 10506013 classify_parent answers
+  [pass] classifier: 10506013 threshold is a probability in (0, 1)
+  [pass] classifier: 10506013 suggestion agrees with p vs threshold
+  [pass] classifier: 10506013 falls in band high
+  [pass] classifier: 10506013 top features ordered by |contribution|
+  [pass] classifier: 10506013 explain(parent) answers
+  [pass] classifier: 10506013 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10506013 classify_parent top features appear in explain
+  [pass] classifier: 10506013 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10506013 explain(subcategory) matches classify_subcategory
+  [pass] classifier: 10388671 classify_parent answers
+  [pass] classifier: 10388671 threshold is a probability in (0, 1)
+  [pass] classifier: 10388671 suggestion agrees with p vs threshold
+  [pass] classifier: 10388671 falls in band positive_near_threshold
+  [pass] classifier: 10388671 top features ordered by |contribution|
+  [pass] classifier: 10388671 explain(parent) answers
+  [pass] classifier: 10388671 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10388671 classify_parent top features appear in explain
+  [pass] classifier: 10388671 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10388671 explain(subcategory) matches classify_subcategory
+  [pass] classifier: 10445135 classify_parent answers
+  [pass] classifier: 10445135 threshold is a probability in (0, 1)
+  [pass] classifier: 10445135 suggestion agrees with p vs threshold
+  [pass] classifier: 10445135 falls in band negative_near_threshold
+  [pass] classifier: 10445135 top features ordered by |contribution|
+  [pass] classifier: 10445135 explain(parent) answers
+  [pass] classifier: 10445135 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10445135 classify_parent top features appear in explain
+  [pass] classifier: 10445135 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10445135 explain(subcategory) matches classify_subcategory
+  [pass] classifier: 10304125 classify_parent answers
+  [pass] classifier: 10304125 threshold is a probability in (0, 1)
+  [pass] classifier: 10304125 suggestion agrees with p vs threshold
+  [pass] classifier: 10304125 falls in band clear_negative
+  [pass] classifier: 10304125 top features ordered by |contribution|
+  [pass] classifier: 10304125 explain(parent) answers
+  [pass] classifier: 10304125 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10304125 classify_parent top features appear in explain
+  [pass] classifier: 10304125 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10304125 explain(subcategory) matches classify_subcategory
+  [pass] classifier: explain on an unknown appl_id is a tool error
+  [pass] portal: pending(demo_po_niaid_01): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_po_ninr_01): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_po_nci_01): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nci): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nigms): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_niaid): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nimh): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nibib): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_sia): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_po_nhlbi_01): inactive persona is refused
+  [pass] portal: pending(unknown persona) is a tool error
+  [pass] portal: 10506013 routes program_officer -> demo_po_niaid_01
+  [pass] portal: 10388671 routes program_officer -> demo_po_ninr_01
+  [pass] portal: 10445135 routes ic_rep -> demo_ic_rep_nci
+  [pass] portal: review-table row counts unchanged (read-only)
+  latency per tool (ms): n p50 p95 max
+    classifier_classify_parent           4      504    14834    14834
+    classifier_classify_subcategory      4      482      566      566
+    classifier_explain                   9      472      566      566
+    outputs_find_cohort                 15        2      794      794
+    outputs_find_projects                7      551      857      857
+    outputs_get_project_datacite         1      843      843      843
+    outputs_get_project_detail           1     5230     5230     5230
+    outputs_get_project_publications     1      906      906      906
+    outputs_score_project_intensity      1      983      983      983
+    portal_get_reviewer_assignment       3      502      528      528
+    portal_list_pending_reviews         11      425     3437     3437
+  first call nih_grants_outputs: outputs_get_project_detail 5230ms (later p50 486.0ms)
+  first call nitrd_classifier: classifier_classify_parent 14834ms (later p50 471.7ms)
+  first call reviewer_portal: portal_list_pending_reviews 3437ms (later p50 425.3ms)
+[32mPASSED[0m[32m         [ 93%][0m
+tests/test_smoke_contract.py::test_contract_personas_are_the_bundled_personas [32mPASSED[0m[32m [ 93%][0m
+tests/test_smoke_contract.py::test_bands_are_disjoint_and_cover_0_to_1 [32mPASSED[0m[32m [ 93%][0m
+tests/test_smoke_contract.py::test_percentile_and_latency_summary [32mPASSED[0m[32m [ 93%][0m
+tests/test_smoke_contract.py::test_expected_bands_cover_the_demo_projects_and_control [32mPASSED[0m[32m [ 93%][0m
+tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10506013] 
+Prompt BJ e2e | appl 10506013 U24AI171008 (NIAID) | transport=stdio
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.15825
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [PASS] 6 known-NITRD parent probability > 0.7 p=0.986275 suggestion=nitrd
+    [PASS] 7 plausible PCA (LSDMA) in top 3 top3=['CHuman', 'LSDMA', 'EdW']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_niaid_01 (fixture expects program_officer -> demo_po_niaid_01)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=40
+[32mPASSED[0m[32m  [ 94%][0m
+tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10388671] 
+Prompt BJ e2e | appl 10388671 R01NR013912 (NINR) | transport=stdio
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.28581081081081083
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [WARN] 6 known-NITRD parent probability > 0.7 p=0.580214 suggestion=nitrd
+    [WARN] 7 plausible PCA (AI) in top 3 top3=['ENIT', 'IRAS', 'SPSQ']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_ninr_01 (fixture expects program_officer -> demo_po_ninr_01)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=40
+[32mPASSED[0m[32m  [ 94%][0m
+tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10445135] 
+Prompt BJ e2e | appl 10445135 R01CA258987 (NCI) | transport=stdio
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.2941711956521739
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [WARN] 6 known-NITRD parent probability > 0.7 p=0.275149 suggestion=not_nitrd
+    [WARN] 7 plausible PCA (AI) in top 3 top3=['LSDMA', 'EHCS', 'SPSQ']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) ic_rep -> demo_ic_rep_nci (fixture expects ic_rep -> demo_ic_rep_nci)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=46
+[32mPASSED[0m[32m  [ 94%][0m
+tests/test_smoke_e2e.py::test_negative_control_parent_probability 
+Prompt BJ e2e | negative control appl 10304125 | transport=stdio
+  step  tool                               status           note
+  6     classifier_classify_parent         ok               
+  sanity checks (logged, not asserted):
+    [PASS] 6 known non-NITRD parent probability < 0.3 p=0.000644 suggestion=not_nitrd
+[32mPASSED[0m[32m [ 94%][0m
+tests/test_smoke_e2e.py::test_intensity_tracks_computational_publications 
+Prompt BJ e2e | cross-project intensity | transport=stdio
+  step  tool                               status           note
+  sanity checks (logged, not asserted):
+    [PASS] 5 intensity higher for more computational publications appl 10388671: comp_pubs=14 overall=0.286; appl 10445135: comp_pubs=29 overall=0.294; appl 10506013: comp_pubs=10 overall=0.158
+[32mPASSED[0m[32m [ 94%][0m
+tests/test_smoke_e2e.py::test_harness_passes_when_every_tool_answers [32mPASSED[0m[32m [ 95%][0m
+tests/test_sql_params.py::test_valid_lists_serialize_to_a_json_array[items0-str-["R01EB016064", "U24AI171008"]] [32mPASSED[0m[32m [ 95%][0m
+tests/test_sql_params.py::test_valid_lists_serialize_to_a_json_array[items1-int-[31415926, 27182818]] [32mPASSED[0m[32m [ 95%][0m
+tests/test_sql_params.py::test_valid_lists_serialize_to_a_json_array[items2-int-[1, 2, 3]] [32mPASSED[0m[32m [ 95%][0m
+tests/test_sql_params.py::test_valid_lists_serialize_to_a_json_array[items3-str-["x') OR 1=1 --"]] [32mPASSED[0m[32m [ 95%][0m
+tests/test_sql_params.py::test_valid_lists_serialize_to_a_json_array[items4-str-[]] [32mPASSED[0m[32m [ 96%][0m
+tests/test_sql_params.py::test_valid_lists_serialize_to_a_json_array[items5-None-["a"]] [32mPASSED[0m[32m [ 96%][0m
+tests/test_sql_params.py::test_large_bigint_pmids_round_trip_exactly [32mPASSED[0m[32m [ 96%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[None-str-list is None] [32mPASSED[0m[32m [ 96%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[R01EB016064-str-expected a list, got str] [32mPASSED[0m[32m [ 97%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[x-str-expected a list, got bytes] [32mPASSED[0m[32m [ 97%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items3-None-expected a list, got dict] [32mPASSED[0m[32m [ 97%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items4-None-expected a list, got set] [32mPASSED[0m[32m [ 97%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items5-str-list contains None] [32mPASSED[0m[32m [ 97%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items6-None-list contains None] [32mPASSED[0m[32m [ 98%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items7-int-expected int items] [32mPASSED[0m[32m [ 98%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items8-int-expected int items] [32mPASSED[0m[32m [ 98%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items9-int-expected int items] [32mPASSED[0m[32m [ 98%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items10-str-expected str items] [32mPASSED[0m[32m [ 98%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items11-None-not JSON-serializable] [32mPASSED[0m[32m [ 99%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items12-None-not JSON-serializable] [32mPASSED[0m[32m [ 99%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items13-None-not JSON-serializable] [32mPASSED[0m[32m [ 99%][0m
+tests/test_sql_params.py::test_invalid_lists_raise_value_error[items14-None-not JSON-serializable] [32mPASSED[0m[32m [ 99%][0m
+tests/test_sql_params.py::test_live_from_json_reads_the_helper_output [32mPASSED[0m[32m [100%][0m
+
+------------------ generated xml file: /tmp/lc-work/g5_wm.xml ------------------
+[36m[1m=========================== short test summary info ============================[0m
+[33mSKIPPED[0m [1] tests/test_classifier_tools.py:204: uac-nitrd repo not available (set UAC_NITRD_ROOT)
+[32m================= [32m[1m471 passed[0m, [33m1 skipped[0m[32m in 1089.60s (0:18:09)[0m[32m ==================[0m

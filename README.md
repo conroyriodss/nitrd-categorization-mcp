@@ -16,6 +16,9 @@ classifications. GSA MCP + AI Agent Hackathon, Service Write Integration track.
 ## Start here
 
 - Run the servers locally: [Run locally](#run-locally).
+- Design rationale (tools as goals, Pydantic schemas, descriptions for LLM tool selection):
+  [ARCHITECTURE.md](ARCHITECTURE.md).
+- Demo click-path (three awards, persona switching, cleanup): [DEMO.md](DEMO.md).
 - Inspect the implementation: [read server](src/nih_grants_outputs/),
   [inference server](src/nitrd_classifier/) ([model card](src/nitrd_classifier/README.md)),
   and [review portal](src/reviewer_portal/).
@@ -24,19 +27,54 @@ classifications. GSA MCP + AI Agent Hackathon, Service Write Integration track.
 - Security posture: [Scope and limitations](#scope-and-limitations) and
   [eval/README.md section 3](eval/README.md#3-security-considerations).
 
+## Submission map: three public repositories
+
+This repository is the primary submission. Everything a reviewer needs to check the claims is in
+these three public repositories; nothing requires access to the Databricks workspace.
+
+| Repository | Role | Start with |
+| --- | --- | --- |
+| [nitrd-categorization-mcp](https://github.com/conroyriodss/nitrd-categorization-mcp) (this one) | The three MCP servers, Databricks Apps deployment, tests, and the exported run evidence | [eval/README.md section 0](eval/README.md#0-claim-to-artifact-map-verifiable-from-this-repository): claim-to-artifact map, benchmark question set, tool utilization |
+| [uac-nitrd](https://github.com/conroyriodss/uac-nitrd) | The NITRD categorization evaluation workflow: read guard, FY2021 fingerprint, FY2026 prospective forecast, seal manifest, pre-registration | its README section "Verifying the blind evaluation from the repositories alone" |
+| [uac-witness](https://github.com/conroyriodss/uac-witness) | Append-only witness records: SHA-256 of every sealed held-out file and of the seal log, at timestamped points | `records/` |
+
+**What stays in the environment, and why.**
+
+| Environment-bound | Why it is not committed | What stands in for it |
+| --- | --- | --- |
+| Unity Catalog tables (public ExPORTER, iCite, PubMed data) | bulk public data, too large to version here | the SQL each tool runs (`src/*/data.py`), the exported run logs |
+| Deployed Databricks Apps | behind workspace OAuth | parity, e2e and smoke run records in [`eval/results/runs/`](eval/results/runs/), exported verbatim |
+| Sandbox review tables | emptied by every test run | per-run row counts (`rows_left`) in each `run.json` |
+| Sealed held-out volume (answer keys) | must stay unread until the frozen predictions are scored | its SHA-256 hashes in `uac-witness` and in the `uac-nitrd` seal manifest; a key published after scoring can be checked byte-for-byte against those hashes |
+
+**How the blind evaluation is verifiable without the sealed volume.** The order of events is checkable
+in public commits, as a chain of hashes:
+
+1. The answer key's SHA-256 was published before any prediction existed: the `uac-nitrd` seal
+   manifest and the `uac-witness` records.
+2. The prediction build could not read the key. A read guard enforces this, and the guard's tests run
+   in CI. The build's READ_MANIFEST lists every file it opened, with hashes.
+3. The predictions and the pre-registration were committed, and the pre-registration's hash was
+   witnessed, before the key is opened.
+4. The key published after scoring must hash to step 1.
+
+Steps 1-2 and the predictions are committed. The pre-registration freeze and its witness record are
+pending (target 2026-11-07). The status table is in the
+[uac-nitrd README](https://github.com/conroyriodss/uac-nitrd#verifying-the-blind-evaluation-from-the-repositories-alone).
+
 ## Submission status
 
-As of commit `d54920b` (2026-10-29).
+As of commit `d54920b` (2026-10-29), with three rows updated 2026-11-03 (marked).
 
 | Component | Status | Scope of the claim |
 | --- | --- | --- |
-| `nih-grants-outputs` (5 tools) | Implemented | Reads public ExPORTER, iCite, and PubMed data staged in Unity Catalog tables. The DataCite tool returns `not_available` because the DataCite table is not loaded in the MVP. |
+| `nih-grants-outputs` (6 tools, incl. `outputs_find_cohort`; updated 2026-11-03) | Implemented | Reads public ExPORTER, iCite, and PubMed data staged in Unity Catalog tables. The DataCite tool returns `not_available` because the DataCite table is not loaded in the MVP. |
 | `nitrd-classifier` (3 tools) | Implemented | Parent (NITRD yes/no) probability with feature explanations; PCA ranking with matched scope terms. |
 | Parent model `nitrd-parent-v2-ba10594d9581` | Trained and evaluated | FY2019 validation half: PR-AUC 0.862 (all), 0.720 (new cores). Agreement with RCDC labels. [Details](eval/classifier_evaluation.md). |
 | `reviewer-portal` (5 tools) | Implemented | Writes and reads three sandbox Delta tables. Table CHECK constraints require `sandbox=true` and the label "Not RCDC / demonstration only" on every row; submission is idempotent (UUIDv5 request ID); nine fictional personas, no end-user authentication. |
 | Software tests | Offline: 160 passed, 8 skipped, 1 xfailed. Live: 167 passed, 2 skipped. GitHub Actions CI passes on `main`. | Skips are live-mode, opt-in sandbox-write and optional parity tests. Test results are separate from model and agent performance. |
-| End-to-end sequence | All 10 steps pass live on three demo projects (in-process transport, shipped model, warehouse data) | Scripted tool calls, not an agent choosing tools. Run against the deployed Apps: pending (see below). |
-| Databricks Apps deployment | Three Apps deployed and running | `mcp-nih-grants-outputs` and `mcp-nitrd-classifier` return the same results as local servers. `mcp-nitrd-reviewer-portal` is healthy; its tool list and the 10-step chain over HTTP are not yet recorded. An e2e runner App ([`deploy/databricks/e2e_runner/`](deploy/databricks/e2e_runner/)) is in the repository to run that chain with its own service principal. |
+| End-to-end sequence (updated 2026-11-03) | All 10 steps pass on three demo projects in-process and over HTTP against the deployed Apps ([run record](eval/results/runs/20261103T1358Z_e2e_778bd3ab/)) | Scripted tool calls, not an agent choosing tools. |
+| Databricks Apps deployment (updated 2026-11-03) | Three MCP Apps plus the e2e runner App deployed and running | All 14 tools answer byte-identically to in-process code over HTTP, 71/71 cases ([run record](eval/results/runs/20261103T1350Z_parity_5704d50c/), [tool utilization](eval/results/tool_utilization.md)). The runner ([`deploy/databricks/e2e_runner/`](deploy/databricks/e2e_runner/)) uses its own service principal. |
 | Agent-level (MLflow) evaluation | Not run | Blocked on a workspace-admin-provisioned service principal; request pending. |
 | Ground-truth validation (45 projects) | Sample drawn, judging not started | Pre-specified protocol: [eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md](eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md). One reviewer, blinded to model outputs and RCDC labels. |
 
@@ -83,9 +121,12 @@ APIs per request.
 
 | Server | Responsibility | Tools | Side effects |
 | --- | --- | --- | --- |
-| `nih-grants-outputs` | Find projects; project detail, publications, DataCite outputs; output-intensity score | `outputs_find_projects`, `outputs_get_project_detail`, `outputs_get_project_publications`, `outputs_get_project_datacite`, `outputs_score_project_intensity` | Read only |
+| `nih-grants-outputs` | Find projects or a cohort; project detail, publications, DataCite outputs; output-intensity score | `outputs_find_projects`, `outputs_find_cohort`, `outputs_get_project_detail`, `outputs_get_project_publications`, `outputs_get_project_datacite`, `outputs_score_project_intensity` | Read only |
 | `nitrd-classifier` | Parent suggestion, PCA ranking, explanations | `classifier_classify_parent`, `classifier_classify_subcategory`, `classifier_explain` | Inference only (bundled model) |
 | `reviewer-portal` | Preview assignment; submit, list, decide, and inspect reviews | `portal_get_reviewer_assignment`, `portal_submit_review_request`, `portal_list_pending_reviews`, `portal_submit_review_decision`, `portal_get_review_history` | Sandbox writes (submit, decide) |
+
+Each of the 14 tools is one user goal; the goal-to-tool table and the reasons for the schema and
+description design are in [ARCHITECTURE.md](ARCHITECTURE.md#tools-as-goals).
 
 Code lives in [`src/`](src/) (one package per server plus `src/shared`). Each
 server has its own Databricks App configuration under
@@ -98,7 +139,8 @@ inherit their parent award's routing (same `full_project_num` and fiscal year).
 
 ## Demonstration workflow
 
-The planned demonstration follows one project through ten calls:
+The click-path, with exact arguments, persona switching and cleanup, is in [DEMO.md](DEMO.md). The
+scripted chain follows one project through ten calls:
 
 1. `outputs_find_projects`: select projects in the NITRD parent category.
 2. `outputs_get_project_detail`: inspect project text and identifiers.

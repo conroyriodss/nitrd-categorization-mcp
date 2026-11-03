@@ -115,6 +115,29 @@ authenticated principal, not to a parameter.
   or stack traces. A failed warehouse statement's error message is passed
   through in the tool error; it can name tables or columns.
 
+## Public-repository hygiene (checked 2026-11-03)
+
+The three submission repositories (this one,
+[uac-nitrd](https://github.com/conroyriodss/uac-nitrd) and
+[uac-witness](https://github.com/conroyriodss/uac-witness)) are public. Before release they were
+swept for:
+
+- **Credentials:** Databricks PATs, GitHub/Slack tokens, AWS keys, JWTs and private keys, in the
+  current files and in the full git history of all three. None were found.
+- **Exported run evidence** (`eval/results/`): the same credential patterns again, at export time
+  (a hit aborts the export). The workspace host name, Apps service-principal IDs and warehouse ID
+  are replaced by placeholders, and each replacement is counted in `eval/results/INDEX.json`.
+- **People:** reviewer personas are fictional. A program officer is matched through a SHA-256 of
+  the public PO name, and `personas.json` holds no names or contact fields.
+  `outputs_get_project_detail` returns the PO name as published in public NIH ExPORTER data. Test
+  fixtures use placeholder addresses. Open item: the `uac-nitrd` FY2025 UAC fixture still has its
+  source's `PO Name` and `PCC` columns. Those values are public in RePORTER, but they are not needed;
+  removal is pending.
+- **Sealed evaluation data:** only hashes are published (the `uac-nitrd` seal manifest and the
+  `uac-witness` records), never key contents. No FY2026 award-level NITRD membership is in any
+  repository. The FY2026 file in `uac-nitrd` holds model predictions made before that membership
+  was public.
+
 ## Reporting a vulnerability
 
 Report suspected vulnerabilities privately by email to

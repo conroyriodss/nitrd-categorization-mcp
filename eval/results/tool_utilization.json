@@ -1,0 +1,153 @@
+{
+ "cases": 71,
+ "git_commit": "0e6ae7cc4c21465b6ab1c768863a22f4d72022aa",
+ "identical": 71,
+ "remote_ms_p50": 644.7,
+ "remote_ms_p95": 2909.2,
+ "source_run": "5704d50c-3add-41a0-a166-88182e853210",
+ "started_at": "2026-11-03T13:50:36.880692",
+ "tools": {
+  "classifier_classify_parent": {
+   "cases": 5,
+   "error_results": 1,
+   "ok_results": 4,
+   "passed": 5,
+   "remote_ms_max": 4625,
+   "remote_ms_max_in_run_summary": 4625.4,
+   "remote_ms_median": 654,
+   "server": "classifier"
+  },
+  "classifier_classify_subcategory": {
+   "cases": 5,
+   "error_results": 1,
+   "ok_results": 4,
+   "passed": 5,
+   "remote_ms_max": 512,
+   "remote_ms_max_in_run_summary": 512.5,
+   "remote_ms_median": 480,
+   "server": "classifier"
+  },
+  "classifier_explain": {
+   "cases": 9,
+   "error_results": 1,
+   "ok_results": 8,
+   "passed": 9,
+   "remote_ms_max": 620,
+   "remote_ms_max_in_run_summary": 620.4,
+   "remote_ms_median": 508,
+   "server": "classifier"
+  },
+  "outputs_find_cohort": {
+   "cases": 7,
+   "error_results": 3,
+   "ok_results": 4,
+   "passed": 7,
+   "remote_ms_max": 830,
+   "remote_ms_max_in_run_summary": 829.6,
+   "remote_ms_median": 544,
+   "server": "outputs"
+  },
+  "outputs_find_projects": {
+   "cases": 2,
+   "error_results": 1,
+   "ok_results": 1,
+   "passed": 2,
+   "remote_ms_max": 1955,
+   "remote_ms_max_in_run_summary": 1955.4,
+   "remote_ms_median": 1446.0,
+   "server": "outputs"
+  },
+  "outputs_get_project_datacite": {
+   "cases": 5,
+   "error_results": 0,
+   "ok_results": 5,
+   "passed": 5,
+   "remote_ms_max": 1281,
+   "remote_ms_max_in_run_summary": 1280.8,
+   "remote_ms_median": 740,
+   "server": "outputs"
+  },
+  "outputs_get_project_detail": {
+   "cases": 5,
+   "error_results": 1,
+   "ok_results": 4,
+   "passed": 5,
+   "remote_ms_max": 3888,
+   "remote_ms_max_in_run_summary": 3888.0,
+   "remote_ms_median": 754,
+   "server": "outputs"
+  },
+  "outputs_get_project_publications": {
+   "cases": 5,
+   "error_results": 1,
+   "ok_results": 4,
+   "passed": 5,
+   "remote_ms_max": 4982,
+   "remote_ms_max_in_run_summary": 4982.4,
+   "remote_ms_median": 2588,
+   "server": "outputs"
+  },
+  "outputs_score_project_intensity": {
+   "cases": 5,
+   "error_results": 1,
+   "ok_results": 4,
+   "passed": 5,
+   "remote_ms_max": 2307,
+   "remote_ms_max_in_run_summary": 2306.8,
+   "remote_ms_median": 2169,
+   "server": "outputs"
+  },
+  "portal_get_review_history": {
+   "cases": 5,
+   "error_results": 0,
+   "ok_results": 5,
+   "passed": 5,
+   "remote_ms_max": 1068,
+   "remote_ms_max_in_run_summary": 1068.1,
+   "remote_ms_median": 933,
+   "server": "portal"
+  },
+  "portal_get_reviewer_assignment": {
+   "cases": 5,
+   "error_results": 1,
+   "ok_results": 4,
+   "passed": 5,
+   "remote_ms_max": 1298,
+   "remote_ms_max_in_run_summary": 1298.5,
+   "remote_ms_median": 703,
+   "server": "portal"
+  },
+  "portal_list_pending_reviews": {
+   "cases": 10,
+   "error_results": 2,
+   "ok_results": 8,
+   "passed": 10,
+   "remote_ms_max": 508,
+   "remote_ms_max_in_run_summary": 507.8,
+   "remote_ms_median": 435.0,
+   "server": "portal"
+  },
+  "portal_submit_review_decision": {
+   "cases": 1,
+   "error_results": 1,
+   "ok_results": 0,
+   "passed": 1,
+   "remote_ms_max": 505,
+   "remote_ms_max_in_run_summary": 505.4,
+   "remote_ms_median": 505,
+   "server": "portal"
+  },
+  "portal_submit_review_request": {
+   "cases": 2,
+   "error_results": 2,
+   "ok_results": 0,
+   "passed": 2,
+   "remote_ms_max": 29,
+   "remote_ms_max_in_run_summary": 29.0,
+   "remote_ms_median": 27.5,
+   "server": "portal"
+  }
+ },
+ "tools_exercised": 14,
+ "transport": "http (deployed Databricks Apps)"
+}
