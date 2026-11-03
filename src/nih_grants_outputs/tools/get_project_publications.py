@@ -99,10 +99,11 @@ def register(mcp: FastMCP) -> None:
     ) -> PublicationsResult:
         """List an award's linked PubMed publications, with MeSH and iCite data.
 
-        Links come from NIH ExPORTER publication links (award level, all
-        years). Returns at most the newest publications_max papers. An award with
-        no linked papers returns an empty list; missing MeSH or iCite values are
-        null, never zero.
+        Coverage: links (NIH ExPORTER, award level) are loaded only for the
+        9,422 cores that carry the NITRD spending category somewhere in the
+        FY2015-2023 snapshot. For any other award an empty list means "not
+        loaded", not "no papers". Returns at most the newest publications_max
+        papers; missing MeSH or iCite values are null, never zero.
         """
         total, rows = await data.fetch_publications(
             core_project_num, settings.publications_max

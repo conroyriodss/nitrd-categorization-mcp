@@ -4,8 +4,8 @@ Adapted from the ChatGPT reviewer-portal-routing design (its package source was
 not received) and the earlier hackathon-scratch/reviewer_routing_adapted draft,
 per the MVP decisions:
 
-1. Program officer: the record names exactly one PO, and exactly one ACTIVE
-   program_officer persona in the administering IC carries that PO's name hash.
+1. Program officer: exactly one ACTIVE program_officer persona in the
+   administering IC is assigned the record's core project number.
 2. IC NITRD representative: exactly one active ic_nitrd_rep persona for the
    administering IC.
 3. NITRD SIA queue (demo_sia) otherwise.
@@ -17,17 +17,17 @@ reason recorded (route_unresolved_subproject); on FY2022 NITRD data all 897
 subprojects have exactly one parent. Routing events go to the routing_events
 table (no SQLite). No email or contact fields.
 
-PO names are public RePORTER data, but they are not stored here: a persona
-carries SHA-256 hashes of normalized PO names. That keeps names out of the repo;
-it is not anonymization (a public name list can be hashed and compared).
-Post-hackathon, routing needs real NIH identity resolution.
+The persona-to-award assignment is fully synthetic: a program_officer persona
+lists the public core project numbers it stands in for (resources/personas.json).
+Routing reads no program-officer name, and no name or name hash is stored
+(until 2026-11-03 personas carried SHA-256 hashes of public PO names; those
+hashes were removed). Post-hackathon, routing needs real NIH identity resolution.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
-import unicodedata
+import re
 from collections.abc import Mapping
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -57,17 +57,7 @@ class RoutingError(ValueError):
     """The request cannot be routed (e.g. subproject without its parent record)."""
 
 
-def normalize_po_name(name: str) -> str:
-    """NFKC, 'LAST, FIRST M' -> 'first m last', casefold, collapse spaces."""
-    name = unicodedata.normalize("NFKC", name).strip()
-    if name.count(",") == 1:
-        last, first = name.split(",")
-        name = f"{first.strip()} {last.strip()}"
-    return " ".join(name.casefold().split())
-
-
-def po_name_sha256(name: str) -> str:
-    return hashlib.sha256(normalize_po_name(name).encode()).hexdigest()
+CORE_PROJECT_NUM_RE = re.compile(r"^[A-Z0-9]{3}[A-Z]{2}[0-9]{6}$")
 
 
 class Persona(BaseModel):
@@ -80,18 +70,22 @@ class Persona(BaseModel):
     role_title: str = Field(min_length=1, max_length=120)
     ic: str | None = Field(default=None, pattern=r"^[A-Z]{2,6}$")
     active: bool = True
-    po_name_sha256: tuple[str, ...] = ()
+    core_project_nums: tuple[str, ...] = Field(
+        default=(),
+        description="Synthetic assignment: public core project numbers this demo "
+        "program officer stands in for.",
+    )
     demo_note: str | None = None
 
     @model_validator(mode="after")
     def _consistent(self) -> Persona:
         if (self.role == "sia_queue") != (self.ic is None):
             raise ValueError("people need an IC; only the SIA queue has ic=null")
-        if self.po_name_sha256 and self.role != "program_officer":
-            raise ValueError("only program_officer personas carry PO name hashes")
-        for digest in self.po_name_sha256:
-            if len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest):
-                raise ValueError("po_name_sha256 entries must be lowercase hex SHA-256")
+        if self.core_project_nums and self.role != "program_officer":
+            raise ValueError("only program_officer personas are assigned awards")
+        for core in self.core_project_nums:
+            if not CORE_PROJECT_NUM_RE.match(core):
+                raise ValueError(f"{core!r} is not a core project number")
         return self
 
 
@@ -143,7 +137,6 @@ class ProjectRouting(BaseModel):
     full_project_num: str | None = None
     subproject_id: str | None = None
     administering_ic: str | None = None  # abbreviation, e.g. NIAID
-    program_officer_names: tuple[str, ...] = ()
 
     @property
     def is_subproject(self) -> bool:
@@ -151,9 +144,8 @@ class ProjectRouting(BaseModel):
 
     @classmethod
     def from_exporter(cls, row: Mapping[str, Any]) -> ProjectRouting:
-        """From an exporter_projects row (codes like 'AI'; POs joined by ';')."""
+        """From an exporter_projects row (administering IC codes like 'AI')."""
         code = (row.get("administering_ic") or "").strip().upper()
-        names = (row.get("program_officer_name") or "").split(";")
         return cls(
             appl_id=int(row["application_id"]),
             fy=int(row["fy"]),
@@ -161,7 +153,6 @@ class ProjectRouting(BaseModel):
             full_project_num=(row.get("full_project_num") or "").strip() or None,
             subproject_id=(row.get("subproject_id") or "").strip() or None,
             administering_ic=IC_CODE_TO_ABBREV.get(code),
-            program_officer_names=tuple(n.strip() for n in names if n.strip()),
         )
 
 
@@ -183,33 +174,27 @@ def _decide(
             inherited_from=inherited,
         )
 
-    # Tier 1: exactly one named PO -> exactly one active PO persona in the IC.
-    hashes = {po_name_sha256(n) for n in basis.program_officer_names}
-    if not hashes:
-        notes.append("Tier 1: the record names no program officer.")
-    elif len(hashes) > 1:
-        notes.append(f"Tier 1: {len(hashes)} program officers named; not choosing.")
+    # Tier 1: exactly one active PO persona in the IC is assigned this award.
+    core = basis.core_project_num
+    matches = [
+        p
+        for p in directory.personas
+        if p.role == "program_officer" and core in p.core_project_nums
+    ]
+    usable = [p for p in matches if p.active and ic is not None and p.ic == ic]
+    if len(usable) == 1:
+        notes.append(
+            f"Tier 1: {usable[0].reviewer_id} is the demo program officer assigned "
+            f"to {core} ({ic})."
+        )
+        return decision(usable[0], RoutingTier.PROGRAM_OFFICER)
+    if not matches:
+        notes.append("Tier 1: no demo program officer is assigned to this award.")
     else:
-        (digest,) = hashes
-        matches = [
-            p
-            for p in directory.personas
-            if p.role == "program_officer" and digest in p.po_name_sha256
-        ]
-        usable = [p for p in matches if p.active and ic is not None and p.ic == ic]
-        if len(usable) == 1:
-            notes.append(
-                f"Tier 1: the program officer is represented by {usable[0].reviewer_id}"
-                f" ({ic})."
-            )
-            return decision(usable[0], RoutingTier.PROGRAM_OFFICER)
-        if not matches:
-            notes.append("Tier 1: no demo persona represents this program officer.")
-        else:
-            notes.append(
-                "Tier 1: the program officer's persona is inactive, ambiguous or in "
-                "another IC."
-            )
+        notes.append(
+            "Tier 1: the assigned program officer persona is inactive, ambiguous or "
+            "in another IC."
+        )
     # Tier 2: exactly one active NITRD representative for the administering IC.
     if ic is None:
         notes.append("Tier 2: administering IC unknown.")

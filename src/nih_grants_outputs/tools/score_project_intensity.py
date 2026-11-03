@@ -123,8 +123,11 @@ def register(mcp: FastMCP) -> None:
     ) -> IntensityResult:
         """Score how strongly an award's research outputs signal NITRD work, by PCA.
 
-        Uses linked publications (MeSH, titles, venues) and DataCite outputs
-        when loaded. Covers 7 PCAs: LSDMA, HCIA, CHuman, AI, EHCS, CSP, SPSQ.
+        Publication-only: uses linked publications (MeSH, titles, venues).
+        DataCite scoring is not implemented (the DataCite table is not loaded).
+        Publication links exist only for cores that carry the NITRD category in
+        FY2015-2023, so other awards score null. Covers 7 PCAs: LSDMA, HCIA,
+        CHuman, AI, EHCS, CSP, SPSQ.
         Exploratory weights; evidence for a reviewer, not a classification.
         With no usable outputs the scores are null and score_interpretable is false.
         """

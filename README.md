@@ -64,18 +64,19 @@ pending (target 2026-11-07). The status table is in the
 
 ## Submission status
 
-As of commit `d54920b` (2026-10-29), with three rows updated 2026-11-03 (marked).
+This is the authoritative status table; other files link here rather than
+restating it. Updated 2026-11-03.
 
 | Component | Status | Scope of the claim |
 | --- | --- | --- |
-| `nih-grants-outputs` (6 tools, incl. `outputs_find_cohort`; updated 2026-11-03) | Implemented | Reads public ExPORTER, iCite, and PubMed data staged in Unity Catalog tables. The DataCite tool returns `not_available` because the DataCite table is not loaded in the MVP. |
+| `nih-grants-outputs` (6 tools) | Implemented | Reads public ExPORTER, iCite, and PubMed data staged in Unity Catalog tables. Publication links are loaded only for the 9,422 cores that carry the NITRD category in FY2015-2023. The DataCite tool returns `not_available` because the DataCite table is not loaded, so intensity scoring is publication-only. |
 | `nitrd-classifier` (3 tools) | Implemented | Parent (NITRD yes/no) probability with feature explanations; PCA ranking with matched scope terms. |
 | Parent model `nitrd-parent-v2-ba10594d9581` | Trained and evaluated | FY2019 validation half: PR-AUC 0.862 (all), 0.720 (new cores). Agreement with RCDC labels. [Details](eval/classifier_evaluation.md). |
-| `reviewer-portal` (5 tools) | Implemented | Writes and reads three sandbox Delta tables. Table CHECK constraints require `sandbox=true` and the label "Not RCDC / demonstration only" on every row; submission is idempotent (UUIDv5 request ID); nine fictional personas, no end-user authentication. |
-| Software tests | Offline: 160 passed, 8 skipped, 1 xfailed. Live: 167 passed, 2 skipped. GitHub Actions CI passes on `main`. | Skips are live-mode, opt-in sandbox-write and optional parity tests. Test results are separate from model and agent performance. |
+| `reviewer-portal` (5 tools) | Implemented | Writes and reads three sandbox Delta tables. Table CHECK constraints require `sandbox=true` and the label "Not RCDC / demonstration only" on every row; submission is idempotent (UUIDv5 request ID; reusing a key with different content is refused). Nine fictional personas plus the SIA queue, with a synthetic persona-to-award assignment (no program-officer names or name hashes); no end-user authentication. |
+| Software tests | Offline: 453 passed, 19 skipped, 1 xfailed (2026-11-03). Live write mode, last recorded run: 472 tests, 0 failures, 1 skipped (2026-11-02, [junit](eval/results/step_g/2026-11-02T2058Z_g5_write_mode/)). GitHub Actions CI passes on `main`. | Skips are live-mode, opt-in sandbox-write and optional parity tests. Test results are separate from model and agent performance. |
 | End-to-end sequence (updated 2026-11-03) | All 10 steps pass on three demo projects in-process and over HTTP against the deployed Apps ([run record](eval/results/runs/20261103T1358Z_e2e_778bd3ab/)) | Scripted tool calls, not an agent choosing tools. |
 | Databricks Apps deployment (updated 2026-11-03) | Three MCP Apps plus the e2e runner App deployed and running | All 14 tools answer byte-identically to in-process code over HTTP, 71/71 cases ([run record](eval/results/runs/20261103T1350Z_parity_5704d50c/), [tool utilization](eval/results/tool_utilization.md)). The runner ([`deploy/databricks/e2e_runner/`](deploy/databricks/e2e_runner/)) uses its own service principal. |
-| Agent-level (MLflow) evaluation | Not run | Blocked on a workspace-admin-provisioned service principal; request pending. |
+| Agent-level tool selection and task completion | Not measured | No agent-level runs. The tool descriptions are written for LLM tool selection ([ARCHITECTURE.md](ARCHITECTURE.md#tools-as-goals)), but whether an agent picks the right tools has not been measured. |
 | Ground-truth validation (45 projects) | Sample drawn, judging not started | Pre-specified protocol: [eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md](eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md). One reviewer, blinded to model outputs and RCDC labels. |
 
 ## Problem and mission value
@@ -238,8 +239,8 @@ it.
 ## Scope and limitations
 
 - Hackathon prototype using public-source data and fictional reviewer personas.
-- Program-officer names appear in public source metadata and are used only to
-  match a routing persona; fictional reviewer IDs do not authenticate anyone.
+- Routing uses a synthetic persona-to-award assignment and reads no
+  program-officer name; fictional reviewer IDs do not authenticate anyone.
 - Parent probabilities, PCA match scores, and output-intensity values answer
   different questions and are not interchangeable.
 - Sandbox records carry the demonstration marker and do not change operational

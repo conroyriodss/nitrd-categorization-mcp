@@ -71,8 +71,8 @@ MAX_ERROR_CHARS = 2000
 
 _PROJECT_COLS = (
     "application_id, fy, core_project_num, full_project_num, subproject_id, "
-    "administering_ic, program_officer_name"
-)
+    "administering_ic"
+)  # no program-officer name: routing uses the synthetic persona assignment
 _REQUEST_COLS = (
     "request_id, idempotency_key, payload_sha256, appl_id, fy, task1_suggestion, "
     "task2_suggestion, evidence, requested_by, assigned_reviewer_id, "

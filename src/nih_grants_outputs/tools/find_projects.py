@@ -77,7 +77,8 @@ def register(mcp: FastMCP) -> None:
     ) -> FindProjectsResult:
         """List public NIH projects tagged with a spending category in one fiscal year.
 
-        Use this first to pick projects to inspect. Each result gives the
+        Use it to find candidate projects by category and year (for a cohort
+        by IC and activity code, use outputs_find_cohort). Each result gives the
         appl_id (for outputs_get_project_detail and the classifier tools) and
         the core_project_num (for publications, DataCite and intensity).
         An unknown category name is an error; a valid category with no rows

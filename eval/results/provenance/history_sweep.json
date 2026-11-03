@@ -1,0 +1,62 @@
+{
+  "captured_at": "2026-11-03T20:27:35+00:00",
+  "findings": [
+    "No credential pattern in any reachable blob or commit message of the three repositories.",
+    "nitrd-mcp: one workspace hostname (an identifier, not a credential) in scripts/agent_eval_offline.py, added in e078f2f and removed in 7a9953e (2026-09-18); not in HEAD. History not rewritten.",
+    "nitrd-mcp: personas.json v1 (2026-10-27 to 2026-11-03) carried SHA-256 hashes of two public RePORTER program-officer names; removed in personas v2. Hashes remain in history; history not rewritten.",
+    "No service-principal or SQL-warehouse ID in history."
+  ],
+  "heads": {
+    "entry2-uac-nitrd": "d549d26",
+    "nitrd-mcp": "3923a82",
+    "uac-witness": "b6c9102"
+  },
+  "kind": "secret sweep over full git history (every reachable blob, binaries included, plus commit messages)",
+  "patterns": [
+    "aws_key",
+    "bearer_value",
+    "databricks_pat",
+    "github_token",
+    "jwt",
+    "private_key",
+    "slack_token"
+  ],
+  "repos": {
+    "entry2-uac-nitrd": {
+      "bytes": 140245706,
+      "commits": 42,
+      "credential_hits": [],
+      "identifiers": {
+        "portal_sp": 0,
+        "runner_sp": 0,
+        "warehouse": 0,
+        "workspace_host": 0
+      },
+      "objects": 447
+    },
+    "nitrd-mcp": {
+      "bytes": 12506623,
+      "commits": 56,
+      "credential_hits": [],
+      "identifiers": {
+        "portal_sp": 0,
+        "runner_sp": 0,
+        "warehouse": 0,
+        "workspace_host": 1
+      },
+      "objects": 708
+    },
+    "uac-witness": {
+      "bytes": 9656,
+      "commits": 2,
+      "credential_hits": [],
+      "identifiers": {
+        "portal_sp": 0,
+        "runner_sp": 0,
+        "warehouse": 0,
+        "workspace_host": 0
+      },
+      "objects": 8
+    }
+  }
+}

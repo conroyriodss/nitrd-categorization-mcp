@@ -1,0 +1,75 @@
+{
+  "files": [
+    {
+      "bytes": 8063492,
+      "path": "src/nitrd_classifier/resources/parent_model.joblib",
+      "sha256": "92d97bd138f3ec48da3a9bf3d1a03bac19d5624fc9d0aac8b12a2cba05f8c10c"
+    },
+    {
+      "bytes": 3899,
+      "path": "src/nitrd_classifier/resources/parent_model_validation.json",
+      "sha256": "3687255dc4047ce4f268d01d3acac98d92376c85396164076fa32906ab15fea6"
+    },
+    {
+      "bytes": 11712,
+      "path": "src/nitrd_classifier/resources/scope/nitrd_pca_scopes_fy2025.v1.json",
+      "sha256": "8914f4c0d7953c366bae19683ed96ca6d2cce6043c98a227544e907683b56ea9"
+    },
+    {
+      "bytes": 4448,
+      "path": "scripts/train_parent_classifier.py",
+      "sha256": "aa2cd3f2237ee6ec35b8b365a06f40d9f27f98dce742a716534c1a474a864bd6"
+    }
+  ],
+  "labels": "public RCDC NITRD spending-category name in ExPORTER nih_spending_cats; records with no spending category dropped",
+  "parent_model": {
+    "calibration": "CalibratedClassifierCV(sigmoid, GroupKFold(5) by core, ensemble=False)",
+    "config": {
+      "C": 1.0,
+      "class_weight": "balanced",
+      "ece_bins": 15,
+      "max_abstract_features": 180000,
+      "max_df": 0.995,
+      "max_iter": 2000,
+      "max_phr_features": 50000,
+      "max_title_features": 40000,
+      "min_df": 3,
+      "n_folds": 5,
+      "seed": 329
+    },
+    "model_id": "nitrd-parent-v2-ba10594d9581",
+    "split": {
+      "exclusions": {
+        "duplicate_text_in_training": 132205,
+        "no_core_project_num": 223,
+        "unlabeled_no_spending_categories": 50943
+      },
+      "threshold_selection": {
+        "cores": 28316,
+        "positives": 1409,
+        "records": 35058
+      },
+      "train": {
+        "cores": 94065,
+        "positives": 3857,
+        "records": 125847
+      },
+      "validation": {
+        "cores": 28275,
+        "positives": 1528,
+        "records": 35090
+      }
+    },
+    "threshold": 0.3893682055460409,
+    "threshold_fy": 2019,
+    "train_fys": [
+      2015,
+      2016,
+      2017,
+      2018
+    ],
+    "trained_at": "2026-10-27T14:57:14+00:00"
+  },
+  "pca_engine": "rule-based scope vocabulary (no training); scope file nitrd_pca_scopes_fy2025.v1.json",
+  "training_code": "scripts/train_parent_classifier.py"
+}

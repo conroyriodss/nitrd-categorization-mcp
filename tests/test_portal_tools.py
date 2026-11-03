@@ -1,9 +1,10 @@
 """reviewer-portal tool bodies.
 
-Offline (default): the stateful FakePortal in tests/fake_sql.py, with persona
-PO hashes patched to the fixture's FICTIONAL PO names (real hashes stay in
-personas.json). Live (opt-in): routing reads need DATABRICKS_WAREHOUSE_ID; the
-write test also needs PORTAL_LIVE_WRITE_TESTS=1 and deletes only its own rows.
+Offline (default): the stateful FakePortal in tests/fake_sql.py, with the
+bundled synthetic persona assignments plus the fixture's synthetic parent award
+P01AI000100 assigned to demo_po_niaid_01. Live (opt-in): routing reads need
+DATABRICKS_WAREHOUSE_ID; the write test also needs PORTAL_LIVE_WRITE_TESTS=1
+and deletes only its own rows.
 """
 
 import os
@@ -16,7 +17,6 @@ from fastmcp.exceptions import ToolError
 from reviewer_portal import data, routing
 from reviewer_portal.app import mcp
 from shared.models import NOT_RCDC
-from tests.fake_sql import FAKE_PO
 
 DEMO = 10506013
 EVIDENCE = {"summary": "Ontology platform; AI and data management terms."}
@@ -29,15 +29,14 @@ async def call(tool, **args):
 
 
 @pytest.fixture
-def fictional_po_hashes(monkeypatch):
-    """Point the two demo PO personas at the fixture's fictional PO names."""
+def synthetic_assignments(monkeypatch):
+    """Bundled personas, plus the synthetic parent award for demo_po_niaid_01."""
     real = routing.default_directory()
-    swap = {"demo_po_niaid_01": FAKE_PO["NIAID"], "demo_po_ninr_01": FAKE_PO["NINR"]}
     personas = tuple(
         p.model_copy(
-            update={"po_name_sha256": (routing.po_name_sha256(swap[p.reviewer_id]),)}
+            update={"core_project_nums": (*p.core_project_nums, "P01AI000100")}
         )
-        if p.reviewer_id in swap
+        if p.reviewer_id == "demo_po_niaid_01"
         else p
         for p in real.personas
     )
@@ -70,7 +69,7 @@ def submit_args(**kw):
     ],
 )
 async def test_assignment_preview(
-    fictional_po_hashes, fake_sql, appl_id, tier, reviewer
+    synthetic_assignments, fake_sql, appl_id, tier, reviewer
 ):
     out = await call("portal_get_reviewer_assignment", appl_id=appl_id)
     a = out["assignment"]
@@ -94,7 +93,7 @@ async def test_assignment_unknown_appl_is_an_error():
 # --- portal_submit_review_request -------------------------------------------------
 
 
-async def test_submit_is_idempotent(fictional_po_hashes, fake_sql):
+async def test_submit_is_idempotent(synthetic_assignments, fake_sql):
     first = await call("portal_submit_review_request", **submit_args())
     again = await call("portal_submit_review_request", **submit_args())
     req = first["request"]
@@ -162,7 +161,7 @@ async def test_submit_errors_write_nothing(fake_sql, args, match):
 # --- pending queue + decisions ----------------------------------------------------
 
 
-async def test_pending_then_decision(fictional_po_hashes, fake_sql):
+async def test_pending_then_decision(synthetic_assignments, fake_sql):
     req = (await call("portal_submit_review_request", **submit_args()))["request"]
     rid, assignee = req["request_id"], "demo_po_niaid_01"
 
@@ -218,7 +217,7 @@ async def _pending(**kw):
     ("label", "pcas"), [(False, []), (True, ["AI", "LSDMA"])], ids=["no", "yes"]
 )
 async def test_override_records_corrections_and_is_final(
-    fictional_po_hashes, fake_sql, label, pcas
+    synthetic_assignments, fake_sql, label, pcas
 ):
     rid, assignee = await _pending(task2_suggestion={"pcas": ["EHCS"]})
     out = await call(
@@ -298,7 +297,7 @@ async def test_override_records_corrections_and_is_final(
     ],
 )
 async def test_correction_rules_leave_request_pending(
-    fictional_po_hashes, fake_sql, decision, extra, match
+    synthetic_assignments, fake_sql, decision, extra, match
 ):
     rid, assignee = await _pending()
     with pytest.raises(ToolError, match=match):

@@ -1,0 +1,1481 @@
+[
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Find a cohort by IC + activity"
+    },
+    "description": "Select a cohort of public NIH records by administering IC, activity\ncode and fiscal year, or list the IC x activity combinations available.\n\nWith ic + activity: the matching records (ordered by appl_id), the total\nbefore the limit, and the exact SQL that ran. With ic only, or neither:\nthe combinations that have at least one record that year, for picking a\ncohort. Check total_matching before classifying a cohort. FY2022-2026\nare refused (reserved for validation and sealed scoring).",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "activity": {
+          "anyOf": [
+            {
+              "maxLength": 3,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Activity code, e.g. U01, R01. Give it with ic to get the cohort; omit it to list the activity codes available."
+        },
+        "confirm_large": {
+          "default": false,
+          "description": "Required to set limit above 50.",
+          "type": "boolean"
+        },
+        "fy": {
+          "description": "NIH fiscal year, 2015-2021. FY2022-2026 are reserved for validation and sealed scoring and are refused.",
+          "minimum": 2015,
+          "type": "integer"
+        },
+        "ic": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Administering IC: NIH abbreviation (e.g. NIBIB) or ExPORTER two-letter code (e.g. EB). Omit, with activity, to list every IC."
+        },
+        "limit": {
+          "default": 50,
+          "description": "Cohort mode: max records to return. Default 50; 51-200 needs confirm_large=true; above 200 or below 1 is rejected.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "fy"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "outputs_find_cohort",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "activity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "administering_ic": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Code queried, if any."
+        },
+        "bounds": {
+          "additionalProperties": false,
+          "properties": {
+            "confirm_above": {
+              "default": 50,
+              "type": "integer"
+            },
+            "default_limit": {
+              "default": 50,
+              "type": "integer"
+            },
+            "hard_cap": {
+              "default": 200,
+              "type": "integer"
+            },
+            "max_fy": {
+              "default": 2021,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "combinations": {
+          "description": "Combinations mode: ordered by IC code, activity; else empty.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "activity": {
+                "type": "string"
+              },
+              "administering_ic": {
+                "description": "ExPORTER code, e.g. EB.",
+                "type": "string"
+              },
+              "ic": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "NIH abbreviation, e.g. NIBIB, if known."
+              },
+              "records": {
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "administering_ic",
+              "ic",
+              "activity",
+              "records"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "fy": {
+          "type": "integer"
+        },
+        "ic": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Abbreviation as resolved, if any."
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Cohort mode only."
+        },
+        "mode": {
+          "enum": [
+            "cohort",
+            "combinations"
+          ],
+          "type": "string"
+        },
+        "projects": {
+          "description": "Cohort mode: ordered by appl_id ascending; empty otherwise.",
+          "items": {
+            "additionalProperties": false,
+            "description": "One fiscal-year application record in the cohort.",
+            "properties": {
+              "activity": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "administering_ic": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "ExPORTER code, e.g. EB."
+              },
+              "appl_id": {
+                "description": "Pass to outputs_get_project_detail / classifier.",
+                "type": "integer"
+              },
+              "core_project_num": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "full_project_num": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fy": {
+                "type": "integer"
+              },
+              "ic": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "NIH abbreviation, e.g. NIBIB, if known."
+              },
+              "pi_names": {
+                "description": "Contact PI first, as in ExPORTER.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "reporter_url": {
+                "description": "Public NIH RePORTER page for the record.",
+                "type": "string"
+              },
+              "subproject_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Set for a multi-project award component; null for the parent."
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "total_cost": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "appl_id",
+              "fy",
+              "full_project_num",
+              "core_project_num",
+              "subproject_id",
+              "title",
+              "activity",
+              "administering_ic",
+              "ic",
+              "pi_names",
+              "total_cost",
+              "reporter_url"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "query": {
+          "additionalProperties": false,
+          "description": "The exact statement this call ran and its bound parameters.",
+          "properties": {
+            "params": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            "sql": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "sql",
+            "params"
+          ],
+          "type": "object"
+        },
+        "returned": {
+          "description": "Projects returned (cohort) or combinations returned.",
+          "type": "integer"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "total_matching": {
+          "description": "Records matching before any limit (both modes).",
+          "type": "integer"
+        },
+        "truncated": {
+          "description": "Cohort mode: total_matching > returned.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mode",
+        "fy",
+        "ic",
+        "administering_ic",
+        "activity",
+        "limit",
+        "total_matching",
+        "returned",
+        "truncated",
+        "projects",
+        "combinations",
+        "query",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Find a cohort by IC + activity"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Find NIH projects by category"
+    },
+    "description": "List public NIH projects tagged with a spending category in one fiscal year.\n\nUse it to find candidate projects by category and year (for a cohort\nby IC and activity code, use outputs_find_cohort). Each result gives the\nappl_id (for outputs_get_project_detail and the classifier tools) and\nthe core_project_num (for publications, DataCite and intensity).\nAn unknown category name is an error; a valid category with no rows\nthat year returns an empty list.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "description": "NIH RCDC spending category NAME exactly as published in ExPORTER (matched case-insensitively), e.g. 'Networking and Information Technology R&D (NITRD)'. Names, not numeric RCDC IDs. For NITRD the pre-FY2019 name without ' (NITRD)' is matched too.",
+          "maxLength": 200,
+          "minLength": 2,
+          "type": "string"
+        },
+        "fy": {
+          "description": "NIH fiscal year, 2015-2023 (loaded ExPORTER years).",
+          "maximum": 2023,
+          "minimum": 2015,
+          "type": "integer"
+        },
+        "limit": {
+          "default": 50,
+          "description": "Max projects to return (1-500).",
+          "maximum": 500,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "category",
+        "fy"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "outputs_find_projects",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "description": "Category name as matched in the data.",
+          "type": "string"
+        },
+        "fy": {
+          "type": "integer"
+        },
+        "limit": {
+          "type": "integer"
+        },
+        "projects": {
+          "description": "Ordered by appl_id ascending (stable across calls).",
+          "items": {
+            "additionalProperties": false,
+            "description": "One fiscal-year application record.",
+            "properties": {
+              "activity": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Activity code, e.g. R01, U24."
+              },
+              "administering_ic": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Two-letter IC code, e.g. AI, LM."
+              },
+              "appl_id": {
+                "description": "Application ID; pass to the detail/classifier tools.",
+                "type": "integer"
+              },
+              "core_project_num": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Award-level number for publications/DataCite/intensity tools."
+              },
+              "full_project_num": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "e.g. 5U24AI171008-02."
+              },
+              "fy": {
+                "type": "integer"
+              },
+              "subproject_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Set for a multi-project award component; null for the parent."
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "total_cost": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Total cost in USD for this record, if published."
+              }
+            },
+            "required": [
+              "appl_id",
+              "fy",
+              "full_project_num",
+              "core_project_num",
+              "subproject_id",
+              "title",
+              "activity",
+              "administering_ic",
+              "total_cost"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "returned": {
+          "type": "integer"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "total_matching": {
+          "description": "Records in the category for this year.",
+          "type": "integer"
+        },
+        "truncated": {
+          "description": "True when total_matching > returned.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "category",
+        "fy",
+        "limit",
+        "total_matching",
+        "returned",
+        "truncated",
+        "projects",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Find NIH projects by category"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Get DataCite outputs for an NIH award"
+    },
+    "description": "List datasets and software with DataCite DOIs that cite this award.\n\nIn the MVP the DataCite table is not loaded yet, so status is\n\"not_available\" and outputs is null. Treat that as unknown, not as\nevidence the award produced no data outputs.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "core_project_num": {
+          "description": "NIH core project number shared by all years of an award, e.g. U24AI171008 (activity + IC + serial; no type prefix or -yr suffix). Publications and data outputs are linked at this level.",
+          "maxLength": 40,
+          "minLength": 3,
+          "type": "string"
+        }
+      },
+      "required": [
+        "core_project_num"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "outputs_get_project_datacite",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "core_project_num": {
+          "type": "string"
+        },
+        "outputs": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "award_number_matched": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Funding-reference award number that linked this DOI to the award."
+                  },
+                  "doi": {
+                    "type": "string"
+                  },
+                  "match_confidence": {
+                    "description": "DataCite v2 tier: funder ID + award = high; name + award = medium.",
+                    "enum": [
+                      "high",
+                      "medium",
+                      "low"
+                    ],
+                    "type": "string"
+                  },
+                  "publication_year": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "resource_type": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "resource_type_general": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "e.g. Dataset, Software."
+                  },
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "doi",
+                  "title",
+                  "resource_type_general",
+                  "resource_type",
+                  "publication_year",
+                  "award_number_matched",
+                  "match_confidence"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Null when not_available; [] when loaded and nothing matched."
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Why status is not_available."
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "description": "not_available = table not loaded (unknown), NOT 'no outputs'.",
+          "enum": [
+            "available",
+            "not_available"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "core_project_num",
+        "status",
+        "reason",
+        "outputs",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Get DataCite outputs for an NIH award"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Get NIH project detail"
+    },
+    "description": "Get the public record for one application: title, abstract, PHR, IC, PI, PO.\n\nUse after outputs_find_projects to read the text a reviewer would read.\nThe spending categories are NIH's published RCDC tags. An appl_id that\nis not in the FY2015-2023 snapshot is an error.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "appl_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "outputs_get_project_detail",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "project": {
+          "additionalProperties": false,
+          "description": "Public ExPORTER fields for one fiscal-year application.",
+          "properties": {
+            "abstract": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Public abstract; null if not published."
+            },
+            "activity": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "administering_ic": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "appl_id": {
+              "type": "integer"
+            },
+            "core_project_num": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "full_project_num": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "funding_mechanism": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fy": {
+              "type": "integer"
+            },
+            "ic_name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "is_nitrd": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "True when spending_categories includes 'Networking and Information Technology R&D (NITRD)' (or its pre-FY2019 name without ' (NITRD)'); null when unlabeled (unknown, not a negative)."
+            },
+            "org_name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "phr": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Public health relevance statement; null if absent."
+            },
+            "pi_names": {
+              "description": "Contact PI first when ExPORTER marks one.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "program_officer_name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ExPORTER format 'LAST, FIRST M'."
+            },
+            "project_end": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "project_start": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "As published in the ExPORTER CSV (YYYY-MM-DD)."
+            },
+            "spending_categories": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "RCDC category names; null when the record is unlabeled."
+            },
+            "subproject_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Set for a multi-project award component; null for the parent row."
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "total_cost": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "appl_id",
+            "fy",
+            "full_project_num",
+            "core_project_num",
+            "subproject_id",
+            "title",
+            "abstract",
+            "phr",
+            "activity",
+            "funding_mechanism",
+            "administering_ic",
+            "ic_name",
+            "org_name",
+            "pi_names",
+            "program_officer_name",
+            "project_start",
+            "project_end",
+            "total_cost",
+            "spending_categories",
+            "is_nitrd"
+          ],
+          "type": "object"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "project",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Get NIH project detail"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Get publications for an NIH award"
+    },
+    "description": "List an award's linked PubMed publications, with MeSH and iCite data.\n\nCoverage: links (NIH ExPORTER, award level) are loaded only for the\n9,422 cores that carry the NITRD spending category somewhere in the\nFY2015-2023 snapshot. For any other award an empty list means \"not\nloaded\", not \"no papers\". Returns at most the newest publications_max\npapers; missing MeSH or iCite values are null, never zero.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "core_project_num": {
+          "description": "NIH core project number shared by all years of an award, e.g. U24AI171008 (activity + IC + serial; no type prefix or -yr suffix). Publications and data outputs are linked at this level.",
+          "maxLength": 40,
+          "minLength": 3,
+          "type": "string"
+        }
+      },
+      "required": [
+        "core_project_num"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "outputs_get_project_publications",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "core_project_num": {
+          "type": "string"
+        },
+        "publications": {
+          "description": "Newest first (pub_year desc, then pmid desc).",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "citation_count": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "doi": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "is_research_article": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "journal": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mesh": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "major_topic": {
+                          "type": "boolean"
+                        },
+                        "name": {
+                          "description": "Descriptor name, e.g. Machine Learning.",
+                          "type": "string"
+                        },
+                        "ui": {
+                          "description": "MeSH descriptor UI, e.g. D000069550.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "ui",
+                        "name",
+                        "major_topic"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Null when PubMed has not indexed MeSH yet (not the same as none)."
+              },
+              "nih_percentile": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pmid": {
+                "type": "integer"
+              },
+              "pub_year": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "publication_types": {
+                "description": "PubMed publication types.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "rcr": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "iCite Relative Citation Ratio; null if unavailable."
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "pmid",
+              "title",
+              "journal",
+              "pub_year",
+              "doi",
+              "publication_types",
+              "mesh",
+              "rcr",
+              "citation_count",
+              "nih_percentile",
+              "is_research_article"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "returned": {
+          "type": "integer"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "total_linked": {
+          "description": "PMIDs linked to this award in ExPORTER. Links are loaded for NITRD awards (any FY2015-2023 NITRD record); other awards show 0.",
+          "type": "integer"
+        },
+        "truncated": {
+          "description": "True when more than 100 are linked.",
+          "type": "boolean"
+        },
+        "with_icite": {
+          "description": "Returned publications that have iCite metrics.",
+          "type": "integer"
+        },
+        "with_mesh": {
+          "description": "Returned publications that have MeSH.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "core_project_num",
+        "total_linked",
+        "returned",
+        "truncated",
+        "with_mesh",
+        "with_icite",
+        "publications",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Get publications for an NIH award"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Score NITRD output intensity"
+    },
+    "description": "Score how strongly an award's research outputs signal NITRD work, by PCA.\n\nPublication-only: uses linked publications (MeSH, titles, venues).\nDataCite scoring is not implemented (the DataCite table is not loaded).\nPublication links exist only for cores that carry the NITRD category in\nFY2015-2023, so other awards score null. Covers 7 PCAs: LSDMA, HCIA,\nCHuman, AI, EHCS, CSP, SPSQ.\nExploratory weights; evidence for a reviewer, not a classification.\nWith no usable outputs the scores are null and score_interpretable is false.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "core_project_num": {
+          "description": "NIH core project number shared by all years of an award, e.g. U24AI171008 (activity + IC + serial; no type prefix or -yr suffix). Publications and data outputs are linked at this level.",
+          "maxLength": 40,
+          "minLength": 3,
+          "type": "string"
+        }
+      },
+      "required": [
+        "core_project_num"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "outputs_score_project_intensity",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "core_project_num": {
+          "type": "string"
+        },
+        "coverage": {
+          "additionalProperties": true,
+          "description": "Scorer-native coverage block.",
+          "type": "object"
+        },
+        "inputs": {
+          "additionalProperties": false,
+          "properties": {
+            "datacite_outputs": {
+              "type": "integer"
+            },
+            "datacite_status": {
+              "enum": [
+                "available",
+                "not_available"
+              ],
+              "type": "string"
+            },
+            "publications": {
+              "description": "Publications passed to the scorer.",
+              "type": "integer"
+            },
+            "publications_with_mesh": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "publications",
+            "publications_with_mesh",
+            "datacite_status",
+            "datacite_outputs"
+          ],
+          "type": "object"
+        },
+        "interpretation": {
+          "default": "Observed output-signal index; not a probability, budget share or official classification. Covers 7 of 12 PCAs.",
+          "type": "string"
+        },
+        "overall": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "0-1 index. Null when not score_interpretable (missing, not 0)."
+        },
+        "per_pca": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "propertyNames": {
+                "enum": [
+                  "LSDMA",
+                  "HCIA",
+                  "CHuman",
+                  "AI",
+                  "EHCS",
+                  "CSP",
+                  "SPSQ"
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Per-PCA 0-1 indexes; they overlap (never sum). Null if not usable."
+        },
+        "reproducibility": {
+          "additionalProperties": true,
+          "description": "scorer_version, rule_version, input/config/code SHA-256.",
+          "type": "object"
+        },
+        "score_interpretable": {
+          "type": "boolean"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "description": "Scorer status, e.g. scored, no_outputs.",
+          "type": "string"
+        },
+        "top_evidence": {
+          "description": "Highest-contributing outputs with their signals (scorer-native).",
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "core_project_num",
+        "status",
+        "score_interpretable",
+        "overall",
+        "per_pca",
+        "inputs",
+        "top_evidence",
+        "coverage",
+        "warnings",
+        "reproducibility",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Score NITRD output intensity"
+  }
+]

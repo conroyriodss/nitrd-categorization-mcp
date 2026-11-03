@@ -1,4 +1,4 @@
-"""Operator HTML pages: cohort selector (Item 3), submit (Item 4), review stub.
+"""Operator HTML pages: cohort selector, submit, review screen with decisions.
 
     GET  /operator                  redirects to the selector
     GET  /operator/select           selector: IC / activity lists load per FY
@@ -7,8 +7,15 @@
     POST /operator/submit           re-validates everything, then streams the
                                     classification progress (chunked HTML,
                                     one line per project) and redirects to:
-    GET  /operator/review           placeholder until Item 5: the cohort's
-                                    requests, counts by tier, failures
+    GET  /operator/review           the cohort's requests, counts by tier,
+                                    classification failures, and a decision
+                                    form per pending request
+    POST /operator/decide           records one reviewer decision (approve,
+                                    reject, defer, override with corrections)
+    POST /operator/retry            re-runs failed classifications for the
+                                    cohort (new attempt events, same request)
+
+The operator pages refuse reserved fiscal years (shared.guardrail).
 
 Every page, error pages included, is rendered by layout(), which puts the
 three sandbox labels in an undismissable header banner. Pages are rendered on

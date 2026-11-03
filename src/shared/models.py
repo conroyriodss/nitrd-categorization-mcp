@@ -110,8 +110,9 @@ PersonaId = Annotated[
     ),
     Field(
         description=(
-            "Fictional demo reviewer persona ID, e.g. demo_po_lsdma_01, "
-            "demo_ic_rep_nlm, demo_sia. Not a real person; no authentication."
+            "Fictional demo reviewer persona ID from the bundled roster, e.g. "
+            "demo_po_niaid_01, demo_ic_rep_nci, demo_sia. Not a real person; "
+            "no authentication."
         ),
     ),
 ]

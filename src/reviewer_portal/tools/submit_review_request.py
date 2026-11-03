@@ -70,8 +70,10 @@ def register(mcp: FastMCP) -> None:
         SUBMITTING the request; the portal chooses the assigned reviewer itself
         (see portal_get_reviewer_assignment to preview). Give task1_suggestion,
         task2_suggestion, or both. Writes only to sandbox tables; never changes
-        RCDC or any NIH record. Safe to retry: an identical request (or the
-        same idempotency_key) returns the existing record with created=false.
+        RCDC or any NIH record. Safe to retry: an identical request, or the same
+        idempotency_key with the same content, returns the existing record with
+        created=false. Reusing an idempotency_key with different content is an
+        error and writes nothing.
         """
         data.require_persona(reviewer_id)
         if task1_suggestion is None and task2_suggestion is None:

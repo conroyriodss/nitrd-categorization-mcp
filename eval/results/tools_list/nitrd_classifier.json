@@ -1,0 +1,544 @@
+[
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Suggest NITRD parent category"
+    },
+    "description": "Suggest whether one NIH application is NITRD from its text.\n\nReturns a calibrated probability, the decision threshold, and the 10\nterms that pushed the score up most. It is a suggestion for a human\nreviewer, not RCDC coding. Use classifier_explain(task=\"parent\") for\nthe top 15 terms each way (up and down). An appl_id outside the\nFY2015-2023 snapshot is an error.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "appl_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "classifier_classify_parent",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "abstain_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appl_id": {
+          "type": "integer"
+        },
+        "cohort": {
+          "description": "Where this record sat in model development. 'training' and 'threshold_selection' results are in-sample-ish; 'validation' (other FY2019 half) and 'not_used_in_training' (FY2020-2023) are not.",
+          "enum": [
+            "training",
+            "threshold_selection",
+            "validation",
+            "not_used_in_training"
+          ],
+          "type": "string"
+        },
+        "fy": {
+          "type": "integer"
+        },
+        "fy2019_half": {
+          "anyOf": [
+            {
+              "enum": [
+                "threshold_selection",
+                "validation"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "For FY2019 records: which half of the core_project_num split the record is in. Null for every other fiscal year."
+        },
+        "model": {
+          "additionalProperties": false,
+          "description": "Which trained model produced a parent suggestion.",
+          "properties": {
+            "calibration": {
+              "description": "e.g. CalibratedClassifierCV(sigmoid, GroupKFold(5), single model).",
+              "type": "string"
+            },
+            "model_id": {
+              "type": "string"
+            },
+            "sklearn_version": {
+              "type": "string"
+            },
+            "threshold": {
+              "description": "probability >= threshold -> suggest NITRD.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "threshold_fy": {
+              "description": "Year for threshold selection; validation reported separately on a disjoint FY2019 subset split by core_project_num.",
+              "type": "integer"
+            },
+            "train_fys": {
+              "description": "Fiscal years the model was fitted on.",
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "model_id",
+            "train_fys",
+            "threshold_fy",
+            "calibration",
+            "threshold",
+            "sklearn_version"
+          ],
+          "type": "object"
+        },
+        "notice": {
+          "default": "Suggestion only. Not RCDC / demonstration only.",
+          "type": "string"
+        },
+        "probability": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Calibrated P(NITRD). Null when abstaining."
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "suggestion": {
+          "description": "abstain = no usable text/features; a human must decide.",
+          "enum": [
+            "nitrd",
+            "not_nitrd",
+            "abstain"
+          ],
+          "type": "string"
+        },
+        "top_features": {
+          "description": "Up to 10 terms pushing most toward NITRD, largest first.",
+          "items": {
+            "additionalProperties": false,
+            "description": "One TF-IDF term's signed contribution for THIS document (not a global weight).",
+            "properties": {
+              "contribution": {
+                "description": "tf-idf value x logistic-regression coefficient, in raw log-odds before calibration. Positive pushes toward NITRD.",
+                "type": "number"
+              },
+              "field": {
+                "description": "Text field the term came from.",
+                "enum": [
+                  "title",
+                  "abstract",
+                  "phr"
+                ],
+                "type": "string"
+              },
+              "term": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "term",
+              "field",
+              "contribution"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "appl_id",
+        "fy",
+        "suggestion",
+        "probability",
+        "abstain_reason",
+        "cohort",
+        "fy2019_half",
+        "top_features",
+        "model",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Suggest NITRD parent category"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Rank NITRD subcategories (PCAs)"
+    },
+    "description": "Rank the 12 NITRD Program Component Areas for one public NIH application.\n\nMatches the application's title, abstract and PHR against the NITRD\nscope vocabulary and returns up to 5 of the 12 PCAs (those with at\nleast one match, highest score first), with the matched terms. Public\nFY2015-2023 projects only. Most useful after classifier_classify_parent\nsuggests NITRD.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "appl_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "classifier_classify_subcategory",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "type": "integer"
+        },
+        "fy": {
+          "type": "integer"
+        },
+        "notice": {
+          "default": "Ranking signal for a reviewer; scores are not probabilities and are not comparable with parent probabilities. Not RCDC / demonstration only.",
+          "type": "string"
+        },
+        "ranked_pcas": {
+          "description": "Up to 5 PCAs with at least one match, highest score first (engine order, after its most-specific-PCA rules).",
+          "items": {
+            "additionalProperties": false,
+            "description": "One PCA from the subcategory scope-vocabulary engine.",
+            "properties": {
+              "matched_terms": {
+                "description": "Scope-vocabulary terms found in the text (why this PCA ranked).",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "pca": {
+                "enum": [
+                  "ACNS",
+                  "AI",
+                  "CHuman",
+                  "CNPS",
+                  "CSP",
+                  "EdW",
+                  "EHCS",
+                  "ENIT",
+                  "HCIA",
+                  "IRAS",
+                  "LSDMA",
+                  "SPSQ"
+                ],
+                "type": "string"
+              },
+              "score": {
+                "description": "Engine ranking score; not a probability.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "pca",
+              "score",
+              "matched_terms"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "description": "no_match = no scope-vocabulary term found; ranked_pcas is empty.",
+          "enum": [
+            "ranked",
+            "no_match"
+          ],
+          "type": "string"
+        },
+        "vocabulary_id": {
+          "default": "vocabulary-scope-only-2026-10-24",
+          "type": "string"
+        }
+      },
+      "required": [
+        "appl_id",
+        "fy",
+        "status",
+        "ranked_pcas",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Rank NITRD subcategories (PCAs)"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Explain a classifier suggestion"
+    },
+    "description": "Explain the parent (NITRD yes/no) or subcategory (PCA) suggestion.\n\ntask=\"parent\": the terms that pushed the score toward and against NITRD,\nwith exact signed contributions. task=\"subcategory\": each matched PCA\nand the scope-vocabulary terms behind it. Explains the model's\nbehaviour, not whether the suggestion is correct.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "task": {
+          "description": "Which classifier classifier_explain should explain.",
+          "enum": [
+            "parent",
+            "subcategory"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "appl_id",
+        "task"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "classifier_explain",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "type": "integer"
+        },
+        "caveats": {
+          "description": "Limits of the explanation, e.g. contributions are pre-calibration.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "features": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "description": "One TF-IDF term's signed contribution for THIS document (not a global weight).",
+                "properties": {
+                  "contribution": {
+                    "description": "tf-idf value x logistic-regression coefficient, in raw log-odds before calibration. Positive pushes toward NITRD.",
+                    "type": "number"
+                  },
+                  "field": {
+                    "description": "Text field the term came from.",
+                    "enum": [
+                      "title",
+                      "abstract",
+                      "phr"
+                    ],
+                    "type": "string"
+                  },
+                  "term": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "term",
+                  "field",
+                  "contribution"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "task=parent only: up to 15 terms each way (toward and against NITRD), by absolute contribution. Null for subcategory."
+        },
+        "fy": {
+          "type": "integer"
+        },
+        "method": {
+          "description": "parent: exact per-term log-odds contributions of the linear model. subcategory: scope-vocabulary matches per PCA.",
+          "type": "string"
+        },
+        "pca_matches": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "description": "One PCA from the subcategory scope-vocabulary engine.",
+                "properties": {
+                  "matched_terms": {
+                    "description": "Scope-vocabulary terms found in the text (why this PCA ranked).",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "pca": {
+                    "enum": [
+                      "ACNS",
+                      "AI",
+                      "CHuman",
+                      "CNPS",
+                      "CSP",
+                      "EdW",
+                      "EHCS",
+                      "ENIT",
+                      "HCIA",
+                      "IRAS",
+                      "LSDMA",
+                      "SPSQ"
+                    ],
+                    "type": "string"
+                  },
+                  "score": {
+                    "description": "Engine ranking score; not a probability.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "pca",
+                  "score",
+                  "matched_terms"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "task=subcategory only: each matched PCA and its terms; else null."
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        },
+        "summary": {
+          "description": "One or two plain sentences for a reviewer.",
+          "type": "string"
+        },
+        "task": {
+          "description": "Which classifier classifier_explain should explain.",
+          "enum": [
+            "parent",
+            "subcategory"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "appl_id",
+        "fy",
+        "task",
+        "method",
+        "summary",
+        "features",
+        "pca_matches",
+        "caveats",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Explain a classifier suggestion"
+  }
+]

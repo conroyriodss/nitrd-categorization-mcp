@@ -94,7 +94,9 @@ Design rules this follows:
   `idempotentHint: false`: decisions are final, and a second decision is refused.
 * **Deterministic routing.** Program officer (when exactly one active persona matches) -> IC NITRD
   representative -> SIA queue. Every routing event records its tier and reason. Personas are
-  fictional; a program officer is matched by a SHA-256 of the public PO name, so the persona file holds no names.
+  fictional, and the persona-to-award assignment is synthetic: each demo program officer lists
+  the public core project numbers it stands in for. Routing reads no program-officer name, and
+  the persona file holds no names or name hashes.
 * **Sandbox, enforced in the table.** CHECK constraints reject any row without `sandbox=true` and
   the demonstration label, whatever the code does. There is no delete tool; cleanup is an owner
   action (DEMO.md, A6).

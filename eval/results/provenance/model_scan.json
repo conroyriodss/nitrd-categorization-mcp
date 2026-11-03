@@ -1,0 +1,19 @@
+{
+  "credential_patterns_in_bytes": [],
+  "credential_patterns_in_vocabulary": [],
+  "email_like_in_bytes": [],
+  "email_like_in_bytes_note": "the file is a compressed pickle; matches in its bytes are compression noise unless they also appear in the vocabulary",
+  "email_like_in_vocabulary": [],
+  "file": "src/nitrd_classifier/resources/parent_model.joblib",
+  "patterns": [
+    "aws_key",
+    "bearer_value",
+    "databricks_pat",
+    "github_token",
+    "jwt",
+    "private_key",
+    "slack_token"
+  ],
+  "sha256": "92d97bd138f3ec48da3a9bf3d1a03bac19d5624fc9d0aac8b12a2cba05f8c10c",
+  "vocabulary_terms": 270000
+}

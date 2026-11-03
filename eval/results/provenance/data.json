@@ -1,0 +1,73 @@
+{
+  "tables": [
+    {
+      "columns": 49,
+      "delta_version": 5,
+      "last_modified": "2026-10-30 06:42:23",
+      "rows": 713635,
+      "source": "NIH ExPORTER project files FY2015-2023 (public)",
+      "table": "users.conroyri.nitrd_hackathon_v1_exporter_projects"
+    },
+    {
+      "columns": 5,
+      "delta_version": 1,
+      "last_modified": "2026-10-26 15:51:01",
+      "rows": 700341,
+      "source": "NIH ExPORTER abstract files FY2015-2023 (public)",
+      "table": "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+    },
+    {
+      "columns": 7,
+      "delta_version": 1,
+      "last_modified": "2026-10-26 15:56:19",
+      "rows": 9422,
+      "source": "derived: cores with the NITRD category in exporter_projects",
+      "table": "users.conroyri.nitrd_hackathon_v1_nitrd_cores"
+    },
+    {
+      "columns": 3,
+      "delta_version": 1,
+      "last_modified": "2026-10-26 15:57:26",
+      "rows": 432247,
+      "source": "NIH ExPORTER link tables, restricted to nitrd_cores",
+      "table": "users.conroyri.nitrd_hackathon_v1_nitrd_pub_links"
+    },
+    {
+      "columns": 28,
+      "delta_version": 4,
+      "last_modified": "2026-11-02 22:20:22",
+      "rows": 318824,
+      "source": "NIH iCite (public)",
+      "table": "users.conroyri.nitrd_hackathon_v1_icite_pubs"
+    },
+    {
+      "columns": 8,
+      "delta_version": 2,
+      "last_modified": "2026-10-26 19:04:18",
+      "rows": 318824,
+      "source": "PubMed / NLM E-utilities (public)",
+      "table": "users.conroyri.nitrd_hackathon_v1_pubmed_articles"
+    },
+    {
+      "columns": 5,
+      "delta_version": 2,
+      "last_modified": "2026-10-26 19:04:31",
+      "rows": 3019307,
+      "source": "PubMed MeSH headings (public)",
+      "table": "users.conroyri.nitrd_hackathon_v1_pubmed_mesh"
+    },
+    {
+      "columns": 3,
+      "delta_version": 2,
+      "last_modified": "2026-10-27 05:07:52",
+      "rows": 749081,
+      "source": "PubMed publication types (public)",
+      "table": "users.conroyri.nitrd_hackathon_v1_pubmed_pubtypes"
+    },
+    {
+      "source": "DataCite",
+      "status": "not loaded",
+      "table": "users.conroyri.nitrd_hackathon_v1_datacite_outputs"
+    }
+  ]
+}

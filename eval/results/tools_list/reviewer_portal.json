@@ -1,0 +1,3536 @@
+[
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Get review history"
+    },
+    "description": "Show an application's sandbox review trail: requests, routing, decisions.\n\nAn application never sent for review returns empty lists. Use this to\ncheck what already happened before submitting or retrying a write.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "appl_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "portal_get_review_history",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "type": "integer"
+        },
+        "events": {
+          "description": "Review and routing events for those requests, in time order.",
+          "items": {
+            "additionalProperties": false,
+            "description": "One row of review_events (request lifecycle) or routing_events.",
+            "properties": {
+              "actor_id": {
+                "description": "Persona (or 'system' for routing) that caused it.",
+                "type": "string"
+              },
+              "appl_id": {
+                "description": "Application the request is about.",
+                "type": "integer"
+              },
+              "at": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "details": {
+                "additionalProperties": true,
+                "description": "Event-specific payload.",
+                "type": "object"
+              },
+              "event_id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "event_type": {
+                "enum": [
+                  "created",
+                  "routed",
+                  "approved",
+                  "rejected",
+                  "deferred",
+                  "override",
+                  "classified",
+                  "classification_failed"
+                ],
+                "type": "string"
+              },
+              "label": {
+                "const": "Not RCDC / demonstration only",
+                "default": "Not RCDC / demonstration only",
+                "type": "string"
+              },
+              "request_id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "sandbox": {
+                "const": true,
+                "default": true,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "event_id",
+              "request_id",
+              "appl_id",
+              "event_type",
+              "actor_id",
+              "details",
+              "at"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "requests": {
+          "description": "Oldest first.",
+          "items": {
+            "additionalProperties": false,
+            "description": "One row of review_requests.",
+            "properties": {
+              "appl_id": {
+                "type": "integer"
+              },
+              "assignment": {
+                "additionalProperties": false,
+                "description": "Who reviews a request, and why (deterministic; no ML).",
+                "properties": {
+                  "fallback_used": {
+                    "description": "True for tiers ic_rep and sia_queue.",
+                    "type": "boolean"
+                  },
+                  "inherited_from": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "description": "Parent award record a subproject's routing was taken from.",
+                        "properties": {
+                          "full_project_num": {
+                            "type": "string"
+                          },
+                          "fy": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "full_project_num",
+                          "fy"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Set when a subproject inherited its parent award's routing."
+                  },
+                  "policy_version": {
+                    "default": "nitrd-routing-v2-2026-10-26",
+                    "type": "string"
+                  },
+                  "rationale": {
+                    "description": "Why this tier and persona were chosen.",
+                    "type": "string"
+                  },
+                  "reviewer_id": {
+                    "description": "Assigned demo persona.",
+                    "type": "string"
+                  },
+                  "reviewer_role": {
+                    "description": "Persona's role title, e.g. Program Officer (LSDMA).",
+                    "type": "string"
+                  },
+                  "tier": {
+                    "description": "Three-tier routing: program officer -> IC NITRD rep -> NITRD-SIA queue.",
+                    "enum": [
+                      "program_officer",
+                      "ic_rep",
+                      "sia_queue"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reviewer_id",
+                  "reviewer_role",
+                  "tier",
+                  "fallback_used",
+                  "rationale",
+                  "inherited_from"
+                ],
+                "type": "object"
+              },
+              "classification_attempts": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Operator path: attempts so far (>= 1)."
+              },
+              "classification_error": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "failed only: why classification failed."
+              },
+              "classification_evidence": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "What the classifier said when the request was classified. Written once.",
+                    "properties": {
+                      "appl_id": {
+                        "type": "integer"
+                      },
+                      "explain": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "against": {
+                            "description": "Against NITRD.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "contribution": {
+                                  "description": "Signed log-odds contribution.",
+                                  "type": "number"
+                                },
+                                "field": {
+                                  "description": "Text field the term came from.",
+                                  "type": "string"
+                                },
+                                "term": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "term",
+                                "field",
+                                "contribution"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 10,
+                            "type": "array"
+                          },
+                          "toward": {
+                            "description": "Toward NITRD.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "contribution": {
+                                  "description": "Signed log-odds contribution.",
+                                  "type": "number"
+                                },
+                                "field": {
+                                  "description": "Text field the term came from.",
+                                  "type": "string"
+                                },
+                                "term": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "term",
+                                "field",
+                                "contribution"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 10,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "toward",
+                          "against"
+                        ],
+                        "type": "object"
+                      },
+                      "fy": {
+                        "type": "integer"
+                      },
+                      "parent": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "band": {
+                            "enum": [
+                              "high",
+                              "positive_near_threshold",
+                              "negative_near_threshold",
+                              "clear_negative",
+                              "abstain"
+                            ],
+                            "type": "string"
+                          },
+                          "cohort": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Classifier cohort for this record."
+                          },
+                          "model_id": {
+                            "type": "string"
+                          },
+                          "probability": {
+                            "anyOf": [
+                              {
+                                "maximum": 1,
+                                "minimum": 0,
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "suggestion": {
+                            "enum": [
+                              "nitrd",
+                              "not_nitrd",
+                              "abstain"
+                            ],
+                            "type": "string"
+                          },
+                          "threshold": {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "suggestion",
+                          "probability",
+                          "threshold",
+                          "model_id",
+                          "band",
+                          "cohort"
+                        ],
+                        "type": "object"
+                      },
+                      "prior_year": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "continuing": {
+                            "description": "The core has a record before this FY.",
+                            "type": "boolean"
+                          },
+                          "max_fy": {
+                            "type": "integer"
+                          },
+                          "years": {
+                            "description": "Oldest first; empty for a new core.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "fy": {
+                                  "type": "integer"
+                                },
+                                "is_nitrd": {
+                                  "anyOf": [
+                                    {
+                                      "type": "boolean"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "null: no NITRD-era label that year."
+                                },
+                                "records": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "fy",
+                                "is_nitrd",
+                                "records"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "max_fy",
+                          "years",
+                          "continuing"
+                        ],
+                        "type": "object"
+                      },
+                      "schema_version": {
+                        "const": 1,
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "subcategory": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "status": {
+                            "enum": [
+                              "ranked",
+                              "no_match",
+                              "not_requested"
+                            ],
+                            "type": "string"
+                          },
+                          "top_pcas": {
+                            "description": "Top 2 at most.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "matched_terms": {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "maxItems": 30,
+                                  "type": "array"
+                                },
+                                "pca": {
+                                  "enum": [
+                                    "ACNS",
+                                    "AI",
+                                    "CHuman",
+                                    "CNPS",
+                                    "CSP",
+                                    "EdW",
+                                    "EHCS",
+                                    "ENIT",
+                                    "HCIA",
+                                    "IRAS",
+                                    "LSDMA",
+                                    "SPSQ"
+                                  ],
+                                  "type": "string"
+                                },
+                                "score": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "pca",
+                                "score",
+                                "matched_terms"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 2,
+                            "type": "array"
+                          },
+                          "vocabulary_id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "status",
+                          "vocabulary_id",
+                          "top_pcas"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "appl_id",
+                      "fy",
+                      "parent",
+                      "subcategory",
+                      "explain",
+                      "prior_year"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "ok only: what the classifier said (immutable)."
+              },
+              "classification_status": {
+                "anyOf": [
+                  {
+                    "description": "review_requests.classification_status (operator path only; NULL otherwise).\n\nok and failed are the only values. ok is final (its evidence never\nchanges); failed can be retried, and a retry moves it to ok or leaves it\nfailed with one more attempt.",
+                    "enum": [
+                      "ok",
+                      "failed"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Operator-path requests: ok or failed. null for requests made with portal_submit_review_request."
+              },
+              "classified_at": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "ok only: when the evidence was produced."
+              },
+              "corrected_parent_label": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Override only: the reviewer's is-NITRD call; null otherwise."
+              },
+              "corrected_pcas": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "ACNS",
+                        "AI",
+                        "CHuman",
+                        "CNPS",
+                        "CSP",
+                        "EdW",
+                        "EHCS",
+                        "ENIT",
+                        "HCIA",
+                        "IRAS",
+                        "LSDMA",
+                        "SPSQ"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Override only: the reviewer's PCAs (empty when the corrected label is not NITRD); null otherwise."
+              },
+              "created_at": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "decided_by": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "decision_at": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "decision_rationale": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "evidence": {
+                "additionalProperties": false,
+                "description": "What the reviewer should look at.",
+                "properties": {
+                  "intensity_overall": {
+                    "anyOf": [
+                      {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "From outputs_score_project_intensity, if used."
+                  },
+                  "key_terms": {
+                    "description": "Classifier features or scope terms cited.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 30,
+                    "type": "array"
+                  },
+                  "pmids": {
+                    "description": "Supporting PubMed IDs.",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "maxItems": 50,
+                    "type": "array"
+                  },
+                  "summary": {
+                    "description": "Plain-language case for the suggestion.",
+                    "maxLength": 2000,
+                    "minLength": 10,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "summary"
+                ],
+                "type": "object"
+              },
+              "fy": {
+                "type": "integer"
+              },
+              "idempotency_key": {
+                "description": "Caller-supplied key, or 'auto:' + payload_sha256 when omitted.",
+                "type": "string"
+              },
+              "label": {
+                "const": "Not RCDC / demonstration only",
+                "default": "Not RCDC / demonstration only",
+                "type": "string"
+              },
+              "payload_sha256": {
+                "description": "SHA-256 of the canonical submitted payload (appl_id, suggestions, evidence, requested_by).",
+                "type": "string"
+              },
+              "request_id": {
+                "description": "Derived from idempotency_key (UUIDv5).",
+                "format": "uuid",
+                "type": "string"
+              },
+              "requested_by": {
+                "description": "Persona that submitted the request.",
+                "type": "string"
+              },
+              "sandbox": {
+                "const": true,
+                "default": true,
+                "type": "boolean"
+              },
+              "status": {
+                "description": "review_requests.status values.",
+                "enum": [
+                  "pending",
+                  "approved",
+                  "rejected",
+                  "deferred",
+                  "override"
+                ],
+                "type": "string"
+              },
+              "task1_suggestion": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "Parent (NITRD yes/no) suggestion being sent for review.",
+                    "properties": {
+                      "model_id": {
+                        "anyOf": [
+                          {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null
+                      },
+                      "probability": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "From classifier_classify_parent, if used."
+                      },
+                      "suggestion": {
+                        "enum": [
+                          "nitrd",
+                          "not_nitrd"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "suggestion"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "task2_suggestion": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "Subcategory (PCA) suggestion being sent for review.",
+                    "properties": {
+                      "pcas": {
+                        "description": "Suggested PCAs, most likely first; no repeats.",
+                        "items": {
+                          "enum": [
+                            "ACNS",
+                            "AI",
+                            "CHuman",
+                            "CNPS",
+                            "CSP",
+                            "EdW",
+                            "EHCS",
+                            "ENIT",
+                            "HCIA",
+                            "IRAS",
+                            "LSDMA",
+                            "SPSQ"
+                          ],
+                          "type": "string"
+                        },
+                        "maxItems": 12,
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "vocabulary_id": {
+                        "anyOf": [
+                          {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null
+                      }
+                    },
+                    "required": [
+                      "pcas"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "request_id",
+              "idempotency_key",
+              "payload_sha256",
+              "appl_id",
+              "fy",
+              "task1_suggestion",
+              "task2_suggestion",
+              "evidence",
+              "requested_by",
+              "assignment",
+              "status",
+              "created_at",
+              "decided_by",
+              "decision_at",
+              "decision_rationale",
+              "corrected_parent_label",
+              "corrected_pcas"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "appl_id",
+        "requests",
+        "events",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Get review history"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "Preview reviewer assignment"
+    },
+    "description": "Preview which demo reviewer this application would be routed to, and why.\n\nRead-only; nothing is written. Order: program officer, then the IC's\nNITRD representative, then the NITRD-SIA queue. Subprojects use their\nparent award's routing.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "appl_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "portal_get_reviewer_assignment",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "type": "integer"
+        },
+        "assignment": {
+          "additionalProperties": false,
+          "description": "Who reviews a request, and why (deterministic; no ML).",
+          "properties": {
+            "fallback_used": {
+              "description": "True for tiers ic_rep and sia_queue.",
+              "type": "boolean"
+            },
+            "inherited_from": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "Parent award record a subproject's routing was taken from.",
+                  "properties": {
+                    "full_project_num": {
+                      "type": "string"
+                    },
+                    "fy": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "full_project_num",
+                    "fy"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Set when a subproject inherited its parent award's routing."
+            },
+            "policy_version": {
+              "default": "nitrd-routing-v2-2026-10-26",
+              "type": "string"
+            },
+            "rationale": {
+              "description": "Why this tier and persona were chosen.",
+              "type": "string"
+            },
+            "reviewer_id": {
+              "description": "Assigned demo persona.",
+              "type": "string"
+            },
+            "reviewer_role": {
+              "description": "Persona's role title, e.g. Program Officer (LSDMA).",
+              "type": "string"
+            },
+            "tier": {
+              "description": "Three-tier routing: program officer -> IC NITRD rep -> NITRD-SIA queue.",
+              "enum": [
+                "program_officer",
+                "ic_rep",
+                "sia_queue"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "reviewer_id",
+            "reviewer_role",
+            "tier",
+            "fallback_used",
+            "rationale",
+            "inherited_from"
+          ],
+          "type": "object"
+        },
+        "fy": {
+          "type": "integer"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "appl_id",
+        "fy",
+        "assignment",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "Preview reviewer assignment"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": true,
+      "title": "List pending reviews"
+    },
+    "description": "List review requests assigned to a demo reviewer that await a decision.\n\nReturns status=pending requests whose assigned reviewer is reviewer_id,\noldest first (at most 200). An unknown persona is an error; a persona\nwith nothing pending gets an empty list.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "reviewer_id": {
+          "description": "Fictional demo reviewer persona ID from the bundled roster, e.g. demo_po_niaid_01, demo_ic_rep_nci, demo_sia. Not a real person; no authentication.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reviewer_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "portal_list_pending_reviews",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "type": "integer"
+        },
+        "requests": {
+          "description": "Oldest first.",
+          "items": {
+            "additionalProperties": false,
+            "description": "One row of review_requests.",
+            "properties": {
+              "appl_id": {
+                "type": "integer"
+              },
+              "assignment": {
+                "additionalProperties": false,
+                "description": "Who reviews a request, and why (deterministic; no ML).",
+                "properties": {
+                  "fallback_used": {
+                    "description": "True for tiers ic_rep and sia_queue.",
+                    "type": "boolean"
+                  },
+                  "inherited_from": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "description": "Parent award record a subproject's routing was taken from.",
+                        "properties": {
+                          "full_project_num": {
+                            "type": "string"
+                          },
+                          "fy": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "full_project_num",
+                          "fy"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Set when a subproject inherited its parent award's routing."
+                  },
+                  "policy_version": {
+                    "default": "nitrd-routing-v2-2026-10-26",
+                    "type": "string"
+                  },
+                  "rationale": {
+                    "description": "Why this tier and persona were chosen.",
+                    "type": "string"
+                  },
+                  "reviewer_id": {
+                    "description": "Assigned demo persona.",
+                    "type": "string"
+                  },
+                  "reviewer_role": {
+                    "description": "Persona's role title, e.g. Program Officer (LSDMA).",
+                    "type": "string"
+                  },
+                  "tier": {
+                    "description": "Three-tier routing: program officer -> IC NITRD rep -> NITRD-SIA queue.",
+                    "enum": [
+                      "program_officer",
+                      "ic_rep",
+                      "sia_queue"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reviewer_id",
+                  "reviewer_role",
+                  "tier",
+                  "fallback_used",
+                  "rationale",
+                  "inherited_from"
+                ],
+                "type": "object"
+              },
+              "classification_attempts": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Operator path: attempts so far (>= 1)."
+              },
+              "classification_error": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "failed only: why classification failed."
+              },
+              "classification_evidence": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "What the classifier said when the request was classified. Written once.",
+                    "properties": {
+                      "appl_id": {
+                        "type": "integer"
+                      },
+                      "explain": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "against": {
+                            "description": "Against NITRD.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "contribution": {
+                                  "description": "Signed log-odds contribution.",
+                                  "type": "number"
+                                },
+                                "field": {
+                                  "description": "Text field the term came from.",
+                                  "type": "string"
+                                },
+                                "term": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "term",
+                                "field",
+                                "contribution"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 10,
+                            "type": "array"
+                          },
+                          "toward": {
+                            "description": "Toward NITRD.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "contribution": {
+                                  "description": "Signed log-odds contribution.",
+                                  "type": "number"
+                                },
+                                "field": {
+                                  "description": "Text field the term came from.",
+                                  "type": "string"
+                                },
+                                "term": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "term",
+                                "field",
+                                "contribution"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 10,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "toward",
+                          "against"
+                        ],
+                        "type": "object"
+                      },
+                      "fy": {
+                        "type": "integer"
+                      },
+                      "parent": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "band": {
+                            "enum": [
+                              "high",
+                              "positive_near_threshold",
+                              "negative_near_threshold",
+                              "clear_negative",
+                              "abstain"
+                            ],
+                            "type": "string"
+                          },
+                          "cohort": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Classifier cohort for this record."
+                          },
+                          "model_id": {
+                            "type": "string"
+                          },
+                          "probability": {
+                            "anyOf": [
+                              {
+                                "maximum": 1,
+                                "minimum": 0,
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "suggestion": {
+                            "enum": [
+                              "nitrd",
+                              "not_nitrd",
+                              "abstain"
+                            ],
+                            "type": "string"
+                          },
+                          "threshold": {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "suggestion",
+                          "probability",
+                          "threshold",
+                          "model_id",
+                          "band",
+                          "cohort"
+                        ],
+                        "type": "object"
+                      },
+                      "prior_year": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "continuing": {
+                            "description": "The core has a record before this FY.",
+                            "type": "boolean"
+                          },
+                          "max_fy": {
+                            "type": "integer"
+                          },
+                          "years": {
+                            "description": "Oldest first; empty for a new core.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "fy": {
+                                  "type": "integer"
+                                },
+                                "is_nitrd": {
+                                  "anyOf": [
+                                    {
+                                      "type": "boolean"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ],
+                                  "description": "null: no NITRD-era label that year."
+                                },
+                                "records": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "fy",
+                                "is_nitrd",
+                                "records"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "max_fy",
+                          "years",
+                          "continuing"
+                        ],
+                        "type": "object"
+                      },
+                      "schema_version": {
+                        "const": 1,
+                        "default": 1,
+                        "type": "integer"
+                      },
+                      "subcategory": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "status": {
+                            "enum": [
+                              "ranked",
+                              "no_match",
+                              "not_requested"
+                            ],
+                            "type": "string"
+                          },
+                          "top_pcas": {
+                            "description": "Top 2 at most.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "matched_terms": {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "maxItems": 30,
+                                  "type": "array"
+                                },
+                                "pca": {
+                                  "enum": [
+                                    "ACNS",
+                                    "AI",
+                                    "CHuman",
+                                    "CNPS",
+                                    "CSP",
+                                    "EdW",
+                                    "EHCS",
+                                    "ENIT",
+                                    "HCIA",
+                                    "IRAS",
+                                    "LSDMA",
+                                    "SPSQ"
+                                  ],
+                                  "type": "string"
+                                },
+                                "score": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "pca",
+                                "score",
+                                "matched_terms"
+                              ],
+                              "type": "object"
+                            },
+                            "maxItems": 2,
+                            "type": "array"
+                          },
+                          "vocabulary_id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "status",
+                          "vocabulary_id",
+                          "top_pcas"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "appl_id",
+                      "fy",
+                      "parent",
+                      "subcategory",
+                      "explain",
+                      "prior_year"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "ok only: what the classifier said (immutable)."
+              },
+              "classification_status": {
+                "anyOf": [
+                  {
+                    "description": "review_requests.classification_status (operator path only; NULL otherwise).\n\nok and failed are the only values. ok is final (its evidence never\nchanges); failed can be retried, and a retry moves it to ok or leaves it\nfailed with one more attempt.",
+                    "enum": [
+                      "ok",
+                      "failed"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Operator-path requests: ok or failed. null for requests made with portal_submit_review_request."
+              },
+              "classified_at": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "ok only: when the evidence was produced."
+              },
+              "corrected_parent_label": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Override only: the reviewer's is-NITRD call; null otherwise."
+              },
+              "corrected_pcas": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "enum": [
+                        "ACNS",
+                        "AI",
+                        "CHuman",
+                        "CNPS",
+                        "CSP",
+                        "EdW",
+                        "EHCS",
+                        "ENIT",
+                        "HCIA",
+                        "IRAS",
+                        "LSDMA",
+                        "SPSQ"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Override only: the reviewer's PCAs (empty when the corrected label is not NITRD); null otherwise."
+              },
+              "created_at": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "decided_by": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "decision_at": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "decision_rationale": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "evidence": {
+                "additionalProperties": false,
+                "description": "What the reviewer should look at.",
+                "properties": {
+                  "intensity_overall": {
+                    "anyOf": [
+                      {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "From outputs_score_project_intensity, if used."
+                  },
+                  "key_terms": {
+                    "description": "Classifier features or scope terms cited.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 30,
+                    "type": "array"
+                  },
+                  "pmids": {
+                    "description": "Supporting PubMed IDs.",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "maxItems": 50,
+                    "type": "array"
+                  },
+                  "summary": {
+                    "description": "Plain-language case for the suggestion.",
+                    "maxLength": 2000,
+                    "minLength": 10,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "summary"
+                ],
+                "type": "object"
+              },
+              "fy": {
+                "type": "integer"
+              },
+              "idempotency_key": {
+                "description": "Caller-supplied key, or 'auto:' + payload_sha256 when omitted.",
+                "type": "string"
+              },
+              "label": {
+                "const": "Not RCDC / demonstration only",
+                "default": "Not RCDC / demonstration only",
+                "type": "string"
+              },
+              "payload_sha256": {
+                "description": "SHA-256 of the canonical submitted payload (appl_id, suggestions, evidence, requested_by).",
+                "type": "string"
+              },
+              "request_id": {
+                "description": "Derived from idempotency_key (UUIDv5).",
+                "format": "uuid",
+                "type": "string"
+              },
+              "requested_by": {
+                "description": "Persona that submitted the request.",
+                "type": "string"
+              },
+              "sandbox": {
+                "const": true,
+                "default": true,
+                "type": "boolean"
+              },
+              "status": {
+                "description": "review_requests.status values.",
+                "enum": [
+                  "pending",
+                  "approved",
+                  "rejected",
+                  "deferred",
+                  "override"
+                ],
+                "type": "string"
+              },
+              "task1_suggestion": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "Parent (NITRD yes/no) suggestion being sent for review.",
+                    "properties": {
+                      "model_id": {
+                        "anyOf": [
+                          {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null
+                      },
+                      "probability": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "From classifier_classify_parent, if used."
+                      },
+                      "suggestion": {
+                        "enum": [
+                          "nitrd",
+                          "not_nitrd"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "suggestion"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "task2_suggestion": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "Subcategory (PCA) suggestion being sent for review.",
+                    "properties": {
+                      "pcas": {
+                        "description": "Suggested PCAs, most likely first; no repeats.",
+                        "items": {
+                          "enum": [
+                            "ACNS",
+                            "AI",
+                            "CHuman",
+                            "CNPS",
+                            "CSP",
+                            "EdW",
+                            "EHCS",
+                            "ENIT",
+                            "HCIA",
+                            "IRAS",
+                            "LSDMA",
+                            "SPSQ"
+                          ],
+                          "type": "string"
+                        },
+                        "maxItems": 12,
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "vocabulary_id": {
+                        "anyOf": [
+                          {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null
+                      }
+                    },
+                    "required": [
+                      "pcas"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "request_id",
+              "idempotency_key",
+              "payload_sha256",
+              "appl_id",
+              "fy",
+              "task1_suggestion",
+              "task2_suggestion",
+              "evidence",
+              "requested_by",
+              "assignment",
+              "status",
+              "created_at",
+              "decided_by",
+              "decision_at",
+              "decision_rationale",
+              "corrected_parent_label",
+              "corrected_pcas"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "reviewer_id": {
+          "type": "string"
+        },
+        "source": {
+          "additionalProperties": false,
+          "description": "Where an answer came from. Every read result carries one.",
+          "properties": {
+            "snapshot": {
+              "default": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+              "description": "Data vintage. Results do not reflect later NIH updates.",
+              "type": "string"
+            },
+            "tables": {
+              "description": "Fully qualified Databricks tables read.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tables"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "reviewer_id",
+        "count",
+        "requests",
+        "source"
+      ],
+      "type": "object"
+    },
+    "title": "List pending reviews"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": false,
+      "open_world_hint": false,
+      "read_only_hint": false,
+      "title": "Submit a review decision"
+    },
+    "description": "Record a decision (approved, rejected, deferred, override) on a\npending request.\n\nAsk the user to confirm before calling. reviewer_id must be the\npersona the request is assigned to, and it must still be pending.\noverride replaces the proposal with the reviewer's own call and needs\ncorrected_parent_label and corrected_pcas; the other decisions take\nneither. Every decision is final. Sandbox write only; the decision is\na demonstration, not RCDC coding.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "corrected_parent_label": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "override only (required there): true = is NITRD, false = not NITRD. Omit for approved / rejected / deferred."
+        },
+        "corrected_pcas": {
+          "anyOf": [
+            {
+              "items": {
+                "enum": [
+                  "ACNS",
+                  "AI",
+                  "CHuman",
+                  "CNPS",
+                  "CSP",
+                  "EdW",
+                  "EHCS",
+                  "ENIT",
+                  "HCIA",
+                  "IRAS",
+                  "LSDMA",
+                  "SPSQ"
+                ],
+                "type": "string"
+              },
+              "maxItems": 12,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "override only (required there): the reviewer's PCAs, no repeats; 1-12 when corrected_parent_label is true, [] when false. Omit for approved / rejected / deferred."
+        },
+        "decision": {
+          "description": "Decisions a reviewer can submit. All four are final.\n\noverride = the reviewer replaces the proposal with their own call: a\ncorrected parent label (is NITRD yes/no) and corrected Task 2 PCAs. Only\noverride carries corrections; they are null for the other three.",
+          "enum": [
+            "approved",
+            "rejected",
+            "deferred",
+            "override"
+          ],
+          "type": "string"
+        },
+        "rationale": {
+          "description": "Why the reviewer decided this (stored with the decision).",
+          "maxLength": 2000,
+          "minLength": 10,
+          "type": "string"
+        },
+        "request_id": {
+          "description": "request_id returned by portal_submit_review_request.",
+          "format": "uuid",
+          "type": "string"
+        },
+        "reviewer_id": {
+          "description": "Fictional demo reviewer persona ID from the bundled roster, e.g. demo_po_niaid_01, demo_ic_rep_nci, demo_sia. Not a real person; no authentication.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "reviewer_id",
+        "decision",
+        "rationale"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "portal_submit_review_decision",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "event": {
+          "additionalProperties": false,
+          "description": "The event that was appended.",
+          "properties": {
+            "actor_id": {
+              "description": "Persona (or 'system' for routing) that caused it.",
+              "type": "string"
+            },
+            "appl_id": {
+              "description": "Application the request is about.",
+              "type": "integer"
+            },
+            "at": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "details": {
+              "additionalProperties": true,
+              "description": "Event-specific payload.",
+              "type": "object"
+            },
+            "event_id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "event_type": {
+              "enum": [
+                "created",
+                "routed",
+                "approved",
+                "rejected",
+                "deferred",
+                "override",
+                "classified",
+                "classification_failed"
+              ],
+              "type": "string"
+            },
+            "label": {
+              "const": "Not RCDC / demonstration only",
+              "default": "Not RCDC / demonstration only",
+              "type": "string"
+            },
+            "request_id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "sandbox": {
+              "const": true,
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "event_id",
+            "request_id",
+            "appl_id",
+            "event_type",
+            "actor_id",
+            "details",
+            "at"
+          ],
+          "type": "object"
+        },
+        "request": {
+          "additionalProperties": false,
+          "description": "The request after the decision.",
+          "properties": {
+            "appl_id": {
+              "type": "integer"
+            },
+            "assignment": {
+              "additionalProperties": false,
+              "description": "Who reviews a request, and why (deterministic; no ML).",
+              "properties": {
+                "fallback_used": {
+                  "description": "True for tiers ic_rep and sia_queue.",
+                  "type": "boolean"
+                },
+                "inherited_from": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "Parent award record a subproject's routing was taken from.",
+                      "properties": {
+                        "full_project_num": {
+                          "type": "string"
+                        },
+                        "fy": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "full_project_num",
+                        "fy"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Set when a subproject inherited its parent award's routing."
+                },
+                "policy_version": {
+                  "default": "nitrd-routing-v2-2026-10-26",
+                  "type": "string"
+                },
+                "rationale": {
+                  "description": "Why this tier and persona were chosen.",
+                  "type": "string"
+                },
+                "reviewer_id": {
+                  "description": "Assigned demo persona.",
+                  "type": "string"
+                },
+                "reviewer_role": {
+                  "description": "Persona's role title, e.g. Program Officer (LSDMA).",
+                  "type": "string"
+                },
+                "tier": {
+                  "description": "Three-tier routing: program officer -> IC NITRD rep -> NITRD-SIA queue.",
+                  "enum": [
+                    "program_officer",
+                    "ic_rep",
+                    "sia_queue"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "reviewer_id",
+                "reviewer_role",
+                "tier",
+                "fallback_used",
+                "rationale",
+                "inherited_from"
+              ],
+              "type": "object"
+            },
+            "classification_attempts": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Operator path: attempts so far (>= 1)."
+            },
+            "classification_error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "failed only: why classification failed."
+            },
+            "classification_evidence": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "What the classifier said when the request was classified. Written once.",
+                  "properties": {
+                    "appl_id": {
+                      "type": "integer"
+                    },
+                    "explain": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "against": {
+                          "description": "Against NITRD.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "contribution": {
+                                "description": "Signed log-odds contribution.",
+                                "type": "number"
+                              },
+                              "field": {
+                                "description": "Text field the term came from.",
+                                "type": "string"
+                              },
+                              "term": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "term",
+                              "field",
+                              "contribution"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 10,
+                          "type": "array"
+                        },
+                        "toward": {
+                          "description": "Toward NITRD.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "contribution": {
+                                "description": "Signed log-odds contribution.",
+                                "type": "number"
+                              },
+                              "field": {
+                                "description": "Text field the term came from.",
+                                "type": "string"
+                              },
+                              "term": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "term",
+                              "field",
+                              "contribution"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 10,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "toward",
+                        "against"
+                      ],
+                      "type": "object"
+                    },
+                    "fy": {
+                      "type": "integer"
+                    },
+                    "parent": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "band": {
+                          "enum": [
+                            "high",
+                            "positive_near_threshold",
+                            "negative_near_threshold",
+                            "clear_negative",
+                            "abstain"
+                          ],
+                          "type": "string"
+                        },
+                        "cohort": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Classifier cohort for this record."
+                        },
+                        "model_id": {
+                          "type": "string"
+                        },
+                        "probability": {
+                          "anyOf": [
+                            {
+                              "maximum": 1,
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "suggestion": {
+                          "enum": [
+                            "nitrd",
+                            "not_nitrd",
+                            "abstain"
+                          ],
+                          "type": "string"
+                        },
+                        "threshold": {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "suggestion",
+                        "probability",
+                        "threshold",
+                        "model_id",
+                        "band",
+                        "cohort"
+                      ],
+                      "type": "object"
+                    },
+                    "prior_year": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "continuing": {
+                          "description": "The core has a record before this FY.",
+                          "type": "boolean"
+                        },
+                        "max_fy": {
+                          "type": "integer"
+                        },
+                        "years": {
+                          "description": "Oldest first; empty for a new core.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "fy": {
+                                "type": "integer"
+                              },
+                              "is_nitrd": {
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "null: no NITRD-era label that year."
+                              },
+                              "records": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "fy",
+                              "is_nitrd",
+                              "records"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "max_fy",
+                        "years",
+                        "continuing"
+                      ],
+                      "type": "object"
+                    },
+                    "schema_version": {
+                      "const": 1,
+                      "default": 1,
+                      "type": "integer"
+                    },
+                    "subcategory": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "status": {
+                          "enum": [
+                            "ranked",
+                            "no_match",
+                            "not_requested"
+                          ],
+                          "type": "string"
+                        },
+                        "top_pcas": {
+                          "description": "Top 2 at most.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "matched_terms": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "maxItems": 30,
+                                "type": "array"
+                              },
+                              "pca": {
+                                "enum": [
+                                  "ACNS",
+                                  "AI",
+                                  "CHuman",
+                                  "CNPS",
+                                  "CSP",
+                                  "EdW",
+                                  "EHCS",
+                                  "ENIT",
+                                  "HCIA",
+                                  "IRAS",
+                                  "LSDMA",
+                                  "SPSQ"
+                                ],
+                                "type": "string"
+                              },
+                              "score": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "pca",
+                              "score",
+                              "matched_terms"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 2,
+                          "type": "array"
+                        },
+                        "vocabulary_id": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "vocabulary_id",
+                        "top_pcas"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "appl_id",
+                    "fy",
+                    "parent",
+                    "subcategory",
+                    "explain",
+                    "prior_year"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "ok only: what the classifier said (immutable)."
+            },
+            "classification_status": {
+              "anyOf": [
+                {
+                  "description": "review_requests.classification_status (operator path only; NULL otherwise).\n\nok and failed are the only values. ok is final (its evidence never\nchanges); failed can be retried, and a retry moves it to ok or leaves it\nfailed with one more attempt.",
+                  "enum": [
+                    "ok",
+                    "failed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Operator-path requests: ok or failed. null for requests made with portal_submit_review_request."
+            },
+            "classified_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "ok only: when the evidence was produced."
+            },
+            "corrected_parent_label": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Override only: the reviewer's is-NITRD call; null otherwise."
+            },
+            "corrected_pcas": {
+              "anyOf": [
+                {
+                  "items": {
+                    "enum": [
+                      "ACNS",
+                      "AI",
+                      "CHuman",
+                      "CNPS",
+                      "CSP",
+                      "EdW",
+                      "EHCS",
+                      "ENIT",
+                      "HCIA",
+                      "IRAS",
+                      "LSDMA",
+                      "SPSQ"
+                    ],
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Override only: the reviewer's PCAs (empty when the corrected label is not NITRD); null otherwise."
+            },
+            "created_at": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "decided_by": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "decision_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "decision_rationale": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "additionalProperties": false,
+              "description": "What the reviewer should look at.",
+              "properties": {
+                "intensity_overall": {
+                  "anyOf": [
+                    {
+                      "maximum": 1,
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "From outputs_score_project_intensity, if used."
+                },
+                "key_terms": {
+                  "description": "Classifier features or scope terms cited.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 30,
+                  "type": "array"
+                },
+                "pmids": {
+                  "description": "Supporting PubMed IDs.",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "maxItems": 50,
+                  "type": "array"
+                },
+                "summary": {
+                  "description": "Plain-language case for the suggestion.",
+                  "maxLength": 2000,
+                  "minLength": 10,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "summary"
+              ],
+              "type": "object"
+            },
+            "fy": {
+              "type": "integer"
+            },
+            "idempotency_key": {
+              "description": "Caller-supplied key, or 'auto:' + payload_sha256 when omitted.",
+              "type": "string"
+            },
+            "label": {
+              "const": "Not RCDC / demonstration only",
+              "default": "Not RCDC / demonstration only",
+              "type": "string"
+            },
+            "payload_sha256": {
+              "description": "SHA-256 of the canonical submitted payload (appl_id, suggestions, evidence, requested_by).",
+              "type": "string"
+            },
+            "request_id": {
+              "description": "Derived from idempotency_key (UUIDv5).",
+              "format": "uuid",
+              "type": "string"
+            },
+            "requested_by": {
+              "description": "Persona that submitted the request.",
+              "type": "string"
+            },
+            "sandbox": {
+              "const": true,
+              "default": true,
+              "type": "boolean"
+            },
+            "status": {
+              "description": "review_requests.status values.",
+              "enum": [
+                "pending",
+                "approved",
+                "rejected",
+                "deferred",
+                "override"
+              ],
+              "type": "string"
+            },
+            "task1_suggestion": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "Parent (NITRD yes/no) suggestion being sent for review.",
+                  "properties": {
+                    "model_id": {
+                      "anyOf": [
+                        {
+                          "maxLength": 100,
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null
+                    },
+                    "probability": {
+                      "anyOf": [
+                        {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null,
+                      "description": "From classifier_classify_parent, if used."
+                    },
+                    "suggestion": {
+                      "enum": [
+                        "nitrd",
+                        "not_nitrd"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "suggestion"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "task2_suggestion": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "Subcategory (PCA) suggestion being sent for review.",
+                  "properties": {
+                    "pcas": {
+                      "description": "Suggested PCAs, most likely first; no repeats.",
+                      "items": {
+                        "enum": [
+                          "ACNS",
+                          "AI",
+                          "CHuman",
+                          "CNPS",
+                          "CSP",
+                          "EdW",
+                          "EHCS",
+                          "ENIT",
+                          "HCIA",
+                          "IRAS",
+                          "LSDMA",
+                          "SPSQ"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 12,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "vocabulary_id": {
+                      "anyOf": [
+                        {
+                          "maxLength": 100,
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null
+                    }
+                  },
+                  "required": [
+                    "pcas"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "request_id",
+            "idempotency_key",
+            "payload_sha256",
+            "appl_id",
+            "fy",
+            "task1_suggestion",
+            "task2_suggestion",
+            "evidence",
+            "requested_by",
+            "assignment",
+            "status",
+            "created_at",
+            "decided_by",
+            "decision_at",
+            "decision_rationale",
+            "corrected_parent_label",
+            "corrected_pcas"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "request",
+        "event"
+      ],
+      "type": "object"
+    },
+    "title": "Submit a review decision"
+  },
+  {
+    "annotations": {
+      "destructive_hint": false,
+      "idempotent_hint": true,
+      "open_world_hint": false,
+      "read_only_hint": false,
+      "title": "Submit a review request"
+    },
+    "description": "Submit a NITRD categorization suggestion for human review (sandbox write).\n\nAsk the user to confirm before calling. reviewer_id is the demo persona\nSUBMITTING the request; the portal chooses the assigned reviewer itself\n(see portal_get_reviewer_assignment to preview). Give task1_suggestion,\ntask2_suggestion, or both. Writes only to sandbox tables; never changes\nRCDC or any NIH record. Safe to retry: an identical request, or the same\nidempotency_key with the same content, returns the existing record with\ncreated=false. Reusing an idempotency_key with different content is an\nerror and writes nothing.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "appl_id": {
+          "description": "NIH application ID (ExPORTER APPLICATION_ID) of one fiscal-year record, e.g. 10506013. Get one from outputs_find_projects.",
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        "evidence": {
+          "additionalProperties": false,
+          "description": "What the reviewer should look at.",
+          "properties": {
+            "intensity_overall": {
+              "anyOf": [
+                {
+                  "maximum": 1,
+                  "minimum": 0,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "From outputs_score_project_intensity, if used."
+            },
+            "key_terms": {
+              "description": "Classifier features or scope terms cited.",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 30,
+              "type": "array"
+            },
+            "pmids": {
+              "description": "Supporting PubMed IDs.",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 50,
+              "type": "array"
+            },
+            "summary": {
+              "description": "Plain-language case for the suggestion.",
+              "maxLength": 2000,
+              "minLength": 10,
+              "type": "string"
+            }
+          },
+          "required": [
+            "summary"
+          ],
+          "type": "object"
+        },
+        "idempotency_key": {
+          "anyOf": [
+            {
+              "description": "Optional client key (8-128 chars: letters, digits, . _ : -). A retry with the same key returns the original request. Omit to key on the payload itself.",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:\\-]{7,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reviewer_id": {
+          "description": "Fictional demo reviewer persona ID from the bundled roster, e.g. demo_po_niaid_01, demo_ic_rep_nci, demo_sia. Not a real person; no authentication.",
+          "type": "string"
+        },
+        "task1_suggestion": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "description": "Parent (NITRD yes/no) suggestion being sent for review.",
+              "properties": {
+                "model_id": {
+                  "anyOf": [
+                    {
+                      "maxLength": 100,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "probability": {
+                  "anyOf": [
+                    {
+                      "maximum": 1,
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "From classifier_classify_parent, if used."
+                },
+                "suggestion": {
+                  "enum": [
+                    "nitrd",
+                    "not_nitrd"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "suggestion"
+              ],
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "task2_suggestion": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "description": "Subcategory (PCA) suggestion being sent for review.",
+              "properties": {
+                "pcas": {
+                  "description": "Suggested PCAs, most likely first; no repeats.",
+                  "items": {
+                    "enum": [
+                      "ACNS",
+                      "AI",
+                      "CHuman",
+                      "CNPS",
+                      "CSP",
+                      "EdW",
+                      "EHCS",
+                      "ENIT",
+                      "HCIA",
+                      "IRAS",
+                      "LSDMA",
+                      "SPSQ"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 12,
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "vocabulary_id": {
+                  "anyOf": [
+                    {
+                      "maxLength": 100,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                }
+              },
+              "required": [
+                "pcas"
+              ],
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "appl_id",
+        "evidence",
+        "reviewer_id"
+      ],
+      "type": "object"
+    },
+    "meta": {
+      "fastmcp": {
+        "tags": []
+      }
+    },
+    "name": "portal_submit_review_request",
+    "output_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "created": {
+          "description": "False when an identical request existed (no new rows written).",
+          "type": "boolean"
+        },
+        "request": {
+          "additionalProperties": false,
+          "description": "One row of review_requests.",
+          "properties": {
+            "appl_id": {
+              "type": "integer"
+            },
+            "assignment": {
+              "additionalProperties": false,
+              "description": "Who reviews a request, and why (deterministic; no ML).",
+              "properties": {
+                "fallback_used": {
+                  "description": "True for tiers ic_rep and sia_queue.",
+                  "type": "boolean"
+                },
+                "inherited_from": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "Parent award record a subproject's routing was taken from.",
+                      "properties": {
+                        "full_project_num": {
+                          "type": "string"
+                        },
+                        "fy": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "full_project_num",
+                        "fy"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Set when a subproject inherited its parent award's routing."
+                },
+                "policy_version": {
+                  "default": "nitrd-routing-v2-2026-10-26",
+                  "type": "string"
+                },
+                "rationale": {
+                  "description": "Why this tier and persona were chosen.",
+                  "type": "string"
+                },
+                "reviewer_id": {
+                  "description": "Assigned demo persona.",
+                  "type": "string"
+                },
+                "reviewer_role": {
+                  "description": "Persona's role title, e.g. Program Officer (LSDMA).",
+                  "type": "string"
+                },
+                "tier": {
+                  "description": "Three-tier routing: program officer -> IC NITRD rep -> NITRD-SIA queue.",
+                  "enum": [
+                    "program_officer",
+                    "ic_rep",
+                    "sia_queue"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "reviewer_id",
+                "reviewer_role",
+                "tier",
+                "fallback_used",
+                "rationale",
+                "inherited_from"
+              ],
+              "type": "object"
+            },
+            "classification_attempts": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Operator path: attempts so far (>= 1)."
+            },
+            "classification_error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "failed only: why classification failed."
+            },
+            "classification_evidence": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "What the classifier said when the request was classified. Written once.",
+                  "properties": {
+                    "appl_id": {
+                      "type": "integer"
+                    },
+                    "explain": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "against": {
+                          "description": "Against NITRD.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "contribution": {
+                                "description": "Signed log-odds contribution.",
+                                "type": "number"
+                              },
+                              "field": {
+                                "description": "Text field the term came from.",
+                                "type": "string"
+                              },
+                              "term": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "term",
+                              "field",
+                              "contribution"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 10,
+                          "type": "array"
+                        },
+                        "toward": {
+                          "description": "Toward NITRD.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "contribution": {
+                                "description": "Signed log-odds contribution.",
+                                "type": "number"
+                              },
+                              "field": {
+                                "description": "Text field the term came from.",
+                                "type": "string"
+                              },
+                              "term": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "term",
+                              "field",
+                              "contribution"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 10,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "toward",
+                        "against"
+                      ],
+                      "type": "object"
+                    },
+                    "fy": {
+                      "type": "integer"
+                    },
+                    "parent": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "band": {
+                          "enum": [
+                            "high",
+                            "positive_near_threshold",
+                            "negative_near_threshold",
+                            "clear_negative",
+                            "abstain"
+                          ],
+                          "type": "string"
+                        },
+                        "cohort": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Classifier cohort for this record."
+                        },
+                        "model_id": {
+                          "type": "string"
+                        },
+                        "probability": {
+                          "anyOf": [
+                            {
+                              "maximum": 1,
+                              "minimum": 0,
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "suggestion": {
+                          "enum": [
+                            "nitrd",
+                            "not_nitrd",
+                            "abstain"
+                          ],
+                          "type": "string"
+                        },
+                        "threshold": {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "suggestion",
+                        "probability",
+                        "threshold",
+                        "model_id",
+                        "band",
+                        "cohort"
+                      ],
+                      "type": "object"
+                    },
+                    "prior_year": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "continuing": {
+                          "description": "The core has a record before this FY.",
+                          "type": "boolean"
+                        },
+                        "max_fy": {
+                          "type": "integer"
+                        },
+                        "years": {
+                          "description": "Oldest first; empty for a new core.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "fy": {
+                                "type": "integer"
+                              },
+                              "is_nitrd": {
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "description": "null: no NITRD-era label that year."
+                              },
+                              "records": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": [
+                              "fy",
+                              "is_nitrd",
+                              "records"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "max_fy",
+                        "years",
+                        "continuing"
+                      ],
+                      "type": "object"
+                    },
+                    "schema_version": {
+                      "const": 1,
+                      "default": 1,
+                      "type": "integer"
+                    },
+                    "subcategory": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "status": {
+                          "enum": [
+                            "ranked",
+                            "no_match",
+                            "not_requested"
+                          ],
+                          "type": "string"
+                        },
+                        "top_pcas": {
+                          "description": "Top 2 at most.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "matched_terms": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "maxItems": 30,
+                                "type": "array"
+                              },
+                              "pca": {
+                                "enum": [
+                                  "ACNS",
+                                  "AI",
+                                  "CHuman",
+                                  "CNPS",
+                                  "CSP",
+                                  "EdW",
+                                  "EHCS",
+                                  "ENIT",
+                                  "HCIA",
+                                  "IRAS",
+                                  "LSDMA",
+                                  "SPSQ"
+                                ],
+                                "type": "string"
+                              },
+                              "score": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "pca",
+                              "score",
+                              "matched_terms"
+                            ],
+                            "type": "object"
+                          },
+                          "maxItems": 2,
+                          "type": "array"
+                        },
+                        "vocabulary_id": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "vocabulary_id",
+                        "top_pcas"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "appl_id",
+                    "fy",
+                    "parent",
+                    "subcategory",
+                    "explain",
+                    "prior_year"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "ok only: what the classifier said (immutable)."
+            },
+            "classification_status": {
+              "anyOf": [
+                {
+                  "description": "review_requests.classification_status (operator path only; NULL otherwise).\n\nok and failed are the only values. ok is final (its evidence never\nchanges); failed can be retried, and a retry moves it to ok or leaves it\nfailed with one more attempt.",
+                  "enum": [
+                    "ok",
+                    "failed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Operator-path requests: ok or failed. null for requests made with portal_submit_review_request."
+            },
+            "classified_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "ok only: when the evidence was produced."
+            },
+            "corrected_parent_label": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Override only: the reviewer's is-NITRD call; null otherwise."
+            },
+            "corrected_pcas": {
+              "anyOf": [
+                {
+                  "items": {
+                    "enum": [
+                      "ACNS",
+                      "AI",
+                      "CHuman",
+                      "CNPS",
+                      "CSP",
+                      "EdW",
+                      "EHCS",
+                      "ENIT",
+                      "HCIA",
+                      "IRAS",
+                      "LSDMA",
+                      "SPSQ"
+                    ],
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Override only: the reviewer's PCAs (empty when the corrected label is not NITRD); null otherwise."
+            },
+            "created_at": {
+              "format": "date-time",
+              "type": "string"
+            },
+            "decided_by": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "decision_at": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "decision_rationale": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evidence": {
+              "additionalProperties": false,
+              "description": "What the reviewer should look at.",
+              "properties": {
+                "intensity_overall": {
+                  "anyOf": [
+                    {
+                      "maximum": 1,
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "From outputs_score_project_intensity, if used."
+                },
+                "key_terms": {
+                  "description": "Classifier features or scope terms cited.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 30,
+                  "type": "array"
+                },
+                "pmids": {
+                  "description": "Supporting PubMed IDs.",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "maxItems": 50,
+                  "type": "array"
+                },
+                "summary": {
+                  "description": "Plain-language case for the suggestion.",
+                  "maxLength": 2000,
+                  "minLength": 10,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "summary"
+              ],
+              "type": "object"
+            },
+            "fy": {
+              "type": "integer"
+            },
+            "idempotency_key": {
+              "description": "Caller-supplied key, or 'auto:' + payload_sha256 when omitted.",
+              "type": "string"
+            },
+            "label": {
+              "const": "Not RCDC / demonstration only",
+              "default": "Not RCDC / demonstration only",
+              "type": "string"
+            },
+            "payload_sha256": {
+              "description": "SHA-256 of the canonical submitted payload (appl_id, suggestions, evidence, requested_by).",
+              "type": "string"
+            },
+            "request_id": {
+              "description": "Derived from idempotency_key (UUIDv5).",
+              "format": "uuid",
+              "type": "string"
+            },
+            "requested_by": {
+              "description": "Persona that submitted the request.",
+              "type": "string"
+            },
+            "sandbox": {
+              "const": true,
+              "default": true,
+              "type": "boolean"
+            },
+            "status": {
+              "description": "review_requests.status values.",
+              "enum": [
+                "pending",
+                "approved",
+                "rejected",
+                "deferred",
+                "override"
+              ],
+              "type": "string"
+            },
+            "task1_suggestion": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "Parent (NITRD yes/no) suggestion being sent for review.",
+                  "properties": {
+                    "model_id": {
+                      "anyOf": [
+                        {
+                          "maxLength": 100,
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null
+                    },
+                    "probability": {
+                      "anyOf": [
+                        {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null,
+                      "description": "From classifier_classify_parent, if used."
+                    },
+                    "suggestion": {
+                      "enum": [
+                        "nitrd",
+                        "not_nitrd"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "suggestion"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "task2_suggestion": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "Subcategory (PCA) suggestion being sent for review.",
+                  "properties": {
+                    "pcas": {
+                      "description": "Suggested PCAs, most likely first; no repeats.",
+                      "items": {
+                        "enum": [
+                          "ACNS",
+                          "AI",
+                          "CHuman",
+                          "CNPS",
+                          "CSP",
+                          "EdW",
+                          "EHCS",
+                          "ENIT",
+                          "HCIA",
+                          "IRAS",
+                          "LSDMA",
+                          "SPSQ"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 12,
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "vocabulary_id": {
+                      "anyOf": [
+                        {
+                          "maxLength": 100,
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null
+                    }
+                  },
+                  "required": [
+                    "pcas"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "request_id",
+            "idempotency_key",
+            "payload_sha256",
+            "appl_id",
+            "fy",
+            "task1_suggestion",
+            "task2_suggestion",
+            "evidence",
+            "requested_by",
+            "assignment",
+            "status",
+            "created_at",
+            "decided_by",
+            "decision_at",
+            "decision_rationale",
+            "corrected_parent_label",
+            "corrected_pcas"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "request",
+        "created"
+      ],
+      "type": "object"
+    },
+    "title": "Submit a review request"
+  }
+]

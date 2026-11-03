@@ -239,8 +239,9 @@ def _routing_row(appl, fy, core, full, ic, po, sub=None):
     }
 
 
-#: Real public IDs and IC codes; PO names are FICTIONAL (tests patch persona
-#: hashes to match them). 9000010x are synthetic parent/subproject records.
+#: Real public IDs and IC codes; PO names are FICTIONAL and routing ignores them
+#: (it uses the synthetic persona assignment). 9000010x are synthetic
+#: parent/subproject records.
 FAKE_PO = {
     "NIAID": "SMITH, JOHN A",
     "NINR": "LEE, MORGAN T",

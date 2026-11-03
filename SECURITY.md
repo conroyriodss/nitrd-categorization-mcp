@@ -123,13 +123,25 @@ The three submission repositories (this one,
 swept for:
 
 - **Credentials:** Databricks PATs, GitHub/Slack tokens, AWS keys, JWTs and private keys, in the
-  current files and in the full git history of all three. None were found.
+  current files and in every blob reachable in the git history of all three (binaries included)
+  plus all commit messages. None were found
+  ([`eval/results/provenance/history_sweep.json`](eval/results/provenance/history_sweep.json)).
+  The same sweep found one workspace hostname, an identifier and not a credential, in
+  `scripts/agent_eval_offline.py` from `e078f2f` until its removal in `7a9953e` (2026-09-18).
+  It is not in HEAD. History was not rewritten.
+- **Model binary:** `parent_model.joblib` bytes and its 270,000-term vocabulary were scanned for
+  the same patterns and for e-mail addresses. None were found
+  ([`model_scan.json`](eval/results/provenance/model_scan.json)).
 - **Exported run evidence** (`eval/results/`): the same credential patterns again, at export time
   (a hit aborts the export). The workspace host name, Apps service-principal IDs and warehouse ID
   are replaced by placeholders, and each replacement is counted in `eval/results/INDEX.json`.
-- **People:** reviewer personas are fictional. A program officer is matched through a SHA-256 of
-  the public PO name, and `personas.json` holds no names or contact fields.
-  `outputs_get_project_detail` returns the PO name as published in public NIH ExPORTER data. Test
+- **People:** reviewer personas are fictional, and since personas v2 (2026-11-03) the
+  persona-to-award assignment is fully synthetic. Each demo program officer lists the public core
+  project numbers it stands in for, and routing reads no program-officer name. Personas v1
+  (2026-10-27 to 2026-11-03) held SHA-256 hashes of two public PO names. They are removed from
+  the current version and remain in git history; history was not rewritten.
+  `outputs_get_project_detail` returns PI and PO names as published in public NIH ExPORTER data;
+  the committed transcript replaces those values with `<person name omitted>`. Test
   fixtures use placeholder addresses. Open item: the `uac-nitrd` FY2025 UAC fixture still has its
   source's `PO Name` and `PCC` columns. Those values are public in RePORTER, but they are not needed;
   removal is pending.

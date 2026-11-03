@@ -66,9 +66,10 @@ def register(mcp: FastMCP) -> None:
         """Rank the 12 NITRD Program Component Areas for one public NIH application.
 
         Matches the application's title, abstract and PHR against the NITRD
-        scope vocabulary and returns the PCAs that matched, with the matched
-        terms. Public FY2015-2023 projects only. Most useful after
-        classifier_classify_parent suggests NITRD.
+        scope vocabulary and returns up to 5 of the 12 PCAs (those with at
+        least one match, highest score first), with the matched terms. Public
+        FY2015-2023 projects only. Most useful after classifier_classify_parent
+        suggests NITRD.
         """
         text, proposal = await propose(appl_id)
         ranked = pca_matches(proposal)

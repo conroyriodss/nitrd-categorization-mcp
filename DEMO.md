@@ -22,7 +22,7 @@ HTTP ([`e2e_778bd3ab`](eval/results/runs/20261103T1358Z_e2e_778bd3ab/report.log)
 | --- | --- | --- | --- |
 | 10506013, U24AI171008, NIAID | confident | 0.986, suggests NITRD | `demo_po_niaid_01` (program officer tier) |
 | 10388671, R01NR013912, NINR | borderline | 0.580, suggests NITRD; AI not in the top 3 PCAs | `demo_po_ninr_01` (program officer tier) |
-| 10445135, R01CA258987, NCI | likely negative | 0.275, suggests not NITRD (a model miss: RCDC says NITRD) | `demo_ic_rep_nci` (IC NITRD representative: no NCI program officer is bound, so routing falls back one tier) |
+| 10445135, R01CA258987, NCI | likely negative | 0.275, suggests not NITRD (a model miss: RCDC says NITRD) | `demo_ic_rep_nci` (IC NITRD representative: no NCI award is assigned to a demo program officer, so routing falls back one tier) |
 
 The story: the reviewer confirms the confident case, corrects the borderline case's PCAs, and
 overturns the model on the third. The model proposes; the person decides, and the decision is

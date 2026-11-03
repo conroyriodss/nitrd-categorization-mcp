@@ -1,4 +1,4 @@
-"""Routing tests with fictional names only (no real program-officer names)."""
+"""Routing tests: synthetic persona-to-award assignments, no program-officer names."""
 
 import json
 from uuid import uuid4
@@ -14,14 +14,12 @@ from reviewer_portal.routing import (
     ProjectRouting,
     RoutingError,
     default_directory,
-    normalize_po_name,
-    po_name_sha256,
     route,
     route_unresolved_subproject,
     routing_event,
 )
 
-FICTIONAL_PO = "EXAMPLE, AVERY Q"
+ASSIGNED = "R01CA000001"  # synthetic: assigned to demo_po_nci_01 below
 
 
 def directory(**overrides):
@@ -31,7 +29,7 @@ def directory(**overrides):
             role="program_officer",
             role_title="Program Officer (NCI, demo)",
             ic="NCI",
-            po_name_sha256=(po_name_sha256(FICTIONAL_PO),),
+            core_project_nums=(ASSIGNED,),
         ),
         Persona(
             reviewer_id="demo_po_nhlbi_01",
@@ -39,7 +37,7 @@ def directory(**overrides):
             role_title="Program Officer (NHLBI, inactive)",
             ic="NHLBI",
             active=False,
-            po_name_sha256=(po_name_sha256("INACTIVE, CASEY"),),
+            core_project_nums=("R01HL000009",),
         ),
         Persona(
             reviewer_id="demo_ic_rep_nci",
@@ -71,7 +69,6 @@ def project(**kw):
         "full_project_num": "5R01CA000001-03",
         "subproject_id": None,
         "administering_ic": "CA",
-        "program_officer_name": FICTIONAL_PO,
     } | kw
     return ProjectRouting.from_exporter(row)
 
@@ -90,11 +87,19 @@ def test_bundled_personas_are_ten_and_valid():
     assert "@" not in json.dumps(raw)
     allowed = set(Persona.model_fields)
     assert all(set(p) <= allowed for p in raw["personas"])  # no email/name keys
+    assert "sha256" not in json.dumps(raw)  # no name hashes (removed in v2)
+    assigned = {
+        p.reviewer_id: p.core_project_nums for p in d.personas if p.core_project_nums
+    }
+    assert assigned == {
+        "demo_po_niaid_01": ("U24AI171008",),
+        "demo_po_ninr_01": ("R01NR013912",),
+    }
 
 
 def test_bundled_nibib_routes_to_its_ic_rep():
-    # NIBIB (ExPORTER code EB) has no program-officer personas, so a named but
-    # unrepresented PO falls to Tier 2: demo_ic_rep_nibib, not the SIA queue.
+    # NIBIB (ExPORTER code EB) has no program-officer personas, so an award
+    # falls to Tier 2: demo_ic_rep_nibib, not the SIA queue.
     p = project(
         administering_ic="EB",
         core_project_num="U01EB000001",
@@ -106,9 +111,10 @@ def test_bundled_nibib_routes_to_its_ic_rep():
     assert d.fallback_used is True
 
 
-def test_name_normalization():
-    assert normalize_po_name(" Example,  Avery Q ") == "avery q example"
-    assert po_name_sha256("EXAMPLE, AVERY Q") == po_name_sha256("Avery Q Example")
+def test_routing_reads_no_program_officer_name():
+    assert "program_officer_names" not in ProjectRouting.model_fields
+    with_name = project(program_officer_name="EXAMPLE, AVERY Q")
+    assert with_name == project()  # the name column is ignored
 
 
 def test_tier1_program_officer():
@@ -121,34 +127,40 @@ def test_tier1_program_officer():
     assert d.inherited_from is None and "Tier 1" in d.rationale
 
 
-@pytest.mark.parametrize(
-    "kw",
-    [
-        {"program_officer_name": None},
-        {"program_officer_name": "UNKNOWN, PERSON"},
-        {"program_officer_name": f"{FICTIONAL_PO}; OTHER, PERSON"},
-    ],
-)
-def test_tier2_ic_rep_when_po_fails(kw):
-    d = route(project(**kw), directory=directory())
+def test_tier2_ic_rep_when_no_po_is_assigned():
+    d = route(project(core_project_num="R01CA000002"), directory=directory())
     assert (d.reviewer_id, d.tier, d.fallback_used) == (
         "demo_ic_rep_nci",
         RoutingTier.IC_REP,
         True,
     )
+    assert "no demo program officer is assigned" in d.rationale
+
+
+def test_two_po_personas_assigned_the_same_award_fall_back():
+    extra = Persona(
+        reviewer_id="demo_po_nci_02",
+        role="program_officer",
+        role_title="Second NCI PO",
+        ic="NCI",
+        core_project_nums=(ASSIGNED,),
+    )
+    d = route(project(), directory=directory(extra=[extra]))
+    assert (d.reviewer_id, d.tier) == ("demo_ic_rep_nci", RoutingTier.IC_REP)
+    assert "ambiguous" in d.rationale
 
 
 def test_po_persona_must_be_active_and_in_the_ic():
-    inactive = project(administering_ic="HL", program_officer_name="INACTIVE, CASEY")
+    inactive = project(administering_ic="HL", core_project_num="R01HL000009")
     assert route(inactive, directory=directory()).reviewer_id == "demo_ic_rep_nhlbi"
-    other_ic = project(administering_ic="HL")  # NCI persona's PO on an NHLBI award
+    other_ic = project(administering_ic="HL")  # NCI persona's award, NHLBI IC
     assert route(other_ic, directory=directory()).reviewer_id == "demo_ic_rep_nhlbi"
 
 
 @pytest.mark.parametrize("code", ["GM", "", "ZZ"])
 def test_tier3_sia_queue(code):
     d = route(
-        project(administering_ic=code, program_officer_name=None),
+        project(administering_ic=code),
         directory=directory(),
     )
     assert (d.reviewer_id, d.tier) == ("demo_sia", RoutingTier.SIA_QUEUE)
@@ -161,15 +173,15 @@ def test_two_ic_reps_fall_to_queue():
         role_title="Second NCI rep",
         ic="NCI",
     )
-    d = route(project(program_officer_name=None), directory=directory(extra=[extra]))
+    d = route(
+        project(core_project_num="R01CA000002"), directory=directory(extra=[extra])
+    )
     assert d.reviewer_id == "demo_sia" and "several" in d.rationale
 
 
 def test_subproject_inherits_parent():
-    parent = project(program_officer_name=FICTIONAL_PO)
-    sub = project(
-        application_id="900002", subproject_id="0003", program_officer_name=None
-    )
+    parent = project()
+    sub = project(application_id="900002", subproject_id="0003")
     d = route(sub, parent=parent, directory=directory())
     assert d.reviewer_id == "demo_po_nci_01"
     assert d.inherited_from.full_project_num == "5R01CA000001-03"
@@ -183,9 +195,7 @@ def test_subproject_inherits_parent():
 
 @pytest.mark.parametrize("count", [0, 2])
 def test_subproject_without_unique_parent_goes_to_queue(count):
-    sub = project(
-        application_id="900002", subproject_id="0003", program_officer_name=None
-    )
+    sub = project(application_id="900002", subproject_id="0003")
     d = route_unresolved_subproject(sub, count, directory=directory())
     assert d.reviewer_id == "demo_sia" and d.tier == RoutingTier.SIA_QUEUE
     assert d.fallback_used is True and d.inherited_from is None
@@ -203,7 +213,15 @@ def test_directory_validation():
             role="ic_nitrd_rep",
             role_title="rep",
             ic="NCI",
-            po_name_sha256=("0" * 64,),
+            core_project_nums=(ASSIGNED,),
+        )
+    with pytest.raises(ValidationError):
+        Persona(
+            reviewer_id="demo_po_nci_01",
+            role="program_officer",
+            role_title="po",
+            ic="NCI",
+            core_project_nums=("not-a-core",),
         )
     with pytest.raises(ValidationError):
         Persona(reviewer_id="jane.doe@nih.gov", role="sia_queue", role_title="q")

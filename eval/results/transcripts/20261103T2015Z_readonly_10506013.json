@@ -1,0 +1,709 @@
+{
+  "captured_at": "2026-11-03T20:15:35+00:00",
+  "demo_award": {
+    "appl_id": 10506013,
+    "core_project_num": "U24AI171008"
+  },
+  "kind": "read-only transcript, in process against the live tables",
+  "list_truncation": "lists cut to 5 items, long strings to 600 chars",
+  "not_included": "steps 9-10 (submit, history) write sandbox rows; see the deployed e2e record eval/results/runs/20261103T1358Z_e2e_778bd3ab/",
+  "steps": [
+    {
+      "arguments": {
+        "category": "Networking and Information Technology R&D (NITRD)",
+        "fy": 2022,
+        "limit": 5
+      },
+      "elapsed_ms": 3641,
+      "is_error": false,
+      "server": "nih_grants_outputs",
+      "step": 1,
+      "structured_content": {
+        "category": "Networking and Information Technology R&D (NITRD)",
+        "fy": 2022,
+        "limit": 5,
+        "projects": [
+          {
+            "activity": "R01",
+            "administering_ic": "EB",
+            "appl_id": 10072053,
+            "core_project_num": "R01EB026331",
+            "full_project_num": "5R01EB026331-04",
+            "fy": 2022,
+            "subproject_id": null,
+            "title": "Energy-independent single photon molecular imaging technology",
+            "total_cost": 670337
+          },
+          {
+            "activity": "R01",
+            "administering_ic": "HD",
+            "appl_id": 10074574,
+            "core_project_num": "R01HD088417",
+            "full_project_num": "5R01HD088417-06",
+            "fy": 2022,
+            "subproject_id": null,
+            "title": "Virtual Immersive Gaming to Optimize Recovery in Low Back Pain",
+            "total_cost": 503011
+          },
+          {
+            "activity": "F30",
+            "administering_ic": "HG",
+            "appl_id": 10113658,
+            "core_project_num": "F30HG010442",
+            "full_project_num": "5F30HG010442-03",
+            "fy": 2022,
+            "subproject_id": null,
+            "title": "Investigating the clinical ontologies of loss-of-function and gain-of-function human gene variants",
+            "total_cost": 33842
+          },
+          {
+            "activity": "R01",
+            "administering_ic": "MH",
+            "appl_id": 10136719,
+            "core_project_num": "R01MH095797",
+            "full_project_num": "5R01MH095797-08",
+            "fy": 2022,
+            "subproject_id": null,
+            "title": "Novel Statistical methods for DNA Sequencing Data, and applications to Autism.",
+            "total_cost": 446831
+          },
+          {
+            "activity": "R01",
+            "administering_ic": "HD",
+            "appl_id": 10142240,
+            "core_project_num": "R01HD097686",
+            "full_project_num": "5R01HD097686-03",
+            "fy": 2022,
+            "subproject_id": null,
+            "title": "Automated Assessment of Neurodevelopment in Infants at Risk for Motor Disability",
+            "total_cost": 655494
+          }
+        ],
+        "returned": 5,
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_exporter_projects"
+          ]
+        },
+        "total_matching": 4247,
+        "truncated": true
+      },
+      "tool": "outputs_find_projects"
+    },
+    {
+      "arguments": {
+        "appl_id": 10506013
+      },
+      "elapsed_ms": 992,
+      "is_error": false,
+      "server": "nih_grants_outputs",
+      "step": 2,
+      "structured_content": {
+        "project": {
+          "abstract": "Project Summary: Vaccination is one of the most successful innovations in the fight against infectious disease. However, we still lack effective and safe vaccines against many major infectious diseases (e.g., HIV, tuberculosis, and malaria). We also lack a comprehensive and interoperable vaccine knowledgebase to accelerate vaccine development and better understand vaccine safety. Based on the preliminary version of our current VIOLIN vaccine knowledgebase, we propose to develop VIOLIN 2.0, a new generation Vaccine Information and Ontology LInked kNowledgebase. Strong preliminary data were gene... [3145 chars]",
+          "activity": "U24",
+          "administering_ic": "AI",
+          "appl_id": 10506013,
+          "core_project_num": "U24AI171008",
+          "full_project_num": "1U24AI171008-01",
+          "funding_mechanism": "OTHER RESEARCH-RELATED",
+          "fy": 2022,
+          "ic_name": "NATIONAL INSTITUTE OF ALLERGY AND INFECTIOUS DISEASES",
+          "is_nitrd": true,
+          "org_name": "UNIVERSITY OF MICHIGAN AT ANN ARBOR",
+          "phr": "Project Narrative (Relevance of this Research to Public Health) To address the huge challenge to capture and integrate heterogeneous vaccine knowledge in an efficient manner, this project will develop VIOLIN 2.0, a new generation comprehensive vaccine knowledgebase that will cover a wide range of knowledge covering the full vaccine life cycle. We will develop advanced informatics technologies, including literature mining and machine learning tools, web interfaces, databases, and knowledge graphs to build the knowledgebase. Our research will lead to ontology-based standardization and integratio... [690 chars]",
+          "pi_names": "<person name omitted>",
+          "program_officer_name": "<person name omitted>",
+          "project_end": "2027-05-31",
+          "project_start": "2022-08-19",
+          "spending_categories": [
+            "Biodefense",
+            "Biotechnology",
+            "Data Science",
+            "Emerging Infectious Diseases",
+            "Immunization",
+            {
+              "_truncated": "5 more of 10"
+            }
+          ],
+          "subproject_id": null,
+          "title": "VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase",
+          "total_cost": 753786
+        },
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+            "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+          ]
+        }
+      },
+      "tool": "outputs_get_project_detail"
+    },
+    {
+      "arguments": {
+        "core_project_num": "U24AI171008"
+      },
+      "elapsed_ms": 3279,
+      "is_error": false,
+      "server": "nih_grants_outputs",
+      "step": 3,
+      "structured_content": {
+        "core_project_num": "U24AI171008",
+        "publications": [
+          {
+            "citation_count": 3,
+            "doi": "10.1101/2025.11.27.690985",
+            "is_research_article": true,
+            "journal": "bioRxiv",
+            "mesh": null,
+            "nih_percentile": null,
+            "pmid": 41383772,
+            "pub_year": 2025,
+            "publication_types": [
+              "Journal Article",
+              "Preprint"
+            ],
+            "rcr": null,
+            "title": "VaxjoGNN: A Graph Neural Network for Ontology-Grounded Vaccine Adjuvant Recommendation."
+          },
+          {
+            "citation_count": 0,
+            "doi": "10.1101/2025.08.26.671804",
+            "is_research_article": true,
+            "journal": "bioRxiv",
+            "mesh": null,
+            "nih_percentile": null,
+            "pmid": 40909744,
+            "pub_year": 2025,
+            "publication_types": [
+              "Journal Article",
+              "Preprint"
+            ],
+            "rcr": null,
+            "title": "SEA CDM: Study-Experiment-Assay Common Data Model and Databases for Cross-Domain Data Integration and Analysis."
+          },
+          {
+            "citation_count": 3,
+            "doi": "10.1101/2025.08.12.669998",
+            "is_research_article": true,
+            "journal": "bioRxiv",
+            "mesh": null,
+            "nih_percentile": null,
+            "pmid": 40832256,
+            "pub_year": 2025,
+            "publication_types": [
+              "Journal Article",
+              "Preprint"
+            ],
+            "rcr": null,
+            "title": "VO: The Vaccine Ontology."
+          },
+          {
+            "citation_count": 1,
+            "doi": "10.1101/2025.07.15.664501",
+            "is_research_article": true,
+            "journal": "bioRxiv",
+            "mesh": null,
+            "nih_percentile": null,
+            "pmid": 40791563,
+            "pub_year": 2025,
+            "publication_types": [
+              "Journal Article",
+              "Preprint"
+            ],
+            "rcr": null,
+            "title": "Mapping and Harmonization of CVX vaccine terms to the Vaccine Ontology."
+          },
+          {
+            "citation_count": 2,
+            "doi": "10.1101/2025.07.15.664450",
+            "is_research_article": true,
+            "journal": "bioRxiv",
+            "mesh": null,
+            "nih_percentile": null,
+            "pmid": 40791355,
+            "pub_year": 2025,
+            "publication_types": [
+              "Journal Article",
+              "Preprint"
+            ],
+            "rcr": null,
+            "title": "VaxKG: Integrating The Vaccine Ontology And VIOLIN For Advanced Vaccine Queries And LLM-Powered Chat Systems."
+          },
+          {
+            "_truncated": "35 more of 40"
+          }
+        ],
+        "returned": 40,
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_nitrd_pub_links",
+            "users.conroyri.nitrd_hackathon_v1_pubmed_articles",
+            "users.conroyri.nitrd_hackathon_v1_pubmed_mesh",
+            "users.conroyri.nitrd_hackathon_v1_pubmed_pubtypes",
+            "users.conroyri.nitrd_hackathon_v1_icite_pubs"
+          ]
+        },
+        "total_linked": 40,
+        "truncated": false,
+        "with_icite": 40,
+        "with_mesh": 19
+      },
+      "tool": "outputs_get_project_publications"
+    },
+    {
+      "arguments": {
+        "core_project_num": "U24AI171008"
+      },
+      "elapsed_ms": 1433,
+      "is_error": false,
+      "server": "nih_grants_outputs",
+      "step": 4,
+      "structured_content": {
+        "core_project_num": "U24AI171008",
+        "outputs": null,
+        "reason": "The DataCite outputs table has not been loaded yet (MVP). Unknown, not evidence of no data outputs.",
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_datacite_outputs"
+          ]
+        },
+        "status": "not_available"
+      },
+      "tool": "outputs_get_project_datacite"
+    },
+    {
+      "arguments": {
+        "core_project_num": "U24AI171008"
+      },
+      "elapsed_ms": 1961,
+      "is_error": false,
+      "server": "nih_grants_outputs",
+      "step": 5,
+      "structured_content": {
+        "core_project_num": "U24AI171008",
+        "coverage": {
+          "datacite": {
+            "effective_weight": 0.0,
+            "eligible_unique_works": 0,
+            "field_coverage": {
+              "resource_type": null,
+              "title": null
+            },
+            "mean_available_signal_weight": null,
+            "mean_scores": {
+              "AI": null,
+              "CHuman": null,
+              "CSP": null,
+              "EHCS": null,
+              "HCIA": null,
+              "LSDMA": null,
+              "SPSQ": null,
+              "overall": null
+            },
+            "publication_type_coverage": null,
+            "state": "not_supplied"
+          },
+          "publication": {
+            "effective_weight": 1.0,
+            "eligible_unique_works": 40,
+            "field_coverage": {
+              "mesh": 0.475,
+              "title": 1.0,
+              "venue": 1.0
+            },
+            "mean_available_signal_weight": 0.7112499999999999,
+            "mean_scores": {
+              "AI": 0.138125,
+              "CHuman": 0.0,
+              "CSP": 0.0,
+              "EHCS": 0.0,
+              "HCIA": 0.0,
+              "LSDMA": 0.028687499999999998,
+              "SPSQ": 0.0,
+              "overall": 0.15825
+            },
+            "publication_type_coverage": 1.0,
+            "state": "supplied_records"
+          }
+        },
+        "inputs": {
+          "datacite_outputs": 0,
+          "datacite_status": "not_available",
+          "publications": 40,
+          "publications_with_mesh": 19
+        },
+        "interpretation": "Observed output-signal index; not a probability, budget share or official classification. Covers 7 of 12 PCAs.",
+        "overall": 0.15825,
+        "per_pca": {
+          "AI": 0.138125,
+          "CHuman": 0.0,
+          "CSP": 0.0,
+          "EHCS": 0.0,
+          "HCIA": 0.0,
+          "LSDMA": 0.028687500000000005,
+          "SPSQ": 0.0
+        },
+        "reproducibility": {
+          "canonicalization": "UTF-8 JSON; sorted keys; compact separators; finite values only",
+          "code_sha256": "4238080e570a29a6d7cd9b0aaf3766ff4f45893fc808fd1119a19f0d5d846a1b",
+          "config_sha256": "12a38d51626a4845dcbc377feab8553dbe56b9e0fc9c3affe25c07176b97b037",
+          "input_sha256": "a256416acf80a1717ed8b961933ea81035162f4f04df696c69da398aa5e89fdc",
+          "rule_version": "0.1.0-exploratory",
+          "scorer_version": "0.1.0",
+          "source_provenance": {
+            "core_project_num": "U24AI171008",
+            "datacite_source": "not loaded (MVP)",
+            "output_window": "all linked publications, newest first",
+            "publication_source": "ExPORTER publication links + PubMed + iCite (nitrd_hackathon_v1 snapshot)"
+          }
+        },
+        "score_interpretable": true,
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_nitrd_pub_links",
+            "users.conroyri.nitrd_hackathon_v1_pubmed_articles",
+            "users.conroyri.nitrd_hackathon_v1_pubmed_mesh",
+            "users.conroyri.nitrd_hackathon_v1_pubmed_pubtypes",
+            "users.conroyri.nitrd_hackathon_v1_icite_pubs",
+            {
+              "_truncated": "1 more of 6"
+            }
+          ]
+        },
+        "status": "scored",
+        "top_evidence": [
+          {
+            "aggregation_weight": 0.025,
+            "output_score": 0.9,
+            "project_contribution": 0.022500000000000003,
+            "signals": {
+              "mesh": {
+                "contribution": 0.55,
+                "credit_per_winning_rule": 0.18333333333333335,
+                "project_contribution": 0.013750000000000002,
+                "strength": 1.0,
+                "weight": 0.55,
+                "winning_rules": [
+                  "D000077321",
+                  "D001185",
+                  "D016571"
+                ]
+              },
+              "title": {
+                "contribution": 0.35,
+                "credit_per_winning_rule": 0.35,
+                "project_contribution": 0.008749999999999999,
+                "strength": 1.0,
+                "weight": 0.35,
+                "winning_rules": [
+                  "ai_methods"
+                ]
+              }
+            },
+            "title": "Explainable artificial intelligence and domain adaptation for predicting HIV infection with graph neural networks.",
+            "work_key": "publication:pmid:39417227"
+          },
+          {
+            "aggregation_weight": 0.025,
+            "output_score": 0.9,
+            "project_contribution": 0.022500000000000003,
+            "signals": {
+              "mesh": {
+                "contribution": 0.55,
+                "credit_per_winning_rule": 0.18333333333333335,
+                "project_contribution": 0.013750000000000002,
+                "strength": 1.0,
+                "weight": 0.55,
+                "winning_rules": [
+                  "D000077321",
+                  "D000098342",
+                  "D009323"
+                ]
+              },
+              "title": {
+                "contribution": 0.35,
+                "credit_per_winning_rule": 0.35,
+                "project_contribution": 0.008749999999999999,
+                "strength": 1.0,
+                "weight": 0.35,
+                "winning_rules": [
+                  "ai_methods"
+                ]
+              }
+            },
+            "title": "Improving entity recognition using ensembles of deep learning and fine-tuned large language models: A case study on adverse event extraction from VAERS and social media.",
+            "work_key": "publication:pmid:39923968"
+          },
+          {
+            "aggregation_weight": 0.025,
+            "output_score": 0.675,
+            "project_contribution": 0.016875,
+            "signals": {
+              "mesh": {
+                "contribution": 0.41250000000000003,
+                "credit_per_winning_rule": 0.1375,
+                "project_contribution": 0.010312500000000002,
+                "strength": 1.0,
+                "weight": 0.55,
+                "winning_rules": [
+                  "D000077321",
+                  "D001185",
+                  "D009323"
+                ]
+              },
+              "title": {
+                "contribution": 0.26249999999999996,
+                "credit_per_winning_rule": 0.26249999999999996,
+                "project_contribution": 0.006562499999999999,
+                "strength": 1.0,
+                "weight": 0.35,
+                "winning_rules": [
+                  "ai_methods"
+                ]
+              }
+            },
+            "title": "Artificial intelligence-powered pharmacovigilance: A review of machine and deep learning in clinical text-based adverse drug event detection for benchmark datasets.",
+            "work_key": "publication:pmid:38447600"
+          },
+          {
+            "aggregation_weight": 0.025,
+            "output_score": 0.55,
+            "project_contribution": 0.013750000000000002,
+            "signals": {
+              "mesh": {
+                "contribution": 0.55,
+                "credit_per_winning_rule": 0.55,
+                "project_contribution": 0.013750000000000002,
+                "strength": 1.0,
+                "weight": 0.55,
+                "winning_rules": [
+                  "D009323"
+                ]
+              }
+            },
+            "title": "RefAI: a GPT-powered retrieval-augmented generative tool for biomedical literature recommendation and summarization.",
+            "work_key": "publication:pmid:38857454"
+          },
+          {
+            "aggregation_weight": 0.025,
+            "output_score": 0.55,
+            "project_contribution": 0.013750000000000002,
+            "signals": {
+              "mesh": {
+                "contribution": 0.55,
+                "credit_per_winning_rule": 0.55,
+                "project_contribution": 0.013750000000000002,
+                "strength": 1.0,
+                "weight": 0.55,
+                "winning_rules": [
+                  "D009323"
+                ]
+              }
+            },
+            "title": "Mapping vaccine names in clinical trials to vaccine ontology using cascaded fine-tuned domain-specific language models.",
+            "work_key": "publication:pmid:39123237"
+          }
+        ],
+        "warnings": [
+          "Exploratory weights and mappings; no empirical validity claim.",
+          "Source retrieval completeness and attribution must be established upstream.",
+          "Per-PCA scores overlap; do not sum them or treat them as budget allocations.",
+          "Compare projects only with compatible output windows and metadata/source coverage.",
+          "DataCite outputs not loaded (MVP); publications only."
+        ]
+      },
+      "tool": "outputs_score_project_intensity"
+    },
+    {
+      "arguments": {
+        "appl_id": 10506013
+      },
+      "elapsed_ms": 2323,
+      "is_error": false,
+      "server": "nitrd_classifier",
+      "step": 6,
+      "structured_content": {
+        "abstain_reason": null,
+        "appl_id": 10506013,
+        "cohort": "not_used_in_training",
+        "fy": 2022,
+        "fy2019_half": null,
+        "model": {
+          "calibration": "CalibratedClassifierCV(sigmoid, GroupKFold(5) by core, ensemble=False)",
+          "model_id": "nitrd-parent-v2-ba10594d9581",
+          "sklearn_version": "1.9.1",
+          "threshold": 0.3893682055460409,
+          "threshold_fy": 2019,
+          "train_fys": [
+            2015,
+            2016,
+            2017,
+            2018
+          ]
+        },
+        "notice": "Suggestion only. Not RCDC / demonstration only.",
+        "probability": 0.986275,
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+            "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+          ]
+        },
+        "suggestion": "nitrd",
+        "top_features": [
+          {
+            "contribution": 1.634091,
+            "field": "title",
+            "term": "information"
+          },
+          {
+            "contribution": 0.966975,
+            "field": "title",
+            "term": "ontology"
+          },
+          {
+            "contribution": 0.421752,
+            "field": "abstract",
+            "term": "ontology"
+          },
+          {
+            "contribution": 0.375783,
+            "field": "phr",
+            "term": "informatics"
+          },
+          {
+            "contribution": 0.326393,
+            "field": "title",
+            "term": "information and"
+          },
+          {
+            "_truncated": "5 more of 10"
+          }
+        ]
+      },
+      "tool": "classifier_classify_parent"
+    },
+    {
+      "arguments": {
+        "appl_id": 10506013
+      },
+      "elapsed_ms": 572,
+      "is_error": false,
+      "server": "nitrd_classifier",
+      "step": 7,
+      "structured_content": {
+        "appl_id": 10506013,
+        "fy": 2022,
+        "notice": "Ranking signal for a reviewer; scores are not probabilities and are not comparable with parent probabilities. Not RCDC / demonstration only.",
+        "ranked_pcas": [
+          {
+            "matched_terms": [
+              "natural language processing",
+              "natural language",
+              "language processing",
+              "information",
+              "one",
+              {
+                "_truncated": "1 more of 6"
+              }
+            ],
+            "pca": "CHuman",
+            "score": 37.7822
+          },
+          {
+            "matched_terms": [
+              "data",
+              "insights",
+              "knowledge",
+              "analysis",
+              "management",
+              {
+                "_truncated": "2 more of 7"
+              }
+            ],
+            "pca": "LSDMA",
+            "score": 15.6026
+          },
+          {
+            "matched_terms": [
+              "information",
+              "technologies",
+              "learning",
+              "support",
+              "standards",
+              {
+                "_truncated": "1 more of 6"
+              }
+            ],
+            "pca": "EdW",
+            "score": 10.9975
+          },
+          {
+            "matched_terms": [
+              "data",
+              "methods",
+              "challenges"
+            ],
+            "pca": "EHCS",
+            "score": 6.3561
+          },
+          {
+            "matched_terms": [
+              "safe",
+              "design",
+              "machine"
+            ],
+            "pca": "IRAS",
+            "score": 6.0685
+          }
+        ],
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+            "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+          ]
+        },
+        "status": "ranked",
+        "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+      },
+      "tool": "classifier_classify_subcategory"
+    },
+    {
+      "arguments": {
+        "appl_id": 10506013
+      },
+      "elapsed_ms": 691,
+      "is_error": false,
+      "server": "reviewer_portal",
+      "step": 8,
+      "structured_content": {
+        "appl_id": 10506013,
+        "assignment": {
+          "fallback_used": false,
+          "inherited_from": null,
+          "policy_version": "nitrd-routing-v2-2026-10-26",
+          "rationale": "Tier 1: demo_po_niaid_01 is the demo program officer assigned to U24AI171008 (NIAID).",
+          "reviewer_id": "demo_po_niaid_01",
+          "reviewer_role": "Program Officer (NIAID, demo)",
+          "tier": "program_officer"
+        },
+        "fy": 2022,
+        "source": {
+          "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+          "tables": [
+            "users.conroyri.nitrd_hackathon_v1_exporter_projects"
+          ]
+        }
+      },
+      "tool": "portal_get_reviewer_assignment"
+    }
+  ]
+}

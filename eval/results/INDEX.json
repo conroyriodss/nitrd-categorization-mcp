@@ -1,5 +1,21 @@
 {
  "files": {
+  "provenance/data.json": {
+   "bytes": 2183,
+   "sha256": "da2ee4a4afaa007704f7df190581946c91d098f2da125fc719315fdd8f97c90a"
+  },
+  "provenance/history_sweep.json": {
+   "bytes": 1778,
+   "sha256": "f847d808e6368cefcea46f66e6bb0ef34fc2466f27e4a54b3ca08ed67bee2712"
+  },
+  "provenance/model.json": {
+   "bytes": 2230,
+   "sha256": "d4197e355a92be658fedddd6d2487902433c74bafbf883419e521d8aa881ec0e"
+  },
+  "provenance/model_scan.json": {
+   "bytes": 618,
+   "sha256": "431580535ee650a8a7db97d1663ac9d3a76b63467cc7d6d9292a98c335825d39"
+  },
   "runs/20261103T1350Z_parity_5704d50c/report.log": {
    "bytes": 12351,
    "sha256": "6730707424d28a4756100d4090813e2124657c74ca55b80ef9c0341ff830ca84"
@@ -63,6 +79,22 @@
   "tool_utilization.md": {
    "bytes": 1712,
    "sha256": "6f716c138bd970ada19d7d40e093b258259afb60dc948ff76f35108bc80dec4c"
+  },
+  "tools_list/nih_grants_outputs.json": {
+   "bytes": 43826,
+   "sha256": "0634f2618c1ee33fafa4896297cc224d6a8b8f4cbcc82ff1d88690f77acf8857"
+  },
+  "tools_list/nitrd_classifier.json": {
+   "bytes": 17297,
+   "sha256": "f31f584e7cc1ee2de963bea5a2ef683f90d0d643a0f852e7a9862739c33e5593"
+  },
+  "tools_list/reviewer_portal.json": {
+   "bytes": 123963,
+   "sha256": "1d3b1a8ca5721312080fc91a57d772b9187b04f3cd2680585f697a9fd6cb6c03"
+  },
+  "transcripts/20261103T2015Z_readonly_10506013.json": {
+   "bytes": 25423,
+   "sha256": "54b09ab7848579e416eb6660e1d7a4cbbb1b66bbe397e924475f90d789dc691a"
   }
  },
  "generated_utc": "2026-11-03T17:53:37Z",
@@ -87,6 +119,14 @@
   "github_token",
   "jwt",
   "private_key",
-  "slack_token"
+  "slack_token",
+  "tools_list/nih_grants_outputs.json",
+  "tools_list/nitrd_classifier.json",
+  "tools_list/reviewer_portal.json",
+  "transcripts/20261103T2015Z_readonly_10506013.json",
+  "provenance/data.json",
+  "provenance/history_sweep.json",
+  "provenance/model.json",
+  "provenance/model_scan.json"
  ]
 }

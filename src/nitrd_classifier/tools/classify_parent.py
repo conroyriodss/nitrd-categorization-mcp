@@ -125,9 +125,10 @@ def register(mcp: FastMCP) -> None:
     async def classifier_classify_parent(appl_id: ApplId) -> ParentResult:
         """Suggest whether one NIH application is NITRD from its text.
 
-        Returns a calibrated probability, the decision threshold, and the terms
-        that pushed the score up. It is a suggestion for a human reviewer, not
-        RCDC coding. Use classifier_explain(task="parent") for the full signed
-        term list. An appl_id outside the FY2015-2023 snapshot is an error.
+        Returns a calibrated probability, the decision threshold, and the 10
+        terms that pushed the score up most. It is a suggestion for a human
+        reviewer, not RCDC coding. Use classifier_explain(task="parent") for
+        the top 15 terms each way (up and down). An appl_id outside the
+        FY2015-2023 snapshot is an error.
         """
         return parent_result(await score(appl_id))

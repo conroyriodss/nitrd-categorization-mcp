@@ -15,11 +15,22 @@ shared workspace by a user **without** workspace-admin rights.
 Tables live in `users.conroyri` with prefix `nitrd_hackathon_v1_` (see
 [`src/shared/tables.py`](../../src/shared/tables.py)).
 
-Status at the time of writing: all three Apps are deployed and running from
-commit `2c37f87`. `mcp-nih-grants-outputs` and `mcp-nitrd-classifier` are
-verified against the local stdio servers (identical results).
-`mcp-nitrd-reviewer-portal` is deployed; its grant and live-write
-verification (sub-gates D and E) is in progress.
+Current deployment status (deployment IDs, commits, parity and e2e results) is
+in the authoritative table in the
+[root README](../../README.md#submission-status). This guide covers how to
+deploy, not what is deployed.
+
+### Tool inventory (14 tools)
+
+| App | Tools |
+| --- | --- |
+| `mcp-nih-grants-outputs` (6, read only) | `outputs_find_projects`, `outputs_find_cohort`, `outputs_get_project_detail`, `outputs_get_project_publications`, `outputs_get_project_datacite`, `outputs_score_project_intensity` |
+| `mcp-nitrd-classifier` (3, inference only) | `classifier_classify_parent`, `classifier_classify_subcategory`, `classifier_explain` |
+| `mcp-nitrd-reviewer-portal` (5; submit and decide write sandbox rows) | `portal_get_reviewer_assignment`, `portal_submit_review_request`, `portal_list_pending_reviews`, `portal_submit_review_decision`, `portal_get_review_history` |
+
+The e2e runner checks these counts (`EXPECTED_TOOLS` in
+`deploy/databricks/e2e_runner/runner.py`). A captured `tools/list` is in
+[`eval/results/tools_list/`](../../eval/results/tools_list/).
 
 ### Per-App checklist
 
@@ -33,7 +44,7 @@ write server last):
 | 5. Grants | 7 x `SELECT` | 2 x `SELECT` | 1 x `SELECT` + 3 x `SELECT, MODIFY`; sandbox tables must exist first |
 | 6. Stage source | `SERVER=nih_grants_outputs` | `SERVER=nitrd_classifier` | `SERVER=reviewer_portal` |
 | 7. Deploy | yes | yes | yes |
-| 8. Expected `tools/list` | 5 tools | 3 tools | 5 tools |
+| 8. Expected `tools/list` | 6 tools | 3 tools | 5 tools |
 | 8. Smoke call | `outputs_get_project_detail` | `classifier_classify_parent` | `portal_get_reviewer_assignment` (read); a write only with cleanup |
 
 ## 1. Identity model

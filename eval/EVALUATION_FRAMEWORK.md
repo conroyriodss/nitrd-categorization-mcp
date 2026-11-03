@@ -27,6 +27,9 @@ They answer different questions and are not interchangeable:
 
 ## Summary
 
+Evaluation-item breakdown. Component status is in the authoritative table in
+the [README](../README.md#submission-status).
+
 | # | Area | Item | Status |
 | --- | --- | --- | --- |
 | 1.1 | Parent | FY2019 split validation, new/continuing and new/returning-PI strata | done |
@@ -42,12 +45,12 @@ They answer different questions and are not interchangeable:
 | 3.1 | Output intensity | Scorer runs on real data for the 7 covered PCAs | done |
 | 3.2 | Output intensity | SME judgment of output signatures | design-only |
 | 3.3 | Output intensity | Multi-year maturation and drift | design-only |
-| 4.1 | Reviewer workflow | Mechanism demonstrated (scripted e2e, deployed Apps) | done (local) / partial (deployed) |
+| 4.1 | Reviewer workflow | Mechanism demonstrated (scripted e2e, deployed Apps) | done (local and deployed, 2026-11-03) |
 | 4.2 | Reviewer workflow | Pilot with NITRD coders | design-only |
 | 5.1 | MCP infrastructure | Pytest suite, live e2e on 3 projects | done |
-| 5.2 | MCP infrastructure | Multi-App chain on Databricks Apps | partial |
+| 5.2 | MCP infrastructure | Multi-App chain on Databricks Apps | done (2026-11-03: parity 71/71, e2e over HTTP) |
 | 5.3 | MCP infrastructure | Agent scenario specifications | partial |
-| 5.4 | MCP infrastructure | Agent-level MLflow evaluation | blocked |
+| 5.4 | MCP infrastructure | Agent-level tool selection (MLflow) | not measured |
 
 A 30-50 project ground-truth exercise by the submitter, which addresses parts
 of 1.3, 2.2 and 4.2 at small scale, is specified separately in

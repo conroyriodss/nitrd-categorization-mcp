@@ -44,6 +44,11 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 | G.5 post-fix read-only run: 464 passed, 10 skipped, 0 failed (474 tests); post-fix e2e write mode 3 passed | [`results/step_g/2026-11-02T2144Z_g5_postfix/`](results/step_g/2026-11-02T2144Z_g5_postfix/) | junit totals and logs |
 | Parent classifier PR-AUC 0.862 (FY2019 validation half) | [`classifier_evaluation.md`](classifier_evaluation.md) | protocol and tables; the per-record validation predictions are not committed (they are built from the Unity Catalog ExPORTER tables) |
 | Offline test suite passes in CI | GitHub Actions on `main` (public run logs) | rerun locally with `uv run pytest` |
+| The servers expose 14 tools with closed input/output schemas | [`results/tools_list/`](results/tools_list/) (one `tools/list` capture per server) | names, descriptions, JSON schemas; compare with ARCHITECTURE.md. Captured in process from the committed code; deployed Apps match after their next redeploy |
+| A read step sequence returns grounded evidence for one demo award | [`results/transcripts/`](results/transcripts/) (e2e steps 1-8 on appl 10506013, live tables) | arguments and structured results per step; lists truncated, person names omitted. Steps 9-10 write rows, so their record is the deployed e2e run above |
+| Which model and which data | [`results/provenance/model.json`](results/provenance/model.json), [`data.json`](results/provenance/data.json) | model ID, training years, config, file hashes; each read table's source, rows, Delta version |
+| No credentials in history or in the model binary | [`results/provenance/history_sweep.json`](results/provenance/history_sweep.json), [`model_scan.json`](results/provenance/model_scan.json) | patterns searched, counts per repository, disclosed non-credential findings |
+| Agent-level tool selection | none | **Not measured** (section 2) |
 
 Environment-bound and why: the Unity Catalog tables (public ExPORTER, iCite and PubMed bulk data
 staged in the workspace, too large to version here), the deployed Apps (behind workspace OAuth), and the sandbox review tables
@@ -170,6 +175,9 @@ covers one validation year.
 
 ### Explicitly unmeasured outcomes
 
+Component status is in the authoritative table in the
+[README](../README.md#submission-status); this table lists outcomes only.
+
 | Item | Status |
 |---|---|
 | Agent task completion and correct multi-server tool selection | **Not measured**: no agent-level runs. |
@@ -196,10 +204,10 @@ covers one validation year.
 - **No end-user authentication:** `reviewer_id` is a parameter checked against
   an allow-list of nine fictional personas. That checks roster membership; it
   does not establish the caller's identity or authority.
-- **Name handling:** program-officer names come from public RePORTER metadata
-  and are used only to match a routing persona. The persona file stores SHA-256
-  hashes of normalized names, not names; this keeps names out of the repository
-  but is not anonymization. Test data use fictional names.
+- **Name handling:** routing uses a synthetic persona-to-award assignment
+  (personas v2, 2026-11-03) and reads no program-officer name. The persona file
+  holds no names or name hashes; v1 held hashes of two public PO names, which
+  remain in git history. Test data use fictional names.
 
 The sandbox flag and label mark record scope; they are not an authorization
 boundary. Databricks credentials and the pending evaluation service principal
