@@ -150,8 +150,8 @@ swept for:
   `uac-nitrd-freeze-v1` was moved to the rewritten freeze commit. The full old→new map is in
   [uac-witness record 0003](https://github.com/conroyriodss/uac-witness/blob/main/records/0003-correction-pcc-history-rewrite.json)
   and in seal-log line 32. Old commits may stay reachable by SHA on GitHub until GitHub Support
-  purges them. The engine never read `PCC`. The fixture's `PO Name` column is being removed from the
-  current version with a forward commit, without a history rewrite. Program-officer names are
+  purges them. The engine never read `PCC`. The fixture's `PO Name` column was removed from the
+  current version by a forward commit (`a1f50f3`, fixture-correction-v2), without a history rewrite. Program-officer names are
   public in RePORTER, but the engine does not need them.
 - **Sealed-volume access during that correction:** while scoping the purge, the assistant ran one
   recursive filename-only text search for `PCC` values over the sealed held-out volume. It found
