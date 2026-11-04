@@ -27,6 +27,16 @@ classifications. GSA MCP + AI Agent Hackathon, Service Write Integration track.
 - Security posture: [Scope and limitations](#scope-and-limitations) and
   [eval/README.md section 3](eval/README.md#3-security-considerations).
 
+## Choose a reading route
+
+- **Understand the workflow:** read the [architecture](ARCHITECTURE.md) and [demonstration](DEMO.md) to see how evidence retrieval, classification suggestions, and sandbox review interact.
+- **Inspect the evidence:** start with the [claim-to-artifact map](eval/README.md#0-claim-to-artifact-map-verifiable-from-this-repository) and follow the exact run records associated with the claim.
+- **Evaluate the classifier:** read the [parent-model evaluation](eval/classifier_evaluation.md) and [model card](src/nitrd_classifier/README.md). Parent classification and subcategory ranking are different outputs with different validation requirements.
+- **Review human and agent evaluation plans:** consult the [evaluation framework](eval/EVALUATION_FRAMEWORK.md) and [ground-truth validation protocol](eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md), preserving their distinctions between completed, partial, planned, and blocked work.
+- **Develop or reproduce software behavior:** use [Run locally](#run-locally), the test instructions, and the deployment documentation. Environment-dependent demonstrations require the stated access and configuration.
+
+An implementation, a scripted end-to-end test, an agent evaluation, and a human-reviewed classification result are separate claims. Use the evidence and limitations for the specific claim being assessed.
+
 ## Submission map: three public repositories
 
 This repository is the primary submission. Everything a reviewer needs to check the claims is in
