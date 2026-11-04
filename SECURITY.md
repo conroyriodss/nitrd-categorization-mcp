@@ -115,7 +115,7 @@ authenticated principal, not to a parameter.
   or stack traces. A failed warehouse statement's error message is passed
   through in the tool error; it can name tables or columns.
 
-## Public-repository hygiene (checked 2026-11-03)
+## Public-repository hygiene (checked 2026-11-03; updated 2026-11-04)
 
 The three submission repositories (this one,
 [uac-nitrd](https://github.com/conroyriodss/uac-nitrd) and
@@ -142,9 +142,25 @@ swept for:
   the current version and remain in git history; history was not rewritten.
   `outputs_get_project_detail` returns PI and PO names as published in public NIH ExPORTER data;
   the committed transcript replaces those values with `<person name omitted>`. Test
-  fixtures use placeholder addresses. Open item: the `uac-nitrd` FY2025 UAC fixture still has its
-  source's `PO Name` and `PCC` columns. Those values are public in RePORTER, but they are not needed;
-  removal is pending.
+  fixtures use placeholder addresses.
+- **FY2025 UAC fixture in `uac-nitrd` (2026-11-04):** its source's `PCC` column is not public
+  data, so it was removed from every commit in one sanctioned history rewrite of `uac-nitrd`.
+  This is the only history rewrite in the three repositories. Fixture sha256 `8c92c8af…`
+  (superseded) became `73c87d5a…`. Every `uac-nitrd` commit SHA changed, and the tag
+  `uac-nitrd-freeze-v1` was moved to the rewritten freeze commit. The full old→new map is in
+  [uac-witness record 0003](https://github.com/conroyriodss/uac-witness/blob/main/records/0003-correction-pcc-history-rewrite.json)
+  and in seal-log line 32. Old commits may stay reachable by SHA on GitHub until GitHub Support
+  purges them. The engine never read `PCC`. The fixture's `PO Name` column is being removed from the
+  current version with a forward commit, without a history rewrite. Program-officer names are
+  public in RePORTER, but the engine does not need them.
+- **Sealed-volume access during that correction:** while scoping the purge, the assistant ran one
+  recursive filename-only text search for `PCC` values over the sealed held-out volume. It found
+  no matches and displayed no content, but it did read the bytes of every file there, including
+  key and membership files. Nothing from the sealed volume entered any build: no build read
+  manifest cites a sealed path. The volume will not be searched again. To update the seal
+  log's commit citations, the assistant then read only `SEAL_MANIFEST.json` and
+  `SEAL_AMENDMENTS.jsonl`, by name, and opened no key or membership file. Both events are
+  recorded in seal-log line 32.
 - **Sealed evaluation data:** only hashes are published (the `uac-nitrd` seal manifest and the
   `uac-witness` records), never key contents. No FY2026 award-level NITRD membership is in any
   repository. The FY2026 file in `uac-nitrd` holds model predictions made before that membership
