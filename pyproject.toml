@@ -41,6 +41,7 @@ packages = [
     "src/nih_grants_outputs",
     "src/nitrd_classifier",
     "src/reviewer_portal",
+    "src/nitrd_agent",
 ]
 
 [dependency-groups]

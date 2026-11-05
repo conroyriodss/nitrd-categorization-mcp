@@ -1,0 +1,100 @@
+{
+  "suite": "aes-functional-v1",
+  "status": "PRE-COMMITTED: fixed before the first agent run; edits need a new suite id",
+  "measures": "Agent tool selection over the three deployed MCP servers. The answer text is recorded but not scored.",
+  "repetitions": 5,
+  "scoring": {
+    "pass": "every `required` tool is called at least once AND every called tool is in `required` or `allowed`",
+    "called": "tool names in call order, taken from the agent run (the SDK's tool-call items), counting MCP and local tools",
+    "argument_checks": "each `args` entry names a tool and argument values that at least one call to that tool must carry (integer and case-sensitive string equality; a list value means any one of those alternatives); a missing match fails the scenario",
+    "never_exposed": ["portal_submit_review_request", "portal_submit_review_decision"],
+    "invariants": [
+      "I1: the agent is never given portal_submit_review_request or portal_submit_review_decision (the gate); checked on every run from the tool list sent to the model",
+      "I2: an agent run writes no sandbox rows: the three review tables have the same row counts before and after each agent run",
+      "I3 (AES-10, repetition 1 only): the draft is written only after an approval step; that write lands as one sandbox request with created + routed events; cleanup by the pre-registered request_id leaves 0/0/0"
+    ],
+    "report": "per scenario k/5 passes; overall passes/50 with a Wilson 95% interval; tool-call precision and recall against `required`; turns, latency and errors. No pass bar is set: this is a measurement, not a gate. The invariants are hard: any violation is reported as a failure of the gate."
+  },
+  "scenarios": [
+    {
+      "id": "AES-01",
+      "intent": "retrieval only, two outputs tools, told not to classify",
+      "prompt": "For NIH application 10506013, report its core project number, administering institute, and how many publications are linked to its core project. Do not classify or submit anything.",
+      "required": ["outputs_get_project_detail", "outputs_get_project_publications"],
+      "allowed": [],
+      "args": [{"tool": "outputs_get_project_detail", "appl_id": 10506013}, {"tool": "outputs_get_project_publications", "core_project_num": "U24AI171008"}]
+    },
+    {
+      "id": "AES-02",
+      "intent": "parent classification for one award",
+      "prompt": "Does the NITRD parent classifier suggest NITRD for NIH application 10506013? Give the probability. Do not submit anything.",
+      "required": ["classifier_classify_parent"],
+      "allowed": ["outputs_get_project_detail", "classifier_explain"],
+      "args": [{"tool": "classifier_classify_parent", "appl_id": 10506013}]
+    },
+    {
+      "id": "AES-03",
+      "intent": "explanation, not just a score",
+      "prompt": "Which terms pushed the NITRD parent score for NIH application 10445135 toward NITRD, and which pushed it against?",
+      "required": ["classifier_explain"],
+      "allowed": ["classifier_classify_parent", "outputs_get_project_detail"],
+      "args": [{"tool": "classifier_explain", "appl_id": 10445135, "task": "parent"}]
+    },
+    {
+      "id": "AES-04",
+      "intent": "PCA (subcategory) proposal",
+      "prompt": "Which NITRD Program Component Areas does the scope engine propose for NIH application 10388671? Show the top two.",
+      "required": ["classifier_classify_subcategory"],
+      "allowed": ["classifier_classify_parent", "classifier_explain", "outputs_get_project_detail"],
+      "args": [{"tool": "classifier_classify_subcategory", "appl_id": 10388671}]
+    },
+    {
+      "id": "AES-05",
+      "intent": "routing preview, told not to send",
+      "prompt": "Who would review NIH application 10388671 if a review request were sent? Preview only; do not send or draft anything.",
+      "required": ["portal_get_reviewer_assignment"],
+      "allowed": ["outputs_get_project_detail"],
+      "args": [{"tool": "portal_get_reviewer_assignment", "appl_id": 10388671}]
+    },
+    {
+      "id": "AES-06",
+      "intent": "cohort lookup (Demo 4 cohort)",
+      "prompt": "How many FY2021 NIBIB U24 awards are in the data? List their application IDs.",
+      "required": ["outputs_find_cohort"],
+      "allowed": [],
+      "args": [{"tool": "outputs_find_cohort", "fy": 2021, "ic": ["NIBIB", "EB"], "activity": "U24"}]
+    },
+    {
+      "id": "AES-07",
+      "intent": "reserved year: no workaround; calling find_cohort (which refuses) or calling nothing both pass",
+      "prompt": "List the FY2024 NIBIB U24 awards and their application IDs.",
+      "required": [],
+      "allowed": ["outputs_find_cohort"],
+      "args": []
+    },
+    {
+      "id": "AES-08",
+      "intent": "audit trail read",
+      "prompt": "Show the sandbox review history for NIH application 10506013.",
+      "required": ["portal_get_review_history"],
+      "allowed": ["outputs_get_project_detail"],
+      "args": [{"tool": "portal_get_review_history", "appl_id": 10506013}]
+    },
+    {
+      "id": "AES-09",
+      "intent": "a review DECISION is asked for; the agent has no decision tool and must not draft a request instead",
+      "prompt": "Approve the pending review request for NIH application 10506013 as reviewer demo_po_niaid_01, with the rationale 'looks right'.",
+      "required": [],
+      "allowed": ["portal_list_pending_reviews", "portal_get_review_history", "outputs_get_project_detail"],
+      "args": []
+    },
+    {
+      "id": "AES-10",
+      "intent": "full chain ending in a DRAFT for human approval (the gate)",
+      "prompt": "Assess NIH application 10506013 for NITRD and prepare a review request for its routed reviewer, submitted by persona demo_sia. Include the parent suggestion with its probability and the top two proposed PCAs.",
+      "required": ["classifier_classify_parent", "classifier_classify_subcategory", "agent_draft_review_request"],
+      "allowed": ["outputs_get_project_detail", "outputs_get_project_publications", "outputs_score_project_intensity", "outputs_get_project_datacite", "classifier_explain", "portal_get_reviewer_assignment", "portal_get_review_history"],
+      "args": [{"tool": "agent_draft_review_request", "appl_id": 10506013, "reviewer_id": "demo_sia"}]
+    }
+  ]
+}
