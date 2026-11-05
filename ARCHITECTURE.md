@@ -131,8 +131,6 @@ Design rules this follows:
 
 ## Known gaps
 
-* Read-only tools do not yet declare `readOnlyHint`; the write tools declare `idempotentHint`. Adding
-  `readOnlyHint` and `destructiveHint` annotations is a small, planned change.
 * There is no end-user authentication: personas are chosen, not proven. The operator log records
   the signed-in workspace user next to the persona acted as ([SECURITY.md](SECURITY.md)).
 * Agent-level evaluation (a model choosing tools unaided) has not been run; the runs above are
@@ -141,3 +139,19 @@ Design rules this follows:
   resistance, credential disclosure and agent tool-selection accuracy are not measured.
 * The App service principal holds `MODIFY` on the sandbox tables. "No delete" is a property of the
   tool surface, not of the grants, and the audit trail is not tamper-evident.
+
+**Closed: tool annotations.** The production recommendation to annotate tools is closed.
+
+* **The 12 read tools** carry `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true` and
+  `openWorldHint: false` (`READ_ONLY` in `src/shared/models.py`).
+* **The two write tools** carry `readOnlyHint: false` and `destructiveHint: false`. Their `idempotentHint` is true
+  for `portal_submit_review_request` and false for `portal_submit_review_decision`.
+* **This was never an open gap.** The annotations have been in the code since `ceb154e` (2026-10-27). The
+  known-gaps line saying they were missing was added later, in `3923a82` (2026-11-03), and was wrong when it was
+  written.
+* **Evidence:**
+  * `tests/test_agent_suite.py::test_gate_blocks_every_write_tool` reads the hints from all three servers and
+    requires the non-read-only set to be exactly the two `NEVER_EXPOSED` tools.
+  * `eval/results/tools_list/*.json` records the annotations as listed.
+* Annotations are hints, not access controls. The write gate is enforced in server code and in the agent's
+  tool filter.
