@@ -1,0 +1,11 @@
+{
+ "export_id": "task1-fy2021-under-capture-v1",
+ "file": "under_capture_fy2021.csv",
+ "sha256": "d25d77d362eddb4446a33b0ca94c6d930aff5303a666516a3ef5de35c445f31f",
+ "source_repo": "https://github.com/conroyriodss/uac-nitrd",
+ "source_commit": "7bc428aa6233b4ce561670d6fe4e289506f373c4",
+ "source_path": "build/task1_fy2021_under_capture_v1/under_capture_fy2021.csv",
+ "generator": "tools/export_task1_fy2021_under_capture_v1.py",
+ "snapshot": "static FY2021 snapshot, not a live query",
+ "score_model": "arm A, task1-fingerprint-v1 (TF-IDF + logistic regression, FY2021 labels), out-of-fold log-odds; not the deployed nitrd-classifier and not a probability"
+}

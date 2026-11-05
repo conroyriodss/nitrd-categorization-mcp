@@ -52,6 +52,7 @@ from reviewer_portal import (
     cohort,
     data,
     decisions,
+    guide,
     outputs_client,
     routing,
     selector,
@@ -106,6 +107,9 @@ button[disabled]{opacity:.5}
 textarea{width:100%;box-sizing:border-box}
 .form-error{color:#8a1c1c;font-weight:600}
 #review-filters select{min-width:12rem}
+.why-review{border-left:4px solid #b58100;background:#fff8e1;padding:.25rem .5rem}
+.two-models{border-left:4px solid #1c4f8a;background:#eaf1fb;padding:.25rem .5rem}
+details.explainer,details.try-this,details.task3,#persona-legend{margin:.5rem 0}
 """.strip()
 
 SCRIPT = """
@@ -451,7 +455,10 @@ async def select_page(request: Request) -> Response:
     except OutputsError as exc:
         return unavailable(request, exc)
     body = (
-        _selector_form(fy, code, activity, ic_items, activity_items, cached)
+        guide.explainer()
+        + guide.workflow1_intro()
+        + guide.try_this()
+        + _selector_form(fy, code, activity, ic_items, activity_items, cached)
         + notice
         + preview
     )
@@ -912,8 +919,13 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
         f'<p class="call" data-suggestion="{esc(p.suggestion)}" '
         f'data-band="{esc(band)}">Classifier: <strong>{call}</strong>, {prob}, '
         f"band <code>{esc(band)}</code> (threshold {p.threshold:.3f}, model "
-        f"{esc(p.model_id)})</p>",
+        f"{esc(p.model_id)}: the deployed classifier, validated on the FY2019 "
+        "validation half)</p>",
     ]
+    top_codes = (
+        [m.pca for m in ev.subcategory.top_pcas] if p.suggestion == "nitrd" else []
+    )
+    parts.append(guide.why_review(p.suggestion, p.probability, band, top_codes))
     if p.suggestion == "nitrd":
         # As stored: the evidence already holds the top cohort.TOP_PCAS (2);
         # the page does not re-cut it.
@@ -958,7 +970,7 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
     parts.append(
         '<details class="rationale" open><summary>Rationale</summary>'
         f'{terms}<p class="core-kind" data-continuing="{continuing}">'
-        f"{core_kind}</p>{year_table}</details></section>"
+        f"{core_kind}</p>{year_table}</details>{guide.card_help()}</section>"
     )
     return "".join(parts)
 
@@ -1092,7 +1104,8 @@ def _card(
         f"({esc(view.sel.ic_code)}) | Activity: {esc(view.sel.activity)} | "
         f'FY{r.fy} | <a class="reporter" href="{esc(reporter_url(r.appl_id))}" '
         'rel="noopener">RePORTER</a></p>'
-        f'<p class="routing">Assigned to <strong>{esc(a.reviewer_id)}</strong> '
+        + guide.sample_note(r.fy, core)
+        + f'<p class="routing">Assigned to <strong>{esc(a.reviewer_id)}</strong> '
         f"({esc(submission.tier_name(a))}, {esc(a.reviewer_role)}). State: "
         f'<span class="state">{esc(state)}</span></p>'
         + _classification(r, view)
@@ -1179,8 +1192,12 @@ async def review_page(request: Request) -> Response:
         listing = "".join(cards)
     body = (
         f"<h1>Review: {esc(sel.label())}</h1>"
+        + guide.explainer(open_=False)
+        + guide.try_this()
         + note
         + _summary(records)
+        + guide.persona_legend(active_personas())
+        + guide.task3_panel(sel.fy, sel.ic, sel.activity)
         + _filters(view, records)
         + identity_note
         + f'<p id="shown" data-shown="{len(cards)}">Showing {len(cards)} of '

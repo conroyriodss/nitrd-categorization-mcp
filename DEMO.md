@@ -21,7 +21,7 @@ HTTP ([`e2e_778bd3ab`](eval/results/runs/20261103T1358Z_e2e_778bd3ab/report.log)
 | Award | Story | Parent probability (threshold 0.389) | Routed to |
 | --- | --- | --- | --- |
 | 10506013, U24AI171008, NIAID | confident | 0.986, suggests NITRD | `demo_po_niaid_01` (program officer tier) |
-| 10388671, R01NR013912, NINR | borderline | 0.580, suggests NITRD; AI not in the top 3 PCAs | `demo_po_ninr_01` (program officer tier) |
+| 10388671, R01NR013912, NINR | borderline | 0.580, suggests NITRD; AI not in the top 2 PCAs | `demo_po_ninr_01` (program officer tier) |
 | 10445135, R01CA258987, NCI | likely negative | 0.275, suggests not NITRD (a model miss: RCDC says NITRD) | `demo_ic_rep_nci` (IC NITRD representative: no NCI award is assigned to a demo program officer, so routing falls back one tier) |
 
 The story: the reviewer confirms the confident case, corrects the borderline case's PCAs, and
@@ -147,11 +147,15 @@ with `scripts/export_evidence.py`.
 
 ## Path C: the operator pages (human UI), FY2021 cohort
 
+The operator pages also carry a "Try this" panel with four demos. The three single-award demos
+are FY2019 validation-half awards, chosen by a rule committed before they were scored
+([DEMOS.md](DEMOS.md)); the fourth is this cohort.
+
 1. `https://mcp-nitrd-reviewer-portal-7474654188777746.aws.databricksapps.com/operator/select`.
-2. Choose FY **2021**, IC **NIBIB**, activity **R35**: a small cohort, so no large-cohort
+2. Choose FY **2021**, IC **NIBIB**, activity **U24** (14 records): a small cohort, so no large-cohort
    confirmation is needed. The preview lists the projects.
 3. **Submit**. The page streams one line per project as each is classified and routed, then
-   redirects to `/operator/review?fy=2021&ic=NIBIB&activity=R35`.
+   redirects to `/operator/review?fy=2021&ic=NIBIB&activity=U24`.
 4. On the review page, pick a persona in **Acting as**. Only the nine active personas are listed;
    each shows how many cards are assigned to it here. Filter by tier or state if needed.
 5. On a card assigned to the acting persona, choose a decision, write a rationale (and, for an

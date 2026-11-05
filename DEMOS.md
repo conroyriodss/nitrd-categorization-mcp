@@ -46,4 +46,26 @@ here.
 
 ## Selected awards
 
-_Pending: filled in by running the rule above._
+The rule was committed in `2809262` and run once afterwards, on 2026-11-05 at about 17:20 UTC. It was run with
+scikit-learn 1.9.1, the deployed classifier's pin, on the deployed artifact `nitrd-parent-v2-ba10594d9581`
+(threshold 0.389). The pool had 10,224 FY2019 validation-half records from NIAID, NINR and NCI.
+
+**9722313 is not in the validation half.** Its core, R01NR013912, falls in the threshold-selection half: it was
+used to choose the threshold, not to fit the model, but it is not out-of-sample. The rule's Demo 2 fallback
+therefore applied. Ties were ordered by closeness to the threshold, then cohort size, then `appl_id`.
+
+| Demo | appl_id | Core | Cohort (FY2019, IC, activity) | Records in cohort | Official listing | Probability | Band | Model vs listing |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 confident | 9730348 | UH2AI132339 | FY2019 NIAID UH2 | 5 | NITRD | 0.990 | high | agrees |
+| 2 borderline | 10018446 | ZIENR000016 | FY2019 NINR ZIE | 1 | NITRD | 0.409 | positive near threshold | agrees, by 0.02 |
+| 3 disagrees | 9717098 | K24CA194251 | FY2019 NCI K24 | 10 | NITRD | 0.019 | clear negative | **disagrees: a confident miss** |
+| 4 end to end | (cohort) | | FY2021 NIBIB U24 | 14 | | | | |
+
+Titles: 9730348, "Integrating SWIFT tools to enhance flow data analysis, exploration and visualization in
+Im..." (first 90 characters); 10018446, "NINR Intramural Research Training Programs"; 9717098, "Mentoring And Research In
+Patient-Oriented Breast Cancer Diagnosis". In this pool, 29 NCI awards listed NITRD fall in the clear-negative band.
+
+The story: the reviewer confirms Demo 1. On Demo 2, the call clears the threshold by only 0.02, so the reviewer
+checks the PCAs. On Demo 3, the official listing says NITRD and the model says clearly not: the reviewer reads the
+abstract and decides. Overriding the listing, or the model, is the human's call. The model proposes; the person
+decides.
