@@ -75,6 +75,49 @@ Before any non-demonstration use, reviewer actions would need authenticated
 identities, per-action authorization, and an audit trail bound to the
 authenticated principal, not to a parameter.
 
+## Three trust boundaries
+
+The suite crosses three boundaries. Each has different controls, and different gaps.
+
+| Boundary | What sits there | What this repository controls | What it cannot control |
+| --- | --- | --- | --- |
+| **Server** | The three MCP servers (`src/nih_grants_outputs`, `src/nitrd_classifier`, `src/reviewer_portal`) and the sandbox tables | Closed Pydantic input and output schemas; the reserved-year guard before any SQL; writes only from `reviewer-portal`, only to three sandbox tables, held there by table `CHECK` constraints; idempotent submits; one transaction per request; sanitized error messages | Who the caller really is: `reviewer_id` is a parameter, not an authenticated identity |
+| **Client host** | The MCP host and any LLM agent driving it: MCP Inspector, a chat host, the planned agent | Tool descriptions and annotations (`idempotentHint` on the write tools); the read, infer and write split, so a host can gate `reviewer-portal` on confirmation | Whether a human confirmed a write; whether the agent follows instructions hidden in abstracts or publication metadata (untrusted content returned by the read tools) |
+| **Hosting** | Databricks Apps, workspace OAuth, Unity Catalog grants, the SQL warehouse, App logs | One service principal per App; grants scoped per App (`SELECT` on read tables; `SELECT, MODIFY` on the three sandbox tables for the portal only; [deploy/databricks/README.md](deploy/databricks/README.md)) | Platform behaviour itself. The App does not act with the caller's data permissions, and the three Apps have not been tested as separate authorization domains |
+
+## Enforced controls
+
+These are enforced in code or in the tables, not only described:
+
+- **Sandbox `CHECK` constraints.** Every row in `review_requests`, `review_events` and `routing_events` must have
+  `sandbox = true` and the label "Not RCDC / demonstration only", or the INSERT fails
+  ([`scripts/create_review_tables.sql`](scripts/create_review_tables.sql): `rr_sandbox`, `rr_label`, `re_sandbox`,
+  `re_label`, `ro_sandbox`, `ro_label`). Further constraints hold the state consistent: allowed statuses, tiers and
+  event types; override rows must carry corrections and other rows must not; classification fields must form a
+  valid state; and a request whose classification failed cannot be decided.
+- **Idempotency.** `request_id` is a UUIDv5 of the request content, or of the caller's `idempotency_key`. A
+  retry returns the same record with `created=false`, and reusing a key with a different payload is refused.
+  Decisions are final: a second decision on the same request is refused.
+- **Reserved-year guard.** `require_build_fy()` ([`src/shared/guardrail.py`](src/shared/guardrail.py)) refuses
+  FY2022-FY2026, and any year after FY2021, before any SQL runs. It is called by `outputs_find_cohort`, the
+  portal's cohort selector and the prior-year lookup. The classifier tools take text, not a fiscal year, so the
+  guard does not apply to them.
+- **No delete tool.** None of the 14 tools deletes anything. `DELETE` statements appear only in test and e2e
+  cleanup code, run by the owner or the e2e runner. The portal's service principal holds `MODIFY` on the sandbox
+  tables, so deletion is prevented by the tool surface, not by the grants.
+- **Audit trail.** Every submit, routing, classification attempt and decision writes an event row. The code only
+  ever INSERTs into `review_events` and `routing_events`; the only UPDATEs are to status and classification
+  fields on `review_requests`. The operator pages also log one JSON line per decision or retry, with the persona
+  acted as and the signed-in workspace user side by side. The trail is not tamper-evident: a principal with
+  `MODIFY` can change it.
+- **No PII in the data written.** The read tables are public ExPORTER, iCite and PubMed data. PI names are public
+  award fields, shown on review cards but not written to the sandbox tables. Personas are fictional, and their
+  award assignment is synthetic. The sandbox tables record persona IDs (`requested_by`, `decided_by`,
+  `actor_id`), not people. The non-public PCC column and the PO Name column were removed from the uac-nitrd
+  fixture (see the public-repository hygiene section below). Two exceptions: the free-text `decision_rationale`
+  holds whatever a reviewer types, and the operator log records the signed-in workspace user's email, on purpose,
+  in the App logs only.
+
 ## Known limitations
 
 - **Mid-turn write persistence.** During development, a write started in a
@@ -165,6 +208,33 @@ swept for:
   `uac-witness` records), never key contents. No FY2026 award-level NITRD membership is in any
   repository. The FY2026 file in `uac-nitrd` holds model predictions made before that membership
   was public.
+
+## Pilot to production: Harness 11-12
+
+This is a pilot. The runs so far (parity, e2e, lifecycle) are scripted tool calls. No model has yet chosen tools on
+its own. Harness 11-12 is the planned agent evaluation. It puts one agent over the three servers, with a human
+approving every write, and it will be pre-registered before it runs. It has two suites:
+
+- **Tool selection.** Ten scenarios, each with its expected calls declared in advance.
+- **Adversarial.** Indirect prompt injection placed in content the read tools return, such as abstracts and
+  publication metadata. The design follows AgentDojo (Debenedetti et al., "AgentDojo: A Dynamic Environment to
+  Evaluate Prompt Injection Attacks and Defenses for LLM Agents", arXiv:2406.13352) and InjecAgent (Zhan et al.,
+  "InjecAgent: Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents", Findings of
+  ACL 2024). Attacks cover direct harm (an unrequested portal write or decision) and data stealing (disclosing
+  credentials or identifiers). Results are reported as attack-success rate, alongside utility with and without
+  attack.
+
+**Not measured until the agent runs:** resistance to prompt injection; credential and identifier disclosure; writes
+an agent makes without confirmation; tool-selection accuracy; and isolation between the three Apps. Fault injection
+for cancelled turns and lost responses is not measured either. Until then, none of these may be claimed.
+
+**Before production use,** the gaps above, the identity model and the known limitations would need closing:
+
+- authenticated reviewer identity, with per-action authorization;
+- an audit trail bound to the authenticated principal and protected from change;
+- cleanup moved to a separate principal, so the serving App cannot delete;
+- `readOnlyHint` and `destructiveHint` annotations on every tool;
+- the Harness 11-12 results, published with their pre-registration.
 
 ## Reporting a vulnerability
 

@@ -28,6 +28,21 @@ README covers what it does; [DEMO.md](DEMO.md) covers how to drive it.
 * **The portal reuses one rule set.** Its HTML operator pages call the same `decisions` and
   `cohort` functions as the MCP tools. A refusal is the same refusal from either surface.
 
+## Three trust boundaries
+
+```
+  CLIENT HOST    MCP host / LLM agent  -- sees untrusted abstract text; decides whether a human confirms a write
+       |  MCP over streamable HTTP (workspace OAuth)
+  HOSTING        Databricks Apps: one service principal per App; Unity Catalog grants per App; App logs
+       |
+  SERVER         3 MCP servers: closed schemas, reserved-year guard before SQL, writes only from reviewer-portal
+                 -> 3 sandbox tables held by CHECK constraints (sandbox = true, demonstration label)
+```
+
+The server boundary is where this repository enforces controls. The client host decides confirmation and is
+exposed to injected content; the hosting boundary sets identity and grants. Controls, gaps and the planned
+adversarial evaluation (Harness 11-12) are in [SECURITY.md](SECURITY.md#three-trust-boundaries).
+
 ## Tools as goals
 
 Each tool is named and described for one thing a user wants, not for a table or an endpoint. The
@@ -121,4 +136,8 @@ Design rules this follows:
 * There is no end-user authentication: personas are chosen, not proven. The operator log records
   the signed-in workspace user next to the persona acted as ([SECURITY.md](SECURITY.md)).
 * Agent-level evaluation (a model choosing tools unaided) has not been run; the runs above are
-  scripted calls.
+  scripted calls. Harness 11-12 (tool selection plus AgentDojo / InjecAgent-style injection,
+  [SECURITY.md](SECURITY.md#pilot-to-production-harness-11-12)) is planned. Until it runs, injection
+  resistance, credential disclosure and agent tool-selection accuracy are not measured.
+* The App service principal holds `MODIFY` on the sandbox tables. "No delete" is a property of the
+  tool surface, not of the grants, and the audit trail is not tamper-evident.
