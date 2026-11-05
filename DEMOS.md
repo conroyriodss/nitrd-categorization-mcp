@@ -106,3 +106,58 @@ The story: the reviewer confirms Demo 1. On Demo 2, the call clears the threshol
 checks the PCAs. On Demo 3, the official listing says NITRD and the model says clearly not: the reviewer reads the
 abstract and decides. Overriding the listing, or the model, is the human's call. The model proposes; the person
 decides.
+
+## Run 2 (rule as amended in `a868e7f`; current picks)
+
+**Setup.**
+* Amendment 1 was committed in `a868e7f` (2026-11-05 21:25 UTC). The rule was then run once, at about
+  21:35 UTC.
+* Same environment as run 1: scikit-learn 1.9.1, artifact `nitrd-parent-v2-ba10594d9581`, threshold 0.3894.
+* The universe filter is uac-nitrd `workflow/qvr_universe.py` at `7bc428a`, loaded unchanged.
+
+**Run 1 reproduced without the filter.** The same code with the filter switched off gave run 1's pool of 10,224
+records, the same three picks with the same probabilities, and the same 29.
+
+**The filtered pool.** 6,536 records remain. The filter removed 2,665 subprojects, 592 intramural records and
+431 contracts. It removed no other-transaction, interagency or Clinical Center records from this pool.
+
+**Demos 1 and 3 meet the filter and stand.**
+* 9730348 (UH2AI132339) and 9717098 (K24CA194251) are both extramural grants with no subproject.
+* Their cohorts are entirely in universe: FY2019 NIAID UH2, 5 of 5 records; FY2019 NCI K24, 10 of 10.
+* The amended rule would also have picked both again.
+
+**Demo 4 meets the filter.** All 14 records of the FY2021 NIBIB U24 cohort are in universe.
+
+**Demo 2.** 10018446 fails the filter (`2_intramural`). So does run 1's runner-up 10018449 (ZIINR000037). The
+re-run's Demo 2 is **9722452**:
+* distance from the threshold 0.087;
+* the next NINR record is 9778356 at 0.160, so no tie applied.
+
+| Demo | appl_id | Core | Cohort (FY2019, IC, activity) | Records in cohort | Official listing | Probability | Band | Model vs listing |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 confident | 9730348 | UH2AI132339 | FY2019 NIAID UH2 | 5 | NITRD | 0.990 | high | agrees |
+| 2 borderline | 9722452 | R21NR018532 | FY2019 NINR R21 | 45 | not NITRD (categorized) | 0.476 | positive near threshold | **disagrees: suggests NITRD near the threshold** |
+| 3 adjudication | 9717098 | K24CA194251 | FY2019 NCI K24 | 10 | NITRD | 0.019 | clear negative | **disagrees: confident disagreement** |
+| 4 end to end | (cohort) | | FY2021 NIBIB U24 | 14 | | | | |
+
+"Records in cohort" counts every FY2019 record of the (IC, activity) cohort in the universe, as the operator page
+submits it, not only validation-half records. Run 1 counted the same way.
+
+**Titles.**
+* 9722452: "Passive Data to Improve Outcomes in Advanced Cancer".
+* 9730348 and 9717098: as in run 1.
+
+**Sizing the disagreement space.** In the FY2019 validation-half NCI pool, 29 awards listed NITRD fall in the
+clear-negative band, the figure run 1 reported. 20 of them are in the evaluation universe; the other 9 are out of
+scope. The operator page cites 20, with 29 before the filter.
+
+**The story.**
+* **Demo 1:** the reviewer confirms.
+* **Demo 2:** the model suggests NITRD by 0.087 over the threshold. The listing says not NITRD. The reviewer
+  checks the abstract and the 2 proposed PCAs.
+* **Demo 3 is an adjudication case, not a model failure.** The official listing says NITRD and the model says
+  clearly not. The reviewer reads the abstract and decides. Either the listing or the model could be the one in
+  error, and an override records the reviewer's call.
+
+The model proposes; the person decides. Two of the three single-award demos now disagree with the listing. That is
+the rule's output, reported as it came out.

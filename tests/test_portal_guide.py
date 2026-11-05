@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -17,9 +18,27 @@ from shared.guardrail import MAX_BUILD_FY, RESERVED_FYS
 ROOT = Path(__file__).resolve().parents[1]
 DEMO_CORES = {
     9730348: "UH2AI132339",
-    10018446: "ZIENR000016",
+    9722452: "R21NR018532",
     9717098: "K24CA194251",
 }
+#: Run 1's Demo 2, rejected by DEMOS.md Amendment 1 (intramural, out of universe).
+REJECTED = {10018446: "ZIENR000016"}
+
+
+def _instrument(core: str) -> str:
+    """Rule 2 of uac-nitrd task1-universe-qvr-recon-v1 (workflow/qvr_universe.py)."""
+    a = core[:3]
+    if a.startswith("Z"):
+        return "intramural"
+    if a == "75N" or a.startswith("HHS") or re.match(r"^N\d\d$", a) or a[:1].isdigit():
+        return "contract"
+    if a.startswith("OT"):
+        return "other_transaction"
+    if re.match(r"^Y\d\d$", a):
+        return "interagency"
+    return "grant"
+
+
 VALIDATION_JSON = ROOT / "src/nitrd_classifier/resources/parent_model_validation.json"
 
 
@@ -54,6 +73,31 @@ def test_demo_selection_facts():
     demos_md = (ROOT / "DEMOS.md").read_text()
     for appl in DEMO_CORES:
         assert str(appl) in demos_md
+
+
+def test_demos_are_in_the_evaluation_universe():
+    """Amendment 1: every single-award demo is an extramural grant core."""
+    shown = {d["appl_id"] for d in guide.DEMOS if d["appl_id"]}
+    assert shown == set(DEMO_CORES)
+    for core in DEMO_CORES.values():
+        assert _instrument(core) == "grant", core
+    for appl, core in REJECTED.items():
+        assert appl not in shown and _instrument(core) == "intramural"
+
+
+def test_rejection_is_on_the_record():
+    demos_md = (ROOT / "DEMOS.md").read_text()
+    assert "Amendment 1" in demos_md and "task1-universe-qvr-recon-v1" in demos_md
+    # The original result stays visible, with the reason it was rejected.
+    assert "| 2 borderline | 10018446 | ZIENR000016 |" in demos_md
+    assert "It is outside the system's declared scope" in demos_md
+    assert "run 1's Demo 2 agreed with the official listing" in demos_md
+
+
+def test_demo3_framed_as_adjudication():
+    d3 = next(d for d in guide.DEMOS if d["n"] == 3)
+    assert "adjudicat" in d3["story"] + d3["look"]
+    assert "model miss" not in d3["look"] and "20 " in d3["look"]
 
 
 def test_try_this_links_pass_the_selector_checks():

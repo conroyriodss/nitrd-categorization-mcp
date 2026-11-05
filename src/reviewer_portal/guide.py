@@ -108,7 +108,9 @@ def workflow1_intro() -> str:
 
 # --- Try this ----------------------------------------------------------------
 
-#: DEMOS.md: selection rule committed (2809262) before any award was scored.
+#: DEMOS.md: selection rule committed (2809262) before any award was scored;
+#: Amendment 1 (a868e7f) restricts the pool to the evaluation universe
+#: (task1-universe-qvr-recon-v1). Demo 2 is run 2's pick; Demos 1, 3, 4 stand.
 DEMOS: tuple[dict[str, Any], ...] = (
     dict(
         n=1,
@@ -124,11 +126,12 @@ DEMOS: tuple[dict[str, Any], ...] = (
         n=2,
         fy=2019,
         ic="NR",
-        activity="ZIE",
-        appl_id=10018446,
+        activity="R21",
+        appl_id=9722452,
         story="borderline",
-        look="p = 0.409, just over the 0.389 threshold, listing NITRD. Check the "
-        "2 proposed PCAs before approving, or override them.",
+        look="p = 0.476, over the 0.389 threshold (positive_near_threshold), but "
+        "the official listing says not NITRD. Read the abstract and check the 2 "
+        "proposed PCAs, then approve, reject or override.",
     ),
     dict(
         n=3,
@@ -136,10 +139,13 @@ DEMOS: tuple[dict[str, Any], ...] = (
         ic="CA",
         activity="K24",
         appl_id=9717098,
-        story="model disagrees with the listing",
+        story="listing disagrees with the model: adjudicate",
         look="p = 0.019, band clear_negative, but the official listing says "
-        "NITRD: a confident model miss. Read the abstract and decide; an "
-        "override records your own call.",
+        "NITRD. An adjudication case, not a model failure: either the listing "
+        "or the model could be in error. Read the abstract and decide; an "
+        "override records your call. In the FY2019 validation half, 20 "
+        "in-universe NCI awards listed NITRD fall in clear_negative (29 before "
+        "the universe filter).",
     ),
     dict(
         n=4,

@@ -147,9 +147,12 @@ with `scripts/export_evidence.py`.
 
 ## Path C: the operator pages (human UI), FY2021 cohort
 
-The operator pages also carry a "Try this" panel with four demos. The three single-award demos
-are FY2019 validation-half awards, chosen by a rule committed before they were scored
-([DEMOS.md](DEMOS.md)); the fourth is this cohort.
+The operator pages also carry a "Try this" panel with four demos; the fourth is this cohort. The
+three single-award demos are FY2019 validation-half awards, chosen by a rule committed before
+they were scored ([DEMOS.md](DEMOS.md)). Amendment 1 restricts that rule to the evaluation
+universe. Under it, Demo 2 was re-picked as 9722452 (R21NR018532), and Demos 1 and 3 stand. Demo 3
+(9717098, K24CA194251) is an adjudication case: the listing says NITRD and the model says clearly
+not, and the reviewer decides.
 
 1. `https://mcp-nitrd-reviewer-portal-7474654188777746.aws.databricksapps.com/operator/select`.
 2. Choose FY **2021**, IC **NIBIB**, activity **U24** (14 records): a small cohort, so no large-cohort
