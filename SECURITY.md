@@ -82,7 +82,7 @@ The suite crosses three boundaries. Each has different controls, and different g
 | Boundary | What sits there | What this repository controls | What it cannot control |
 | --- | --- | --- | --- |
 | **Server** | The three MCP servers (`src/nih_grants_outputs`, `src/nitrd_classifier`, `src/reviewer_portal`) and the sandbox tables | Closed Pydantic input and output schemas; the reserved-year guard before any SQL; writes only from `reviewer-portal`, only to three sandbox tables, held there by table `CHECK` constraints; idempotent submits; one transaction per request; sanitized error messages | Who the caller really is: `reviewer_id` is a parameter, not an authenticated identity |
-| **Client host** | The MCP host and any LLM agent driving it: MCP Inspector, a chat host, the planned agent | Tool descriptions and annotations (`idempotentHint` on the write tools); the read, infer and write split, so a host can gate `reviewer-portal` on confirmation | Whether a human confirmed a write; whether the agent follows instructions hidden in abstracts or publication metadata (untrusted content returned by the read tools) |
+| **Client host** | The MCP host and any LLM agent driving it: MCP Inspector, a chat host, the planned agent | Tool descriptions and annotations (every tool declares `readOnlyHint`, `destructiveHint` and `idempotentHint`); the read, infer and write split, so a host can gate `reviewer-portal` on confirmation | Whether a human confirmed a write; whether the agent follows instructions hidden in abstracts or publication metadata (untrusted content returned by the read tools) |
 | **Hosting** | Databricks Apps, workspace OAuth, Unity Catalog grants, the SQL warehouse, App logs | One service principal per App; grants scoped per App (`SELECT` on read tables; `SELECT, MODIFY` on the three sandbox tables for the portal only; [deploy/databricks/README.md](deploy/databricks/README.md)) | Platform behaviour itself. The App does not act with the caller's data permissions, and the three Apps have not been tested as separate authorization domains |
 
 ## Enforced controls
@@ -233,7 +233,6 @@ for cancelled turns and lost responses is not measured either. Until then, none 
 - authenticated reviewer identity, with per-action authorization;
 - an audit trail bound to the authenticated principal and protected from change;
 - cleanup moved to a separate principal, so the serving App cannot delete;
-- `readOnlyHint` and `destructiveHint` annotations on every tool;
 - the Harness 11-12 results, published with their pre-registration.
 
 ## Reporting a vulnerability
