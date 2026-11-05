@@ -1,0 +1,10 @@
+# Databricks App runtime deps for mcp-nitrd-agent (resolved together 2026-11-05).
+openai-agents==0.24.0
+openai==3.46.0
+mcp==2.3.0
+databricks-sdk==0.157.0
+httpx==0.28.1
+pydantic==2.14.3
+starlette==1.7.0
+uvicorn==0.54.0
+anyio==4.15.1
