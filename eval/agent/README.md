@@ -67,3 +67,23 @@ afterwards.
 
 Results are exported to `eval/results/agent/` after the run, with the commit, the model,
 the pins above and every run's tool calls.
+
+### Void runs (kept in the table, not evidence)
+
+Rows in `users.conroyri.nitrd_hackathon_v1_agent_eval_runs` are never deleted. A run
+that should not count is listed here, with the reason, and stays in the table.
+
+* **Run `c1ab24d7-aef3-4a7b-af5d-8dcfae2267b2` is VOID.**
+  * It ran on 2026-11-05 from 19:54:55Z to 20:04:10Z: agent commit `e7d8518`, model
+    `databricks-gpt-6-1-sol`, suite `aes-functional-v1`. It recorded 50/50 passes, I1-I3
+    true and rows_left 0/0/0.
+  * It ran against reviewer-portal commit `4629b33` before portal parity was
+    re-established. The last parity run, 5704d50c, verified portal `eb64604` only.
+    4629b33 changed `portal_get_reviewer_assignment` output in commit 2c6a668 and
+    `src/shared/sql.py` in ceb81c8.
+  * It also ran without supervision. The app started it automatically on boot
+    (`NITRD_AGENT_AES_ON_START=1`), not as a supervised one-shot start, and the agent
+    work had not been approved to run. That breaks the one-shot discipline used
+    everywhere else in this project.
+  * A re-run will supersede it once portal parity has been re-run and re-cited.
+  * Its numbers are not cited anywhere as a result.
