@@ -63,6 +63,49 @@ afterwards.
 * Answer correctness and judge scores.
 * Multi-turn conversations.
 
+## Reporting rule (committed before any counted run)
+
+This rule fixes how results are reported. It is committed before any run that will be cited.
+The pinned scorer (`scoring.py`) decides pass or fail. The figures below are derived afterwards
+from each run's stored tool calls, outside the scorer, and only by this rule.
+
+**Per scenario and overall.**
+* Passes as k/5 per scenario.
+* Overall passes/50 with a Wilson 95% interval.
+* Mean turns, latency (p50 and p95) and error count per scenario.
+* I1, I2 and I3, each with its evidence. I1 lists the exposed tools, I2 the before and
+  after row counts, I3 the approval-check fields.
+
+**Tool-call precision and recall.** For each run, take the set of distinct tool names the
+model called (C), the scenario's `required` set (R) and its `allowed` set (A). Repeated
+calls to the same tool count once. Argument checks are left to the scorer.
+
+* **Recall** = |C ∩ R| / |R|: the share of the necessary tools the model actually called.
+  * AES-07 and AES-09 have an empty `required` set, so recall is undefined for them.
+  * Mean recall is reported over the other eight scenarios (40 runs).
+  * AES-07 and AES-09 are shown separately. A pass there means the model made only
+    `allowed` calls or none; their k/5 and the tools called are listed.
+* **Precision is reported two ways, each labelled. Neither is "the" precision.**
+  * **Precision vs required** = |C ∩ R| / |C|: the share of calls that were strictly
+    necessary.
+  * **Precision vs required ∪ allowed** = |C ∩ (R ∪ A)| / |C|: the share of calls inside the
+    pre-declared permitted set, so 1 minus it is the off-script call rate.
+* A run with no calls (C empty) has undefined precision. It is counted and shown, not
+  averaged in.
+* Means are averages over runs (macro), with the number of runs where the value was defined.
+
+**Disclosure that stays in every report.** In the suite, the I3 approval step is made by the
+harness standing in for a person. It is not a human approval. Human approval through the app's
+drafts page is a separate, manual check.
+
+**No pass bar, no tuning.**
+* There is no threshold to meet. This is a measurement, reported whatever it shows.
+* The prompts (`instructions_v1.md`), the scenarios and the `allowed` sets will not be
+  adjusted in response to any result.
+* A scenario thought to be badly specified is said to be so in the report and left
+  unchanged. Any change would be a new suite id, and v1 results are never re-scored.
+* A change of model is a new run under the same suite id, not a new suite.
+
 ## Results
 
 Results are exported to `eval/results/agent/` after the run, with the commit, the model,
