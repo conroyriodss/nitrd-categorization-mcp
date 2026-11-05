@@ -23,13 +23,29 @@ to under 0.7; negative near-threshold from 0.1 to under 0.389; clear negative un
 
 A cohort is (FY2019, administering IC, activity code), the unit the operator pages submit.
 
+**Universe filter (Amendment 1, below).** Every demo record must also be in the evaluation universe. This is the
+reconstructed QVR filter `task1-universe-qvr-recon-v1` (uac-nitrd `workflow/qvr_universe.py`, at uac-nitrd
+`7bc428a`), applied exactly as written there to `subproject_id`, `core_project_num` and `administering_ic`:
+
+1. Drop subprojects (`subproject_id` not empty).
+2. Keep extramural grants and administrative supplements. Using the first three characters of `core_project_num`,
+   drop:
+   * intramural awards (Z...);
+   * contracts (75N, HHS..., N plus two digits, or a leading digit);
+   * other transactions (OT...);
+   * interagency agreements (Y plus two digits).
+3. Drop the Clinical Center (`CC`, `CL` or `CLC`).
+
+Cohorts are formed and counted after this filter. Demo 4's FY2021 NIBIB U24 cohort is checked against it too. If
+any of its records fail, that is reported to the owner and the cohort is left unchanged.
+
 * **Demo 1, confident (NIAID).** The award must be listed NITRD and fall in the `high` band. Choose the smallest
   NIAID FY2019 cohort that contains one. Within it, take the highest probability; break ties by the lowest
   `appl_id`.
 * **Demo 2, borderline (NINR).** 9722313 (R01NR013912, the FY2019 record of the earlier borderline core). It is
-  used only if its core is in the validation half. Otherwise, use the NINR record in the validation half with the
-  probability closest to the threshold, from the smallest such cohort. Its agreement with the listing is reported
-  as it comes out.
+  used only if its core is in the validation half. Otherwise, use the NINR record in the validation half and the
+  universe with the probability closest to the threshold, from the smallest such cohort. Ties go by closeness to
+  the threshold, then cohort size, then `appl_id`. Its agreement with the listing is reported as it comes out.
 * **Demo 3, model disagrees with the listing (NCI).** The award must be listed NITRD and fall in `clear_negative`:
   a confident miss. If there is none, use a listed-NITRD award in `negative_near_threshold`. Choose the smallest
   NCI FY2019 cohort that contains one; within it, take the lowest probability, then the lowest `appl_id`. Demo 3
@@ -44,7 +60,28 @@ The picks and their probabilities are recorded below once the rule has been run.
 probability on a card differs from the recorded one, the card is authoritative and the difference is recorded
 here.
 
-## Selected awards
+## Amendment 1: universe filter (2026-11-05, committed before run 2)
+
+**The gap.** The rule as committed in `2809262` did not require the evaluation universe. Run 1 executed that rule
+correctly, and its Demo 2 was **10018446** (ZIENR000016, "NINR Intramural Research Training Programs", cohort
+FY2019 NINR ZIE, one record). That is an intramural (Z) training award. The QVR-reconstruction universe excludes
+intramural awards, so the portal would never see this record in production. It sat in a cohort of one.
+
+**Why 10018446 was rejected.** It is outside the system's declared scope. The rejection is not about its result:
+run 1's Demo 2 agreed with the official listing (NITRD, probability 0.409, positive near threshold).
+
+**What changes.**
+* The universe filter is added to the pool (see Selection rule).
+* The Demo 2 tie order, which run 1 applied but did not write down, is now written into the rule. Nothing else in
+  the rule changes.
+
+**What does not change.**
+* Demos 1 and 3 stand as picked in run 1; the owner directs that they are not re-picked. Run 2 only checks that
+  both meet the universe filter. If either fails it, run 2 stops and the owner decides; no substitute is picked.
+* Run 2 re-runs the Demo 2 rule once. Its result is reported as it comes out.
+* Run 1's result stays below, unchanged.
+
+## Run 1 (rule `2809262`; Demo 2 rejected by Amendment 1, Demos 1 and 3 stand)
 
 The rule was committed in `2809262` and run once afterwards, on 2026-11-05 at about 17:20 UTC. It was run with
 scikit-learn 1.9.1, the deployed classifier's pin, on the deployed artifact `nitrd-parent-v2-ba10594d9581`
