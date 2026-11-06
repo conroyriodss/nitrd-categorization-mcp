@@ -1,8 +1,10 @@
 # Databricks App: mcp-nitrd-agent (thin agent over the three MCP apps).
 # https://docs.databricks.com/aws/en/dev-tools/databricks-apps/app-runtime
 #
-# Source root = repo root at a commit, sparse: src/nitrd_agent and this folder
-# (copy this file + requirements.txt to the root when staging). Resources:
+# Source root = repo root at a commit, sparse: src/nitrd_agent, this folder, and
+# src/shared/__init__.py + src/shared/identifiers.py (the shared table-identifier
+# validator; stdlib only). Copy this file + requirements.txt to the root when
+# staging. Resources:
 #   mcp-outputs / mcp-classifier / mcp-portal   app, CAN_USE (the three MCP apps)
 #   llm-endpoint     serving endpoint databricks-gpt-6-1-sol, CAN_QUERY
 #   sql-warehouse    CAN_USE (harness only: row counts, AES-10 cleanup, results)

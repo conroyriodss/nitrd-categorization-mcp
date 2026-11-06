@@ -5,51 +5,28 @@ invariant I2, cleanup of the approved AES-10 request by its pre-registered
 request_id (same DELETE as the e2e and lifecycle suites), and one results row
 per suite run. Fixed statement text; every value is a bound parameter.
 
-Table identifiers cannot be bound parameters, so they are interpolated. They come from
-the environment (NITRD_DATA_SCHEMA, NITRD_TABLE_PREFIX), not from requests, and are
-validated once at import against strict identifier patterns: a malformed value raises
-before any SQL text is built. This covers every statement in the module, not only the
-lines a scanner flagged.
+Table identifiers cannot be bound parameters, so they are interpolated. They come
+from the environment (NITRD_DATA_SCHEMA, NITRD_TABLE_PREFIX), not from requests, and
+are validated once at import by shared.identifiers (the same patterns the servers
+use): a malformed value raises before any SQL text is built. This covers every
+statement in the module, not only the lines a scanner flagged.
 """
 
 from __future__ import annotations
 
 import os
-import re
 import time
 from typing import Any
 
-_IDENT = r"[A-Za-z_][A-Za-z0-9_]{0,127}"
-SCHEMA_RE = re.compile(
-    rf"{_IDENT}\.{_IDENT}"
-)  # catalog.schema, unquoted identifiers only
-PREFIX_RE = re.compile(r"[A-Za-z0-9_]{0,64}")
-TABLE_RE = re.compile(rf"{_IDENT}\.{_IDENT}\.{_IDENT}")
+from shared.identifiers import prefix_from_env, schema_from_env, table_name
 
-
-def _validated(name: str, value: str, pattern: re.Pattern) -> str:
-    if not pattern.fullmatch(value):
-        raise ValueError(
-            f"{name}={value!r} is not a valid identifier (expected {pattern.pattern})"
-        )
-    return value
-
-
-SCHEMA = _validated(
-    "NITRD_DATA_SCHEMA", os.getenv("NITRD_DATA_SCHEMA", "users.conroyri"), SCHEMA_RE
-)
-PREFIX = _validated(
-    "NITRD_TABLE_PREFIX",
-    os.getenv("NITRD_TABLE_PREFIX", "nitrd_hackathon_v1_"),
-    PREFIX_RE,
-)
+SCHEMA = schema_from_env()
+PREFIX = prefix_from_env()
 REVIEW_TABLES = tuple(
-    f"{SCHEMA}.{PREFIX}{t}"
+    table_name(SCHEMA, PREFIX, t)
     for t in ("review_requests", "review_events", "routing_events")
 )
-RESULTS = f"{SCHEMA}.{PREFIX}agent_eval_runs"
-for _t in (*REVIEW_TABLES, RESULTS):  # every identifier interpolated below
-    _validated("table", _t, TABLE_RE)
+RESULTS = table_name(SCHEMA, PREFIX, "agent_eval_runs")
 
 COUNT_SQL = {t: f"SELECT count(*) AS n FROM {t}" for t in REVIEW_TABLES}
 DELETE_SQL = {t: f"DELETE FROM {t} WHERE request_id = :rid" for t in REVIEW_TABLES}

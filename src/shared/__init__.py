@@ -1,6 +1,7 @@
 """Shared code for the three NITRD MCP servers.
 
 - tables.py      Databricks table names (public-data tables + sandbox write tables)
+- identifiers.py validation of the schema / prefix / table identifiers put in SQL text
 - responses.py   the error / not-available response shapes every tool returns
 - models.py      field types, vocabularies and base models (closed schemas)
 - sql.py         Databricks SQL Statement Execution access

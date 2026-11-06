@@ -5,20 +5,22 @@ Week 1 from public NIH ExPORTER, iCite and PubMed data; the tools read them and
 make no live API calls. The write tables belong to reviewer-portal only and every
 row carries sandbox = true.
 
-Override the location with NITRD_DATA_SCHEMA / NITRD_TABLE_PREFIX if needed.
+Override the location with NITRD_DATA_SCHEMA / NITRD_TABLE_PREFIX if needed. Both are
+validated at import (shared.identifiers), and so is every table name built here: a
+table identifier cannot be a bound parameter, so validation is the control.
 """
 
 from __future__ import annotations
 
-import os
+from shared.identifiers import prefix_from_env, schema_from_env, table_name
 
-SCHEMA = os.getenv("NITRD_DATA_SCHEMA", "users.conroyri")
-PREFIX = os.getenv("NITRD_TABLE_PREFIX", "nitrd_hackathon_v1_")
+SCHEMA = schema_from_env()
+PREFIX = prefix_from_env()
 
 
 def table(name: str) -> str:
-    """Fully qualified table name, e.g. table('exporter_projects')."""
-    return f"{SCHEMA}.{PREFIX}{name}"
+    """Fully qualified, validated table name, e.g. table('exporter_projects')."""
+    return table_name(SCHEMA, PREFIX, name)
 
 
 # Read tables (loaded in Week 1).
