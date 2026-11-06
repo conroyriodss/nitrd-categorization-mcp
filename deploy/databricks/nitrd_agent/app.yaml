@@ -28,7 +28,8 @@ env:
     value: https://mcp-nitrd-classifier-7474654188777746.aws.databricksapps.com/mcp
   - name: NITRD_AGENT_URL_PORTAL
     value: https://mcp-nitrd-reviewer-portal-7474654188777746.aws.databricksapps.com/mcp
-  # Run the AES functional suite once at startup unless this commit's result
-  # is already recorded in agent_eval_runs.
+  # "1" runs the AES functional suite at startup unless this commit's result is
+  # already recorded in agent_eval_runs. It is "0" because the suite is started
+  # only as a supervised one-shot (void run c1ab24d7, eval/agent/README.md).
   - name: NITRD_AGENT_AES_ON_START
-    value: "1"
+    value: "0"
