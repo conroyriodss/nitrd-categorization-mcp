@@ -1,0 +1,134 @@
+
+Parity | transport=http | 71 cases
+  [pass] outputs_find_projects({"category": "Networking and Information Technology R&D (NITRD)", "fy": 2022, "limit": 5 -> ok/ok 3718B 775/807ms
+  [pass] outputs_find_projects({"category": "Not A Category", "fy": 2022}) -> error/error 218B 869/784ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB"}) -> ok/ok 38870B 698/506ms
+  [pass] outputs_find_cohort({"fy": 2021, "ic": "NIBIB"}) -> ok/ok 7371B 588/492ms
+  [pass] outputs_find_cohort({"fy": 2021}) -> ok/ok 189773B 682/538ms
+  [pass] outputs_find_cohort({"activity": "R35", "fy": 2021, "ic": "NIBIB"}) -> ok/ok 1988B 434/379ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2022, "ic": "NIBIB"}) -> error/error 177B 15/2ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB", "limit": 51}) -> error/error 159B 16/2ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB", "limit": 201}) -> error/error 154B 15/3ms
+  [pass] outputs_get_project_detail({"appl_id": 1}) -> error/error 160B 492/540ms
+  [pass] outputs_get_project_publications({"core_project_num": "Z99ZZ999999"}) -> error/error 211B 1173/1224ms
+  [pass] outputs_get_project_datacite({"core_project_num": "Z99ZZ999999"}) -> ok/ok 855B 720/631ms
+  [pass] outputs_score_project_intensity({"core_project_num": "Z99ZZ999999"}) -> error/error 211B 994/860ms
+  [pass] classifier_classify_parent({"appl_id": 1}) -> error/error 160B 542/437ms
+  [pass] classifier_classify_subcategory({"appl_id": 1}) -> error/error 160B 389/374ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "bogus"}) -> error/error 274B 14/3ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 1}) -> error/error 154B 580/324ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "nobody"}) -> error/error 371B 28/4ms
+  [pass] portal_get_review_history({"appl_id": 1}) -> ok/ok 629B 1194/929ms
+  [pass] portal_submit_review_decision({"decision": "approved", "rationale": "parity probe: request does not exist", "r -> error/error 163B 437/362ms
+  [pass] portal_submit_review_request({"appl_id": 10388671, "evidence": {}, "reviewer_id": "nobody"}) -> error/error 535B 27/4ms
+  [pass] portal_submit_review_request({"appl_id": 1, "evidence": {}, "reviewer_id": "demo_sia"}) -> error/error 271B 26/3ms
+  [pass] outputs_get_project_detail({"appl_id": 10506013}) -> ok/ok 10158B 706/502ms
+  [pass] classifier_classify_parent({"appl_id": 10506013}) -> ok/ok 3063B 597/2218ms
+  [pass] classifier_classify_subcategory({"appl_id": 10506013}) -> ok/ok 2393B 474/525ms
+  [pass] classifier_explain({"appl_id": 10506013, "task": "parent"}) -> ok/ok 6361B 534/741ms
+  [pass] classifier_explain({"appl_id": 10506013, "task": "subcategory"}) -> ok/ok 3431B 463/510ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10506013}) -> ok/ok 1198B 564/449ms
+  [pass] portal_get_review_history({"appl_id": 10506013}) -> ok/ok 643B 938/672ms
+  [pass] outputs_get_project_detail({"appl_id": 10388671}) -> ok/ok 9702B 608/476ms
+  [pass] classifier_classify_parent({"appl_id": 10388671}) -> ok/ok 2983B 499/501ms
+  [pass] classifier_classify_subcategory({"appl_id": 10388671}) -> ok/ok 2157B 498/468ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "parent"}) -> ok/ok 6231B 500/549ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "subcategory"}) -> ok/ok 3151B 502/476ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10388671}) -> ok/ok 1190B 742/464ms
+  [pass] portal_get_review_history({"appl_id": 10388671}) -> ok/ok 643B 1064/679ms
+  [pass] outputs_get_project_detail({"appl_id": 10445135}) -> ok/ok 10078B 626/577ms
+  [pass] classifier_classify_parent({"appl_id": 10445135}) -> ok/ok 2983B 440/444ms
+  [pass] classifier_classify_subcategory({"appl_id": 10445135}) -> ok/ok 2128B 483/498ms
+  [pass] classifier_explain({"appl_id": 10445135, "task": "parent"}) -> ok/ok 6293B 484/500ms
+  [pass] classifier_explain({"appl_id": 10445135, "task": "subcategory"}) -> ok/ok 3114B 446/446ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10445135}) -> ok/ok 1226B 473/430ms
+  [pass] portal_get_review_history({"appl_id": 10445135}) -> ok/ok 643B 900/845ms
+  [pass] outputs_get_project_detail({"appl_id": 10304125}) -> ok/ok 8431B 1134/477ms
+  [pass] classifier_classify_parent({"appl_id": 10304125}) -> ok/ok 3017B 570/472ms
+  [pass] classifier_classify_subcategory({"appl_id": 10304125}) -> ok/ok 2001B 443/457ms
+  [pass] classifier_explain({"appl_id": 10304125, "task": "parent"}) -> ok/ok 6405B 482/449ms
+  [pass] classifier_explain({"appl_id": 10304125, "task": "subcategory"}) -> ok/ok 2943B 484/448ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10304125}) -> ok/ok 1242B 974/652ms
+  [pass] portal_get_review_history({"appl_id": 10304125}) -> ok/ok 643B 855/701ms
+  [pass] outputs_get_project_publications({"core_project_num": "U24AI171008"}) -> ok/ok 54736B 1590/1772ms
+  [pass] outputs_get_project_datacite({"core_project_num": "U24AI171008"}) -> ok/ok 855B 752/704ms
+  [pass] outputs_score_project_intensity({"core_project_num": "U24AI171008"}) -> ok/ok 11861B 1530/1378ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01NR013912"}) -> ok/ok 84655B 1436/1381ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01NR013912"}) -> ok/ok 855B 617/646ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01NR013912"}) -> ok/ok 12739B 1524/1331ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01CA258987"}) -> ok/ok 65080B 1715/1415ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01CA258987"}) -> ok/ok 855B 756/805ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01CA258987"}) -> ok/ok 12233B 1352/1330ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01GM125981"}) -> ok/ok 1159B 1122/852ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01GM125981"}) -> ok/ok 855B 809/660ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01GM125981"}) -> ok/ok 5408B 904/767ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_niaid_01"}) -> ok/ok 459B 559/348ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_ninr_01"}) -> ok/ok 457B 423/310ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_nci_01"}) -> ok/ok 455B 458/309ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_nhlbi_01"}) -> error/error 275B 29/2ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nci"}) -> ok/ok 457B 451/326ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nigms"}) -> ok/ok 461B 417/320ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_niaid"}) -> ok/ok 461B 428/316ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nimh"}) -> ok/ok 459B 479/407ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_sia"}) -> ok/ok 443B 488/340ms
+  review table counts before={'users.conroyri.nitrd_hackathon_v1_review_requests': 0, 'users.conroyri.nitrd_hackathon_v1_review_events': 0, 'users.conroyri.nitrd_hackathon_v1_routing_events': 0} after={'users.conroyri.nitrd_hackathon_v1_review_requests': 0, 'users.conroyri.nitrd_hackathon_v1_review_events': 0, 'users.conroyri.nitrd_hackathon_v1_routing_events': 0}
+.
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+______________________ test_every_tool_matches_in_process ______________________
+------------------------------ Captured log call -------------------------------
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_projects'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_cohort'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_cohort'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_cohort'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_get_project_detail'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_get_project_publications'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_score_project_intensity'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'classifier_classify_parent'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'classifier_classify_subcategory'
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'classifier_explain': {'error_count': 1, 'error_types': ['enum']}
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'portal_get_reviewer_assignment'
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'portal_list_pending_reviews': {'error_count': 1, 'error_types': ['string_pattern_mismatch']}
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'portal_submit_review_decision'
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'portal_submit_review_request': {'error_count': 2, 'error_types': ['missing', 'string_pattern_mismatch']}
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'portal_submit_review_request': {'error_count': 1, 'error_types': ['missing']}
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'portal_list_pending_reviews'
+=========================== short test summary info ============================
+PASSED tests/test_parity.py::test_every_tool_matches_in_process
+1 passed, 4 deselected, 1 warning in 105.91s (0:01:45)
+
+--- stderr ---
+[11/06/26 20:41:46] Error calling tool 'outputs_find_projects'                  
+[11/06/26 20:41:50] Error calling tool 'outputs_find_cohort'                    
+                    Error calling tool 'outputs_find_cohort'                    
+                    Error calling tool 'outputs_find_cohort'                    
+[11/06/26 20:41:51] Error calling tool 'outputs_get_project_detail'             
+[11/06/26 20:41:54] Error calling tool 'outputs_get_project_publications'       
+[11/06/26 20:41:57] Error calling tool 'outputs_score_project_intensity'        
+[11/06/26 20:41:58] Error calling tool 'classifier_classify_parent'             
+[11/06/26 20:41:59] Error calling tool 'classifier_classify_subcategory'        
+[11/06/26 20:41:59] WARNING  Invalid arguments for tool           server.py:1471
+                             'classifier_explain':                              
+                             {'error_count': 1, 'error_types':                  
+                             ['enum']}                                          
+[11/06/26 20:42:00] Error calling tool 'portal_get_reviewer_assignment'         
+[11/06/26 20:42:00] WARNING  Invalid arguments for tool           server.py:1471
+                             'portal_list_pending_reviews':                     
+                             {'error_count': 1, 'error_types':                  
+                             ['string_pattern_mismatch']}                       
+[11/06/26 20:42:03] Error calling tool 'portal_submit_review_decision'          
+[11/06/26 20:42:03] WARNING  Invalid arguments for tool           server.py:1471
+                             'portal_submit_review_request':                    
+                             {'error_count': 2, 'error_types':                  
+                             ['missing',                                        
+                             'string_pattern_mismatch']}                        
+                    WARNING  Invalid arguments for tool           server.py:1471
+                             'portal_submit_review_request':                    
+                             {'error_count': 1, 'error_types':                  
+                             ['missing']}                                       
+[11/06/26 20:43:06] Error calling tool 'portal_list_pending_reviews'            

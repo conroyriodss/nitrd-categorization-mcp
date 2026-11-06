@@ -1,0 +1,127 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-06T20:47:57.169233",
+ "git_commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
+ "kind": "contract",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "ee2b5080-59c8-40e7-9376-71ebf65dd5d9",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id ee2b5080-59c8-40e7-9376-71ebf65dd5d9",
+ "started_at": "2026-11-06T20:47:06.719548",
+ "summary": {
+  "app_started_at": {
+   "nih_grants_outputs": "2026-11-06T20:32:47Z",
+   "nitrd_classifier": "2026-11-06T20:32:43Z",
+   "reviewer_portal": "2026-11-06T20:32:52Z"
+  },
+  "classifier": {
+   "checks": 41,
+   "failed": [],
+   "passed": 41
+  },
+  "cohort": {
+   "checks": 18,
+   "failed": [],
+   "passed": 18
+  },
+  "first_call_by_app": {
+   "nih_grants_outputs": {
+    "first_call_ms": 471.2,
+    "first_call_tool": "outputs_get_project_detail",
+    "later_calls_p50_ms": 446.8
+   },
+   "nitrd_classifier": {
+    "first_call_ms": 631.0,
+    "first_call_tool": "classifier_classify_parent",
+    "later_calls_p50_ms": 486.9
+   },
+   "reviewer_portal": {
+    "first_call_ms": 568.0,
+    "first_call_tool": "portal_list_pending_reviews",
+    "later_calls_p50_ms": 442.7
+   }
+  },
+  "latency_ms_by_tool": {
+   "classifier_classify_parent": {
+    "max_ms": 631.0,
+    "n": 4,
+    "p50_ms": 482.0,
+    "p95_ms": 631.0
+   },
+   "classifier_classify_subcategory": {
+    "max_ms": 662.1,
+    "n": 4,
+    "p50_ms": 467.5,
+    "p95_ms": 662.1
+   },
+   "classifier_explain": {
+    "max_ms": 577.7,
+    "n": 9,
+    "p50_ms": 489.2,
+    "p95_ms": 577.7
+   },
+   "outputs_find_cohort": {
+    "max_ms": 1003.7,
+    "n": 15,
+    "p50_ms": 15.8,
+    "p95_ms": 1003.7
+   },
+   "outputs_find_projects": {
+    "max_ms": 971.3,
+    "n": 7,
+    "p50_ms": 667.2,
+    "p95_ms": 971.3
+   },
+   "outputs_get_project_datacite": {
+    "max_ms": 963.4,
+    "n": 1,
+    "p50_ms": 963.4,
+    "p95_ms": 963.4
+   },
+   "outputs_get_project_detail": {
+    "max_ms": 471.2,
+    "n": 1,
+    "p50_ms": 471.2,
+    "p95_ms": 471.2
+   },
+   "outputs_get_project_publications": {
+    "max_ms": 900.0,
+    "n": 1,
+    "p50_ms": 900.0,
+    "p95_ms": 900.0
+   },
+   "outputs_score_project_intensity": {
+    "max_ms": 846.4,
+    "n": 1,
+    "p50_ms": 846.4,
+    "p95_ms": 846.4
+   },
+   "portal_get_reviewer_assignment": {
+    "max_ms": 536.7,
+    "n": 3,
+    "p50_ms": 515.7,
+    "p95_ms": 536.7
+   },
+   "portal_list_pending_reviews": {
+    "max_ms": 568.0,
+    "n": 11,
+    "p50_ms": 432.8,
+    "p95_ms": 568.0
+   }
+  },
+  "outputs": {
+   "checks": 16,
+   "failed": [],
+   "passed": 16
+  },
+  "portal": {
+   "checks": 15,
+   "failed": [],
+   "passed": 15
+  }
+ }
+}

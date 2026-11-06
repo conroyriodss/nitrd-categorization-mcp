@@ -100,6 +100,54 @@
    "bytes": 4540,
    "sha256": "5fb67563235c1baca22c746cc0b9a6bc4ea8e005ce1251468685fecc57828207"
   },
+  "runs/20261106T2038Z_e2e_e1969ce8/report.log": {
+   "bytes": 21552,
+   "sha256": "d4e4cd8bc83aa092d520412b4780574f7d354cfeb77383bd61a747fef95d411c"
+  },
+  "runs/20261106T2038Z_e2e_e1969ce8/run.json": {
+   "bytes": 4540,
+   "sha256": "53907a224eae7265344a584b350553ff815e62f3f721b7e76e9aaeb37feec040"
+  },
+  "runs/20261106T2038Z_smoke_053b101d/report.log": {
+   "bytes": 987,
+   "sha256": "19d0c3e550586ffeaa6a4593ef460df9d1cd5c8c4fc41b6b8ccae045dac7a2c8"
+  },
+  "runs/20261106T2038Z_smoke_053b101d/run.json": {
+   "bytes": 1996,
+   "sha256": "5161e6f3f59a0629d278ae00431a9d342428f1163bd37818a6aa6315bb176135"
+  },
+  "runs/20261106T2041Z_parity_d2ddab69/report.log": {
+   "bytes": 12343,
+   "sha256": "82704e147a4b0b1cda41c6ff7eafb392e8711dc476e54954db84771c62fffd57"
+  },
+  "runs/20261106T2041Z_parity_d2ddab69/run.json": {
+   "bytes": 1202,
+   "sha256": "aea7782afb6e8a3622230db8c82ec43c98f57faf1d711443709884fed7bf8f97"
+  },
+  "runs/20261106T2043Z_lifecycle_d74756ca/report.log": {
+   "bytes": 5730,
+   "sha256": "21ebdddabcb3ec1fa1e20bf09d8d65f1afed0b6d38b7d752e1b22c59a6b3e587"
+  },
+  "runs/20261106T2043Z_lifecycle_d74756ca/run.json": {
+   "bytes": 828,
+   "sha256": "ec58859be4ad80f8c483142f974c867fb5dfcf795e1b3d36ad32688dea94a91d"
+  },
+  "runs/20261106T2047Z_contract_ee2b5080/report.log": {
+   "bytes": 8213,
+   "sha256": "788ec90b7ce8b277d349fb5fba6356fde3bbf22622a0dc61ec0a08e7ab645721"
+  },
+  "runs/20261106T2047Z_contract_ee2b5080/run.json": {
+   "bytes": 2692,
+   "sha256": "ccda3ce4af69d59f3e993316f7552e88b22b8f2c177c4ce191ca0f85d3ebefb9"
+  },
+  "runs/20261106T2048Z_auth_69cbcac7/report.log": {
+   "bytes": 4651,
+   "sha256": "db095d59b42ea00bad85b88456ec9efa9c028c480345ec539c03b4be95b692a7"
+  },
+  "runs/20261106T2048Z_auth_69cbcac7/run.json": {
+   "bytes": 6133,
+   "sha256": "e68c3c77a96aae95a25a5ff2c6121137f9f742356a03cfa84fdd85faa8895cd3"
+  },
   "step_g/2026-11-02T2058Z_g5_write_mode/g5_wm.log": {
    "bytes": 81508,
    "sha256": "93416b996b1bd6812e7901ec724c3bed970e36ca64b4ac84428e6a6acfa68f7c"
@@ -133,12 +181,12 @@
    "sha256": "358073a0575ca18578fc31370287089efc637c8a7cf19ed05ee0ceddc9d859a2"
   },
   "tool_utilization.json": {
-   "bytes": 3600,
-   "sha256": "09a2cfa0604c58906637d4d31f143e7f79131ce5911603f4d39c73653ace3893"
+   "bytes": 3593,
+   "sha256": "2a7fa86d7fef573d316816955147332d10fab82184b223ad21d4ad585633ec6f"
   },
   "tool_utilization.md": {
-   "bytes": 1711,
-   "sha256": "50aead3510f89989185d8c42480c6f770105ca25744e99925ffad6b447f1e8ea"
+   "bytes": 1709,
+   "sha256": "ad1e071af8807999910e134be53dffb197aafcf5230da878fe74bec886b7023d"
   },
   "tools_list/nih_grants_outputs.json": {
    "bytes": 43826,
@@ -161,11 +209,12 @@
    "sha256": "54b09ab7848579e416eb6660e1d7a4cbbb1b66bbe397e924475f90d789dc691a"
   }
  },
- "generated_utc": "2026-11-06T19:58:06Z",
+ "generated_utc": "2026-11-06T20:53:26Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md.",
-  "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
+  "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted.",
+  "runs/20261106T2048Z_auth_69cbcac7/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
  },
  "redactions": {
   "runs/20261103T1354Z_smoke_a9204bb7/report.log": {
@@ -181,6 +230,14 @@
    "<workspace-host>": 3
   },
   "runs/20261106T1747Z_auth_249358ff/run.json": {
+   "<service-principal-id>": 5,
+   "<workspace-host>": 3
+  },
+  "runs/20261106T2048Z_auth_69cbcac7/report.log": {
+   "<service-principal-id>": 5,
+   "<workspace-host>": 3
+  },
+  "runs/20261106T2048Z_auth_69cbcac7/run.json": {
    "<service-principal-id>": 5,
    "<workspace-host>": 3
   },

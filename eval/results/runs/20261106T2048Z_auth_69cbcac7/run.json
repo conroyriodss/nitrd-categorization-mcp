@@ -1,0 +1,175 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-06T20:48:42.912755",
+ "git_commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
+ "kind": "auth",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "69cbcac7-9082-4ed5-bc10-65ef52db9ba8",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id 69cbcac7-9082-4ed5-bc10-65ef52db9ba8",
+ "started_at": "2026-11-06T20:48:41.780842",
+ "summary": {
+  "candidates": {
+   "config.authenticate()": {
+    "all_ok": true,
+    "apps": {
+     "mcp-nih-grants-outputs": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "486b7f6d-d559-4535-a5f8-d1b3dd392ce4"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "4d0ef715-3cb3-49dd-ad5d-008b9c45b8f9"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-classifier": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "72a780d9-59d3-49f3-84dd-1c0b27961097"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "97c85924-7f6d-4b29-8308-3d7fb79239af"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-reviewer-portal": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"reviewer-portal\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "eb8949ee-03c6-4e5c-b05e-d9a1cdff4bfb"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "afd84062-36ae-45d7-ab19-7b36f00b5d04"
+       },
+       "status": 200
+      }
+     }
+    },
+    "claims": {
+     "aud": [
+      "7474654188777746"
+     ],
+     "client_id": "<service-principal-id>",
+     "exp": 1794001721,
+     "expires_in_s": 3598,
+     "iat": 1793998121,
+     "iss": "https://<workspace-host>/oidc",
+     "jwt": true,
+     "scope": "all-apis",
+     "sub": "<service-principal-id>"
+    }
+   },
+   "config.oauth_token()": {
+    "all_ok": true,
+    "apps": {
+     "mcp-nih-grants-outputs": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "d4b59d86-b45c-4674-8fe0-0ecbc433dee1"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "8f2c9820-c21a-471b-ba22-b998300e2814"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-classifier": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "1287b24d-3b3b-41b9-bd73-3471577677fb"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "c793ab6b-94a2-4e02-9cc4-f0d692963ebe"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-reviewer-portal": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"reviewer-portal\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "11aae9c6-2d0b-4783-8c85-6826d7f9dc38"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "ae5b1092-cd30-4c36-9eae-b0110282b9fb"
+       },
+       "status": 200
+      }
+     }
+    },
+    "claims": {
+     "aud": [
+      "7474654188777746"
+     ],
+     "client_id": "<service-principal-id>",
+     "exp": 1794001721,
+     "expires_in_s": 3598,
+     "iat": 1793998121,
+     "iss": "https://<workspace-host>/oidc",
+     "jwt": true,
+     "scope": "all-apis",
+     "sub": "<service-principal-id>"
+    }
+   }
+  },
+  "identity": {
+   "auth_type": "oauth-m2m",
+   "env_set": {
+    "DATABRICKS_APP_NAME": true,
+    "DATABRICKS_CLIENT_ID": true,
+    "DATABRICKS_CLIENT_SECRET": true,
+    "DATABRICKS_HOST": true,
+    "DATABRICKS_TOKEN": false
+   },
+   "host": "https://<workspace-host>",
+   "workspace_api_identity": "<service-principal-id>"
+  }
+ }
+}

@@ -1,0 +1,99 @@
+
+Portal lifecycle | appl 10506013 | approved | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (approved) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L14 cleanup left no rows for the request
+.
+Portal lifecycle | appl 10388671 | rejected | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (rejected) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L14 cleanup left no rows for the request
+.
+Portal lifecycle | appl 10445135 | deferred | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (deferred) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L14 cleanup left no rows for the request
+.
+Portal lifecycle | appl 10075931 | override | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7 decision by a non-assigned persona is an error
+  [pass] L7 decision with a too-short rationale is an error
+  [pass] L7 override to NITRD with no PCAs is an error (biconditional)
+  [pass] L7 override to not-NITRD with PCAs is an error (biconditional)
+  [pass] L7 override with no corrected label is an error (biconditional)
+  [pass] L8 rejected writes left only created + routed
+  [pass] L9 assigned reviewer's decision (override) is recorded
+  [pass] L10 a second decision is an error (decisions are final)
+  [pass] L11 decided request left the pending queue
+  [pass] L12 history shows created, routed, decision in order
+  [pass] L12 the override event carries the corrections
+  [pass] L13 warehouse request row has the decision
+  [pass] L13 warehouse holds created + routed + decision events
+  [pass] L13 warehouse request row has the corrections
+  [pass] L14 cleanup left no rows for the request
+.
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10506013]
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10388671]
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10445135]
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10075931]
+4 passed, 6 deselected, 1 warning in 121.31s (0:02:01)

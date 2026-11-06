@@ -1,20 +1,20 @@
 {
  "cases": 71,
- "git_commit": "b6d521d1f41da67fa64000e176fc735929080bf8",
+ "git_commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
  "identical": 71,
- "remote_ms_p50": 647.3,
- "remote_ms_p95": 2765.9,
- "source_run": "6e0e5d36-dd00-4ed0-b4c0-d952cc9c5e34",
- "started_at": "2026-11-06T17:40:52.424835",
+ "remote_ms_p50": 558.7,
+ "remote_ms_p95": 1523.7,
+ "source_run": "d2ddab69-2d04-4b7b-9c62-cc58d916ab82",
+ "started_at": "2026-11-06T20:41:28.576129",
  "tools": {
   "classifier_classify_parent": {
    "cases": 5,
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 3723,
-   "remote_ms_max_in_run_summary": 3723.4,
-   "remote_ms_median": 751,
+   "remote_ms_max": 597,
+   "remote_ms_max_in_run_summary": 597.1,
+   "remote_ms_median": 542,
    "server": "classifier"
   },
   "classifier_classify_subcategory": {
@@ -22,9 +22,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 541,
-   "remote_ms_max_in_run_summary": 541.0,
-   "remote_ms_median": 463,
+   "remote_ms_max": 498,
+   "remote_ms_max_in_run_summary": 497.6,
+   "remote_ms_median": 474,
    "server": "classifier"
   },
   "classifier_explain": {
@@ -32,9 +32,9 @@
    "error_results": 1,
    "ok_results": 8,
    "passed": 9,
-   "remote_ms_max": 575,
-   "remote_ms_max_in_run_summary": 575.2,
-   "remote_ms_median": 485,
+   "remote_ms_max": 534,
+   "remote_ms_max_in_run_summary": 534.5,
+   "remote_ms_median": 484,
    "server": "classifier"
   },
   "outputs_find_cohort": {
@@ -42,9 +42,9 @@
    "error_results": 3,
    "ok_results": 4,
    "passed": 7,
-   "remote_ms_max": 1147,
-   "remote_ms_max_in_run_summary": 1147.4,
-   "remote_ms_median": 634,
+   "remote_ms_max": 698,
+   "remote_ms_max_in_run_summary": 697.8,
+   "remote_ms_median": 434,
    "server": "outputs"
   },
   "outputs_find_projects": {
@@ -52,9 +52,9 @@
    "error_results": 1,
    "ok_results": 1,
    "passed": 2,
-   "remote_ms_max": 3568,
-   "remote_ms_max_in_run_summary": 3568.4,
-   "remote_ms_median": 2777.0,
+   "remote_ms_max": 869,
+   "remote_ms_max_in_run_summary": 868.6,
+   "remote_ms_median": 822.0,
    "server": "outputs"
   },
   "outputs_get_project_datacite": {
@@ -62,9 +62,9 @@
    "error_results": 0,
    "ok_results": 5,
    "passed": 5,
-   "remote_ms_max": 1102,
-   "remote_ms_max_in_run_summary": 1101.9,
-   "remote_ms_median": 650,
+   "remote_ms_max": 809,
+   "remote_ms_max_in_run_summary": 808.6,
+   "remote_ms_median": 752,
    "server": "outputs"
   },
   "outputs_get_project_detail": {
@@ -72,9 +72,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 832,
-   "remote_ms_max_in_run_summary": 832.4,
-   "remote_ms_median": 752,
+   "remote_ms_max": 1134,
+   "remote_ms_max_in_run_summary": 1134.1,
+   "remote_ms_median": 626,
    "server": "outputs"
   },
   "outputs_get_project_publications": {
@@ -82,9 +82,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 2949,
-   "remote_ms_max_in_run_summary": 2948.9,
-   "remote_ms_median": 2122,
+   "remote_ms_max": 1715,
+   "remote_ms_max_in_run_summary": 1715.1,
+   "remote_ms_median": 1436,
    "server": "outputs"
   },
   "outputs_score_project_intensity": {
@@ -92,9 +92,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 1700,
-   "remote_ms_max_in_run_summary": 1699.9,
-   "remote_ms_median": 1486,
+   "remote_ms_max": 1530,
+   "remote_ms_max_in_run_summary": 1530.5,
+   "remote_ms_median": 1352,
    "server": "outputs"
   },
   "portal_get_review_history": {
@@ -102,9 +102,9 @@
    "error_results": 0,
    "ok_results": 5,
    "passed": 5,
-   "remote_ms_max": 1182,
-   "remote_ms_max_in_run_summary": 1181.9,
-   "remote_ms_median": 980,
+   "remote_ms_max": 1194,
+   "remote_ms_max_in_run_summary": 1194.3,
+   "remote_ms_median": 938,
    "server": "portal"
   },
   "portal_get_reviewer_assignment": {
@@ -112,9 +112,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 795,
-   "remote_ms_max_in_run_summary": 795.1,
-   "remote_ms_median": 623,
+   "remote_ms_max": 974,
+   "remote_ms_max_in_run_summary": 974.1,
+   "remote_ms_median": 580,
    "server": "portal"
   },
   "portal_list_pending_reviews": {
@@ -122,9 +122,9 @@
    "error_results": 2,
    "ok_results": 8,
    "passed": 10,
-   "remote_ms_max": 493,
-   "remote_ms_max_in_run_summary": 493.0,
-   "remote_ms_median": 436.5,
+   "remote_ms_max": 559,
+   "remote_ms_max_in_run_summary": 558.7,
+   "remote_ms_median": 439.5,
    "server": "portal"
   },
   "portal_submit_review_decision": {
@@ -132,9 +132,9 @@
    "error_results": 1,
    "ok_results": 0,
    "passed": 1,
-   "remote_ms_max": 398,
-   "remote_ms_max_in_run_summary": 398.1,
-   "remote_ms_median": 398,
+   "remote_ms_max": 437,
+   "remote_ms_max_in_run_summary": 437.3,
+   "remote_ms_median": 437,
    "server": "portal"
   },
   "portal_submit_review_request": {
@@ -142,9 +142,9 @@
    "error_results": 2,
    "ok_results": 0,
    "passed": 2,
-   "remote_ms_max": 28,
-   "remote_ms_max_in_run_summary": 28.5,
-   "remote_ms_median": 27.0,
+   "remote_ms_max": 27,
+   "remote_ms_max_in_run_summary": 27.0,
+   "remote_ms_median": 26.5,
    "server": "portal"
   }
  },

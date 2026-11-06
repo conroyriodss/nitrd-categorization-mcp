@@ -58,6 +58,10 @@ NOTES = {
         "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. "
         "It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
     ),
+    "runs/20261106T2048Z_auth_69cbcac7/": (
+        "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. "
+        "It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
+    ),
 }
 
 SECRET_PATTERNS = {
