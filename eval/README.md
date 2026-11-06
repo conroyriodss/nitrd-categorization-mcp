@@ -25,7 +25,7 @@ prototype, not an operational NIH categorization system.
 **One non-public input enters the Task 1 FY2024 held-out score (in `entry2-uac-nitrd`), and only to flag pre-exposure.**
 * File A is an RCDC Trend Analysis Project Listing export over the NITRD AI sub-categories (`docs/HELDOUT_PROTOCOL.md`). It is not public: the sub-category layer is internal (see the correction at `docs/reference/subcategory_id_to_pca.v1.md:42`).
 * It is reduced to one boolean per award, `filea_exposed`: the award's core project appears in File A in any FY (seal manifest `docs/seal/task1_fy2024_seal_manifest.json`). That flag splits the FY2024 universe into blind Tier 2 (61,423 awards) and exposed Tier 2x (2,642).
-* The flag lives only in the sealed key, outside every repository. No File A rows, project numbers or sub-category names are committed in any of the three repositories.
+* The flag lives only in the sealed key, outside every repository. No per-award copy of it is committed; the repositories hold only counts derived from it.
 
 **No public rule can replace the flag, and no other split can be computed.**
 * None of the 29 NITRD sub-category IDs returns a record from the public RePORTER API, in any year sampled.
