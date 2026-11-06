@@ -6,6 +6,9 @@ Runs on Databricks (needs `spark`). Copies, verbatim:
 * e2e runner job records (`<SCHEMA>.nitrd_hackathon_v1_e2e_runs`): run.json (every column except the
   report) and report.log (the job's stdout/stderr), one directory per run;
 * Step G.5 acceptance runs from the raw Volume (junit XML, logs, manifest);
+* agent evaluation runs (`<SCHEMA>.nitrd_hackathon_v1_agent_eval_runs`, --agent-runs): run.json (every
+  column except the report) and report.json, one directory per run. A void run's directory name ends in
+  _VOID, and its run.json carries the reason under "void";
 
 then derives eval/results/tool_utilization.{json,md} from the parity run's per-case lines, and writes
 eval/results/INDEX.json (sha256 + size of every exported file, plus the source of each).
@@ -38,6 +41,24 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "eval" / "results"
 RUNS_TABLE = "users.conroyri.nitrd_hackathon_v1_e2e_runs"
 RUNS_SQL = f"SELECT * FROM {RUNS_TABLE} WHERE substr(run_id, 1, 8) = :run"  # noqa: S608 - constant table
+AGENT_RUNS_TABLE = "users.conroyri.nitrd_hackathon_v1_agent_eval_runs"
+AGENT_RUNS_SQL = f"SELECT * FROM {AGENT_RUNS_TABLE} WHERE substr(run_id, 1, 8) = :run"  # noqa: S608 - constant table
+# Runs that are void (never deleted from their table; owner decision 8). The reason is written into the
+# exported run.json and into INDEX.json "notes".
+VOID_RUNS = {
+    "c1ab24d7": (
+        "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran "
+        "unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; "
+        "see eval/agent/README.md."
+    ),
+}
+# Fixed reader notes, keyed by path relative to eval/results (prefix match on directories).
+NOTES = {
+    "runs/20261106T1747Z_auth_249358ff/": (
+        "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. "
+        "It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
+    ),
+}
 
 SECRET_PATTERNS = {
     "databricks_pat": re.compile(rb"dapi[0-9a-f]{32}"),
@@ -124,6 +145,49 @@ def export_runs(spark, run_ids: list[str]) -> tuple[dict[Path, bytes], dict]:
         files[d / "report.log"] = (r["report"] or "").encode()
         rows[rid] = r
     return files, rows
+
+
+def export_agent_runs(spark, run_ids: list[str]) -> dict[Path, bytes]:
+    files = {}
+    for rid in run_ids:
+        got = spark.sql(AGENT_RUNS_SQL, args={"run": rid}).collect()
+        if len(got) != 1:
+            raise SystemExit(f"agent run {rid}: expected 1 row, found {len(got)}")
+        r = got[0].asDict()
+        void = VOID_RUNS.get(rid)
+        d = (
+            OUT
+            / "agent_runs"
+            / (
+                f"{stamp(r['started_at'])}_{r['suite']}_{rid}"
+                + ("_VOID" if void else "")
+            )
+        )
+        meta = {
+            k: (v.isoformat() if hasattr(v, "isoformat") else v)
+            for k, v in r.items()
+            if k != "report"
+        }
+        for k in ("summary", "rows_left"):
+            if isinstance(meta.get(k), str):
+                try:
+                    meta[k] = json.loads(meta[k])
+                except ValueError:
+                    pass
+        meta["source"] = f"{AGENT_RUNS_TABLE} (Databricks), run_id {r['run_id']}"
+        if void:
+            meta["void"] = void
+            NOTES[str(d.relative_to(OUT)) + "/"] = void
+        files[d / "run.json"] = (
+            json.dumps(meta, indent=1, sort_keys=True) + "\n"
+        ).encode()
+        rep = r["report"] or ""
+        try:
+            rep = json.dumps(json.loads(rep), indent=1, sort_keys=True) + "\n"
+        except ValueError:
+            pass
+        files[d / "report.json"] = rep.encode()
+    return files
 
 
 def export_step_g(dirs: list[str]) -> dict[Path, bytes]:
@@ -214,6 +278,12 @@ def tool_utilization(parity_row: dict) -> tuple[dict, str]:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", nargs="+", required=True, help="8-char run_id prefixes")
+    ap.add_argument(
+        "--agent-runs",
+        nargs="*",
+        default=[],
+        help="8-char agent_eval_runs run_id prefixes",
+    )
     ap.add_argument("--step-g", nargs="*", default=[])
     ap.add_argument(
         "--parity", help="run_id prefix used for the tool-utilization readout"
@@ -225,6 +295,7 @@ def main(argv=None) -> int:
 
     files, rows = export_runs(spark, a.runs)
     files.update(export_step_g(a.step_g))
+    files.update(export_agent_runs(spark, a.agent_runs))
     if a.parity:
         util, md = tool_utilization(rows[a.parity])
         files[OUT / "tool_utilization.json"] = (
@@ -258,6 +329,7 @@ def main(argv=None) -> int:
         "generator": "scripts/export_evidence.py",
         "secret_scan": sorted(SECRET_PATTERNS),
         "redactions": redactions,
+        "notes": {},
         "files": {},
     }
     for p in sorted(OUT.rglob("*")):
@@ -266,6 +338,12 @@ def main(argv=None) -> int:
                 "sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
                 "bytes": p.stat().st_size,
             }
+    prior_notes = (
+        json.loads(prior.read_text()).get("notes", {}) if prior.is_file() else {}
+    )
+    for k, v in (prior_notes | NOTES).items():
+        if any(f.startswith(k) for f in index["files"]):
+            index["notes"][k] = v
     (OUT / "INDEX.json").write_text(json.dumps(index, indent=1, sort_keys=True) + "\n")
     print(
         json.dumps(

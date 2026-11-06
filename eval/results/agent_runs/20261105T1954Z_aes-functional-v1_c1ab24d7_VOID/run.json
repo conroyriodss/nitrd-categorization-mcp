@@ -1,0 +1,128 @@
+{
+ "finished_at": "2026-11-05T20:04:10.974701",
+ "gate_ok": true,
+ "git_commit": "e7d85180cfdf0bf16bff223c1dddd50a41a8da6d",
+ "model": "databricks-gpt-6-1-sol",
+ "passes": 50,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "c1ab24d7-aef3-4a7b-af5d-8dcfae2267b2",
+ "runs": 50,
+ "source": "users.conroyri.nitrd_hackathon_v1_agent_eval_runs (Databricks), run_id c1ab24d7-aef3-4a7b-af5d-8dcfae2267b2",
+ "started_at": "2026-11-05T19:54:55.152794",
+ "suite": "aes-functional-v1",
+ "summary": {
+  "approval": {
+   "checks": {
+    "cleanup left no rows for the request": true,
+    "created (new row)": true,
+    "history holds exactly one sandbox row for the request": true,
+    "history shows created + routed events": true,
+    "no rows for the request before approval": true,
+    "one request row persisted (warehouse)": true,
+    "request_id is the pre-registered one": true,
+    "sandbox=true": true
+   },
+   "cleanup_failures": [],
+   "draft_id": "724380ca1a384a57934713886fb4457e",
+   "exercised": true,
+   "history_event_types": [
+    "created",
+    "routed"
+   ],
+   "ok": true,
+   "request_id": "28f061f7-b57b-5956-b948-444fb3dea6cb",
+   "rows_after_cleanup": {
+    "review_events": 0,
+    "review_requests": 0,
+    "routing_events": 0
+   },
+   "rows_after_write": {
+    "review_events": 1,
+    "review_requests": 1,
+    "routing_events": 1
+   }
+  },
+  "baseline_counts": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "blocked_tool_exposures": 0,
+  "errors": 0,
+  "git_commit": "e7d85180cfdf0bf16bff223c1dddd50a41a8da6d",
+  "invariants": {
+   "I1_no_write_tool_exposed": true,
+   "I2_agent_runs_wrote_nothing": true,
+   "I3_approval_path": true
+  },
+  "mean_precision": 0.8333333333333334,
+  "mean_recall": 1.0,
+  "passes": 50,
+  "per_scenario": {
+   "AES-01": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-02": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-03": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-04": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-05": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-06": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-07": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-08": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-09": {
+    "passes": 5,
+    "runs": 5
+   },
+   "AES-10": {
+    "passes": 5,
+    "runs": 5
+   }
+  },
+  "pins": {
+   "instructions_sha256": "f4ff62d2f2b14730ac1f82254169b905ba007d098102079e64886f3b88e361d0",
+   "model": "databricks-gpt-6-1-sol",
+   "suite": "aes-functional-v1",
+   "suite_sha256": "9cf941feaf0dd9a47a7def2d24ebc839f6b47291094a0b869ef0b7056aa836b6"
+  },
+  "rate": 1.0,
+  "repetitions": 5,
+  "rows_left": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "runs": 50,
+  "transport": "http",
+  "wilson95": [
+   0.9286524008666414,
+   1.0
+  ]
+ },
+ "void": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md."
+}

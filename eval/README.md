@@ -18,15 +18,16 @@ The multi-server MLflow path is blocked on a workspace administrator
 provisioning a service principal. This is a public-data, sandbox-write
 prototype, not an operational NIH categorization system.
 
-### Data scope and the one non-public input (File A, two uses)
+### Data scope and the one non-public input (File A)
 
 **The servers use public data only.** The three MCP servers and the reviewer portal read public ExPORTER/RePORTER, iCite and PubMed records ([`SECURITY.md`](../SECURITY.md#data-scope-public-data-only)). The NITRD label they are measured against is public too: per-award membership of RCDC spending category 329, from RePORT Categorical Spending.
 
-**One non-public input, File A, is used twice in `entry2-uac-nitrd`.** First, as the answer key of the UAC NITRD held-out evaluation, scored once on 2026-10-23: "Match rate: 24/214", from `results/RESULT.md`, with the protocol in `docs/HELDOUT_PROTOCOL.md`. Second, in the Task 1 FY2024 held-out score, only to flag pre-exposure. The bullets below describe the second use.
+> **File A, the one non-public input (corrected 2026-11-06).** File A, a non-public RCDC Trend Analysis export of NITRD AI sub-category rows, has two scored roles in `entry2-uac-nitrd`: the answer key of the UAC held-out evaluation ("Match rate: 24/214", scored once on 2026-10-25), and the source of the Task 1 FY2024 `filea_exposed` flag, which splits blind Tier 2 (61,423 awards) from exposed Tier 2x (2,642). It was also read once before the Task 1 seal, for an aggregate selection-effect check that is the source of the pre-registration's "2,281"; every read and derived artifact is listed with file and line in `docs/FILE_A_FOOTPRINT.md`, where a test fails on any unlisted reference. Two File A-derived Appl IDs are committed, 11189671 and 11376321, listed as abstentions in `results/heldout_report_v1.json`; they show only that those two public awards are in File A's FY2025 AI-relevant set, and no other per-award File A content was found. That file is not being rewritten: its information content is negligible, and its SHA-256 (`b43bbbaf...`) is pinned in uac-witness records 0001 and 0002, so a rewrite would break the witness chain that makes the evaluation checkable.
+
+The bullets below describe the Task 1 flag.
 * File A is an RCDC Trend Analysis Project Listing export over the NITRD AI sub-categories (`docs/HELDOUT_PROTOCOL.md`). It is not public: the sub-category layer is internal (see the correction at `docs/reference/subcategory_id_to_pca.v1.md:42`).
 * It is reduced to one boolean per award, `filea_exposed`: the award's core project appears in File A in any FY (seal manifest `docs/seal/task1_fy2024_seal_manifest.json`). That flag splits the FY2024 universe into blind Tier 2 (61,423 awards) and exposed Tier 2x (2,642).
 * The flag lives only in the sealed key, outside every repository. No per-award copy of it is committed; the repositories hold only counts derived from it.
-* **Per-award File A content is not wholly absent.** A search on 2026-11-06 found two Appl IDs (11189671 and 11376321) in `results/heldout_report_v1.json`. They are listed as held-out projects the engine abstained on, so they show that those two awards are in File A's FY2025 AI-relevant set. No File A category strings or other File A rows were found in the three repositories. The search cannot compare the repositories against File A's project numbers without reading the sealed file.
 
 **No public rule can replace the flag, and no other split can be computed.**
 * None of the 29 NITRD sub-category IDs returns a record from the public RePORTER API, in any year sampled.
@@ -43,8 +44,9 @@ prototype, not an operational NIH categorization system.
 Judges see the repositories, not the Databricks workspace. Every measured claim in the table below points at a
 committed file. The one exception is CI status, which points at public GitHub Actions logs. Every runner run cited in
 the three repositories is exported under `results/runs/` and hashed in `results/INDEX.json` (audited
-2026-11-06). The void agent run `c1ab24d7` is recorded only in [`agent/README.md`](agent/README.md); its
-table row is not exported. Run records were exported verbatim from the workspace by
+2026-11-06). The void agent run `c1ab24d7` is exported too, marked VOID, under
+[`results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/`](results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/)
+(reason in its `run.json` and in `INDEX.json` `notes`; see [`agent/README.md`](agent/README.md)); it is not a result. Run records were exported verbatim from the workspace by
 [`scripts/export_evidence.py`](../scripts/export_evidence.py) (credential scan before writing; a hit
 aborts the export) and are hashed in [`results/INDEX.json`](results/INDEX.json). Three workspace
 identifiers that are not credentials (workspace host name, Apps service-principal IDs, warehouse ID)

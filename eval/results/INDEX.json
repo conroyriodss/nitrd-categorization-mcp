@@ -1,8 +1,16 @@
 {
  "files": {
   "README.md": {
-   "bytes": 2116,
-   "sha256": "028829a7d6953817135fe47c11d164bdd6484cdb312e07bd8fb9298cd2cd1c2d"
+   "bytes": 2576,
+   "sha256": "59689537f15e57c9a36c9d0523d9193c7f03047bbf72737ff9111055ab62c035"
+  },
+  "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/report.json": {
+   "bytes": 107866,
+   "sha256": "8973d2f328db95f2eab7d3ab94f5754f7658d570ce13cad8a82c564bffa94d0c"
+  },
+  "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/run.json": {
+   "bytes": 3070,
+   "sha256": "7925361bf926a5f0e8c0b5b472a5baeac96daf9ef917771ddc093f1408ccbf7d"
   },
   "provenance/data.json": {
    "bytes": 2183,
@@ -153,8 +161,12 @@
    "sha256": "54b09ab7848579e416eb6660e1d7a4cbbb1b66bbe397e924475f90d789dc691a"
   }
  },
- "generated_utc": "2026-11-06T19:26:07Z",
+ "generated_utc": "2026-11-06T19:58:06Z",
  "generator": "scripts/export_evidence.py",
+ "notes": {
+  "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md.",
+  "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
+ },
  "redactions": {
   "runs/20261103T1354Z_smoke_a9204bb7/report.log": {
    "<service-principal-id>": 5,

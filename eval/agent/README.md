@@ -116,7 +116,7 @@ the pins above and every run's tool calls.
 Rows in `users.conroyri.nitrd_hackathon_v1_agent_eval_runs` are never deleted. A run
 that should not count is listed here, with the reason, and stays in the table.
 
-* **Run `c1ab24d7-aef3-4a7b-af5d-8dcfae2267b2` is VOID.**
+* **Run `c1ab24d7-aef3-4a7b-af5d-8dcfae2267b2` is VOID.** Its row is exported verbatim, marked VOID, to `eval/results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/` and hashed in `INDEX.json`, so the void record can be checked; the row stays in its table.
   * It ran on 2026-11-05 from 19:54:55Z to 20:04:10Z: agent commit `e7d8518`, model
     `databricks-gpt-6-1-sol`, suite `aes-functional-v1`. It recorded 50/50 passes, I1-I3
     true and rows_left 0/0/0.
