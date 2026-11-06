@@ -231,8 +231,15 @@ def main(argv=None) -> int:
             json.dumps(util, indent=1, sort_keys=True) + "\n"
         ).encode()
         files[OUT / "tool_utilization.md"] = md.encode()
-    redactions = {}
+    # Keep the redaction counts of files exported earlier, so an export of new runs does not
+    # drop them from the index. Entries are dropped only for files no longer on disk.
+    prior = OUT / "INDEX.json"
+    redactions = (
+        json.loads(prior.read_text()).get("redactions", {}) if prior.is_file() else {}
+    )
+    redactions = {k: v for k, v in redactions.items() if (OUT / k).is_file()}
     for p in list(files):
+        redactions.pop(str(p.relative_to(OUT)), None)
         files[p], counts = redact(files[p])
         if counts:
             redactions[str(p.relative_to(OUT))] = counts

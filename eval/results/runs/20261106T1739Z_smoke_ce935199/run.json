@@ -1,0 +1,76 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-06T17:39:13.837177",
+ "git_commit": "b6d521d1f41da67fa64000e176fc735929080bf8",
+ "kind": "smoke",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "ce935199-1bca-464d-ab0a-5ab9255df190",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id ce935199-1bca-464d-ab0a-5ab9255df190",
+ "started_at": "2026-11-06T17:39:05.003395",
+ "summary": {
+  "checks": [
+   {
+    "check": "mcp-nih-grants-outputs /health",
+    "detail": "200 {\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}",
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-classifier /health",
+    "detail": "200 {\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}",
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-reviewer-portal /health",
+    "detail": "200 {\"status\":\"healthy\",\"service\":\"reviewer-portal\"}",
+    "ok": true
+   },
+   {
+    "check": "mcp-nih-grants-outputs tools/list",
+    "detail": [
+     "outputs_find_cohort",
+     "outputs_find_projects",
+     "outputs_get_project_datacite",
+     "outputs_get_project_detail",
+     "outputs_get_project_publications",
+     "outputs_score_project_intensity"
+    ],
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-classifier tools/list",
+    "detail": [
+     "classifier_classify_parent",
+     "classifier_classify_subcategory",
+     "classifier_explain"
+    ],
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-reviewer-portal tools/list",
+    "detail": [
+     "portal_get_review_history",
+     "portal_get_reviewer_assignment",
+     "portal_list_pending_reviews",
+     "portal_submit_review_decision",
+     "portal_submit_review_request"
+    ],
+    "ok": true
+   },
+   {
+    "check": "portal routes 10388671 to demo_po_ninr_01",
+    "detail": "demo_po_ninr_01",
+    "ok": true
+   },
+   {
+    "check": "deployed portal response byte-identical to in-process call",
+    "detail": "562 vs 562 bytes",
+    "ok": true
+   }
+  ]
+ }
+}

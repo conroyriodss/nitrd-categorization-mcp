@@ -1,0 +1,138 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-06T17:56:48.045048",
+ "git_commit": "b6d521d1f41da67fa64000e176fc735929080bf8",
+ "kind": "e2e",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "f4d4fff2-3e06-4413-bc9e-998a1734dd37",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id f4d4fff2-3e06-4413-bc9e-998a1734dd37",
+ "started_at": "2026-11-06T17:55:31.462578",
+ "summary": {
+  "appl 10388671 R01NR013912 (NINR)": {
+   "sanity": {
+    "3 at least 10 linked publications": "PASS",
+    "6 known-NITRD parent probability > 0.7": "WARN",
+    "7 plausible PCA (AI) in top 3": "WARN",
+    "8 routing picks a reviewer (fallback tiers ok)": "PASS",
+    "9 submitted assignment matches the step-8 preview": "PASS"
+   },
+   "steps": {
+    "1": "ok",
+    "10": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "9b": "ok"
+   },
+   "strict": {
+    "1 find_projects returns NITRD FY2022 projects": "pass",
+    "10 created + routed events persisted (warehouse)": "pass",
+    "10 history holds exactly one row for the request": "pass",
+    "10 history shows created + routed events": "pass",
+    "2 detail is the requested application": "pass",
+    "4 datacite answers with a known status": "pass",
+    "5 intensity answers for the requested core": "pass",
+    "9 repeat returns the same request_id with created=false": "pass",
+    "9 request row persisted in review_requests (warehouse)": "pass",
+    "9 request_id is the pre-registered UUIDv5 of the run's key": "pass",
+    "9 review request is sandbox=true and labelled Not RCDC": "pass"
+   }
+  },
+  "appl 10445135 R01CA258987 (NCI)": {
+   "sanity": {
+    "3 at least 10 linked publications": "PASS",
+    "6 known-NITRD parent probability > 0.7": "WARN",
+    "7 plausible PCA (AI) in top 3": "WARN",
+    "8 routing picks a reviewer (fallback tiers ok)": "PASS",
+    "9 submitted assignment matches the step-8 preview": "PASS"
+   },
+   "steps": {
+    "1": "ok",
+    "10": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "9b": "ok"
+   },
+   "strict": {
+    "1 find_projects returns NITRD FY2022 projects": "pass",
+    "10 created + routed events persisted (warehouse)": "pass",
+    "10 history holds exactly one row for the request": "pass",
+    "10 history shows created + routed events": "pass",
+    "2 detail is the requested application": "pass",
+    "4 datacite answers with a known status": "pass",
+    "5 intensity answers for the requested core": "pass",
+    "9 repeat returns the same request_id with created=false": "pass",
+    "9 request row persisted in review_requests (warehouse)": "pass",
+    "9 request_id is the pre-registered UUIDv5 of the run's key": "pass",
+    "9 review request is sandbox=true and labelled Not RCDC": "pass"
+   }
+  },
+  "appl 10506013 U24AI171008 (NIAID)": {
+   "sanity": {
+    "3 at least 10 linked publications": "PASS",
+    "6 known-NITRD parent probability > 0.7": "PASS",
+    "7 plausible PCA (LSDMA) in top 3": "PASS",
+    "8 routing picks a reviewer (fallback tiers ok)": "PASS",
+    "9 submitted assignment matches the step-8 preview": "n/a"
+   },
+   "steps": {
+    "1": "ok",
+    "10": "skipped",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "skipped",
+    "9b": "skipped"
+   },
+   "strict": {
+    "1 find_projects returns NITRD FY2022 projects": "pass",
+    "10 created + routed events persisted (warehouse)": "skip",
+    "10 history holds exactly one row for the request": "skip",
+    "10 history shows created + routed events": "skip",
+    "2 detail is the requested application": "pass",
+    "4 datacite answers with a known status": "pass",
+    "5 intensity answers for the requested core": "pass",
+    "9 repeat returns the same request_id with created=false": "skip",
+    "9 request row persisted in review_requests (warehouse)": "skip",
+    "9 request_id is the pre-registered UUIDv5 of the run's key": "skip",
+    "9 review request is sandbox=true and labelled Not RCDC": "skip"
+   }
+  },
+  "cross-project intensity": {
+   "sanity": {
+    "5 intensity higher for more computational publications": "PASS"
+   },
+   "steps": {},
+   "strict": {}
+  },
+  "negative control appl 10304125": {
+   "sanity": {
+    "6 known non-NITRD parent probability < 0.3": "PASS"
+   },
+   "steps": {
+    "6": "ok"
+   },
+   "strict": {}
+  }
+ }
+}

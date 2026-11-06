@@ -1,0 +1,290 @@
+
+Prompt BJ e2e | appl 10506013 U24AI171008 (NIAID) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.15825
+    [pass] 9 request_id is the pre-registered UUIDv5 of the run's key registered=d879876f-8f36-5b58-9e57-93bc031a5607
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [PASS] 6 known-NITRD parent probability > 0.7 p=0.986275 suggestion=nitrd
+    [PASS] 7 plausible PCA (LSDMA) in top 3 top3=['CHuman', 'LSDMA', 'EdW']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_niaid_01 (fixture expects program_officer -> demo_po_niaid_01)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=40
+.
+Prompt BJ e2e | appl 10388671 R01NR013912 (NINR) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.28581081081081083
+    [pass] 9 request_id is the pre-registered UUIDv5 of the run's key registered=d54cea00-0213-5d84-bc4b-fd91641e2cf2
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [WARN] 6 known-NITRD parent probability > 0.7 p=0.580214 suggestion=nitrd
+    [WARN] 7 plausible PCA (AI) in top 3 top3=['ENIT', 'IRAS', 'SPSQ']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_ninr_01 (fixture expects program_officer -> demo_po_ninr_01)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=40
+.
+Prompt BJ e2e | appl 10445135 R01CA258987 (NCI) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       ok               
+  9b    portal_submit_review_request       ok               
+  10    portal_get_review_history          ok               
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=10 total=4247
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.2941711956521739
+    [pass] 9 request_id is the pre-registered UUIDv5 of the run's key registered=0424599a-7bfb-5eea-bc25-dcf82b421c99
+    [pass] 9 review request is sandbox=true and labelled Not RCDC 
+    [pass] 9 repeat returns the same request_id with created=false first created=True
+    [pass] 10 history holds exactly one row for the request rows=1
+    [pass] 10 history shows created + routed events events=['created', 'routed']
+    [pass] 9 request row persisted in review_requests (warehouse) rows=1
+    [pass] 10 created + routed events persisted (warehouse) events=['created', 'routed']
+  sanity checks (logged, not asserted):
+    [WARN] 6 known-NITRD parent probability > 0.7 p=0.275149 suggestion=not_nitrd
+    [WARN] 7 plausible PCA (AI) in top 3 top3=['LSDMA', 'EHCS', 'SPSQ']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) ic_rep -> demo_ic_rep_nci (fixture expects ic_rep -> demo_ic_rep_nci)
+    [PASS] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=46
+.
+Prompt BJ e2e | negative control appl 10304125 | transport=http
+  step  tool                               status           note
+  6     classifier_classify_parent         ok               
+  sanity checks (logged, not asserted):
+    [PASS] 6 known non-NITRD parent probability < 0.3 p=0.000644 suggestion=not_nitrd
+.
+Prompt BJ e2e | cross-project intensity | transport=http
+  step  tool                               status           note
+  sanity checks (logged, not asserted):
+    [PASS] 5 intensity higher for more computational publications appl 10388671: comp_pubs=14 overall=0.286; appl 10445135: comp_pubs=29 overall=0.294; appl 10506013: comp_pubs=10 overall=0.158
+......
+Prompt BJ e2e | appl 10506013 U24AI171008 (NIAID) | transport=http
+  step  tool                               status           note
+  1     outputs_find_projects              ok               
+  2     outputs_get_project_detail         ok               
+  3     outputs_get_project_publications   ok               
+  4     outputs_get_project_datacite       ok               
+  5     outputs_score_project_intensity    ok               
+  6     classifier_classify_parent         ok               
+  7     classifier_classify_subcategory    ok               
+  8     portal_get_reviewer_assignment     ok               
+  9     portal_submit_review_request       skipped          read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_
+  9b    portal_submit_review_request       skipped          read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_
+  10    portal_get_review_history          skipped          read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_
+  strict expectations:
+    [pass] 1 find_projects returns NITRD FY2022 projects returned=1 total=1
+    [pass] 2 detail is the requested application 
+    [pass] 4 datacite answers with a known status status=not_available
+    [pass] 5 intensity answers for the requested core status=scored overall=0.8
+    [skip] 9 request_id is the pre-registered UUIDv5 of the run's key read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+    [skip] 9 review request is sandbox=true and labelled Not RCDC read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+    [skip] 9 repeat returns the same request_id with created=false read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+    [skip] 10 history holds exactly one row for the request read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+    [skip] 10 history shows created + routed events read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+    [skip] 9 request row persisted in review_requests (warehouse) read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+    [skip] 10 created + routed events persisted (warehouse) read-only run: steps 9, 9b and 10 write sandbox rows; set PORTAL_LIVE_WRITE_TESTS=1
+  sanity checks (logged, not asserted):
+    [PASS] 6 known-NITRD parent probability > 0.7 p=0.93 suggestion=nitrd
+    [PASS] 7 plausible PCA (LSDMA) in top 3 top3=['LSDMA']
+    [PASS] 8 routing picks a reviewer (fallback tiers ok) program_officer -> demo_po_niaid_01 (fixture expects program_officer -> demo_po_niaid_01)
+    [n/a] 9 submitted assignment matches the step-8 preview 
+    [PASS] 3 at least 10 linked publications total_linked=12
+.
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+________________ test_request_id_is_registered_before_the_write ________________
+------------------------------ Captured log call -------------------------------
+ERROR    fastmcp.server.server:server.py:1513 Error calling tool 'portal_submit_review_request'
+Traceback (most recent call last):
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/server/server.py", line 1467, in call_tool
+    return await tool._run(arguments or {})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/base.py", line 440, in _run
+    return await self.run(arguments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 391, in run
+    result = await self._run_body(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 432, in _run_body
+    result = await self._execute(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 479, in _execute
+    result = await call_sync_fn_in_threadpool(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/utilities/async_utils.py", line 34, in call_sync_fn_in_threadpool
+    return await run_sync_in_threadpool(functools.partial(fn, *args, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/pydantic/type_adapter.py", line 441, in validate_python
+    return self.validator.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 89, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/tests/test_smoke_e2e.py", line 858, in portal_submit_review_request
+    raise RuntimeError("connection dropped after the write")
+RuntimeError: connection dropped after the write
+ERROR    fastmcp.server.server:server.py:1513 Error calling tool 'portal_submit_review_request'
+Traceback (most recent call last):
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/server/server.py", line 1467, in call_tool
+    return await tool._run(arguments or {})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/base.py", line 440, in _run
+    return await self.run(arguments)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 391, in run
+    result = await self._run_body(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 432, in _run_body
+    result = await self._execute(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 479, in _execute
+    result = await call_sync_fn_in_threadpool(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/utilities/async_utils.py", line 34, in call_sync_fn_in_threadpool
+    return await run_sync_in_threadpool(functools.partial(fn, *args, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/anyio/_backends/_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/pydantic/type_adapter.py", line 441, in validate_python
+    return self.validator.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/.venv/lib/python3.11/site-packages/fastmcp/tools/function_tool.py", line 89, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/app/python/source_code/tests/test_smoke_e2e.py", line 858, in portal_submit_review_request
+    raise RuntimeError("connection dropped after the write")
+RuntimeError: connection dropped after the write
+=========================== short test summary info ============================
+PASSED tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10506013]
+PASSED tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10388671]
+PASSED tests/test_smoke_e2e.py::test_prompt_bj_ten_step_chain[10445135]
+PASSED tests/test_smoke_e2e.py::test_negative_control_parent_probability
+PASSED tests/test_smoke_e2e.py::test_intensity_tracks_computational_publications
+PASSED tests/test_smoke_e2e.py::test_request_id_is_registered_before_the_write
+PASSED tests/test_smoke_e2e.py::test_clean_up_deletes_every_table_and_checks_zero
+PASSED tests/test_smoke_e2e.py::test_clean_up_tries_every_pair_before_raising
+PASSED tests/test_smoke_e2e.py::test_live_chain_cleans_up_when_the_run_raises
+PASSED tests/test_smoke_e2e.py::test_harness_passes_when_every_tool_answers
+PASSED tests/test_smoke_e2e.py::test_harness_read_only_never_calls_the_write_steps
+11 passed, 1 warning in 72.82s (0:01:12)
+
+--- stderr ---
+[11/06/26 17:56:46] Error calling tool 'portal_submit_review_request'           
+                    ╭─────────── Traceback (most recent call last) ────────────╮
+                    │ /app/python/source_code/.venv/lib/python3.11/site-packag │
+                    │ es/fastmcp/server/server.py:1467 in call_tool            │
+                    │                                                          │
+                    │ /app/python/source_code/.venv/lib/python3.11/site-packag │
+                    │ es/fastmcp/tools/base.py:440 in _run                     │
+                    │                                                          │
+                    │                 ... 8 frames hidden ...                  │
+                    │                                                          │
+                    │ /app/python/source_code/.venv/lib/python3.11/site-packag │
+                    │ es/fastmcp/tools/function_tool.py:89 in wrapper          │
+                    │                                                          │
+                    │ /app/python/source_code/tests/test_smoke_e2e.py:858 in   │
+                    │ portal_submit_review_request                             │
+                    │                                                          │
+                    │    855 │   │                                             │
+                    │    856 │   │   calls.append("portal_submit_review_reques │
+                    │    857 │   │   if fail_submit:                           │
+                    │ ❱  858 │   │   │   raise RuntimeError("connection droppe │
+                    │    859 │   │   key = idempotency_key or json.dumps(      │
+                    │    860 │   │   │   [appl_id, evidence, reviewer_id, task │
+                    │    861 │   │   │   sort_keys=True,                       │
+                    ╰──────────────────────────────────────────────────────────╯
+                    RuntimeError: connection dropped after the write            
+[11/06/26 17:56:47] Error calling tool 'portal_submit_review_request'           
+                    ╭─────────── Traceback (most recent call last) ────────────╮
+                    │ /app/python/source_code/.venv/lib/python3.11/site-packag │
+                    │ es/fastmcp/server/server.py:1467 in call_tool            │
+                    │                                                          │
+                    │ /app/python/source_code/.venv/lib/python3.11/site-packag │
+                    │ es/fastmcp/tools/base.py:440 in _run                     │
+                    │                                                          │
+                    │                 ... 8 frames hidden ...                  │
+                    │                                                          │
+                    │ /app/python/source_code/.venv/lib/python3.11/site-packag │
+                    │ es/fastmcp/tools/function_tool.py:89 in wrapper          │
+                    │                                                          │
+                    │ /app/python/source_code/tests/test_smoke_e2e.py:858 in   │
+                    │ portal_submit_review_request                             │
+                    │                                                          │
+                    │    855 │   │                                             │
+                    │    856 │   │   calls.append("portal_submit_review_reques │
+                    │    857 │   │   if fail_submit:                           │
+                    │ ❱  858 │   │   │   raise RuntimeError("connection droppe │
+                    │    859 │   │   key = idempotency_key or json.dumps(      │
+                    │    860 │   │   │   [appl_id, evidence, reviewer_id, task │
+                    │    861 │   │   │   sort_keys=True,                       │
+                    ╰──────────────────────────────────────────────────────────╯
+                    RuntimeError: connection dropped after the write            

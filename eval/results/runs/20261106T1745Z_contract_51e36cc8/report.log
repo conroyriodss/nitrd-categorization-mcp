@@ -1,0 +1,118 @@
+
+Extended smoke | transport=http | 90 checks
+  [pass] outputs: unknown appl_id is a tool error naming it
+  [pass] outputs: outputs_get_project_publications: unknown core is a tool error naming it
+  [pass] outputs: outputs_score_project_intensity: unknown core is a tool error naming it
+  [pass] outputs: datacite: unknown core answers with a status, no crash
+  [pass] outputs: unknown category is a tool error naming it
+  [pass] outputs: limit=0 is rejected
+  [pass] outputs: limit=501 is rejected
+  [pass] outputs: independent SQL count of the small result is 2..50
+  [pass] outputs: limit=2: returned=2, total=5, truncated=True
+  [pass] outputs: limit=5: returned=5, total=5, truncated=False
+  [pass] outputs: limit=500: returned=5, total=5, truncated=False
+  [pass] outputs: results ordered by appl_id, no duplicates
+  [pass] outputs: limit=2 is the prefix of the full result
+  [pass] outputs: matched category echoed as in the data
+  [pass] outputs: empty case: category exists, no rows that year (SQL)
+  [pass] outputs: valid category with no rows that year is an empty list
+  [pass] cohort: independent SQL count of FY2021 NIBIB U01 is 41
+  [pass] cohort: cohort: total = returned = SQL count, not truncated
+  [pass] cohort: every record is FY2021 / EB (NIBIB) / U01; ordered, unique
+  [pass] cohort: exact-SQL round-trip: returned SQL + params re-run give the same records and total
+  [pass] cohort: limit=10: first 10 records, total still reported, truncated
+  [pass] cohort: zero-return cohort (NIBIB R35, SQL count 0) is an empty list
+  [pass] cohort: list mode (fy only): every IC x activity combination, counts as SQL
+  [pass] cohort: list mode (fy + ic): only NIBIB combinations, U01 among them
+  [pass] cohort: FY2022 is refused, naming the year and the reason
+  [pass] cohort: FY2023 is refused, naming the year and the reason
+  [pass] cohort: FY2024 is refused, naming the year and the reason
+  [pass] cohort: FY2025 is refused, naming the year and the reason
+  [pass] cohort: FY2026 is refused, naming the year and the reason
+  [pass] cohort: FY2022 is refused in list mode too
+  [pass] cohort: limit=0 confirm=False is rejected
+  [pass] cohort: limit=51 confirm=False is rejected
+  [pass] cohort: limit=201 confirm=True is rejected
+  [pass] cohort: limit=51 with confirm_large is accepted
+  [pass] classifier: 10506013 classify_parent answers
+  [pass] classifier: 10506013 threshold is a probability in (0, 1)
+  [pass] classifier: 10506013 suggestion agrees with p vs threshold
+  [pass] classifier: 10506013 falls in band high
+  [pass] classifier: 10506013 top features ordered by |contribution|
+  [pass] classifier: 10506013 explain(parent) answers
+  [pass] classifier: 10506013 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10506013 classify_parent top features appear in explain
+  [pass] classifier: 10506013 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10506013 explain(subcategory) matches classify_subcategory
+  [pass] classifier: 10388671 classify_parent answers
+  [pass] classifier: 10388671 threshold is a probability in (0, 1)
+  [pass] classifier: 10388671 suggestion agrees with p vs threshold
+  [pass] classifier: 10388671 falls in band positive_near_threshold
+  [pass] classifier: 10388671 top features ordered by |contribution|
+  [pass] classifier: 10388671 explain(parent) answers
+  [pass] classifier: 10388671 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10388671 classify_parent top features appear in explain
+  [pass] classifier: 10388671 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10388671 explain(subcategory) matches classify_subcategory
+  [pass] classifier: 10445135 classify_parent answers
+  [pass] classifier: 10445135 threshold is a probability in (0, 1)
+  [pass] classifier: 10445135 suggestion agrees with p vs threshold
+  [pass] classifier: 10445135 falls in band negative_near_threshold
+  [pass] classifier: 10445135 top features ordered by |contribution|
+  [pass] classifier: 10445135 explain(parent) answers
+  [pass] classifier: 10445135 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10445135 classify_parent top features appear in explain
+  [pass] classifier: 10445135 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10445135 explain(subcategory) matches classify_subcategory
+  [pass] classifier: 10304125 classify_parent answers
+  [pass] classifier: 10304125 threshold is a probability in (0, 1)
+  [pass] classifier: 10304125 suggestion agrees with p vs threshold
+  [pass] classifier: 10304125 falls in band clear_negative
+  [pass] classifier: 10304125 top features ordered by |contribution|
+  [pass] classifier: 10304125 explain(parent) answers
+  [pass] classifier: 10304125 explain(parent): <=15 per sign, ordered, no PCAs
+  [pass] classifier: 10304125 classify_parent top features appear in explain
+  [pass] classifier: 10304125 subcategory shape: status agrees, scores descending, PCAs unique
+  [pass] classifier: 10304125 explain(subcategory) matches classify_subcategory
+  [pass] classifier: explain on an unknown appl_id is a tool error
+  [pass] portal: pending(demo_po_niaid_01): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_po_ninr_01): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_po_nci_01): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nci): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nigms): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_niaid): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nimh): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_ic_rep_nibib): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_sia): count matches, all pending, assigned, sandbox
+  [pass] portal: pending(demo_po_nhlbi_01): inactive persona is refused
+  [pass] portal: pending(unknown persona) is a tool error
+  [pass] portal: 10506013 routes program_officer -> demo_po_niaid_01
+  [pass] portal: 10388671 routes program_officer -> demo_po_ninr_01
+  [pass] portal: 10445135 routes ic_rep -> demo_ic_rep_nci
+  [pass] portal: review-table row counts unchanged (read-only)
+  latency per tool (ms): n p50 p95 max
+    classifier_classify_parent           4      540      582      582
+    classifier_classify_subcategory      4      454      486      486
+    classifier_explain                   9      473      557      557
+    outputs_find_cohort                 15       20      768      768
+    outputs_find_projects                7      734     1209     1209
+    outputs_get_project_datacite         1      890      890      890
+    outputs_get_project_detail           1      361      361      361
+    outputs_get_project_publications     1     1293     1293     1293
+    outputs_score_project_intensity      1      827      827      827
+    portal_get_reviewer_assignment       3      516      568      568
+    portal_list_pending_reviews         11      413      549      549
+  first call nih_grants_outputs: outputs_get_project_detail 361ms (later p50 470.5ms)
+  first call nitrd_classifier: classifier_classify_parent 582ms (later p50 473.3ms)
+  first call reviewer_portal: portal_list_pending_reviews 549ms (later p50 418.5ms)
+.
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_smoke_contract.py::test_contracts_on_live_apps
+1 passed, 4 deselected, 1 warning in 46.50s

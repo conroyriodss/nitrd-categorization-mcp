@@ -1,0 +1,8 @@
+[pass] mcp-nih-grants-outputs /health: 200 {"status":"healthy","service":"nih-grants-outputs"}
+[pass] mcp-nitrd-classifier /health: 200 {"status":"healthy","service":"nitrd-classifier"}
+[pass] mcp-nitrd-reviewer-portal /health: 200 {"status":"healthy","service":"reviewer-portal"}
+[pass] mcp-nih-grants-outputs tools/list: ['outputs_find_cohort', 'outputs_find_projects', 'outputs_get_project_datacite', 'outputs_get_project_detail', 'outputs_get_project_publications', 'outputs_score_project_intensity']
+[pass] mcp-nitrd-classifier tools/list: ['classifier_classify_parent', 'classifier_classify_subcategory', 'classifier_explain']
+[pass] mcp-nitrd-reviewer-portal tools/list: ['portal_get_review_history', 'portal_get_reviewer_assignment', 'portal_list_pending_reviews', 'portal_submit_review_decision', 'portal_submit_review_request']
+[pass] portal routes 10388671 to demo_po_ninr_01: demo_po_ninr_01
+[pass] deployed portal response byte-identical to in-process call: 562 vs 562 bytes

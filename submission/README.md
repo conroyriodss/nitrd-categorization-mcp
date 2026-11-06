@@ -4,8 +4,8 @@
 
 | File | SHA-256 | Note |
 | --- | --- | --- |
-| `NITRD_Evaluation_2026-11-06.docx` | `17163ceef54b28b3861d852b8e284d8317ee43255a935065523220df2c226908` | evaluation document, owner draft of 2026-11-06 |
-| `NITRD_Hackathon_Presentation_2026-11-06.pptx` | `e0f634f943ef1379eff098d6ece89ce8a5e0fde8b8b90aadae9578da7a502f0c` | deck, owner draft of 2026-11-06 |
+| `NITRD_Evaluation_2026-11-06.docx` | `cf838f4eb4ae4fd2246fdf679596d823f4099e5d3280ba30e0fc2e443e79a1eb` | evaluation document, owner draft of 2026-11-06 |
+| `NITRD_Hackathon_Presentation_2026-11-06.pptx` | `d6d5cb9e230a3eef79b15b1c811178a4304ced67bca502c42460852d95c5f276` | deck, owner draft of 2026-11-06 |
 | `*.docx.txt`, `*.pptx.txt` | n/a | plain-text extracts, so that `git grep` can search these documents |
 
 The extracts take the paragraph text of each part, in order.

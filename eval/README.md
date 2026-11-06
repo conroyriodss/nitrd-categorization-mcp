@@ -39,8 +39,11 @@ prototype, not an operational NIH categorization system.
 
 ## 0. Claim-to-artifact map (verifiable from this repository)
 
-Judges see the repositories, not the Databricks workspace. Every measured claim below points at a
-committed file. Run records were exported verbatim from the workspace by
+Judges see the repositories, not the Databricks workspace. Every measured claim in the table below points at a
+committed file. The one exception is CI status, which points at public GitHub Actions logs. Every runner run cited in
+the three repositories is exported under `results/runs/` and hashed in `results/INDEX.json` (audited
+2026-11-06). The void agent run `c1ab24d7` is recorded only in [`agent/README.md`](agent/README.md); its
+table row is not exported. Run records were exported verbatim from the workspace by
 [`scripts/export_evidence.py`](../scripts/export_evidence.py) (credential scan before writing; a hit
 aborts the export) and are hashed in [`results/INDEX.json`](results/INDEX.json). Three workspace
 identifiers that are not credentials (workspace host name, Apps service-principal IDs, warehouse ID)
@@ -59,6 +62,9 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 | Tool utilization: 14 tools exercised, cases and latency per tool | [`results/tool_utilization.md`](results/tool_utilization.md) (+ `.json`) | derived from the parity log above; parser checks its per-tool maxima against the run summary |
 | Ten-step chain passes over HTTP on all three demo projects; 4 WARN lines kept as review cases | [`results/runs/20261103T1358Z_e2e_778bd3ab/`](results/runs/20261103T1358Z_e2e_778bd3ab/) | step-by-step PASS/WARN lines, 0 rows left |
 | Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is added here when recorded |
+| Decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T1743Z_lifecycle_a745730a/`](results/runs/20261106T1743Z_lifecycle_a745730a/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
+| Unified-commit battery: all four apps at `b6d521d`; smoke, parity 71/71, lifecycle, extended smoke, auth and e2e, each passed with 0/0/0 left | `results/runs/20261106T1739Z_smoke_ce935199/`, `20261106T1740Z_parity_6e0e5d36/`, `20261106T1743Z_lifecycle_a745730a/`, `20261106T1745Z_contract_51e36cc8/`, `20261106T1747Z_auth_249358ff/`, `20261106T1755Z_e2e_f4d4fff2/` | `git_commit`, `passed` and `rows_left` in each `run.json` |
+| Write path, step by step: submit, the same request_id on repeat with `created=false`, persisted history, cleanup to 0/0/0 | [`results/traces/20261106T1755Z_write_trace_f4d4fff2.md`](results/traces/20261106T1755Z_write_trace_f4d4fff2.md) | quoted lines from the committed e2e record, with its sha256 |
 | G.5 write-mode acceptance: 471 passed, 1 skipped, 0 failed (472 tests) | [`results/step_g/2026-11-02T2058Z_g5_write_mode/`](results/step_g/2026-11-02T2058Z_g5_write_mode/) (`g5_wm.xml` junit, `g5_wm.log`, `manifest.json`) | junit totals. The original manifest's sha256 `ca25cad3...` is the one in [`DECISIONS_LOG.md`](../docs/DECISIONS_LOG.md); the committed copy differs only by its one warehouse-ID redaction (INDEX.json) |
 | G.5 post-fix read-only run: 464 passed, 10 skipped, 0 failed (474 tests); post-fix e2e write mode 3 passed | [`results/step_g/2026-11-02T2144Z_g5_postfix/`](results/step_g/2026-11-02T2144Z_g5_postfix/) | junit totals and logs |
 | Parent classifier PR-AUC 0.862 (FY2019 validation half) | [`classifier_evaluation.md`](classifier_evaluation.md) | protocol and tables; the per-record validation predictions are not committed (they are built from the Unity Catalog ExPORTER tables) |
