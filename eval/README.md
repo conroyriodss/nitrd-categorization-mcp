@@ -18,6 +18,25 @@ The multi-server MLflow path is blocked on a workspace administrator
 provisioning a service principal. This is a public-data, sandbox-write
 prototype, not an operational NIH categorization system.
 
+### Data scope and the one non-public input (File A)
+
+**The servers use public data only.** The three MCP servers and the reviewer portal read public ExPORTER/RePORTER, iCite and PubMed records ([`SECURITY.md`](../SECURITY.md#data-scope-public-data-only)). The NITRD label they are measured against is public too: per-award membership of RCDC spending category 329, from RePORT Categorical Spending.
+
+**One non-public input enters the Task 1 FY2024 held-out score (in `entry2-uac-nitrd`), and only to flag pre-exposure.**
+* File A is an RCDC Trend Analysis Project Listing export over the NITRD AI sub-categories (`docs/HELDOUT_PROTOCOL.md`). It is not public: the sub-category layer is internal (see the correction at `docs/reference/subcategory_id_to_pca.v1.md:42`).
+* It is reduced to one boolean per award, `filea_exposed`: the award's core project appears in File A in any FY (seal manifest `docs/seal/task1_fy2024_seal_manifest.json`). That flag splits the FY2024 universe into blind Tier 2 (61,423 awards) and exposed Tier 2x (2,642).
+* The flag lives only in the sealed key, outside every repository. No File A rows, project numbers or sub-category names are committed in any of the three repositories.
+
+**No public rule can replace the flag, and no other split can be computed.**
+* None of the 29 NITRD sub-category IDs returns a record from the public RePORTER API, in any year sampled.
+* The nearest public field, RCDC category 4372 "Machine Learning and Artificial Intelligence", is a different category, not a NITRD sub-category.
+* The committed score outputs are aggregates only. No per-award label leaves the run, so any different partition would need a second read of the sealed key.
+
+**A reader who treats the File A dependency as disqualifying can use one figure that doesn't depend on it.**
+* All-awards FY2024 recall is **0.958**, over 64,065 awards and 3,560 NITRD (`build/task1_backtest_vs_reported_v1/report.json`, `years.2024.all_awards_mixed.recall` = 0.95758; `docs/PERFORMANCE_VS_REPORTED.md`). It does not use the split.
+* It is not a blind figure: it includes the 2,642 awards that File A flags as possibly exposed.
+* Two disclosed deviations from the pre-registration concern the split: D1, Tier 2x is 2,642 awards, not the 2,281 the pre-registration names; D2, 95 File A project numbers did not parse. Neither changes a reported figure; see `docs/TASK1_PREREG_DEVIATIONS.md` in `entry2-uac-nitrd`.
+
 ## 0. Claim-to-artifact map (verifiable from this repository)
 
 Judges see the repositories, not the Databricks workspace. Every measured claim below points at a
