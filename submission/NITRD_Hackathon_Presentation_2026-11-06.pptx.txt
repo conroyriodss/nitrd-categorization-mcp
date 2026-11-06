@@ -1,0 +1,173 @@
+--- slide 1 ---
+Governed AI assist for
+NITRD portfolio reporting
+An MCP Service-"Write" prototype with human review
+0.934
+blind FY2024 Tier 2 recall
+at 11.55% overall shortlist budget
+High-recall triage, not human parity.  [Verified]
+NIH / Office of Data Science Strategy
+Public-data demonstration. Sandbox only.
+--- slide 2 ---
+Problem
+Mission alignment
+64,065
+awards in the filtered FY2024 universe
+12
+program component areas
+for human classification and reporting
+Analyst screening precedes SME review.
+The entry supports a reproducible shortlist, transparent PCA suggestions and an SME-reviewed fingerprint refresh.
+--- slide 3 ---
+Solution
+MCP design and governed writes
+nih-grants-outputs
+6 read tools
+Cohort and evidence
+nitrd-classifier
+3 inference tools
+Classify and explain
+reviewer-portal
+5 tools; 2 mutate
+Submit and decide
+Human review
+PO, IC representative or SIA
+Approve / reject / defer / override
+Sandbox records
+Request, route and decision events
+Idempotency and final decisions
+Chosen personas are not authenticated. MODIFY permits audit-table changes. No official RCDC write.
+--- slide 4 ---
+Technical approach
+Readability, maintainability, validation and reliability
+Responsibility
+Repository boundary
+Validated inputs
+shared/models.py
+reviewer_portal/models.py
+Agent-facing tools
+Each server’s tools/ directory
+Model calculations
+parent/model.py
+subcategory/engine.py
+API and SQL access
+data.py, shared/sql.py
+DataCite and cross-server clients
+Pydantic evidence
+Task2Suggestion
+1–12 PCAs from a Literal vocabulary
+Duplicates and extra fields rejected
+71/71
+deployed/reference parity cases
+byte-identical  [Verified]
+Bounded SQL deadline, sanitized errors and read-back before retrying an unknown write. [Repo-reported]
+Live fault tolerance and concurrency remain unmeasured.
+--- slide 5 ---
+Demonstration
+Current operator selections  [Repo-reported]
+FY2019 validation case
+Parent p
+What the human sees
+NIAID 9730348
+0.990
+Confident agreement with listing
+NINR 10018446
+0.409
+Borderline above threshold 0.389
+NCI 9717098
+0.019
+Confident miss requiring human review
+FY2021 NIBIB U24: 14-award walkthrough
+Task 3: static FY2021 snapshot of 519 candidates for SME review. Log-odds are not deployed-model probabilities.
+Selected cases are not an accuracy sample. New walkthrough completion is not independently verified.
+--- slide 6 ---
+Evaluation highlights
+FY2024 non-File-A Tier 2  [Verified]
+The pre-registered recall gate passed
+0.934
+95% CI [0.921, 0.948]
+11.55%
+overall budget
+K = 7,399
+0.89
+new-core
+recall
+Measured budget points. Only Arm A at the frozen budget is the pass/fail gate. Prior aggregate exposure is disclosed.
+--- slide 7 ---
+Evaluation highlights
+Model comparison and distinct parent-classification evidence
+FY2024 Tier 2 recall
+FY2019 parent validation
+PR-AUC
+Value
+Scope-vocabulary LR
+0.633
+Learned parent
+0.862
++0.229
+95% CI 0.202–0.253
+A, B and A+CF share overall K=7,399. *CF uses its own size 3,442.
+Arm C: Llama 4 Maverick, FY2021 weighted sample only. Recall 0.827 is not directly comparable.
+--- slide 8 ---
+Evaluation highlights
+Descriptive backtest with comparable annual scope
+All-award recall (zoomed)
+Count-forecast error
+FY2022/23/25 exposed. FY2024 all-award point mixed. Blind Tier 2 recall 0.934 is a separate scope.
+FY2026 under-prediction is a new draft hypothesis, not a witnessed commitment or measured outcome.
+--- slide 9 ---
+Evaluation highlights
+High-recall triage, not human parity
+Cohen’s κ in context
+Model: blind Tier 2. Human studies: context only.
+Exposed-year model κ spans 0.58–0.64.
+Population
+Evidence status
+FY2024 Tier 2
+Blind non-File-A subset
+Prior aggregate reads disclosed
+FY2024 File A
+Exposed Tier 2x
+Reported separately
+FY2026 snapshot
+56,508 awards; forecast 3,326
+[PENDING REVEAL]
+FY2026 count blindness is qualified by the prior aggregate glimpse.
+Not measured: agent tool selection, injection resistance, reviewer time or incumbent-screen savings.
+--- slide 10 ---
+Why distinctive
+Innovation and mission alignment
+Contribution
+Inspectable evidence
+Limit
+Service-Write workflow
+Review submissions, human decisions and event history
+Sandbox demonstration
+Chosen personas
+Evaluation integrity
+Pre-registered gate, sealed predictions and separate witness chain
+Integrity and ordering do not erase prior exposure
+NIH portfolio support
+Transparent shortlisting, PCA suggestions and refresh candidates
+Reviewer time and assisted quality remain unmeasured
+The reusable pattern is human-reviewed writing paired with evidence judges can inspect without cloud access.
+--- slide 11 ---
+Next steps
+Evidence needed for production use
+Priority
+Concrete next test or control
+Current status
+Agent behavior
+Tool-selection and adversarial suite in Harness 11-12
+Not measured
+Write authority
+Authenticated actor; approval bound to call; separate cleanup principal
+[Planned]
+Failure recovery
+Live SQL faults, partial writes and concurrent retries
+Not measured
+Prospective evaluation
+Reveal on frozen FY2026 IDs; separately register bias hypothesis
+[PENDING REVEAL]
+Bias note is a draft
+Measure reviewer time and assisted-review outcomes against the incumbent workflow.
