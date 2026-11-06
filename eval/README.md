@@ -146,14 +146,14 @@ fitting, calibration, or threshold choice. PR-AUC here is average precision
 **Deployed state, unified 2026-11-06.** All four Databricks Apps run one commit, `b6d521d`. They were deployed together at 17:23Z in snapshot mode from Git folders checked out at that commit.
 * Deployment ids: `01f1da06c77a…` (outputs), `01f1da06c790…` (classifier), `01f1da06c7a5…` (portal) and `01f1da06c7b9…` (runner).
 * Every tracked file in each deployed snapshot is byte-identical to `b6d521d`: 57, 56, 62 and 146 files respectively, 0 mismatches.
-* Since `b6d521d`, `main` has changed only docs and evidence. Nothing under `src/`, `deploy/` or `tests/` has changed.
+* Since `b6d521d`, `main` has changed docs and evidence, plus agent-only code: the 2026-11-06 identifier validation in `src/nitrd_agent/db.py` and its test `tests/test_agent_db_identifiers.py` (not yet deployed). No file that the three servers import has changed (`src/shared/`, `src/reviewer_portal/`, `src/nih_grants_outputs/`, `src/nitrd_classifier/`), and no runner source has either. The runner snapshot's `tests/` lacks the new agent test file, which the runner never runs.
 
 | App | Deployed commit | Shipped code vs `b6d521d` | Security scan (platform status) |
 |---|---|---|---|
 | `mcp-nih-grants-outputs` | `b6d521d` | identical | clean |
 | `mcp-nitrd-classifier` | `b6d521d` | identical | clean |
-| `mcp-nitrd-reviewer-portal` | `b6d521d` | identical | findings reported; not yet triaged in the UI (see `docs/DECISIONS_LOG.md`, 2026-11-06) |
-| `mcp-nitrd-e2e-runner` | `b6d521d` | identical | findings reported; not yet triaged in the UI (same source as the portal) |
+| `mcp-nitrd-reviewer-portal` | `b6d521d` | identical | 2 criticals, `pages.py:316/:859`, false positives (HTML `<select>`); to be Ignored (see `docs/DECISIONS_LOG.md`, 2026-11-06) |
+| `mcp-nitrd-e2e-runner` | `b6d521d` | identical | the same 2 false positives (same source as the portal) |
 
 **Correction: the classifier's code had changed since `2c37f87`.** Until 2026-11-06 the classifier was held at `2c37f87`. This section then said its own code was identical to HEAD and that `src/shared` had only gained modules, "with nothing removed or edited". Both statements were false:
 * `2c6a668` changed the tool descriptions of `classifier_classify_parent` and `classifier_classify_subcategory`.
@@ -308,10 +308,19 @@ Component status is in the authoritative table in the
   that file). Both are false positives, ignored with justification on the
   reviewer-portal and e2e-runner apps; 0 open on the deployments of
   2026-11-04 (owner-confirmed). See `docs/DECISIONS_LOG.md` (2026-11-04).
-  **Not yet triaged in the platform UI as of 2026-11-06:** the later portal
-  (`01f1d945`), runner (`01f1d95d`) and agent (`01f1d952`, `01f1d9f7`)
-  deployments, all of which report `APP_DEPLOYMENT_SCAN_STATUS_FINDINGS`. A
-  local reproduction is in the log (agent entry, 2026-11-06).
+  **Current deployments (2026-11-06), from the platform UI.** There are four `fstring-select`
+  criticals; outputs and classifier are clean.
+  * `pages.py:316` and `:859` on the portal and runner are the same `<select>` false positive,
+    at moved lines.
+  * `src/nitrd_agent/db.py:23` and `:26` interpolate env-derived table identifiers, which cannot
+    be bound parameters. They are fixed by validating every identifier at import, across the
+    whole module (not yet deployed).
+  * The same unvalidated construct exists in `src/shared/tables.py`, which all servers use. It
+    was not flagged; it is recorded and awaits an owner decision because it is deployed source.
+
+  The platform ruleset and our local semgrep run disagree in both directions, and neither is a
+  superset of the other. So a scan without findings is not evidence of absence. Details are in
+  `docs/DECISIONS_LOG.md` (2026-11-06).
 
 The sandbox flag and label mark record scope; they are not an authorization
 boundary. Databricks credentials and the pending evaluation service principal
