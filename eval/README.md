@@ -66,6 +66,7 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 | Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is added here when recorded |
 | Decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T1743Z_lifecycle_a745730a/`](results/runs/20261106T1743Z_lifecycle_a745730a/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
 | Unified-commit battery: all four apps at `b6d521d`; smoke, parity 71/71, lifecycle, extended smoke, auth and e2e, each passed with 0/0/0 left | `results/runs/20261106T1739Z_smoke_ce935199/`, `20261106T1740Z_parity_6e0e5d36/`, `20261106T1743Z_lifecycle_a745730a/`, `20261106T1745Z_contract_51e36cc8/`, `20261106T1747Z_auth_249358ff/`, `20261106T1755Z_e2e_f4d4fff2/` | `git_commit`, `passed` and `rows_left` in each `run.json` |
+| Deployed contract, 90 checks at `b6d521d`: FY2022-FY2026 each refused by the cohort tool (list mode tested at FY2022 only); counts checked against independent SQL (FY2021 NIBIB U01 = 41, NIBIB R35 = 0, list-mode counts, exact-SQL round-trip); limits, error naming, classifier bands, portal routing | [`results/runs/20261106T1745Z_contract_51e36cc8/`](results/runs/20261106T1745Z_contract_51e36cc8/) | one `[pass]` line per check in `report.log`; per-section counts and per-tool latency in `run.json` |
 | Write path, step by step: submit, the same request_id on repeat with `created=false`, persisted history, cleanup to 0/0/0 | [`results/traces/20261106T1755Z_write_trace_f4d4fff2.md`](results/traces/20261106T1755Z_write_trace_f4d4fff2.md) | quoted lines from the committed e2e record, with its sha256 |
 | G.5 write-mode acceptance: 471 passed, 1 skipped, 0 failed (472 tests) | [`results/step_g/2026-11-02T2058Z_g5_write_mode/`](results/step_g/2026-11-02T2058Z_g5_write_mode/) (`g5_wm.xml` junit, `g5_wm.log`, `manifest.json`) | junit totals. The original manifest's sha256 `ca25cad3...` is the one in [`DECISIONS_LOG.md`](../docs/DECISIONS_LOG.md); the committed copy differs only by its one warehouse-ID redaction (INDEX.json) |
 | G.5 post-fix read-only run: 464 passed, 10 skipped, 0 failed (474 tests); post-fix e2e write mode 3 passed | [`results/step_g/2026-11-02T2144Z_g5_postfix/`](results/step_g/2026-11-02T2144Z_g5_postfix/) | junit totals and logs |
@@ -156,8 +157,51 @@ fitting, calibration, or threshold choice. PR-AUC here is average precision
 * So the deployed classifier served older descriptions and older SQL error handling. The unified redeploy removes the difference.
 
 **Parity at the unified commit.** Parity run `6e0e5d36` (runner job, 2026-11-06 17:40Z) checks all four apps at `b6d521d`, against in-process code at the same commit.
-* Result: 71 of 71 cases byte-identical, all 14 tools covered, 0 failures; remote p50 647 ms, p95 2,766 ms.
+* Result: 71 of 71 cases byte-identical, all 14 tools covered, 0 failures. Remote latency p50 647.3 ms, p95 2765.9 ms; the per-tool figures are in [`results/tool_utilization.md`](results/tool_utilization.md).
+* `portal_submit_review_request` shows 28.5 ms (run-summary max; median 27 ms). That figure covers rejection-path cases only: both parity cases fail argument validation, because write-tool parity cases never reach SQL. It is not a write latency.
 * Record: [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/).
+
+**Extended smoke (contract) at the unified commit.** Run `51e36cc8` (runner, HTTP, 2026-11-06 17:45Z, `b6d521d`) ran 90 checks, all passed: outputs 16, cohort 18, classifier 41 and portal 15. It is read-only: one check confirms the review-table row counts are unchanged. Record: [`results/runs/20261106T1745Z_contract_51e36cc8/`](results/runs/20261106T1745Z_contract_51e36cc8/).
+* **The FY2022-FY2026 guard holds on the deployed cohort tool.** Each of FY2022, FY2023, FY2024, FY2025 and FY2026 is refused, with the error naming the year and the reason. List mode refuses too, but the run only tests FY2022 in list mode; FY2023-FY2026 are not tested there.
+* **Tool answers are checked against independent SQL, not against the tool itself.**
+  * The FY2021 NIBIB U01 cohort is 41 by a separate SQL count, and the tool's total and returned counts equal it, untruncated.
+  * Re-running the SQL and parameters the tool returns gives the same records and total.
+  * The NIBIB R35 cohort is 0 by SQL, and the tool returns an empty list.
+  * List-mode IC × activity counts equal SQL.
+  * The `outputs_find_projects` small-result count is checked by SQL (2..50), as is the empty case (the category exists, but has no rows that year).
+* **Limits and errors.** Limits 0 and 501 are rejected for projects. For cohorts, 0 and 51 are rejected without confirmation and 201 is rejected even with it; 51 with `confirm_large` is accepted. Unknown appl_id, core and category inputs are tool errors that name the bad input. The inactive persona and an unknown persona are refused.
+* **Classifier contract**, on 4 awards, one per band (high, positive near threshold, negative near threshold, clear negative):
+  * the threshold is in (0, 1), and the suggestion agrees with p versus the threshold;
+  * features are ordered by |contribution|, and the top features appear in `explain`;
+  * `explain(subcategory)` equals `classify_subcategory`.
+
+Per-tool latency in the contract run (ms):
+
+| Tool | n | p50 | p95 | max |
+|---|---:|---:|---:|---:|
+| `classifier_classify_parent` | 4 | 540.3 | 581.8 | 581.8 |
+| `classifier_classify_subcategory` | 4 | 454.2 | 485.8 | 485.8 |
+| `classifier_explain` | 9 | 473.3 | 556.7 | 556.7 |
+| `outputs_find_cohort` | 15 | 20.3 | 767.7 | 767.7 |
+| `outputs_find_projects` | 7 | 734.3 | 1208.6 | 1208.6 |
+| `outputs_get_project_datacite` | 1 | 889.9 | 889.9 | 889.9 |
+| `outputs_get_project_detail` | 1 | 360.9 | 360.9 | 360.9 |
+| `outputs_get_project_publications` | 1 | 1293.1 | 1293.1 | 1293.1 |
+| `outputs_score_project_intensity` | 1 | 827.1 | 827.1 | 827.1 |
+| `portal_get_reviewer_assignment` | 3 | 516.4 | 567.6 | 567.6 |
+| `portal_list_pending_reviews` | 11 | 412.7 | 549.4 | 549.4 |
+
+Rows with n = 1 are single observations, not percentiles. Of the 18 cohort checks, 9 are refusals or limit rejections: FY2022-FY2026, list-mode FY2022, and three limit cases. That probably explains the low `outputs_find_cohort` p50 of 20 ms, but the record does not tie each of the 15 timed calls to a check.
+
+Cold start, first call versus later calls, per app (ms):
+
+| App | First call (tool) | First call | Later calls p50 |
+|---|---|---:|---:|
+| `mcp-nih-grants-outputs` | `outputs_get_project_detail` | 360.9 | 470.5 |
+| `mcp-nitrd-classifier` | `classifier_classify_parent` | 581.8 | 473.3 |
+| `mcp-nitrd-reviewer-portal` | `portal_list_pending_reviews` | 549.4 | 418.5 |
+
+The apps started at 17:24:35-17:24:44Z, about 21 minutes before this run, and smoke and parity had already called them. So this compares the run's first call with its later calls on warm apps; it is not a true cold start. The largest first-call ratio is 1.31× (portal, 549.4 / 418.5); outputs' first call was faster than its later p50.
 
 **Earlier parity run `5704d50c` (2026-11-03 13:50Z, in-process code at `0e6ae7c`).** It is kept as history and is not a current citation.
 * At that time the apps ran four different commits: portal `eb64604`, runner `0e6ae7c`, outputs `daa101d` and classifier `2c37f87`.
