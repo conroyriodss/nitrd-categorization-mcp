@@ -1,4 +1,4 @@
---- slide 1 ---
+=== slide 1 ===
 Governed AI assist for
 NITRD portfolio reporting
 An MCP Service-"Write" prototype with human review
@@ -8,7 +8,16 @@ at 11.55% overall shortlist budget
 High-recall triage, not human parity.  [Verified]
 NIH / Office of Data Science Strategy
 Public-data demonstration. Sandbox only.
---- slide 2 ---
+--- slide 1 speaker notes ---
+Headline scope: FY2024 non-File-A Tier 2 only, prior aggregate exposure disclosed. The declared Arm A gate was at least 0.90. This title result is not a measure of human reliability. The deck expands the results section to five slides while preserving the original section order.
+Introduce the team. The current demonstration uses public RePORTER/ExPORTER and public NITRD dashboard data in a Databricks sandbox. No official classification is changed. Historical PCC and PO Name remediation is described in evaluation §3; public-data demonstration is not a claim that every historical repository object is clean.
+Revision reconciled with committed artifacts on 2026-11-05. Evidence tiers match the evaluation document: [Verified], [Repo-reported], [Team-reported], [Planned], [PENDING REVEAL]. Only prospective FY2026 results remain pending; FY2024 was revealed on 2026-11-04. This revision did not rerun servers or reopen a sealed key.
+2026-11-05 backtest and operator-page revision: current MCP source 4629b337b62bf517f8ace8616835cf2aebed6424; UAC source 7bc428aa6233b4ce561670d6fe4e289506f373c4. New operator selections and static panel are repository-reported; earlier HTTP runs do not validate the new walkthrough. A separately hashed forecast-bias addendum remains draft, without a new witness record.
+Reference wording retained from the preceding deck
+Governed AI assist for
+NITRD portfolio reporting
+An MCP Service-"Write" prototype: shortlist, classify, and refresh — with the human in the loop.
+=== slide 2 ===
 Problem
 Mission alignment
 64,065
@@ -18,7 +27,25 @@ program component areas
 for human classification and reporting
 Analyst screening precedes SME review.
 The entry supports a reproducible shortlist, transparent PCA suggestions and an SME-reviewed fingerprint refresh.
---- slide 3 ---
+--- slide 2 speaker notes ---
+This is a Service "Write" problem: a review submission and oversight trail. Neither staff speed nor year-to-year consistency is measured. The award count is the reconstructed QVR-filtered FY2024 universe, not an all-NIH annual total; FY2021 has 63,074 records.
+Benchmark scope: Mateen’s title/abstract screening kappa 0.56, Neves’ first-round biomedical classification kappa 0.62 (label range 0.42–0.82), and Hanegraaf’s abstract-screening mean 0.82 (SD 0.11; 12 studies). The displayed range describes these contextual estimates, not an exhaustive literature range, confidence interval or NITRD threshold. Hanegraaf’s 0.72 appears in the paper but describes its own review screening; it is not the synthesis mean. Model-vs-listing agreement and human-vs-human agreement are different estimands. The evaluation table separates kappa/ICC from automation-bias effects; Hooper’s consistency is relegated to a note without an unverified numeric estimate. Pier’s ICC about 0 remains study-specific preliminary ratings, not all NIH review.
+Sources:
+https://doi.org/10.2147/CLEP.S43118
+https://doi.org/10.1186/s13326-023-00292-w
+https://doi.org/10.1136/bmjopen-2023-076912
+https://doi.org/10.1073/pnas.1714379115
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_fy2024_score_v1/report.json
+Official PCA history: FY2017–2018 restructuring, AI introduced FY2020, ENIT FY2022, LSN renamed ACNS FY2023. These changes do not establish a statistical regime break or explain the decay by themselves.
+[FY2017 PCA changes](https://www.nitrd.gov/program-component-areas/nitrd-pcas-2017/); [FY2018 PCA changes](https://www.nitrd.gov/program-component-areas/nitrd-pcas-2018/); [FY2020 AI addition](https://www.nitrd.gov/program-component-areas/nitrd-pcas-2020/); [FY2022 definitions](https://www.nitrd.gov/program-component-areas/nitrd-pcas-2022/); [FY2023 changes, including ENIT’s FY2022 introduction](https://www.nitrd.gov/program-component-areas/nitrd-pcas-2023/). These are NITRD’s official definitions associated with each annual Budget Supplement; the PDF supplements were not independently retrieved in this revision.
+Reference wording retained from the preceding deck
+Problem
+Annual screening: 64,065 awards in the filtered FY2024 universe; identify networking and IT R&D, assign 12 program component areas, report the crosscut.
+Analyst term screening precedes SME review; portfolio-scale review and annual fingerprint refresh require human judgment.
+PCA definitions and the screening fingerprint change over time; frozen-model decay motivates refresh.
+Contextual screening/classification kappa: 0.56–0.82; Hanegraaf’s abstract-screening mean is 0.82 across 12 studies. Not a NITRD standard.
+Goal: a reproducible, auditable shortlist; transparent PCA suggestions; SME-reviewed fingerprint refresh.
+=== slide 3 ===
 Solution
 MCP design and governed writes
 nih-grants-outputs
@@ -37,7 +64,21 @@ Sandbox records
 Request, route and decision events
 Idempotency and final decisions
 Chosen personas are not authenticated. MODIFY permits audit-table changes. No official RCDC write.
---- slide 4 ---
+--- slide 3 speaker notes ---
+Architecture diagram: separates read, inference and sandbox-write effects. Only request submission and decision recording mutate records. The audit trail is not tamper-evident because the portal service principal has MODIFY. Separate cleanup credentials and authenticated authorization are planned. The arrows describe the workflow, not an autonomous agent measurement.
+Emphasize three tasks: shortlist (Task 1), PCA suggestions (Task 2), and fingerprint refresh (Task 3). The human decides. Only submit-review-request and record-decision tools mutate records. The portal is not an authenticated end-user authorization boundary. Existing HTTP evidence uses a fixed tool chain; autonomous tool selection is unmeasured.
+Source: https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/eval/README.md
+The current operator walkthrough is a human-driven UI flow. The historical HTTP evidence remains a scripted fixed tool chain, not an autonomous agent experiment. The new NIBIB U24 cohort is not a newly verified 14-award lifecycle run.
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/4629b337b62bf517f8ace8616835cf2aebed6424/DEMOS.md
+Reference wording retained from the preceding deck
+Solution
+Three MCP servers, 14 agent-facing tools, one review workflow:
+nih-grants-outputs (6 read tools): award cohorts, details, publications, DataCite outputs and intensity.
+nitrd-classifier (3 inference tools): suggest NITRD vs not; rank PCAs; explain the suggestion.
+reviewer-portal (5 tools; 2 mutate): preview assignment, submit request, list queue, record decision, read history.
+Current operator walkthrough: FY2021 NIBIB U24 cohort (14 awards); human review and decision. [Repo-reported]
+Durable request_id; idempotency conflicts; final decisions; audit events. Chosen personas are not authenticated identities.
+=== slide 4 ===
 Technical approach
 Readability, maintainability, validation and reliability
 Responsibility
@@ -62,7 +103,42 @@ deployed/reference parity cases
 byte-identical  [Verified]
 Bounded SQL deadline, sanitized errors and read-back before retrying an unknown write. [Repo-reported]
 Live fault tolerance and concurrency remain unmeasured.
---- slide 5 ---
+--- slide 4 speaker notes ---
+Module map (pinned source): src/shared/models.py holds shared Pydantic inputs and annotations; src/reviewer_portal/models.py holds nested write inputs; each server’s tools/ directory holds tool registration, descriptions and result schemas. src/nitrd_classifier/parent/model.py and subcategory/engine.py hold model calculations. Server data.py modules and src/shared/sql.py isolate SQL; reviewer_portal/classifier_client.py and outputs_client.py isolate cross-server clients; nih_grants_outputs/datacite/client.py isolates DataCite.
+The full classifier_explain description as the agent sees it:
+Explain the parent (NITRD yes/no) or subcategory (PCA) suggestion.
+task="parent": the terms that pushed the score toward and against NITRD,
+with exact signed contributions. task="subcategory": each matched PCA
+and the scope-vocabulary terms behind it. Explains the model's
+behaviour, not whether the suggestion is correct.
+The evaluation document includes the verbatim Task2Suggestion model and validator. It inherits extra="forbid" and str_strip_whitespace=True; list length 1–12 and vocabulary_id maximum length 100 are bounded; the after-validator rejects duplicate PCAs. Flat tool parameters use Annotated constraints. This is static schema evidence, not measured agent tool-selection success.
+The shipped nitrd-parent-v2 (FY2015–2018 fit / FY2019 validation) is distinct from task1-fingerprint-v1 (FY2021 build / FY2024 evaluation). Arm B: databricks-qwen3-embedding-0-6b, served qwen3-embedding-0-6b-112025, general-domain. Arm C: databricks-llama-4-maverick, served meta-llama-4-maverick-040225; zero-shot, 3 runs, temperature 0; weighted FY2021 sample only. No Arm C FY2024 or FY2026 result.
+Read guards constrain the builder; they cannot retract prior human exposure. Tool annotations and simulated SQL-failure tests are committed; no tests were executed in this revision.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/src/reviewer_portal/models.py
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/src/nitrd_classifier/tools/explain.py
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/src/shared/sql.py
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/tests/test_sql_failures.py
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_llm_v1/summary.json
+Frozen pre-registration check: SHA-256 c770a502777725545f9cff5130e329fe83bb003c39f3c11f61beb0e0259a0280 explicitly specifies Llama 4 Maverick and FY2021-only Arm C scope. The prior gpt-6-astra entry was a documentation error, not evidence of a post-freeze substitution. The pre-freeze Llama 3.3 70B change for a QPS limit was disclosed before any completed run.
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/docs/TASK1_PREREGISTRATION.md
+The reserved-year guard covers outputs_find_cohort, operator pages and analysis_run_validation before SQL. It does not cover the historical fixed FY2022 end-to-end chain: pre-guardrail FY2022 demo fixtures use per-project tools by appl_id and pre-existing per-category discovery. No new reserved-year selection is claimed. The current operator pages now use the FY2019 selections in DEMOS.md; the historical FY2022 end-to-end fixtures remain distinct. This is a surface-specific build restriction, not a server-wide authorization boundary.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/src/shared/guardrail.py
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/tests/fixtures/demo_projects.json
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/tests/test_smoke_e2e.py
+Grant-level limit: the portal App principal holds MODIFY on sandbox tables; no delete is a tool-surface property. Audit tables can be altered by that principal and are not tamper-evident. A separate cleanup principal is planned, not implemented or tested.
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/4629b337b62bf517f8ace8616835cf2aebed6424/ARCHITECTURE.md
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/4629b337b62bf517f8ace8616835cf2aebed6424/SECURITY.md
+Reference wording retained from the preceding deck
+Technical approach
+Goal-facing tools: cohort discovery, classification explanations and review submission; models, tools and data clients are separate modules.
+Pydantic evidence: Task2Suggestion bounds PCA lists to 1–12, validates vocabulary and rejects repeats; extra fields forbidden. [Repo-reported]
+14 tools; 71/71 deployed/reference cases byte-identical. [Verified] Table CHECK constraints, idempotency conflicts and decision finality bound sandbox writes.
+Interpretable TF-IDF + LR; general-domain Qwen3 embeddings + LR; Llama 4 Maverick (FY2021 only); carry-forward. Models and evaluation populations are pinned.
+FY2021-only label build guard; hashed plan and predictions; separate witness chain verifies integrity and ordering. Prior exposure is disclosed separately.
+Bounded SQL deadline, sanitized errors, read-back guidance for unknown writes. [Repo-reported] Live failure and concurrency behavior remain unmeasured.
+=== slide 5 ===
 Demonstration
 Current operator selections  [Repo-reported]
 FY2019 validation case
@@ -80,7 +156,35 @@ Confident miss requiring human review
 FY2021 NIBIB U24: 14-award walkthrough
 Task 3: static FY2021 snapshot of 519 candidates for SME review. Log-odds are not deployed-model probabilities.
 Selected cases are not an accuracy sample. New walkthrough completion is not independently verified.
---- slide 6 ---
+--- slide 5 speaker notes ---
+Current operator demonstration (2026-11-05). Model nitrd-parent-v2-ba10594d9581, training FY2015–FY2018; threshold 0.389 chosen on the FY2019 threshold half. These three records are in the other, validation half; earlier records of the same core can be in training. They are selected teaching cases, including a miss by construction, not an accuracy sample. Rule committed at 2809262; later DEMOS.md records the picks.
+NIAID: 9730348 / UH2AI132339 / FY2019 UH2 cohort of 5 / p 0.990. NINR: 10018446 / ZIENR000016 / FY2019 ZIE cohort of 1 / p 0.409. NCI: 9717098 / K24CA194251 / FY2019 K24 cohort of 10 / p 0.019. All are listed NITRD. 9722313 was in the threshold-selection half, so the declared NINR fallback applied. The ZIE intramural record belongs to the parent-classifier demo population, not the QVR-filtered Task 1 universe.
+The fourth scenario is FY2021 NIBIB U24, 14 records: select, submit, review, decide or override, cleanup. This is out of time for nitrd-parent-v2, but has no validated metrics of its own; prior cores may appear in training. Repository source does not independently establish a completed new HTTP/UI run, its cleanup, or live deployment. Keep sandbox label "Not RCDC / demonstration only" visible. Personas are not authenticated identities.
+Task 3: static FY2021 snapshot, not a live query. It contains 519 uncategorized candidates from the Arm A out-of-fold K=7,284 shortlist. Arm A task1-fingerprint-v1 OOF log-odds are not probabilities and not the deployed parent classifier. Source commit 7bc428aa6233b4ce561670d6fe4e289506f373c4; CSV SHA-256 d25d77d362eddb4446a33b0ca94c6d930aff5303a666516a3ef5de35c445f31f. Source provenance and model labels are surfaced in the repository implementation; confirmed under-capture and reviewer benefit remain unmeasured.
+Engine top 3 and stored top 2 are distinct quantities. In the old FY2022 chain, the subcategory output shows three PCAs; operator requests store two. Existing AI-absence observations apply to the old examples, not the new cards. No tool-contract change.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/4629b337b62bf517f8ace8616835cf2aebed6424/DEMOS.md
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/4629b337b62bf517f8ace8616835cf2aebed6424/src/reviewer_portal/resources/task3/SOURCE.json
+https://github.com/conroyriodss/uac-nitrd/blob/7bc428aa6233b4ce561670d6fe4e289506f373c4/build/task1_fy2021_under_capture_v1/SUMMARY.json
+Historical FY2022 test evidence only; not the current cards:
+Show the confident and borderline cases; the borderline case illustrates why the reviewer remains. These are scripted tool chains, not an autonomous selection experiment. Selected role names are demonstration personas, not independently proven identities.
+Run 778bd3ab supports chain execution, idempotent re-submit and cleanup; the separate lifecycle run 3d778528 supports approve/reject/defer/override and finality. Do not attribute every lifecycle assertion to the end-to-end run.
+Source: https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/eval/README.md
+Display correction per the operator-UI instruction: AI absent from the stored top 2 PCAs. The tool contract is unchanged. This sentence applied to the previous revision. Current FY2019 selections are now recorded in DEMOS.md; their new operator-path execution is not established by the historical run.
+The reserved-year guard covers outputs_find_cohort, operator pages and analysis_run_validation before SQL. It does not cover the historical fixed FY2022 end-to-end chain: pre-guardrail FY2022 demo fixtures use per-project tools by appl_id and pre-existing per-category discovery. No new reserved-year selection is claimed. The current operator pages now use the FY2019 selections in DEMOS.md; the historical FY2022 end-to-end fixtures remain distinct. This is a surface-specific build restriction, not a server-wide authorization boundary.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/src/shared/guardrail.py
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/tests/fixtures/demo_projects.json
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/tests/test_smoke_e2e.py
+Reference wording retained from the preceding deck
+Demonstration
+Current operator pages [Repo-reported]; FY2019 cards use nitrd-parent-v2.
+NIAID 9730348: p 0.990; listed NITRD; confident agreement.
+NINR 10018446: p 0.409 versus threshold 0.389; borderline agreement.
+NCI 9717098: p 0.019; listed NITRD; a confident miss for human review.
+FY2021 NIBIB U24: 14-award walkthrough; new completion and cleanup not independently verified.
+Task 3: static FY2021 snapshot, 519 candidates; Arm A out-of-fold log-odds, not deployed-model probabilities.
+=== slide 6 ===
 Evaluation highlights
 FY2024 non-File-A Tier 2  [Verified]
 The pre-registered recall gate passed
@@ -93,7 +197,45 @@ K = 7,399
 new-core
 recall
 Measured budget points. Only Arm A at the frozen budget is the pass/fail gate. Prior aggregate exposure is disclosed.
---- slide 7 ---
+--- slide 6 speaker notes ---
+Curve points are copied directly from scopes.tier2.curves in the committed reveal report and sorted by fraction. Lines connect reported points without smoothing. The chart's frozen-K point uses the report's unrounded budget fraction; displayed budget remains 11.55%. The y-axis is recall of Tier 2 listed positives; the x-axis budget uses the full filtered FY2024 universe. Exposed File A is excluded from this result. Source: https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_fy2024_score_v1/report.json
+SHA-256 2fc574fe781fb2fedcc05319c97c3714ed7d3201ac1989ca5dd9480c5c891e11
+Lead with recall at stated burden on FY2024 non-File-A Tier 2; do not call the whole year fully blind. The exposed File A subset is separate Tier 2x. Prior aggregate reads and carry-forward analyses are in the frozen exposure ledger.
+Rounding convention: preserve source precision for headline metrics; selected context values use two decimals (0.42 from 0.416, 0.89 from 0.893, and 0.93 from blind Tier 2 0.934; the all-award decay curve now retains three decimals). These are rounded displays of the same scoped results, not separate runs; the all-award backtest has its own scope and exposure labels. Spelled-out kappa/about/at least avoid Greek/math glyph export risk.
+Burden is shortlist fraction against the full filtered award universe (64,065), not the incumbent analyst screen. Its yield is not public; no like-for-like current-practice or reviewer-time comparison is measured.
+A+CF uses carry-forward members first, ordered by A rank, then the rest by A rank, cut at K=7,399 overall. It is not a union or equal-size Tier-2 shortlist. Tier 2: A 5,143 selected, 330 uncategorized excluded, 1,382 true positives; A+CF 4,876 selected, 666 excluded, 1,415 true positives. Precision denominators 4,813 and 4,210 give 0.287 and 0.336. Including uncategorized as negatives gives 0.269 and 0.290. Same overall budget; highest observed Tier 2 recall among reported configurations, not established production optimality. Carry-forward alone: 0.699 at its own full-universe size 3,442; it recovers almost no new cores.
+FY2021 status: A out-of-fold recall 0.95 at 11.55%; B 0.92; C 0.827 on a weighted sample only (not directly comparable). Carry-forward FY2021 was not computed (FY2020 labels unavailable). FY2024 A/B/CF agreement matrix and disagreement_tier2.csv.gz are committed; benefit of disagreement routing is unmeasured.
+Exposure attestation [Team-reported]: owner saw a rough unfiltered FY2026 aggregate about 3,787 in QVR on 2026-10-25, with no award-level membership read, exported or recorded. The filtered forecast 3,326 is a different quantity; count-forecast blindness is qualified, not absolute. FY2025 is 57% exposed and not a held-out target. The ledger’s 2,281 FY2024 File A IDs differ from Tier 2x: core-based exposure tagging yields 2,642 filtered awards / 2,081 positives.
+Benchmark context is not a human-parity test. The evaluation now uses Hanegraaf’s synthesis mean kappa 0.82 (SD 0.11, 12 abstract-screening studies); 0.72 is its own-review screening agreement. Model kappa 0.42 is below the contextual 0.56–0.82 estimates. Hooper consistency and ICC are different statistics. Sattler’s between-group ICCs have overlapping intervals: 0.61 (0.32–0.96) vs 0.89 (0.71–0.99), from a rating-scale exercise. Mutz reports single-review ICC 0.259 and mean-rating ICC 0.495 across 2.82 reviews. Goddard’s RR 1.26 (1.11–1.44) comes from a four-study indicative meta-analysis. Tsai Table 5 confirms 67.7% vs 34.6%; its Results prose instead prints 67.8%. These are contextual effects, not measured outcomes of this server.
+Reveal report SHA-256: 2fc574fe781fb2fedcc05319c97c3714ed7d3201ac1989ca5dd9480c5c891e11; matches witness 0005. No sealed key reopened.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/docs/analysis/scope_vs_learned.md
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_fy2024_score_v1/report.json
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/docs/TASK1_PREREGISTRATION.md
+https://github.com/conroyriodss/uac-witness/blob/7f6c81e55539061e8847a849c9c51a3c97f096fe/records/0005-task1-tier2-fy2024-reveal.json
+Citation sources:
+https://doi.org/10.1136/bmjopen-2023-076912
+https://doi.org/10.1371/journal.pone.0130450
+https://doi.org/10.1371/journal.pone.0048509
+https://doi.org/10.1136/amiajnl-2011-000089
+https://doi.org/10.1197/jamia.M1279
+Moved from the original results slide to notes; evidence and numeric precision preserved:
+41-award functional exercise; cleanup 0/0/0. Not a load benchmark. [Repo-reported]
+Tier 2: new-core recall 0.89; B 0.881; A+CF 0.957 at the same overall K=7,399. Precision partly reflects excluded uncategorized awards.
+All-award decay FY2022/23/24/25: 0.984 → 0.968 → 0.958 → 0.941. FY2022/23/25 exposed; FY2024 mixed. Blind FY2024 Tier 2 0.934 is separate; prior aggregates remain disclosed.
+Comparable decay: all-award recall 0.984 (FY2022 exposed), 0.968 (FY2023 exposed), 0.958 (FY2024 mixed), 0.941 (FY2025 exposed). Blind FY2024 Tier 2 0.934 is the separate pre-registered gate point, not the curve endpoint. Approximately 1.4 percentage points per year over the endpoints is descriptive. No isolated cause or measured benefit of refresh is established. This is a post-reveal backtest, not an extension of blind validation.
+Kappa versus listing: 0.58, 0.60, 0.64 in FY2022/23/25 exposed years; 0.42 in blind Tier 2. The 0.42–0.64 range depends on year and scope; prevalence and File A inclusion differ, but their causal contributions are not decomposed. Higher exposed-year kappa does not establish human parity.
+Count error: +9.3%, +4.2%, −1.5%, −4.7% across FY2022/23/24/25; exact report values +9.31%, +4.22%, −1.47%, −4.69%. Signed error = (forecast − observed)/observed. FY2021 constants remain fixed as reported prevalence rises from 4.32% to 6.06%.
+Source: https://github.com/conroyriodss/uac-nitrd/blob/7bc428aa6233b4ce561670d6fe4e289506f373c4/build/task1_backtest_vs_reported_v1/report.json
+SHA-256 68b665c15dcbc78cca28467a1a815dd3acd23be7d46aab748e0633efdf22115b
+Reference wording retained from the preceding deck
+Evaluation highlights — results
+HTTP lifecycle: submit → route → decide → history → cleanup; approve/reject/defer/override passed. [Verified]
+FY2019 parent validation: scope-vocabulary LR 0.633 → learned 0.862 PR-AUC; +0.229 (CI 0.202–0.253). [Repo-reported]
+FY2024 Tier 2 (non-File-A, blind subset): recall 0.934; overall budget 11.55%; at least 0.90 gate passed. ~88% below full-portfolio review. [Verified]
+Tier 2 new-core recall: 0.89, where carry-forward recovers almost none.
+All-award decay FY2022/23/24/25: 0.984 → 0.968 → 0.958 → 0.941. FY2022/23/25 exposed; FY2024 mixed.
+=== slide 7 ===
 Evaluation highlights
 Model comparison and distinct parent-classification evidence
 FY2024 Tier 2 recall
@@ -108,14 +250,24 @@ Learned parent
 95% CI 0.202–0.253
 A, B and A+CF share overall K=7,399. *CF uses its own size 3,442.
 Arm C: Llama 4 Maverick, FY2021 weighted sample only. Recall 0.827 is not directly comparable.
---- slide 8 ---
+--- slide 7 speaker notes ---
+[Verified] FY2024 values and budget qualifications: https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_fy2024_score_v1/report.json
+A+CF is CF-first ranking followed by Arm A at the same overall K, not a union. Tier 2 precision denominators differ because uncategorized shortlisted awards are excluded under the pre-registered primary analysis. Full denominator arithmetic remains in the evaluation document and the retained results notes. Highest observed recall does not establish an optimal production configuration.
+[Repo-reported] Parent PR-AUC is a separate model and FY2019 validation population, 35,090 records at 4.35% prevalence. Comparator 0.633 is logistic regression on scope vocabulary. The scope engine itself is 0.222 and is not the +0.229 comparator. https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/docs/analysis/scope_vs_learned.md
+Arm C provenance: https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_llm_v1/summary.json
+=== slide 8 ===
 Evaluation highlights
 Descriptive backtest with comparable annual scope
 All-award recall (zoomed)
 Count-forecast error
 FY2022/23/25 exposed. FY2024 all-award point mixed. Blind Tier 2 recall 0.934 is a separate scope.
 FY2026 under-prediction is a new draft hypothesis, not a witnessed commitment or measured outcome.
---- slide 9 ---
+--- slide 8 speaker notes ---
+[Verified] Comparable all-award backtest: https://github.com/conroyriodss/uac-nitrd/blob/7bc428aa6233b4ce561670d6fe4e289506f373c4/build/task1_backtest_vs_reported_v1/report.json
+SHA-256 68b665c15dcbc78cca28467a1a815dd3acd23be7d46aab748e0633efdf22115b. Recall labels use the revised display values 0.984, 0.968, 0.958 and 0.941. The recall axis is zoomed from 0.90 to 1.00. The disconnected blind result 0.934 is shown separately in text, not substituted into the all-award curve.
+The count-error display preserves +9.3%, +4.2%, −1.5%, −4.7%; the report retains +9.31%, +4.22%, −1.47%, −4.69%. The observed pattern is descriptive. It does not isolate causal contributions from prevalence, taxonomy changes, program emphasis or reporting. Refresh improvement has not been measured.
+The draft bias addendum remains unregistered and unwitnessed. It leaves the original 3,326 forecast and frozen 56,508-award target unchanged. Its rough −10% estimate is a new exploratory extrapolation, not a FY2026 result. Full provenance remains in the evaluation document.
+=== slide 9 ===
 Evaluation highlights
 High-recall triage, not human parity
 Cohen’s κ in context
@@ -134,7 +286,49 @@ FY2026 snapshot
 [PENDING REVEAL]
 FY2026 count blindness is qualified by the prior aggregate glimpse.
 Not measured: agent tool selection, injection resistance, reviewer time or incumbent-screen savings.
---- slide 10 ---
+--- slide 9 speaker notes ---
+The chart compares distinct estimands, not interchangeable tests of human parity. Model-versus-listing κ 0.42 is below each contextual human-human screening/classification estimate. Mateen: title/abstract screening 0.56. Neves: first annotation round 0.62. Hanegraaf: included-study mean 0.82, not the authors’ own 0.72. No ICC or automation-bias effect size is placed on this κ chart. The exposed-year range is reported separately and does not establish parity.
+Lead with recall at stated burden on FY2024 non-File-A Tier 2; do not call the whole year fully blind. The exposed File A subset is separate Tier 2x. Prior aggregate reads and carry-forward analyses are in the frozen exposure ledger.
+Rounding convention: preserve source precision for headline metrics; selected context values use two decimals (0.42 from 0.416, 0.89 from 0.893, and 0.93 from blind Tier 2 0.934; the all-award decay curve now retains three decimals). These are rounded displays of the same scoped results, not separate runs; the all-award backtest has its own scope and exposure labels. Spelled-out kappa/about/at least avoid Greek/math glyph export risk.
+Burden is shortlist fraction against the full filtered award universe (64,065), not the incumbent analyst screen. Its yield is not public; no like-for-like current-practice or reviewer-time comparison is measured.
+A+CF uses carry-forward members first, ordered by A rank, then the rest by A rank, cut at K=7,399 overall. It is not a union or equal-size Tier-2 shortlist. Tier 2: A 5,143 selected, 330 uncategorized excluded, 1,382 true positives; A+CF 4,876 selected, 666 excluded, 1,415 true positives. Precision denominators 4,813 and 4,210 give 0.287 and 0.336. Including uncategorized as negatives gives 0.269 and 0.290. Same overall budget; highest observed Tier 2 recall among reported configurations, not established production optimality. Carry-forward alone: 0.699 at its own full-universe size 3,442; it recovers almost no new cores.
+FY2021 status: A out-of-fold recall 0.95 at 11.55%; B 0.92; C 0.827 on a weighted sample only (not directly comparable). Carry-forward FY2021 was not computed (FY2020 labels unavailable). FY2024 A/B/CF agreement matrix and disagreement_tier2.csv.gz are committed; benefit of disagreement routing is unmeasured.
+Exposure attestation [Team-reported]: owner saw a rough unfiltered FY2026 aggregate about 3,787 in QVR on 2026-10-25, with no award-level membership read, exported or recorded. The filtered forecast 3,326 is a different quantity; count-forecast blindness is qualified, not absolute. FY2025 is 57% exposed and not a held-out target. The ledger’s 2,281 FY2024 File A IDs differ from Tier 2x: core-based exposure tagging yields 2,642 filtered awards / 2,081 positives.
+Benchmark context is not a human-parity test. The evaluation now uses Hanegraaf’s synthesis mean kappa 0.82 (SD 0.11, 12 abstract-screening studies); 0.72 is its own-review screening agreement. Model kappa 0.42 is below the contextual 0.56–0.82 estimates. Hooper consistency and ICC are different statistics. Sattler’s between-group ICCs have overlapping intervals: 0.61 (0.32–0.96) vs 0.89 (0.71–0.99), from a rating-scale exercise. Mutz reports single-review ICC 0.259 and mean-rating ICC 0.495 across 2.82 reviews. Goddard’s RR 1.26 (1.11–1.44) comes from a four-study indicative meta-analysis. Tsai Table 5 confirms 67.7% vs 34.6%; its Results prose instead prints 67.8%. These are contextual effects, not measured outcomes of this server.
+Reveal report SHA-256: 2fc574fe781fb2fedcc05319c97c3714ed7d3201ac1989ca5dd9480c5c891e11; matches witness 0005. No sealed key reopened.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/docs/analysis/scope_vs_learned.md
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_fy2024_score_v1/report.json
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/docs/TASK1_PREREGISTRATION.md
+https://github.com/conroyriodss/uac-witness/blob/7f6c81e55539061e8847a849c9c51a3c97f096fe/records/0005-task1-tier2-fy2024-reveal.json
+Citation sources:
+https://doi.org/10.1136/bmjopen-2023-076912
+https://doi.org/10.1371/journal.pone.0130450
+https://doi.org/10.1371/journal.pone.0048509
+https://doi.org/10.1136/amiajnl-2011-000089
+https://doi.org/10.1197/jamia.M1279
+FY2026 target clarification (already pre-registered; no amendment): frozen §3.6 states “FY2026 universe = the frozen snapshot fetched 2026-11-03”. It excludes later-added awards from Tier 1 metrics and reports them separately. Section 6.11 defines the count forecast over the same snapshot; validate against revealed statuses restricted to the committed forecast application IDs, not the published final annual total. Primary ranking metrics exclude uncategorized awards as specified in §3.4. Tier 1c count error is reported, not pass/fail.
+The snapshot contains 56,508 filtered awards. The committed numeric count forecast is 3325.7, displayed as 3,326. Source pull: 2026-11-03; the later pre-freeze category-count check is not a replacement snapshot. Pre-registration SHA-256 c770a502777725545f9cff5130e329fe83bb003c39f3c11f61beb0e0259a0280. Forecast CSV SHA-256 b0b42f78a6041425395625c39f4062bc728c29c3658f8df63c31919ac23bca2a. Forecast-summary SHA-256 4ecb98bde969bf6830174212e49d04962d6cb83ecc0299f49ff0e5b4292ff4b1.
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/build/task1_forecast_fy2026/forecast_summary.json
+Primary citation re-check: Mateen’s Discussion explicitly says none had formal systematic-review experience before the course; the physician-reviewer qualification is factual, not an adjustment to the benchmark. Mutz prints the F-test 95% interval 0.249–0.279 for 0.259; preserve its asymmetry as reported.
+https://doi.org/10.2147/CLEP.S43118
+https://doi.org/10.1371/journal.pone.0048509
+Comparable decay: all-award recall 0.984 (FY2022 exposed), 0.968 (FY2023 exposed), 0.958 (FY2024 mixed), 0.941 (FY2025 exposed). Blind FY2024 Tier 2 0.934 is the separate pre-registered gate point, not the curve endpoint. Approximately 1.4 percentage points per year over the endpoints is descriptive. No isolated cause or measured benefit of refresh is established. This is a post-reveal backtest, not an extension of blind validation.
+Kappa versus listing: 0.58, 0.60, 0.64 in FY2022/23/25 exposed years; 0.42 in blind Tier 2. The 0.42–0.64 range depends on year and scope; prevalence and File A inclusion differ, but their causal contributions are not decomposed. Higher exposed-year kappa does not establish human parity.
+Count error: +9.3%, +4.2%, −1.5%, −4.7% across FY2022/23/24/25; exact report values +9.31%, +4.22%, −1.47%, −4.69%. Signed error = (forecast − observed)/observed. FY2021 constants remain fixed as reported prevalence rises from 4.32% to 6.06%.
+Source: https://github.com/conroyriodss/uac-nitrd/blob/7bc428aa6233b4ce561670d6fe4e289506f373c4/build/task1_backtest_vs_reported_v1/report.json
+SHA-256 68b665c15dcbc78cca28467a1a815dd3acd23be7d46aab748e0633efdf22115b
+Separate forecast-bias addendum [Planned]: prepared 2026-11-05 from exposed FY2022/23/25 and mixed FY2024 results. Proposed direction: under-prediction. Rough signed error about −10%, from unweighted OLS on the four exact historical percentage errors; extrapolation −10.08%. It is exploratory, not a prediction interval or a new pass/fail target. Original forecast 3325.7 (displayed 3,326), frozen application-ID universe of 56,508, model and scoring rules are unchanged. The raw annual-count trend comparison has different denominators and is not used as the snapshot validation target.
+The prepared note is not registered or separately witnessed; witness chain inspected through 0005. A count-only public-label-availability check and a new commit and witness record are required before claiming a pre-reveal commitment. No FY2026 award-level membership was consulted. The prior unfiltered aggregate glimpse about 3,787 remains disclosed. A correct bias-direction prediction does not rescue a miss of the original point estimate.
+Draft filename FY2026_FORECAST_BIAS_ADDENDUM_DRAFT.json; SHA-256 f3ac24c456ecf1a9d298e91edc39232c17780019e60db866e5d952c0145e936e
+Reference wording retained from the preceding deck
+Evaluation highlights — scope and limits
+FY2024: blind result is non-File-A Tier 2 only; exposed File A is separate Tier 2x. Prior aggregate reads disclosed.
+Kappa varies with scope: 0.42 blind Tier 2; 0.58–0.64 exposed years. High-recall triage, not human parity.
+Not measured: agent tool selection, injection resistance, incumbent-screen savings or reviewer time.
+FY2026: forecast 3,326 for the frozen 56,508 awards [PENDING REVEAL]; prior aggregate glimpse disclosed.
+Forecast-bias addendum: expected under-prediction; draft, not yet witnessed. Original forecast remains frozen.
+=== slide 10 ===
 Why distinctive
 Innovation and mission alignment
 Contribution
@@ -151,7 +345,18 @@ NIH portfolio support
 Transparent shortlisting, PCA suggestions and refresh candidates
 Reviewer time and assisted quality remain unmeasured
 The reusable pattern is human-reviewed writing paired with evidence judges can inspect without cloud access.
---- slide 11 ---
+--- slide 10 speaker notes ---
+Do not quantify read-only versus write workflows without the actual entry list. A name-based impression cannot establish competitors’ architectures or safeguards. The defensible distinction is the submitted workflow plus its inspectable evidence trail. The witness chain does not prove absence of prior exposure. Annual fingerprint refresh under human review is a proposed operational pattern; comparative speed and consistency are intended benefits, not established outcomes.
+Source: https://github.com/conroyriodss/uac-witness/blob/7f6c81e55539061e8847a849c9c51a3c97f096fe/records/0005-task1-tier2-fy2024-reveal.json
+The witness chain protects the external evidence record’s integrity and ordering. It is not a tamper-evidence guarantee for the sandbox review tables: the serving principal has MODIFY.
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/4629b337b62bf517f8ace8616835cf2aebed6424/ARCHITECTURE.md
+Reference wording retained from the preceding deck
+Why distinctive
+Name-based positioning only: review submission and decision recording distinguish the workflow; competitor safeguards were not audited.
+Governed sandbox writes pair with a pre-registered, sealed, witness-chained evaluation.
+Judges can inspect artifact integrity and ordering without cloud access. Prior human exposure requires a separate ledger.
+Intended agency benefits: reproducible portfolio screening and SME oversight. Faster reporting and improved consistency remain unmeasured.
+=== slide 11 ===
 Next steps
 Evidence needed for production use
 Priority
@@ -171,3 +376,28 @@ Reveal on frozen FY2026 IDs; separately register bias hypothesis
 [PENDING REVEAL]
 Bias note is a draft
 Measure reviewer time and assisted-review outcomes against the incumbent workflow.
+--- slide 11 speaker notes ---
+The immediate demonstration priority is an auditable operator walkthrough and an agent build whose tool-selection behavior can be measured. A successful scripted HTTP chain does not establish agent selection or injection resistance. The grant-level MODIFY caveat remains current; a separate cleanup principal and protected audit trail are future controls.
+These are future work, not measured capabilities. SQL deadline, sanitization and unknown-write read-back guidance are committed; simulated tests do not substitute for live failure/concurrency evaluation.
+Operational verification outstanding: identify Arm C’s executing principal and invocation path from run/audit metadata. The committed endpoint was databricks-llama-4-maverick through WorkspaceClient default authentication, not gpt-6-astra. Compare the agent 403 request’s exact endpoint, principal, timestamp, request ID and authorization result before diagnosing permissions or model availability; do not request credentials or reopen the key.
+Witness 0003 records completed PCC history rewrite and says a GitHub Support cache-purge request was filed separately. Ticket and closure remain independently unverified. PO Name was removed going forward in fixture v2; older public-name history remains.
+Sources:
+https://github.com/conroyriodss/nitrd-categorization-mcp/blob/f81733c7fc9cb3847e4d6ea5092dfdc06321fdbc/src/shared/sql.py
+https://github.com/conroyriodss/uac-nitrd/blob/6b11ff0ff40fa24a0be50c86e981d15abd9d555f/tools/build_llm_classifier_v1.py
+https://github.com/conroyriodss/uac-witness/blob/7f6c81e55539061e8847a849c9c51a3c97f096fe/records/0003-correction-pcc-history-rewrite.json
+Harness 11-12 is the consistent governance-lab name. Cleanup on a separate principal is planned; the current serving principal has MODIFY.
+AgentDojo: NeurIPS 2024 Datasets & Benchmarks track; arXiv:2406.13352; 97 tasks, 629 security test cases. InjecAgent: Findings of ACL 2024, pp. 10471–10506, DOI 10.18653/v1/2024.findings-acl.624; 1,054 cases over 17 user tools and 62 attacker tools. These describe external benchmarks, not measured tests of this server.
+https://proceedings.neurips.cc/paper_files/paper/2024/hash/97091a5177d8dc64b1da8bf3e1f6fb54-Abstract-Datasets_and_Benchmarks_Track.html
+https://aclanthology.org/2024.findings-acl.624/
+Separate forecast-bias addendum [Planned]: prepared 2026-11-05 from exposed FY2022/23/25 and mixed FY2024 results. Proposed direction: under-prediction. Rough signed error about −10%, from unweighted OLS on the four exact historical percentage errors; extrapolation −10.08%. It is exploratory, not a prediction interval or a new pass/fail target. Original forecast 3325.7 (displayed 3,326), frozen application-ID universe of 56,508, model and scoring rules are unchanged. The raw annual-count trend comparison has different denominators and is not used as the snapshot validation target.
+The prepared note is not registered or separately witnessed; witness chain inspected through 0005. A count-only public-label-availability check and a new commit and witness record are required before claiming a pre-reveal commitment. No FY2026 award-level membership was consulted. The prior unfiltered aggregate glimpse about 3,787 remains disclosed. A correct bias-direction prediction does not rescue a miss of the original point estimate.
+Draft filename FY2026_FORECAST_BIAS_ADDENDUM_DRAFT.json; SHA-256 f3ac24c456ecf1a9d298e91edc39232c17780019e60db866e5d952c0145e936e
+Reference wording retained from the preceding deck
+Next steps
+Pilot → production
+Measure agent tool selection, hostile-metadata injection, leakage and approval bypass in Harness 11-12.
+Add a release policy gate and approval bound to the exact actor and call.
+Establish authenticated authorization; separate cleanup permissions; protect audit records.
+Validate live SQL failures, partial writes and concurrent retries; annotations and failure code already exist.
+Measure reviewer time and assisted-review outcomes against the incumbent workflow.
+Formalize annual SME-reviewed fingerprint refresh.
