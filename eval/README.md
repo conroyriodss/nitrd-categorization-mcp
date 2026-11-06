@@ -58,9 +58,10 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 
 | Claim | Artifact (committed) | What a reader can check |
 |---|---|---|
-| All 14 deployed tools answer byte-identically to in-process code (71/71 cases) | [`results/runs/20261103T1350Z_parity_5704d50c/`](results/runs/20261103T1350Z_parity_5704d50c/) (`run.json`, `report.log`) | per-case lines, commit `0e6ae7c`, 0 review-table rows left |
+| All 14 deployed tools answer byte-identically to in-process code (71/71 cases), all four apps at `b6d521d` | [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/) (`run.json`, `report.log`) | per-case lines, commit `b6d521d`, 0 review-table rows left |
+| Earlier parity, history only: 71/71 with the portal at `eb64604` (the other apps were at three other commits) | [`results/runs/20261103T1350Z_parity_5704d50c/`](results/runs/20261103T1350Z_parity_5704d50c/) | verifies portal `eb64604` only; superseded by `6e0e5d36` |
 | Tool utilization: 14 tools exercised, cases and latency per tool | [`results/tool_utilization.md`](results/tool_utilization.md) (+ `.json`) | derived from the parity log above; parser checks its per-tool maxima against the run summary |
-| Ten-step chain passes over HTTP on all three demo projects; 4 WARN lines kept as review cases | [`results/runs/20261103T1358Z_e2e_778bd3ab/`](results/runs/20261103T1358Z_e2e_778bd3ab/) | step-by-step PASS/WARN lines, 0 rows left |
+| Ten-step chain passes over HTTP on all three demo projects, at `b6d521d`; 4 WARN lines kept as review cases | [`results/runs/20261106T1755Z_e2e_f4d4fff2/`](results/runs/20261106T1755Z_e2e_f4d4fff2/) | step-by-step PASS/WARN lines, 0 rows left (earlier run: `20261103T1358Z_e2e_778bd3ab/`, same values) |
 | Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is added here when recorded |
 | Decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T1743Z_lifecycle_a745730a/`](results/runs/20261106T1743Z_lifecycle_a745730a/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
 | Unified-commit battery: all four apps at `b6d521d`; smoke, parity 71/71, lifecycle, extended smoke, auth and e2e, each passed with 0/0/0 left | `results/runs/20261106T1739Z_smoke_ce935199/`, `20261106T1740Z_parity_6e0e5d36/`, `20261106T1743Z_lifecycle_a745730a/`, `20261106T1745Z_contract_51e36cc8/`, `20261106T1747Z_auth_249358ff/`, `20261106T1755Z_e2e_f4d4fff2/` | `git_commit`, `passed` and `rows_left` in each `run.json` |
@@ -134,37 +135,39 @@ fitting, calibration, or threshold choice. PR-AUC here is average precision
 | [`pi_history.md`](../docs/analysis/pi_history.md) | Should PI or project history be used? | PI history: no ranking gain, lowers new-PI recall (95% CI −0.047 to −0.017). Project history: +0.020 to +0.039, only on continuing awards. Neither is used by the shipped model. |
 | [`subcategory_ranking.md`](../docs/analysis/subcategory_ranking.md) | What does the PCA engine rank first on public NITRD awards? | Descriptive only: EHCS, LSDMA, and EdW take 70% of first places; AI is ranked first for 0.6% of records. No accuracy figure. |
 
-### Deployed state after Step G (2026-11-02)
+### Deployed state (unified 2026-11-06; previously the Step G state of 2026-11-02)
 
-The commit numbers above are from 2026-10-29. After Step G (review-table
-migrations 001 and 002, redeploys, post-deploy acceptance) the four Databricks
-Apps run these commits. Code at `main` HEAD is `21d98b9`.
+**Deployed state, unified 2026-11-06.** All four Databricks Apps run one commit, `b6d521d`. They were deployed together at 17:23Z in snapshot mode from Git folders checked out at that commit.
+* Deployment ids: `01f1da06c77a…` (outputs), `01f1da06c790…` (classifier), `01f1da06c7a5…` (portal) and `01f1da06c7b9…` (runner).
+* Every tracked file in each deployed snapshot is byte-identical to `b6d521d`: 57, 56, 62 and 146 files respectively, 0 mismatches.
+* Since `b6d521d`, `main` has changed only docs and evidence. Nothing under `src/`, `deploy/` or `tests/` has changed.
 
-| App | Deployed commit | Shipped code vs HEAD | Security scan |
+| App | Deployed commit | Shipped code vs `b6d521d` | Security scan (platform status) |
 |---|---|---|---|
-| `mcp-nih-grants-outputs` | `daa101d` | identical | clean |
-| `mcp-nitrd-reviewer-portal` | `eb64604` | identical | 2 findings, both resolved (HTML `<select>` tags in `pages.py`, not SQL) |
-| `mcp-nitrd-e2e-runner` | `0e6ae7c` | differs only in `tests/`: the read-only gate and version guard added in `21d98b9`. Its one job that runs the e2e chain (`/api/start/e2e`) sets write mode, so its jobs behave the same | 2 findings, both resolved (same `pages.py` lines) |
-| `mcp-nitrd-classifier` | `2c37f87` | its own code (`src/nitrd_classifier`, deploy files) identical; `src/shared` older (see below) | clean (first scan, redeploy of the same content on 2026-11-02) |
+| `mcp-nih-grants-outputs` | `b6d521d` | identical | clean |
+| `mcp-nitrd-classifier` | `b6d521d` | identical | clean |
+| `mcp-nitrd-reviewer-portal` | `b6d521d` | identical | findings reported; not yet triaged in the UI (see `docs/DECISIONS_LOG.md`, 2026-11-06) |
+| `mcp-nitrd-e2e-runner` | `b6d521d` | identical | findings reported; not yet triaged in the UI (same source as the portal) |
 
-The classifier stays at `2c37f87` by decision. Since that commit, `src/shared`
-gained four modules (`guardrail.py`, `ics.py`, `prior_year.py`, `urls.py`) and
-one function (`sql.json_array_param`), with nothing removed or edited. The
-classifier uses none of them, so the deployed classifier ships an older
-`src/shared` without the new, unused modules. Equivalence with the current code
-is shown by the parity suite (`tests/test_parity.py`): every tool, the
-classifier's included, gives byte-identical output in-process and through a
-server. Against the deployed Apps (runner job, 2026-11-03 13:50Z, in-process
-code at `0e6ae7c`): 71 of 71 cases byte-identical, classifier included.
+**Correction: the classifier's code had changed since `2c37f87`.** Until 2026-11-06 the classifier was held at `2c37f87`. This section then said its own code was identical to HEAD and that `src/shared` had only gained modules, "with nothing removed or edited". Both statements were false:
+* `2c6a668` changed the tool descriptions of `classifier_classify_parent` and `classifier_classify_subcategory`.
+* `daa101d` and `ceb81c8` edited `src/shared/sql.py` (+215/-23 lines, including the SQL failure contract), `models.py` and `__init__.py`.
+* So the deployed classifier served older descriptions and older SQL error handling. The unified redeploy removes the difference.
 
-Deployed-path run (runner, HTTP, 2026-11-03): the ten-step e2e chain passed on
-all three demo projects (13:58Z), with 0 rows left in the review tables. Its
-four WARN lines are kept on purpose; they are the cases a human reviewer should
-see: two known-NITRD projects with parent probability below 0.7 (NINR 0.58;
-NCI 0.275, which the classifier suggests as not NITRD), and for the same two,
-AI not among the top three PCAs.
-The smoke job (13:54Z) failed one check because the runner still expected 5
-outputs tools after `outputs_find_cohort` made it 6; fixed in the runner.
+**Parity at the unified commit.** Parity run `6e0e5d36` (runner job, 2026-11-06 17:40Z) checks all four apps at `b6d521d`, against in-process code at the same commit.
+* Result: 71 of 71 cases byte-identical, all 14 tools covered, 0 failures; remote p50 647 ms, p95 2,766 ms.
+* Record: [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/).
+
+**Earlier parity run `5704d50c` (2026-11-03 13:50Z, in-process code at `0e6ae7c`).** It is kept as history and is not a current citation.
+* At that time the apps ran four different commits: portal `eb64604`, runner `0e6ae7c`, outputs `daa101d` and classifier `2c37f87`.
+* So it verifies the portal at `eb64604` only. It says nothing about the later portal deploy at `4629b33`, which changed `portal_get_reviewer_assignment` output ([`agent/README.md`](agent/README.md), void-run note).
+
+**End-to-end run at the unified commit.** Run `f4d4fff2` (runner, HTTP, 2026-11-06 17:55Z) ran the ten-step chain in write mode.
+* It passed on all three demo projects, with 0 rows left in the review tables. A step-by-step write trace is in [`results/traces/`](results/traces/).
+* Its four WARN lines are the same as in the 2026-11-03 run `778bd3ab`, and are kept on purpose: they are the cases a human reviewer should see.
+  * Two known-NITRD projects have parent probability below 0.7: NINR 0.58, and NCI 0.275, which the classifier suggests as not NITRD.
+  * For the same two, AI is not among the top three PCAs.
+* Smoke `ce935199` passed all 8 checks (tool counts 6/3/5). The 2026-11-03 smoke failure (`a9204bb7`) was a stale expected count, 5 versus 6 outputs tools, fixed in the runner.
 
 Post-deploy acceptance (G.5, live warehouse): read-only 465 passed / 7 skipped
 / 0 failed; write mode 471 passed / 1 skipped / 0 failed; per-test results in

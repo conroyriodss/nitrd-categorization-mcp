@@ -121,7 +121,7 @@ that should not count is listed here, with the reason, and stays in the table.
     `databricks-gpt-6-1-sol`, suite `aes-functional-v1`. It recorded 50/50 passes, I1-I3
     true and rows_left 0/0/0.
   * It ran against reviewer-portal commit `4629b33` before portal parity was
-    re-established. The last parity run, 5704d50c, verified portal `eb64604` only.
+    re-established. The last parity run at that time, 5704d50c, verified portal `eb64604` only. Parity was re-established on 2026-11-06 by run `6e0e5d36`, with all four apps at `b6d521d`.
     4629b33 changed `portal_get_reviewer_assignment` output in commit 2c6a668 and
     `src/shared/sql.py` in ceb81c8.
   * It also ran without supervision. The app started it automatically on boot

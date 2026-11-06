@@ -16,7 +16,7 @@ never used by, or scored in, the blind evaluation in
 
 All three are public FY2022 awards that RCDC lists as NITRD
 ([`tests/fixtures/demo_projects.json`](tests/fixtures/demo_projects.json)). The recorded run over
-HTTP ([`e2e_778bd3ab`](eval/results/runs/20261103T1358Z_e2e_778bd3ab/report.log)) gives:
+HTTP at `b6d521d` ([`e2e_f4d4fff2`](eval/results/runs/20261106T1755Z_e2e_f4d4fff2/report.log); the same values as the earlier `e2e_778bd3ab`) gives:
 
 | Award | Story | Parent probability (threshold 0.389) | Routed to |
 | --- | --- | --- | --- |
