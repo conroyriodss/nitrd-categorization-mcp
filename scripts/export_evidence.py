@@ -23,7 +23,8 @@ replacement is counted per file in INDEX.json ("redactions"), so nothing is chan
 IDs to replace come from NITRD_EXPORT_REDACT_SP_IDS / NITRD_EXPORT_REDACT_WAREHOUSE_IDS.
 
 Usage (Databricks notebook / serverless):
-    python scripts/export_evidence.py --runs 5704d50c a9204bb7 778bd3ab --step-g DIR [DIR ...]
+    python scripts/export_evidence.py --runs 053b101d e1969ce8 d2ddab69 d74756ca ee2b5080 69cbcac7 \
+        --parity d2ddab69 --agent-runs c1ab24d7 [--step-g DIR ...]
 """
 
 from __future__ import annotations

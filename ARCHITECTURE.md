@@ -124,8 +124,8 @@ Design rules this follows:
 
 | Property | Evidence |
 | --- | --- |
-| Deployed equals in-process, for all 14 tools | parity run, 71/71 byte-identical, all four apps at `b6d521d`: [`eval/results/runs/20261106T1740Z_parity_6e0e5d36/`](eval/results/runs/20261106T1740Z_parity_6e0e5d36/) |
-| The 10-step workflow over HTTP | [`eval/results/runs/20261106T1755Z_e2e_f4d4fff2/`](eval/results/runs/20261106T1755Z_e2e_f4d4fff2/) (`b6d521d`) |
+| Deployed equals in-process, for all 14 tools | parity run, 71/71 byte-identical, all five apps at `95e5dea`: [`eval/results/runs/20261106T2041Z_parity_d2ddab69/`](eval/results/runs/20261106T2041Z_parity_d2ddab69/) |
+| The 10-step workflow over HTTP | [`eval/results/runs/20261106T2038Z_e2e_e1969ce8/`](eval/results/runs/20261106T2038Z_e2e_e1969ce8/) (`95e5dea`) |
 | Write-path rules, and that tests leave no rows | Step G.5 JUnit + manifest: [`eval/results/step_g/`](eval/results/step_g/) |
 | Schema and description rules | `tests/test_scaffold.py`, `tests/test_portal_tools.py` (CI) |
 

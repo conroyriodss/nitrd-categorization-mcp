@@ -61,17 +61,19 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 
 | Claim | Artifact (committed) | What a reader can check |
 |---|---|---|
-| All 14 deployed tools answer byte-identically to in-process code (71/71 cases), all four apps at `b6d521d` | [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/) (`run.json`, `report.log`) | per-case lines, commit `b6d521d`, 0 review-table rows left |
-| Earlier parity, history only: 71/71 with the portal at `eb64604` (the other apps were at three other commits) | [`results/runs/20261103T1350Z_parity_5704d50c/`](results/runs/20261103T1350Z_parity_5704d50c/) | verifies portal `eb64604` only; superseded by `6e0e5d36` |
+| All 14 deployed tools answer byte-identically to in-process code (71/71 cases), all five apps at `95e5dea` | [`results/runs/20261106T2041Z_parity_d2ddab69/`](results/runs/20261106T2041Z_parity_d2ddab69/) (`run.json`, `report.log`) | per-case lines, commit `95e5dea`, 0 review-table rows left |
+| Parity at `b6d521d`, history only: 71/71 with four apps at `b6d521d` | [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/) | verifies `b6d521d` only; superseded by `d2ddab69` at `95e5dea`, with no tool differing (report lines identical once timestamps and latencies are normalized) |
+| Earlier parity, history only: 71/71 with the portal at `eb64604` (the other apps were at three other commits) | [`results/runs/20261103T1350Z_parity_5704d50c/`](results/runs/20261103T1350Z_parity_5704d50c/) | verifies portal `eb64604` only; superseded by `6e0e5d36`, then `d2ddab69` |
 | Tool utilization: 14 tools exercised, cases and latency per tool | [`results/tool_utilization.md`](results/tool_utilization.md) (+ `.json`) | derived from the parity log above; parser checks its per-tool maxima against the run summary |
-| Ten-step chain passes over HTTP on all three demo projects, at `b6d521d`; 4 WARN lines kept as review cases | [`results/runs/20261106T1755Z_e2e_f4d4fff2/`](results/runs/20261106T1755Z_e2e_f4d4fff2/) | step-by-step PASS/WARN lines, 0 rows left (earlier run: `20261103T1358Z_e2e_778bd3ab/`, same values) |
-| Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is smoke `ce935199` at `b6d521d` (8/8, tool counts 6/3/5), in the battery row below |
-| Decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T1743Z_lifecycle_a745730a/`](results/runs/20261106T1743Z_lifecycle_a745730a/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
-| Unified-commit battery: all four apps at `b6d521d`; smoke, parity 71/71, lifecycle, extended smoke, auth and e2e, each passed with 0/0/0 left | `results/runs/20261106T1739Z_smoke_ce935199/`, `20261106T1740Z_parity_6e0e5d36/`, `20261106T1743Z_lifecycle_a745730a/`, `20261106T1745Z_contract_51e36cc8/`, `20261106T1747Z_auth_249358ff/`, `20261106T1755Z_e2e_f4d4fff2/` | `git_commit`, `passed` and `rows_left` in each `run.json` |
-| Deployed contract, 90 checks at `b6d521d`: FY2022-FY2026 each refused by the cohort tool (list mode tested at FY2022 only); counts checked against independent SQL (FY2021 NIBIB U01 = 41, NIBIB R35 = 0, list-mode counts, exact-SQL round-trip); limits, error naming, classifier bands, portal routing | [`results/runs/20261106T1745Z_contract_51e36cc8/`](results/runs/20261106T1745Z_contract_51e36cc8/) | one `[pass]` line per check in `report.log`; per-section counts and per-tool latency in `run.json` |
-| The cleanup identifier is derived before the write: the request_id equals the pre-registered UUIDv5 of the run's key, on all 3 chains (new on 2026-11-06) | [`results/runs/20261106T1755Z_e2e_f4d4fff2/`](results/runs/20261106T1755Z_e2e_f4d4fff2/) | `report.log` lines 20, 52 and 84 (registered values) |
+| Ten-step chain passes over HTTP on all three demo projects, at `95e5dea`; 4 WARN lines kept as review cases | [`results/runs/20261106T2038Z_e2e_e1969ce8/`](results/runs/20261106T2038Z_e2e_e1969ce8/) | step-by-step PASS/WARN lines, 0 rows left (history: `20261106T1755Z_e2e_f4d4fff2/` at `b6d521d` and `20261103T1358Z_e2e_778bd3ab/`, same WARN lines) |
+| Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is smoke `053b101d` at `95e5dea` (8/8, tool counts 6/3/5), in the battery row below |
+| Decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T2043Z_lifecycle_d74756ca/`](results/runs/20261106T2043Z_lifecycle_d74756ca/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
+| Frozen-commit battery: all five apps at `95e5dea`; smoke, parity 71/71, lifecycle, extended smoke, auth and e2e, each passed with 0/0/0 left | `results/runs/20261106T2038Z_smoke_053b101d/`, `20261106T2041Z_parity_d2ddab69/`, `20261106T2043Z_lifecycle_d74756ca/`, `20261106T2047Z_contract_ee2b5080/`, `20261106T2048Z_auth_69cbcac7/`, `20261106T2038Z_e2e_e1969ce8/` | `git_commit`, `passed` and `rows_left` in each `run.json` |
+| Battery at `b6d521d`, history only (four apps; agent at `f9c024b`): the same six kinds, each passed with 0/0/0 left | `results/runs/20261106T1739Z_smoke_ce935199/`, `20261106T1740Z_parity_6e0e5d36/`, `20261106T1743Z_lifecycle_a745730a/`, `20261106T1745Z_contract_51e36cc8/`, `20261106T1747Z_auth_249358ff/`, `20261106T1755Z_e2e_f4d4fff2/` | verifies `b6d521d` only; superseded by the `95e5dea` battery |
+| Deployed contract, 90 checks at `95e5dea`: FY2022-FY2026 each refused by the cohort tool (list mode tested at FY2022 only); counts checked against independent SQL (FY2021 NIBIB U01 = 41, NIBIB R35 = 0, list-mode counts, exact-SQL round-trip); limits, error naming, classifier bands, portal routing | [`results/runs/20261106T2047Z_contract_ee2b5080/`](results/runs/20261106T2047Z_contract_ee2b5080/) | one `[pass]` line per check in `report.log`; per-section counts and per-tool latency in `run.json` |
+| The cleanup identifier is derived before the write: the request_id equals the pre-registered UUIDv5 of the run's key, on all 3 chains (first checked 2026-11-06) | [`results/runs/20261106T2038Z_e2e_e1969ce8/`](results/runs/20261106T2038Z_e2e_e1969ce8/) | `report.log` lines 20, 52 and 84 (registered values) |
 | Unknown write outcome: tested by a simulated fault only (4 in-process fault tests among 11). Live faults (SQL timeout, upstream down, concurrent retries) are not measured | same record, `report.log` lines 227-238; `tests/test_smoke_e2e.py:907-978` | test names and PASSED lines; the tracebacks at lines 148-290 come from the simulated fault |
-| Write path, step by step: submit, the same request_id on repeat with `created=false`, persisted history, cleanup to 0/0/0 | [`results/traces/20261106T1755Z_write_trace_f4d4fff2.md`](results/traces/20261106T1755Z_write_trace_f4d4fff2.md) | quoted lines from the committed e2e record, with its sha256 |
+| Write path, step by step: submit, the same request_id on repeat with `created=false`, persisted history, cleanup to 0/0/0 | [`results/traces/20261106T1755Z_write_trace_f4d4fff2.md`](results/traces/20261106T1755Z_write_trace_f4d4fff2.md) | quoted lines from the committed e2e record `f4d4fff2` (at `b6d521d`), with its sha256; history, not regenerated for `e1969ce8` |
 | G.5 write-mode acceptance: 471 passed, 1 skipped, 0 failed (472 tests) | [`results/step_g/2026-11-02T2058Z_g5_write_mode/`](results/step_g/2026-11-02T2058Z_g5_write_mode/) (`g5_wm.xml` junit, `g5_wm.log`, `manifest.json`) | junit totals. The original manifest's sha256 `ca25cad3...` is the one in [`DECISIONS_LOG.md`](../docs/DECISIONS_LOG.md); the committed copy differs only by its one warehouse-ID redaction (INDEX.json) |
 | G.5 post-fix read-only run: 464 passed, 10 skipped, 0 failed (474 tests); post-fix e2e write mode 3 passed | [`results/step_g/2026-11-02T2144Z_g5_postfix/`](results/step_g/2026-11-02T2144Z_g5_postfix/) | junit totals and logs |
 | Parent classifier PR-AUC 0.862 (FY2019 validation half) | [`classifier_evaluation.md`](classifier_evaluation.md) | protocol and tables; the per-record validation predictions are not committed (they are built from the Unity Catalog ExPORTER tables) |
@@ -143,29 +145,32 @@ fitting, calibration, or threshold choice. PR-AUC here is average precision
 
 ### Deployed state (unified 2026-11-06; previously the Step G state of 2026-11-02)
 
-**Deployed state, unified 2026-11-06.** All four Databricks Apps run one commit, `b6d521d`. They were deployed together at 17:23Z in snapshot mode from Git folders checked out at that commit.
-* Deployment ids: `01f1da06c77a…` (outputs), `01f1da06c790…` (classifier), `01f1da06c7a5…` (portal) and `01f1da06c7b9…` (runner).
-* Every tracked file in each deployed snapshot is byte-identical to `b6d521d`: 57, 56, 62 and 146 files respectively, 0 mismatches.
-* Since `b6d521d`, `main` has changed docs and evidence, plus agent-only code: the 2026-11-06 identifier validation in `src/nitrd_agent/db.py` and its test `tests/test_agent_db_identifiers.py` (not yet deployed). No file that the three servers import has changed (`src/shared/`, `src/reviewer_portal/`, `src/nih_grants_outputs/`, `src/nitrd_classifier/`), and no runner source has either. The runner snapshot's `tests/` lacks the new agent test file, which the runner never runs.
+**Deployed state, frozen 2026-11-06.** All five Databricks Apps run one commit, `95e5dea`. They were deployed together at 20:31Z in snapshot mode from Git folders checked out at that commit. Server source is frozen from here: no change to `src/`, `deploy/` or `tests/` without an explicit owner decision.
+* `95e5dea` adds table-identifier validation (`src/shared/identifiers.py`, used by `src/shared/tables.py` and `src/nitrd_agent/db.py`) and its tests to `b6d521d`. Nothing else under `src/`, `deploy/` or `tests/` differs.
+* Every tracked file in each deployed snapshot is byte-identical to `95e5dea`, with 0 mismatches and nothing missing. The only files outside git are the `app.yaml` / `requirements.txt` copies and the commit markers.
 
-| App | Deployed commit | Shipped code vs `b6d521d` | Security scan (platform status) |
-|---|---|---|---|
-| `mcp-nih-grants-outputs` | `b6d521d` | identical | clean |
-| `mcp-nitrd-classifier` | `b6d521d` | identical | clean |
-| `mcp-nitrd-reviewer-portal` | `b6d521d` | identical | 2 criticals, `pages.py:316/:859`, false positives (HTML `<select>`); to be Ignored (see `docs/DECISIONS_LOG.md`, 2026-11-06) |
-| `mcp-nitrd-e2e-runner` | `b6d521d` | identical | the same 2 false positives (same source as the portal) |
+| App | Deployed commit | Deployment id | Files byte-verified | Security scan (platform status) |
+|---|---|---|---:|---|
+| `mcp-nih-grants-outputs` | `95e5dea` | `01f1da210f4a11caa9445fa060354dca` | 58 | clean |
+| `mcp-nitrd-classifier` | `95e5dea` | `01f1da210f791e38ba4e82977ba781ff` | 57 | clean |
+| `mcp-nitrd-reviewer-portal` | `95e5dea` | `01f1da21102b1ac7bf1ce8a133d8fa2a` | 63 | findings; triage and Ignore text in `docs/DECISIONS_LOG.md` (2026-11-06) |
+| `mcp-nitrd-e2e-runner` | `95e5dea` | `01f1da210f781705895384747fbb5326` | 149 | findings; same source as the portal |
+| `mcp-nitrd-agent` | `95e5dea` | `01f1da21177f156b866f7025dde59eb6` | 14 | findings; triage in `docs/DECISIONS_LOG.md` |
+
+History: from 17:23Z to 20:31Z on 2026-11-06, four apps ran `b6d521d` (deployments `01f1da06c77a…`, `01f1da06c790…`, `01f1da06c7a5…` and `01f1da06c7b9…`; 57, 56, 62 and 146 files byte-identical), and the agent ran `f9c024b`.
 
 **Correction: the classifier's code had changed since `2c37f87`.** Until 2026-11-06 the classifier was held at `2c37f87`. This section then said its own code was identical to HEAD and that `src/shared` had only gained modules, "with nothing removed or edited". Both statements were false:
 * `2c6a668` changed the tool descriptions of `classifier_classify_parent` and `classifier_classify_subcategory`.
 * `daa101d` and `ceb81c8` edited `src/shared/sql.py` (+215/-23 lines, including the SQL failure contract), `models.py` and `__init__.py`.
 * So the deployed classifier served older descriptions and older SQL error handling. The unified redeploy removes the difference.
 
-**Parity at the unified commit.** Parity run `6e0e5d36` (runner job, 2026-11-06 17:40Z) checks all four apps at `b6d521d`, against in-process code at the same commit.
-* Result: 71 of 71 cases byte-identical, all 14 tools covered, 0 failures. Remote latency p50 647.3 ms, p95 2765.9 ms; the per-tool figures are in [`results/tool_utilization.md`](results/tool_utilization.md).
-* `portal_submit_review_request` shows 28.5 ms (run-summary max; median 27 ms). That figure covers rejection-path cases only: both parity cases fail argument validation, because write-tool parity cases never reach SQL. It is not a write latency.
-* Record: [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/).
+**Parity at the frozen commit.** Parity run `d2ddab69` (runner job, 2026-11-06 20:41Z) checks all five apps at `95e5dea` against in-process code at the same commit.
+* Result: 71 of 71 cases byte-identical, all 14 tools covered, 0 failures. Remote latency p50 558.7 ms, p95 1523.7 ms; the per-tool figures are in [`results/tool_utilization.md`](results/tool_utilization.md).
+* Against `6e0e5d36` (at `b6d521d`), no tool differs: with timestamps and latencies normalized, the report lines are identical.
+* `portal_submit_review_request` shows 27.0 ms (run-summary max; median 26.5 ms). That figure covers rejection-path cases only: both parity cases fail argument validation, because write-tool parity cases never reach SQL. It is not a write latency.
+* Record: [`results/runs/20261106T2041Z_parity_d2ddab69/`](results/runs/20261106T2041Z_parity_d2ddab69/). History: `6e0e5d36` at `b6d521d` (p50 647.3 ms, p95 2765.9 ms), [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/).
 
-**Extended smoke (contract) at the unified commit.** Run `51e36cc8` (runner, HTTP, 2026-11-06 17:45Z, `b6d521d`) ran 90 checks, all passed: outputs 16, cohort 18, classifier 41 and portal 15. It is read-only: one check confirms the review-table row counts are unchanged. Record: [`results/runs/20261106T1745Z_contract_51e36cc8/`](results/runs/20261106T1745Z_contract_51e36cc8/).
+**Extended smoke (contract) at the frozen commit.** Run `ee2b5080` (runner, HTTP, 2026-11-06 20:47Z, `95e5dea`) ran 90 checks, all passed: outputs 16, cohort 18, classifier 41 and portal 15. It is read-only: one check confirms the review-table row counts are unchanged. Record: [`results/runs/20261106T2047Z_contract_ee2b5080/`](results/runs/20261106T2047Z_contract_ee2b5080/). History: `51e36cc8` at `b6d521d` (the same 90 checks).
 * **The FY2022-FY2026 guard holds on the deployed cohort tool.** Each of FY2022, FY2023, FY2024, FY2025 and FY2026 is refused, with the error naming the year and the reason. List mode refuses too, but the run only tests FY2022 in list mode; FY2023-FY2026 are not tested there.
 * **Tool answers are checked against independent SQL, not against the tool itself.**
   * The FY2021 NIBIB U01 cohort is 41 by a separate SQL count, and the tool's total and returned counts equal it, untruncated.
@@ -183,44 +188,44 @@ Per-tool latency in the contract run (ms):
 
 | Tool | n | p50 | p95 | max |
 |---|---:|---:|---:|---:|
-| `classifier_classify_parent` | 4 | 540.3 | 581.8 | 581.8 |
-| `classifier_classify_subcategory` | 4 | 454.2 | 485.8 | 485.8 |
-| `classifier_explain` | 9 | 473.3 | 556.7 | 556.7 |
-| `outputs_find_cohort` | 15 | 20.3 | 767.7 | 767.7 |
-| `outputs_find_projects` | 7 | 734.3 | 1208.6 | 1208.6 |
-| `outputs_get_project_datacite` | 1 | 889.9 | 889.9 | 889.9 |
-| `outputs_get_project_detail` | 1 | 360.9 | 360.9 | 360.9 |
-| `outputs_get_project_publications` | 1 | 1293.1 | 1293.1 | 1293.1 |
-| `outputs_score_project_intensity` | 1 | 827.1 | 827.1 | 827.1 |
-| `portal_get_reviewer_assignment` | 3 | 516.4 | 567.6 | 567.6 |
-| `portal_list_pending_reviews` | 11 | 412.7 | 549.4 | 549.4 |
+| `classifier_classify_parent` | 4 | 482.0 | 631.0 | 631.0 |
+| `classifier_classify_subcategory` | 4 | 467.5 | 662.1 | 662.1 |
+| `classifier_explain` | 9 | 489.2 | 577.7 | 577.7 |
+| `outputs_find_cohort` | 15 | 15.8 | 1003.7 | 1003.7 |
+| `outputs_find_projects` | 7 | 667.2 | 971.3 | 971.3 |
+| `outputs_get_project_datacite` | 1 | 963.4 | 963.4 | 963.4 |
+| `outputs_get_project_detail` | 1 | 471.2 | 471.2 | 471.2 |
+| `outputs_get_project_publications` | 1 | 900.0 | 900.0 | 900.0 |
+| `outputs_score_project_intensity` | 1 | 846.4 | 846.4 | 846.4 |
+| `portal_get_reviewer_assignment` | 3 | 515.7 | 536.7 | 536.7 |
+| `portal_list_pending_reviews` | 11 | 432.8 | 568.0 | 568.0 |
 
-Rows with n = 1 are single observations, not percentiles. Of the 18 cohort checks, 9 are refusals or limit rejections: FY2022-FY2026, list-mode FY2022, and three limit cases. That probably explains the low `outputs_find_cohort` p50 of 20 ms, but the record does not tie each of the 15 timed calls to a check.
+Rows with n = 1 are single observations, not percentiles. Of the 18 cohort checks, 9 are refusals or limit rejections: FY2022-FY2026, list-mode FY2022, and three limit cases. That probably explains the low `outputs_find_cohort` p50 of 16 ms, but the record does not tie each of the 15 timed calls to a check.
 
 Cold start, first call versus later calls, per app (ms):
 
 | App | First call (tool) | First call | Later calls p50 |
 |---|---|---:|---:|
-| `mcp-nih-grants-outputs` | `outputs_get_project_detail` | 360.9 | 470.5 |
-| `mcp-nitrd-classifier` | `classifier_classify_parent` | 581.8 | 473.3 |
-| `mcp-nitrd-reviewer-portal` | `portal_list_pending_reviews` | 549.4 | 418.5 |
+| `mcp-nih-grants-outputs` | `outputs_get_project_detail` | 471.2 | 446.8 |
+| `mcp-nitrd-classifier` | `classifier_classify_parent` | 631.0 | 486.9 |
+| `mcp-nitrd-reviewer-portal` | `portal_list_pending_reviews` | 568.0 | 442.7 |
 
-The apps started at 17:24:35-17:24:44Z, about 21 minutes before this run, and smoke and parity had already called them. So this compares the run's first call with its later calls on warm apps; it is not a true cold start. The largest first-call ratio is 1.31× (portal, 549.4 / 418.5); outputs' first call was faster than its later p50.
+The apps started at 20:32:43-20:32:52Z, about 14 minutes before this run, and smoke, e2e, parity and lifecycle had already called them. So this compares the run's first call with its later calls on warm apps; it is not a true cold start. The largest first-call ratio is 1.30× (classifier, 631.0 / 486.9); at `b6d521d` it was 1.31× (portal).
 
 **Earlier parity run `5704d50c` (2026-11-03 13:50Z, in-process code at `0e6ae7c`).** It is kept as history and is not a current citation.
 * At that time the apps ran four different commits: portal `eb64604`, runner `0e6ae7c`, outputs `daa101d` and classifier `2c37f87`.
 * So it verifies the portal at `eb64604` only. It says nothing about the later portal deploy at `4629b33`, which changed `portal_get_reviewer_assignment` output ([`agent/README.md`](agent/README.md), void-run note).
 
-**End-to-end run at the unified commit.** Run `f4d4fff2` (runner, HTTP, 2026-11-06 17:55Z) ran the ten-step chain in write mode.
-* It passed on all three demo projects, with 0 rows left in the review tables. A step-by-step write trace is in [`results/traces/`](results/traces/).
-* Its four WARN lines are the same as in the 2026-11-03 run `778bd3ab`, and are kept on purpose: they are the cases a human reviewer should see.
+**End-to-end run at the frozen commit.** Run `e1969ce8` (runner, HTTP, 2026-11-06 20:38Z, `95e5dea`) ran the ten-step chain in write mode. History: `f4d4fff2` at `b6d521d`, the same results.
+* It passed on all three demo projects, with 0 rows left in the review tables. A step-by-step write trace, taken from `f4d4fff2` at `b6d521d` and not regenerated, is in [`results/traces/`](results/traces/).
+* Its four WARN lines are the same as in `f4d4fff2` and the 2026-11-03 run `778bd3ab`, and are kept on purpose: they are the cases a human reviewer should see.
   * Two known-NITRD projects have parent probability below 0.7: NINR 0.58, and NCI 0.275, which the classifier suggests as not NITRD.
   * For the same two, AI is not among the top three PCAs.
-* Smoke `ce935199` passed all 8 checks (tool counts 6/3/5). The 2026-11-03 smoke failure (`a9204bb7`) was a stale expected count, 5 versus 6 outputs tools, fixed in the runner.
+* Smoke `053b101d` (`95e5dea`) passed all 8 checks (tool counts 6/3/5); history: `ce935199` at `b6d521d`, the same. The 2026-11-03 smoke failure (`a9204bb7`) was a stale expected count, 5 versus 6 outputs tools, fixed in the runner.
 
-**The cleanup identifier exists before the write.** This is new in `f4d4fff2`; the 2026-11-03 run `778bd3ab` did not check it.
+**The cleanup identifier exists before the write.** First checked in `f4d4fff2`, checked again in `e1969ce8`; the 2026-11-03 run `778bd3ab` did not check it.
 * For each chain, a strict check confirms that the `request_id` the portal returns equals the UUIDv5 of the run's idempotency key. The key is registered for cleanup before the submit is sent.
-* Registered values: `d879876f-8f36-5b58-9e57-93bc031a5607` (10506013), `d54cea00-0213-5d84-bc4b-fd91641e2cf2` (10388671) and `0424599a-7bfb-5eea-bc25-dcf82b421c99` (10445135), at `report.log` lines 20, 52 and 84.
+* Registered values in `e1969ce8`: `a208ad0b-8f1f-5bc9-9a2d-f78ad204ab36`, `683d21dc-d795-56cf-9b4b-d25861878b72` and `a2dd527d-ef46-5b47-8093-44090f0fa3b1`, at `report.log` lines 20, 52 and 84 (chains 10506013, 10388671 and 10445135, in run order). In `f4d4fff2` they were `d879876f…`, `d54cea00…` and `0424599a…`; the values differ between runs, and in each run they equal the UUIDv5 of that run's key.
 * Because the identifier is known before the row exists, the cleanup can find every row a run may have written, even if the response is lost. Orphan-free cleanup is therefore structural; it does not depend on the write returning.
 * The agent's approval gate uses the same derivation: the same namespace, and `request_id = uuid5(namespace, idempotency_key)`, set by the app at approval. Compare `src/nitrd_agent/gate.py:27-47` with `src/reviewer_portal/data.py:60-63`. This is shown in code only; no valid agent run exercises it (`c1ab24d7` is void).
 

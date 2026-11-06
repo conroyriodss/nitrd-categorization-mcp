@@ -111,6 +111,38 @@ drafts page is a separate, manual check.
 Results are exported to `eval/results/agent/` after the run, with the commit, the model,
 the pins above and every run's tool calls.
 
+
+### Provenance of the measured configuration (recorded 2026-11-06, before the run at `95e5dea`)
+
+The next suite run measures the agent deployed at `95e5dea` (deployment `01f1da21177f156b866f7025dde59eb6`; 14 tracked files byte-identical to the commit). This section says what changed in that artifact since the void run `c1ab24d7` (agent commit `e7d8518`), so the result can be attributed to a known configuration. Hashes are SHA-256 of the file at each commit (`git show <commit>:<path>`).
+
+**Unchanged: the four pinned files, plus the model pointer.**
+
+| File | SHA-256 at `e7d8518` and at `95e5dea` |
+|---|---|
+| `src/nitrd_agent/resources/aes_functional_v1.json` (suite) | `9cf941feaf0dd9a47a7def2d24ebc839f6b47291094a0b869ef0b7056aa836b6` |
+| `src/nitrd_agent/resources/instructions_v1.md` (instructions) | `f4ff62d2f2b14730ac1f82254169b905ba007d098102079e64886f3b88e361d0` |
+| `src/nitrd_agent/scoring.py` (scorer) | `23131a0ff84a29921f328ce8f395102969f92f9699e87a9806b2d8ed4906d164` |
+| `src/nitrd_agent/agent.py` (the agent loop: tool list, model call) | `0c57cbe46875391565338de63c500bc1b17d6db892c30a11c4150a6ae32b39a7` |
+| `src/nitrd_agent/config.py` (model `databricks-gpt-6-1-sol`, gate settings) | `caa3c1089cae05a747e43406e1f066c0d6d5ddfc1c57ce82be30b3900e4fbbbe` |
+
+The model pointer is in `config.py`, not in one of the four pinned files, so it is listed separately. `aes.py` (suite runner, `587e6604…`), `gate.py` (approval gate, `96272e94…`) and `__init__.py` are also unchanged. `agent.py` did not change.
+
+**Changed, outside the model's tool path:**
+* `src/nitrd_agent/app.py` (`49f0bd67…` to `1da956b8…`, commit `e2885b6`). `/api/start/aes` is POST-only, and the approve, discard, ask and start routes refuse a cross-site Origin or Referer with 403. This is HTTP routing for people. `agent.py` imports only `config` and `gate` from the package, so the model's tools and instructions do not pass through `app.py`.
+* `src/nitrd_agent/db.py` (`c410e7cd…` to `a0c0c84d…`, commits `4d1a704` and `95e5dea`). Table identifiers are validated at import through `src/shared/identifiers.py` (new; shipped in the agent snapshot as stdlib-only code). `db.py` is harness SQL: row counts for I2, AES-10 cleanup by request_id, and the results row. `app.py` builds the `Warehouse` (lines 209 and 263) and hands it to the suite runner `aes.py`, which makes the calls. `agent.py` never imports it, and the model has no SQL tool. At the default schema and prefix the table names are the same as before.
+* The `NITRD_AGENT_AES_ON_START` default in `deploy/databricks/nitrd_agent/app.yaml` is now `"0"`, so the run is a supervised one-shot start, not a start on boot.
+
+**Changed on the MCP servers the model calls.**
+* The void run called a portal at `4629b33` that had no parity record. The servers are now at `95e5dea`, with parity `d2ddab69` 71/71 across all 14 tools.
+* In code, from `e7d8518` to `95e5dea` the server-side changes are three:
+  * `src/shared/tables.py` and the new `src/shared/identifiers.py`: identifier validation, with the same table names at the defaults;
+  * `src/shared/__init__.py`: docstring only;
+  * `src/reviewer_portal/guide.py`: operator-page demo text, referenced only by `pages.py` (the HTML pages, not an MCP tool).
+* No tool description, tool schema or tool handler changed between those commits.
+
+**Not changed by this section:** the scenarios, allowed tool sets, prompts, scoring rule and reporting rule are as committed before the void run.
+
 ### Void runs (kept in the table, not evidence)
 
 Rows in `users.conroyri.nitrd_hackathon_v1_agent_eval_runs` are never deleted. A run
@@ -121,7 +153,7 @@ that should not count is listed here, with the reason, and stays in the table.
     `databricks-gpt-6-1-sol`, suite `aes-functional-v1`. It recorded 50/50 passes, I1-I3
     true and rows_left 0/0/0.
   * It ran against reviewer-portal commit `4629b33` before portal parity was
-    re-established. The last parity run at that time, 5704d50c, verified portal `eb64604` only. Parity was re-established on 2026-11-06 by run `6e0e5d36`, with all four apps at `b6d521d`.
+    re-established. The last parity run at that time, 5704d50c, verified portal `eb64604` only. Parity was re-established on 2026-11-06 by run `6e0e5d36`, with four apps at `b6d521d`, and confirmed at the frozen commit by run `d2ddab69`, with all five apps at `95e5dea`.
     4629b33 changed `portal_get_reviewer_assignment` output in commit 2c6a668 and
     `src/shared/sql.py` in ceb81c8.
   * It also ran without supervision. The app started it automatically on boot

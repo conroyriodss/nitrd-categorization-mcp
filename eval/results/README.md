@@ -10,7 +10,7 @@ The execution records in this folder were exported verbatim from the Databricks 
 
 ## Folder contents
 
-* `runs/<UTC start>_<kind>_<run id prefix>/` holds the runner's `run.json` (status, `git_commit`, `rows_left`, summary) and `report.log` (the pytest output, verbatim). Kinds: smoke, parity, lifecycle, contract (extended smoke), auth, e2e. The 2026-11-06 set is all at `b6d521d`.
+* `runs/<UTC start>_<kind>_<run id prefix>/` holds the runner's `run.json` (status, `git_commit`, `rows_left`, summary) and `report.log` (the pytest output, verbatim). Kinds: smoke, parity, lifecycle, contract (extended smoke), auth, e2e. The 2026-11-06 sets: started 17:39-17:55Z, at `b6d521d` (history); started 20:38-20:48Z, at `95e5dea` (current).
 * `agent_runs/<UTC start>_<suite>_<run id prefix>[_VOID]/` holds agent evaluation runs (`run.json`, `report.json`). A `_VOID` suffix means the run is void and is not a result; the reason is in its `run.json` (`void`) and in `INDEX.json` `notes`.
 * `INDEX.json` `notes` holds fixed reader notes. For example, the auth record's decoded token claims include the numeric workspace ID, which is not a credential and is already public in `DEMO.md` and the App URLs.
 * `traces/` holds quoted extracts of a committed record, each citing its source sha256. They contain no new measurement.
@@ -19,7 +19,7 @@ The execution records in this folder were exported verbatim from the Databricks 
 
 ## Reading the logs
 
-**Tracebacks in `runs/20261106T1755Z_e2e_f4d4fff2/report.log` are intentional test fixtures, not failures.**
+**Tracebacks in `runs/20261106T2038Z_e2e_e1969ce8/report.log` (and in `runs/20261106T1755Z_e2e_f4d4fff2/report.log`, at the same line numbers) are intentional test fixtures, not failures.**
 * The `RuntimeError: connection dropped after the write` tracebacks at lines 148-290 come from the fault-injection test `test_request_id_is_registered_before_the_write`. That test makes a fake portal raise the error on purpose (`tests/test_smoke_e2e.py:858`).
 * The two logged errors each appear twice: in pytest's captured log (lines 151 and 189), then in stderr (lines 241 and 266).
 * The run's result is "11 passed" (line 238).
