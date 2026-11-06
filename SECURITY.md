@@ -146,6 +146,22 @@ These are enforced in code or in the tables, not only described:
 - **Separate Apps are not separate authorization domains.** Splitting read,
   inference, and write into three Apps narrows which principal holds write
   grants, but it has not been tested as an isolation control.
+- **The e2e runner starts jobs on a plain GET, with no CSRF check. Accepted for the
+  demonstration harness.**
+  * **What it does.** `deploy/databricks/e2e_runner/runner.py` registers
+    `Route("/api/start/{kind}", start)` with no `methods` argument, so Starlette serves it on GET. It has no
+    Origin or Referer check.
+  * **The risk.** Any signed-in workspace user whose browser loads `/api/start/e2e` or `/api/start/lifecycle`
+    (an embedded link or image is enough) starts a job. Those jobs write sandbox rows and then delete them.
+  * **Why it is accepted.**
+    * The owner starts these runs deliberately from a browser, through the links on the runner's index page.
+    * Only one job runs at a time (`409 "a job is already running"`).
+    * The writes are sandbox-only, held there by the table `CHECK` constraints, and every job cleans up by
+      request_id, back to 0/0/0.
+    * Reaching the runner at all needs workspace OAuth.
+    * The runner is test infrastructure, not part of the served product.
+  * **The agent app is different.** It was fixed in `e2885b6`: `/api/start/aes` is POST-only, and its
+    state-changing routes refuse cross-site requests. The approval gate is the control under test there.
 
 ## Handling secrets and errors
 

@@ -209,6 +209,17 @@ Component status is in the authoritative table in the
   holds no names or name hashes; v1 held hashes of two public PO names, which
   remain in git history. Test data use fictional names.
 
+- **App security scan:** the Databricks Apps scanner flagged 2 findings, both the
+  same rule on `src/reviewer_portal/pages.py` (HTML `<select>`/form markup
+  matched as SQL; values are constants or `esc()`-escaped; no SQL is built in
+  that file). Both are false positives, ignored with justification on the
+  reviewer-portal and e2e-runner apps; 0 open on the deployments of
+  2026-11-04 (owner-confirmed). See `docs/DECISIONS_LOG.md` (2026-11-04).
+  **Not yet triaged in the platform UI as of 2026-11-06:** the later portal
+  (`01f1d945`), runner (`01f1d95d`) and agent (`01f1d952`, `01f1d9f7`)
+  deployments, all of which report `APP_DEPLOYMENT_SCAN_STATUS_FINDINGS`. A
+  local reproduction is in the log (agent entry, 2026-11-06).
+
 The sandbox flag and label mark record scope; they are not an authorization
 boundary. Databricks credentials and the pending evaluation service principal
 are infrastructure identities, not reviewer authentication.
