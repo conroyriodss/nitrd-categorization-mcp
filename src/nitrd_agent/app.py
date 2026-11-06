@@ -4,7 +4,7 @@ Pages (signed-in users only; Databricks Apps authenticate every request):
   /                 ask the agent one question; see its answer and tool calls
   /drafts           review-request drafts; Approve sends one to the portal,
                     Discard drops it. Nothing is written before Approve.
-  /api/start/aes    run the AES functional suite once (results table row)
+  /api/start/aes    POST only: run the AES functional suite once (results table row)
   /api/status       state of the current / last suite run
 With NITRD_AGENT_AES_ON_START=1 the suite runs once at startup unless a result
 for this commit, suite and model is already recorded.
@@ -13,6 +13,11 @@ The app's service principal calls the three MCP apps (CAN_USE) and the model
 endpoint. The approver's identity is shown on the page from the platform's
 X-Forwarded-Email header and kept in memory only; it is not written to the
 sandbox tables (no PII there).
+
+Every state-changing route is POST and passes a same-origin check
+(`_cross_site`): a browser request whose Origin (or, failing that, Referer)
+names another host is refused with 403. A request with neither header (a
+non-browser client using a bearer token) is let through.
 """
 
 from __future__ import annotations
@@ -26,6 +31,7 @@ from datetime import UTC, datetime
 from html import escape
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import uvicorn
 from starlette.applications import Starlette
@@ -71,6 +77,31 @@ def _commit() -> str:
     return ref.read_text().strip() if ref.is_file() else "unknown"
 
 
+def _own_hosts(request: Request) -> set[str]:
+    hosts = {
+        request.headers.get("x-forwarded-host", ""),
+        request.headers.get("host", ""),
+    }
+    app_url = os.getenv("DATABRICKS_APP_URL", "")
+    if app_url:
+        hosts.add(urlsplit(app_url if "//" in app_url else f"//{app_url}").netloc)
+    return {h.lower() for h in hosts if h}
+
+
+def _cross_site(request: Request) -> bool:
+    """True if a browser sent this request from another site (CSRF check)."""
+    origin = request.headers.get("origin")
+    source = origin if origin is not None else request.headers.get("referer")
+    if source is None:
+        return False  # no browser provenance headers: not a cross-site form
+    netloc = urlsplit(source).netloc.lower()  # "null" -> "" -> refused
+    return not netloc or netloc not in _own_hosts(request)
+
+
+def _refuse_cross_site() -> HTMLResponse:
+    return HTMLResponse("Cross-site request refused.", status_code=403)
+
+
 def _page(title: str, body: str) -> HTMLResponse:
     return HTMLResponse(
         f"<!doctype html><title>{escape(title)}</title><style>{CSS}</style>"
@@ -91,6 +122,8 @@ async def index(request: Request) -> HTMLResponse:
 
 
 async def ask(request: Request) -> HTMLResponse:
+    if _cross_site(request):
+        return _refuse_cross_site()
     q = str((await request.form()).get("q") or "").strip()[:2000]
     if not q:
         return RedirectResponse("./", status_code=303)
@@ -145,6 +178,8 @@ async def drafts(request: Request) -> HTMLResponse:
 
 
 async def approve(request: Request) -> HTMLResponse:
+    if _cross_site(request):
+        return _refuse_cross_site()
     who = request.headers.get("x-forwarded-email")
     if not who:
         return _page("Not approved", "<p>Approval needs a signed-in person.</p>")
@@ -161,6 +196,8 @@ async def approve(request: Request) -> HTMLResponse:
 
 
 async def discard(request: Request) -> HTMLResponse:
+    if _cross_site(request):
+        return _refuse_cross_site()
     draft = DRAFTS.get(request.path_params["draft_id"])
     if draft and draft.status == "awaiting_approval":
         draft.status = "discarded"
@@ -204,6 +241,8 @@ def _start_suite() -> bool:
 
 
 async def start_aes(request: Request) -> JSONResponse:
+    if _cross_site(request):
+        return JSONResponse({"error": "cross-site request refused"}, status_code=403)
     if not _start_suite():
         return JSONResponse({"error": "already running", **STATE}, status_code=409)
     return JSONResponse({"started": "aes", **STATE})
@@ -247,7 +286,7 @@ app = Starlette(
         Route("/drafts", drafts),
         Route("/drafts/{draft_id}/approve", approve, methods=["POST"]),
         Route("/drafts/{draft_id}/discard", discard, methods=["POST"]),
-        Route("/api/start/aes", start_aes),
+        Route("/api/start/aes", start_aes, methods=["POST"]),
         Route("/api/status", status),
         Route("/health", health),
     ],
