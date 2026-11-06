@@ -94,6 +94,15 @@ def test_rejection_is_on_the_record():
     assert "run 1's Demo 2 agreed with the official listing" in demos_md
 
 
+def test_demo_set_framed_as_informative_not_representative():
+    html = guide.try_this()
+    assert 'id="demo-framing"' in html
+    assert "informative rather than representative" in html
+    assert "eval/classifier_evaluation.md" in html
+    assert (ROOT / "eval/classifier_evaluation.md").exists()
+    assert "informative rather" in (ROOT / "DEMOS.md").read_text()
+
+
 def test_demo3_framed_as_adjudication():
     d3 = next(d for d in guide.DEMOS if d["n"] == 3)
     assert "adjudicat" in d3["story"] + d3["look"]

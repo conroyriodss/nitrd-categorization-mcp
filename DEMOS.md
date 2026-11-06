@@ -161,3 +161,7 @@ scope. The operator page cites 20, with 29 before the filter.
 
 The model proposes; the person decides. Two of the three single-award demos now disagree with the listing. That is
 the rule's output, reported as it came out.
+
+**These demos are not an accuracy sample.** They were selected by a committed rule to be informative rather than
+representative: one confident agreement and two adjudication cases in opposite directions. For measured performance,
+see the evaluation document, [eval/classifier_evaluation.md](eval/classifier_evaluation.md).

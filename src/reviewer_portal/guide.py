@@ -180,11 +180,13 @@ def try_this() -> str:
     return (
         '<details id="try-this" class="try-this"><summary><strong>Try this'
         "</strong>: four demos</summary>"
-        f'<ol>{"".join(items)}</ol><p class="muted">The demos were chosen by a '
-        "rule written before any of them was scored (DEMOS.md). At least one "
-        "disagrees with the official listing, and is not merely low-confidence. If "
-        "a card's probability differs from the one quoted here, the card is "
-        "right.</p></details>"
+        f'<ol>{"".join(items)}</ol><p id="demo-framing" class="muted">The demos '
+        "were selected by a rule committed before any of them was scored "
+        "(DEMOS.md), to be informative rather than representative: one confident "
+        "agreement and two adjudication cases in opposite directions. They are not "
+        "an accuracy sample; for measured performance see the evaluation document "
+        "(eval/classifier_evaluation.md). If a card's probability differs from the "
+        "one quoted here, the card is right.</p></details>"
     )
 
 
