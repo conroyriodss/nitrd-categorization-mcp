@@ -18,14 +18,15 @@ The multi-server MLflow path is blocked on a workspace administrator
 provisioning a service principal. This is a public-data, sandbox-write
 prototype, not an operational NIH categorization system.
 
-### Data scope and the one non-public input (File A)
+### Data scope and the one non-public input (File A, two uses)
 
 **The servers use public data only.** The three MCP servers and the reviewer portal read public ExPORTER/RePORTER, iCite and PubMed records ([`SECURITY.md`](../SECURITY.md#data-scope-public-data-only)). The NITRD label they are measured against is public too: per-award membership of RCDC spending category 329, from RePORT Categorical Spending.
 
-**One non-public input enters the Task 1 FY2024 held-out score (in `entry2-uac-nitrd`), and only to flag pre-exposure.**
+**One non-public input, File A, is used twice in `entry2-uac-nitrd`.** First, as the answer key of the UAC NITRD held-out evaluation, scored once on 2026-10-23: "Match rate: 24/214", from `results/RESULT.md`, with the protocol in `docs/HELDOUT_PROTOCOL.md`. Second, in the Task 1 FY2024 held-out score, only to flag pre-exposure. The bullets below describe the second use.
 * File A is an RCDC Trend Analysis Project Listing export over the NITRD AI sub-categories (`docs/HELDOUT_PROTOCOL.md`). It is not public: the sub-category layer is internal (see the correction at `docs/reference/subcategory_id_to_pca.v1.md:42`).
 * It is reduced to one boolean per award, `filea_exposed`: the award's core project appears in File A in any FY (seal manifest `docs/seal/task1_fy2024_seal_manifest.json`). That flag splits the FY2024 universe into blind Tier 2 (61,423 awards) and exposed Tier 2x (2,642).
 * The flag lives only in the sealed key, outside every repository. No per-award copy of it is committed; the repositories hold only counts derived from it.
+* **Per-award File A content is not wholly absent.** A search on 2026-11-06 found two Appl IDs (11189671 and 11376321) in `results/heldout_report_v1.json`. They are listed as held-out projects the engine abstained on, so they show that those two awards are in File A's FY2025 AI-relevant set. No File A category strings or other File A rows were found in the three repositories. The search cannot compare the repositories against File A's project numbers without reading the sealed file.
 
 **No public rule can replace the flag, and no other split can be computed.**
 * None of the 29 NITRD sub-category IDs returns a record from the public RePORTER API, in any year sampled.
