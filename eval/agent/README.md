@@ -115,7 +115,14 @@ drafts page is a separate, manual check.
 * **Record:** [`eval/results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/`](../results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/) (`run.json` `b5fdcee5…`, `report.json` `899a25b1…`).
 * **How the figures were derived:** recomputed from the stored tool calls, independently of the scorer, by the reporting rule.
 
-**Overall: 50/50 passed. Wilson 95% interval [0.929, 1.000].** Errors: 0. Runs where the scorer flagged a blocked-tool exposure: 0.
+**Overall: 50/50 passed, Wilson 95% interval [0.929, 1.000].** Errors: 0. Runs where the scorer flagged a blocked-tool exposure: 0.
+
+**Interpretation. Read this with the number; it goes with any citation of it.**
+* **No failures, gate held.** No tool-selection failure was observed in 50 runs, and the human-approval gate held in every run (I1-I3).
+* **The suite did not discriminate.** 50/50 is the ceiling of this suite. A perfect score cannot tell a capable agent apart from scenarios that are easy for this model.
+* **The interval carries that uncertainty.** The Wilson 95% interval [0.929, 1.000] is consistent with a true pass rate as low as about 93%. It always appears with the 50/50; the 50/50 is never cited alone.
+* **Agent-level latency** is p50 4.5 s and p95 19.4 s per run. It includes every model turn as well as the tool calls, so it is not comparable to the per-tool latencies in `eval/README.md` (parity, contract), which time single tool calls.
+* **A second model is needed for a comparison.** The same suite on a second model, under the same rule, is what turns the ceiling into a comparison; see the next run.
 
 | Scenario | k/5 | Tools called (distinct, per run) | Mean turns | Latency p50 / p95 (s) | Errors | Recall | Precision vs required | Precision vs required ∪ allowed |
 |---|---|---|---:|---|---:|---:|---:|---:|
@@ -147,7 +154,13 @@ drafts page is a separate, manual check.
     * cleanup failures none; 0/0/0 after cleanup.
 * **Disclosure:** in this run the I3 approval step was made by the harness standing in for a person. It is not a human approval.
 * **Badly specified scenarios:** none identified in this run. Precision vs required for AES-07 is 0 by construction, because its `required` set is empty. That is how the rule defines it, not a model error. No scenario, prompt or allowed set was changed.
-* **Compared with the void run `c1ab24d7`:** also 50/50, 0 errors, maximum 7 turns. That run is void and is not a comparison point; it is mentioned only for the turn-limit evidence below.
+* **Compared with the void run `c1ab24d7`:** it also recorded 50 passes of 50 (void, not a result), 0 errors, maximum 7 turns. That run is void and is not a comparison point; it is mentioned only for the turn-limit evidence below.
+
+### Wording for the deliverables (DOCX, deck)
+
+* **AES result.** Always cite it with its interval and its ceiling: "No tool-selection failures in 50 runs (Wilson 95% [0.929, 1.000]); the human-approval gate held in every run. The suite did not discriminate: a perfect score cannot separate a capable agent from scenarios that are easy for this model." Never cite "50/50" on its own.
+* **Latency.** "Agent-level latency p50 4.5 s, p95 19.4 s per run, including model turns; not comparable to per-tool latency."
+* **Unscripted queries.** Tier [Team-reported]: owner-attested, content not captured, timestamps from the app's `/logz` access log without request content. They are not suite runs and not scored, and they are not [Verified].
 
 ## Known limitations (recorded 2026-11-06, after the run; nothing changed)
 
@@ -204,7 +217,7 @@ that should not count is listed here, with the reason, and stays in the table.
 
 * **Run `c1ab24d7-aef3-4a7b-af5d-8dcfae2267b2` is VOID.** Its row is exported verbatim, marked VOID, to `eval/results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/` and hashed in `INDEX.json`, so the void record can be checked; the row stays in its table.
   * It ran on 2026-11-05 from 19:54:55Z to 20:04:10Z: agent commit `e7d8518`, model
-    `databricks-gpt-6-1-sol`, suite `aes-functional-v1`. It recorded 50/50 passes, I1-I3
+    `databricks-gpt-6-1-sol`, suite `aes-functional-v1`. It recorded 50 passes of 50 (not a result), I1-I3
     true and rows_left 0/0/0.
   * It ran against reviewer-portal commit `4629b33` before portal parity was
     re-established. The last parity run at that time, 5704d50c, verified portal `eb64604` only. Parity was re-established on 2026-11-06 by run `6e0e5d36`, with four apps at `b6d521d`, and confirmed at the frozen commit by run `d2ddab69`, with all five apps at `95e5dea`.
