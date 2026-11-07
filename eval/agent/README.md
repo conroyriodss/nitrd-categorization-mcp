@@ -180,6 +180,10 @@ This section records every agent-app change after the first counted run, in orde
      * **Equal prominence.** Both models are reported with equal prominence, whatever the result. If B scores lower, A does not become "the" result. If B also reaches the ceiling, that is reported as the suite failing to discriminate.
      * **No adjustment.** No scenario, prompt or allowed set is adjusted in response to either run.
      * **Ordering.** The model-B run started at 2026-11-07 18:11:16Z (start response: commit `756334c`, model `databricks-gpt-6-sol`, instructions `f4ff62d2…`, suite `9cf941fe…`). This pre-commitment was committed after that start but before the run finished and before any result was read. The commit time and the run's `finished_at` are what show the order.
+     * **Verifiable pair:**
+       * **Push.** Commit `9ed6951` was pushed to `refs/heads/main` at **2026-11-07T18:13:16Z**. This is GitHub's server-side push record (repository activity API, `3803520 -> 9ed6951`), not the committer date. CI run `42400179858` (push event, created 18:13:18Z) completed with success at 18:13:52Z.
+       * **Run.** Model-B run `3acc8a96-6ae1-48cd-984b-e582cfe1b34d` has `started_at` 2026-11-07T18:11:17.59Z and **`finished_at` 2026-11-07T18:17:59.92Z** in `agent_eval_runs`.
+       * **Order.** The push precedes the run's finish by 4 min 44 s. The run's result row did not exist until `finished_at`.
 3. **Capture, model back to A.** Proposed, not yet built or deployed; see the next section. It is recorded here when deployed.
 
 ### Proposed change for redeploy 2 (awaiting the owner's go-ahead)
