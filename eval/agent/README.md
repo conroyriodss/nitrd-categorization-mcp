@@ -259,6 +259,17 @@ This section records every agent-app change after the first counted run, in orde
   * 16 is enough for the suite (maximum observed 7) and too low for interactive cohort questions.
   * Both AES suite runs (`c1ab24d7`, void, and `2096c936`) ran with `MAX_TURNS = 16` and used at most 7 turns. The second-model deployment (`01f1da5b5f54…`) has the same value.
   * It is not raised (owner decision, 2026-11-07; see "Proposed change for redeploy 2"). The clean fix, a per-call `max_turns` through `Session.run`, touches the pinned `agent.py` and is deferred to v2.
+* **L4. The reserved-year guard covers the cohort and operator surfaces only, not the per-project read tools.** This was found on 2026-11-07 by the adversarial-suite design work (recording fixtures for adv-injection-v1), not by functional testing. It is documented, not fixed: the servers are frozen at `95e5dea`.
+  * `require_build_fy()` is called by `outputs_find_cohort`, the portal's cohort selector and the prior-year lookup.
+  * `outputs_find_projects` and `outputs_get_project_detail` do not call it.
+  * **What is reachable,** measured in-process at `95e5dea` on 2026-11-07:
+    * `outputs_find_projects` returned FY2022 and FY2023 records (NITRD: 4,247 and 4,583 matching; another category: 15,185 and 15,453), 50 rows each.
+    * FY2024, FY2025 and FY2026 are refused by the tool's own input schema (`fy` must be at most 2023) before any SQL.
+    * `outputs_get_project_detail` returned an FY2023 record (10691426).
+    * The snapshot table holds FY2015-FY2023 only (`exporter_projects`: max fy 2023, 0 rows at or after FY2024).
+  * **So the gap reaches FY2022 and FY2023 only.** Those years are already exposed and reported as not blind (Tier 3). The blind FY2024 Tier 2 population is not in the snapshot and cannot be reached through these tools.
+  * **Independent of Task 1's blindness.** That control is `workflow/build_guard.py` in uac-nitrd (guard `task1-build-read-guard-v1`). The Task 1 build's `build/task1_fingerprint_v1/READ_MANIFEST.json` (mode `build`, hook installed, written 2026-11-03T15:45:37Z) lists six files read, all FY2019-FY2021 seed fetch files (`task1_seed_v1/fy2019`-`fy2021`), with 0 RePORTER requests and 0 SQL statements. A grep of `workflow/` and `scripts/` for MCP client patterns (`fastmcp`, `mcp_server`, `outputs_find_projects`, `databricksapps.com`, `/mcp`) finds nothing. The build never called the MCP servers.
+  * **Production recommendation:** extend `require_build_fy()` to the per-project read tools (`outputs_find_projects`, `outputs_get_project_detail`, and any tool that returns a fiscal-year record), so the guard is server-wide, not per-surface.
 
 
 ### Provenance of the measured configuration (recorded 2026-11-06, before the run at `95e5dea`)
