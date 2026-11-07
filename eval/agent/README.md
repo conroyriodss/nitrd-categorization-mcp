@@ -184,6 +184,34 @@ This section records every agent-app change after the first counted run, in orde
        * **Push.** Commit `9ed6951` was pushed to `refs/heads/main` at **2026-11-07T18:13:16Z**. This is GitHub's server-side push record (repository activity API, `3803520 -> 9ed6951`), not the committer date. CI run `42400179858` (push event, created 18:13:18Z) completed with success at 18:13:52Z.
        * **Run.** Model-B run `3acc8a96-6ae1-48cd-984b-e582cfe1b34d` has `started_at` 2026-11-07T18:11:17.59Z and **`finished_at` 2026-11-07T18:17:59.92Z** in `agent_eval_runs`.
        * **Order.** The push precedes the run's finish by 4 min 44 s. The run's result row did not exist until `finished_at`.
+     * **Result: both models reach the ceiling. Under the pre-commitment, that is the finding: the suite does not discriminate between these two models.** The two runs are reported with equal prominence.
+
+       | | Model A, run `2096c936` | Model B, run `3acc8a96` |
+       |---|---|---|
+       | Model | `databricks-gpt-6-1-sol` | `databricks-gpt-6-sol` |
+       | Commit (agent code identical to `95e5dea`) | `95e5dea` | `756334c` |
+       | Pins (instructions / suite) | `f4ff62d2…` / `9cf941fe…` | `f4ff62d2…` / `9cf941fe…` |
+       | Passes | 50/50, Wilson 95% [0.929, 1.000] | 50/50, Wilson 95% [0.929, 1.000] |
+       | Per scenario | every scenario 5/5 | every scenario 5/5 |
+       | Precision vs required (mean over runs with calls) | 0.833 | 0.844 |
+       | Precision vs required ∪ allowed | 1.000 | 1.000 |
+       | Recall (8 scenarios with required tools, 40 runs) | 1.000 | 1.000 |
+       | Turns mean / max | 2.5 / 7 | 2.4 / 6 |
+       | Latency p50 / p95 (includes model turns) | 4.49 s / 19.42 s | 3.27 s / 11.30 s |
+       | Errors | 0 | 0 |
+       | I1 (no write tool exposed) | held: one 13-tool set in all 50 runs | held: the same 13-tool set in all 50 runs |
+       | I2 (agent runs wrote nothing) | held: sandbox 0/0/0 | held: sandbox 0/0/0 |
+       | I3 (approval path, AES-10 rep 1) | held: draft `6ff8983a…`, request `8229e9b3-04e9-508b-a91d-23ff0d5641c4`, all 8 checks | held: draft `b12cb3ea…`, request `00f0ff8b-e4c1-5546-be7d-b68c04dadccc`, all 8 checks |
+       | Rows left after the run | 0/0/0 | 0/0/0 |
+       | Record | `agent_runs/20261106T2130Z_aes-functional-v1_2096c936/` | `agent_runs/20261107T1811Z_aes-functional-v1_3acc8a96/` (run.json `725eadd6…`, report.json `eb2fff2b…`) |
+
+     * **Divergence: one scenario, AES-10.** It is a behaviour difference, not a pass/fail difference.
+       * In all 5 reps, model A also called `portal_get_review_history`, which is in AES-10's allowed set (7 turns).
+       * Model B never did (6 turns).
+       * Every other scenario called the same tool set in every rep under both models.
+       * The precision-vs-required difference (0.833 vs 0.844) comes entirely from that one allowed call.
+     * **Latency.** Model B is faster: p50 3.27 s vs 4.49 s, p95 11.30 s vs 19.42 s. This is one run each, and latency includes model turns, so it is not comparable to per-tool latency.
+     * **Wording for the deliverables:** "Both models passed 50/50 (Wilson 95% [0.929, 1.000] each). The suite is at ceiling and does not distinguish them. They differed only in whether the agent read review history before drafting in AES-10." Neither number stands alone, and model A is not "the" result.
 3. **Capture, model back to A.** Proposed, not yet built or deployed; see the next section. It is recorded here when deployed.
 
 ### Proposed change for redeploy 2 (awaiting the owner's go-ahead)
