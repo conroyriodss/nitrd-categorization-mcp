@@ -172,6 +172,14 @@ This section records every agent-app change after the first counted run, in orde
    * Deployed 2026-11-07 ~03:35Z as deployment `01f1da5b5f5410ac84f6acefcbd5a538` (commit `756334c`). The 14 staged files match the commit, and the sandbox was 0/0/0 before and after.
    * Model B is used for one suite run only, and then reverted (step 3).
    * A model change is a new run under the same suite id, not a new suite.
+   * **Pre-commitment for the two-model comparison, recorded before the model-B result exists.**
+     * **Why model A was pinned.** `databricks-gpt-6-1-sol` was pinned on availability and API-path grounds:
+       * `databricks-gpt-6-astra` returned a workspace-level PERMISSION_DENIED (`config.MODEL_UNAVAILABLE`);
+       * the agent uses the Agents SDK's Responses API path, and GPT endpoints here reject function tools on chat completions (`config.py` comment).
+     * That pin predates both suite runs. It was not chosen on measured performance.
+     * **Equal prominence.** Both models are reported with equal prominence, whatever the result. If B scores lower, A does not become "the" result. If B also reaches the ceiling, that is reported as the suite failing to discriminate.
+     * **No adjustment.** No scenario, prompt or allowed set is adjusted in response to either run.
+     * **Ordering.** The model-B run started at 2026-11-07 18:11:16Z (start response: commit `756334c`, model `databricks-gpt-6-sol`, instructions `f4ff62d2…`, suite `9cf941fe…`). This pre-commitment was committed after that start but before the run finished and before any result was read. The commit time and the run's `finished_at` are what show the order.
 3. **Capture, model back to A.** Proposed, not yet built or deployed; see the next section. It is recorded here when deployed.
 
 ### Proposed change for redeploy 2 (awaiting the owner's go-ahead)
