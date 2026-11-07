@@ -1,0 +1,82 @@
+{
+  "what": "Re-derivation of the figures quoted by an unscripted owner query (NEI P30, FY2021). The six appl_ids came from the owner; the transcript itself was not captured.",
+  "method": "In-process calls to classifier_classify_parent and outputs_get_project_detail through fastmcp Client(<server object>). Source tree is src/ at 95e5dea (git diff 95e5dea HEAD -- src is empty); the user's credentials; warehouse <warehouse-id>. Parity d2ddab69 (71/71) is what links in-process answers to the deployed apps; these calls were not made over HTTP.",
+  "run_at_utc": "2026-11-07T03:41Z",
+  "src_commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
+  "threshold": 0.3893682055460409,
+  "model_id": "nitrd-parent-v2-ba10594d9581",
+  "awards": [
+    {
+      "appl_id": 10213736,
+      "fy": 2021,
+      "full_project_num": "5P30EY026877-05",
+      "subproject_id": "7083",
+      "title": "Advanced Computing/Computational Core",
+      "org_name": "STANFORD UNIVERSITY",
+      "administering_ic": "EY",
+      "listed_nitrd_spending_category": true,
+      "suggestion": "nitrd",
+      "probability": 0.99967
+    },
+    {
+      "appl_id": 10222684,
+      "fy": 2021,
+      "full_project_num": "5P30EY022589-09",
+      "subproject_id": "6047",
+      "title": "Computational Ophthalmology",
+      "org_name": "UNIVERSITY OF CALIFORNIA, SAN DIEGO",
+      "administering_ic": "EY",
+      "listed_nitrd_spending_category": true,
+      "suggestion": "nitrd",
+      "probability": 0.999616
+    },
+    {
+      "appl_id": 10239010,
+      "fy": 2021,
+      "full_project_num": "5P30EY000331-54",
+      "subproject_id": "5461",
+      "title": "Software Engineering Core",
+      "org_name": "UNIVERSITY OF CALIFORNIA LOS ANGELES",
+      "administering_ic": "EY",
+      "listed_nitrd_spending_category": true,
+      "suggestion": "nitrd",
+      "probability": 0.933904
+    },
+    {
+      "appl_id": 10203973,
+      "fy": 2021,
+      "full_project_num": "5P30EY002162-43",
+      "subproject_id": "5798",
+      "title": "Computing/IT Core",
+      "org_name": "UNIVERSITY OF CALIFORNIA, SAN FRANCISCO",
+      "administering_ic": "EY",
+      "listed_nitrd_spending_category": true,
+      "suggestion": "nitrd",
+      "probability": 0.986441
+    },
+    {
+      "appl_id": 10250516,
+      "fy": 2021,
+      "full_project_num": "5P30EY003176-39",
+      "subproject_id": "6160",
+      "title": "Software Development",
+      "org_name": "UNIVERSITY OF CALIFORNIA BERKELEY",
+      "administering_ic": "EY",
+      "listed_nitrd_spending_category": true,
+      "suggestion": "nitrd",
+      "probability": 0.62805
+    },
+    {
+      "appl_id": 10168540,
+      "fy": 2021,
+      "full_project_num": "5P30EY008098-33",
+      "subproject_id": "5950",
+      "title": "Tissue Culture and Histology Core",
+      "org_name": "UNIVERSITY OF PITTSBURGH AT PITTSBURGH",
+      "administering_ic": "EY",
+      "listed_nitrd_spending_category": false,
+      "suggestion": "not_nitrd",
+      "probability": 0.007943
+    }
+  ]
+}

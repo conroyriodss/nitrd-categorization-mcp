@@ -169,24 +169,49 @@ This section records every agent-app change after the first counted run, in orde
 1. **`95e5dea`, model `databricks-gpt-6-1-sol`.** Deployment `01f1da21177f156b866f7025dde59eb6`. Counted run `2096c936`.
 2. **Model B, the same code.** `deploy/databricks/nitrd_agent/app.yaml` sets `NITRD_AGENT_MODEL=databricks-gpt-6-sol`, and the app gains the resource `llm-endpoint-b` (serving endpoint `databricks-gpt-6-sol`, CAN_QUERY). `src/` is byte-identical to `95e5dea`.
    * `config.MODEL` is read from `NITRD_AGENT_MODEL`. `pins()` and the results row record `config.MODEL`, so the run names the effective model. This was checked before the run by importing `config` with the variable set: `pins()["model"]` is `databricks-gpt-6-sol`; without it, the default is `databricks-gpt-6-1-sol`.
+   * Deployed 2026-11-07 ~03:35Z as deployment `01f1da5b5f5410ac84f6acefcbd5a538` (commit `756334c`). The 14 staged files match the commit, and the sandbox was 0/0/0 before and after.
    * Model B is used for one suite run only, and then reverted (step 3).
    * A model change is a new run under the same suite id, not a new suite.
-3. **Capture, model back to A.** Planned: `/ask` records saved to a table, and `NITRD_AGENT_MODEL` reverted to `databricks-gpt-6-1-sol`. It is recorded here when deployed.
+3. **Capture, model back to A.** Proposed, not yet built or deployed; see the next section. It is recorded here when deployed.
+
+### Proposed change for redeploy 2 (awaiting the owner's go-ahead)
+
+**What it touches.**
+* **Changes:** `src/nitrd_agent/app.py`, `src/nitrd_agent/db.py`, a new `src/nitrd_agent/capture.py`, new tests, `deploy/databricks/nitrd_agent/app.yaml` (model back to A) and `config.py` (one new constant).
+* **Untouched:** `agent.py`, `gate.py`, `aes.py`, `scoring.py`, the suite and the instructions.
+
+* **Saving `/ask` records (L2 fix outside `agent.py`).**
+  * `app.py` installs one local trace processor with the SDK's public `set_trace_processors([...])`. This replaces the default exporter, so nothing leaves the process.
+  * It runs each `/ask` inside its own `agents.trace(...)`. The processor collects `FunctionSpanData` (tool name, input, output) as each call ends, keyed by that trace id. So when `Runner.run` raises (`MaxTurnsExceeded` or anything else), the calls made so far are already held.
+  * The page then shows those calls and their outputs, labelled as a partial result, with the error. The record saves them with `calls_source: "trace"`. On success, `agent.py`'s own `rec.calls` is saved too, as before.
+  * One table row per `/ask`: prompt, calls, final answer or error, model, commit, UTC time. Values are passed through the exporter's placeholders (`<warehouse-id>`, `<service-principal-id>`, `<workspace-host>`). No email.
+* **The suite path stays as measured.** `aes.py` still turns SDK tracing off for a suite run. `/ask` turns it back on only while no suite is running, and refuses with 409 while one is. So the suite runs with tracing off, exactly as in `2096c936`.
+* **Before anything is deployed:** an offline test with a stub model that raises `MaxTurnsExceeded` after two tool calls must show the record holding both calls. One of the two must be an MCP tool and one the local draft tool, because the SDK's span coverage of MCP tool calls in `openai-agents==0.24.0` is assumed here, not yet verified. If MCP calls produce no function span, this design fails, and I stop and report.
+* **`MAX_TURNS` for interactive use: proposed 40, with the suite at 16.**
+  * **Reasoning:** the successful NEI P30 run made 14 calls for 6 awards. A purposive subset of about 15 awards needs about 30 calls plus a cohort call and a reply. 40 covers that, and still stops a runaway exhaustive attempt within about 2 minutes at the observed latency of about 3 s per model turn. Exhaustive assessment of a 431-award cohort is out of reach at any sensible value; that is L1.
+  * **The constraint:** `agent.py` reads `config.MAX_TURNS` at call time and serves both paths. Without touching it, the only way to give `/ask` a different value is for `app.py` to set `config.MAX_TURNS = config.INTERACTIVE_MAX_TURNS` for `/ask` and restore 16 when a suite starts. Because `/ask` is refused during a suite, the two never overlap. This is a module-level setting, not a per-call argument, and is disclosed as such.
 
 ## Known limitations (recorded 2026-11-06, after the run; nothing changed)
 
-* **L1. Cohort-scale conversational assessment is out of reach by construction. This is a measured boundary, not a bug.**
-  * `outputs_find_cohort` returns at most 200 records per call, each award needs its own classify call, and the agent loop is capped at `MAX_TURNS = 16` (`src/nitrd_agent/config.py:44`).
-  * Observed in an unscripted owner query: a follow-up asking for a cohort assessment ended with `MaxTurnsExceeded: Max turns (16) exceeded` (see [`../results/agent_runs/unscripted/`](../results/agent_runs/unscripted/)).
-  * This is why the reviewer portal's operator page, not the agent, is the bulk-submission surface.
+* **L1. Capability boundary, measured on unscripted owner queries at `95e5dea` (owner-attested, [Team-reported]). This replaces the earlier estimate.**
+  * **Assessing a purposive subset works.** NEI P30 FY2021: 14 tool calls, 6 awards assessed, and coverage and non-extrapolation caveats volunteered. The six probabilities and the threshold were re-derived independently ([`../results/agent_runs/unscripted/20261107_nei_p30_verification.json`](../results/agent_runs/unscripted/20261107_nei_p30_verification.json)).
+  * **Exhaustive cohort assessment fails.** The owner's tally over 6 cohort queries: 2 clean refusals (reserved years), 1 full assessment, 3 `MaxTurnsExceeded`.
+  * **Why it fails:** `outputs_find_cohort` caps at 200 records, each award needs its own classify call, and `MAX_TURNS` is 16.
+  * **Consequence:** this is the documented reason the reviewer portal's operator page, not the agent, is the bulk-submission surface.
+  * **Fix, deferred:**
+    * The cleanest fix is an instruction telling the agent to bound its own work on large cohorts, which is what it already does when it succeeds.
+    * `instructions_v1.md` is pinned, so that change would need a new suite id.
+    * Deferred for that reason, and not acted on.
 * **L2. Evidence-path defect: a failed run records no tool calls.**
   * In `agent.py` (`Session.run`, lines 210-226), tool calls are collected from `result.new_items` inside the `try` block. When `Runner.run` raises (for example `MaxTurnsExceeded`), `rec.calls` stays empty, although the model may have made calls before the error.
   * **Not fixed:** `agent.py` is pinned (`0c57cbe4…`), and fixing it would break the pre-commitment.
   * **Evidence that the suite does not reach this path:** both suite runs (`c1ab24d7`, `2096c936`) recorded 0 errors, and their maximum was 7 turns of the 16 allowed.
   * **How to read it:** any run that records an error with zero calls means "calls not captured", not "no calls made".
+  * **It is also a product bug, raised to priority for the next agent deploy.** Three of six real cohort queries returned a bare `MaxTurnsExceeded`: no partial result for the user, and no recorded calls. The proposed fix is outside `agent.py`; see "Proposed change for redeploy 2".
 * **L3. `MAX_TURNS` serves both the suite and the interactive assistant.**
   * It lives in `config.py`. `config.py` is recorded in the provenance hashes, but it is not one of the test-pinned files.
   * 16 is enough for the suite (maximum observed 7) and too low for interactive cohort questions.
+  * Both AES suite runs (`c1ab24d7`, void, and `2096c936`) ran with `MAX_TURNS = 16` and used at most 7 turns. The second-model deployment (`01f1da5b5f54…`) has the same value.
   * Raising it, separately for interactive use, is flagged as a post-AES change. It is not made here, and it would come with a new provenance record.
 
 
