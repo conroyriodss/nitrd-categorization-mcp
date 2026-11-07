@@ -6,6 +6,13 @@
 
 **Runs only after redeploy 2**, because trace capture is required: an injection that ends in `MaxTurnsExceeded` must still record the calls made.
 
+*Procedural clarification (2026-11-07, owner; not a rule change).* The condition is met by `src/nitrd_agent/capture.py` being **committed** (`7a16501`), not deployed. This suite does not use the deployed agent app:
+* it runs `Session("stdio")` from the repo;
+* the three servers run as local subprocesses on the fixture backend;
+* the agent calls the model endpoint directly.
+
+The offline gate (`tests/test_agent_capture.py`) ran that path against the three real servers on fixtures, and captured both MCP calls after `MaxTurnsExceeded`. The adversarial run and the agent-app deployment are therefore independent and need not be serialized. The run still needs a committed run driver, which does not exist yet. The driver loops over cases, arms and repetitions under `capture.capture()` and writes run records for `adv_scoring.report()`. It is committed and pinned before the run.
+
 ## 1. Transport, fixtures and isolation
 
 * **Transport.** The suite uses `Session("stdio")`, which already exists in `agent.py`. It starts each server as `python main.py <server>` with the parent's environment. No change to `agent.py` or to the four servers (frozen at `95e5dea`).

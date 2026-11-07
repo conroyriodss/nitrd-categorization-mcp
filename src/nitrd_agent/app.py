@@ -18,6 +18,16 @@ Every state-changing route is POST and passes a same-origin check
 (`_cross_site`): a browser request whose Origin (or, failing that, Referer)
 names another host is refused with 403. A request with neither header (a
 non-browser client using a bearer token) is let through.
+
+Trace capture (L2 fix, eval/agent/README.md) is used by /ask only. The suite
+path is unchanged: aes.py runs with SDK tracing OFF, as measured. Tracing is
+one process-wide switch, so the two are interlocked under `_lock`:
+  * /ask returns 409 while a suite run is in progress;
+  * a suite start returns 409 while any /ask is in flight;
+  * tracing is turned on by the first in-flight /ask and off again by the last,
+    so it is off whenever a suite can start.
+capture.install() makes an in-memory collector the only trace processor (no
+exporter), so nothing is sent off the app.
 """
 
 from __future__ import annotations
@@ -39,13 +49,47 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
 from starlette.routing import Route
 
-from nitrd_agent import config, gate
+from nitrd_agent import capture, config, gate
 from nitrd_agent.agent import Session, disable_sdk_tracing
 
 ROOT = Path(__file__).resolve().parents[2]
 DRAFTS = gate.DraftStore()
 STATE: dict[str, Any] = {"status": "idle"}
 _lock = threading.Lock()
+_asks_in_flight = 0  # guarded by _lock
+
+
+def enable_sdk_tracing() -> None:
+    """Turn SDK tracing on (for /ask capture only; see the module docstring)."""
+    from agents import set_tracing_disabled
+
+    set_tracing_disabled(False)
+
+
+def _suite_running() -> bool:
+    return STATE.get("status") == "running"
+
+
+def _begin_ask() -> bool:
+    """Admit one /ask unless a suite is running; tracing on for the first."""
+    global _asks_in_flight
+    with _lock:
+        if _suite_running():
+            return False
+        _asks_in_flight += 1
+        if _asks_in_flight == 1:
+            enable_sdk_tracing()
+        return True
+
+
+def _end_ask() -> None:
+    """Release one /ask; the last one turns tracing off again."""
+    global _asks_in_flight
+    with _lock:
+        _asks_in_flight -= 1
+        if _asks_in_flight == 0:
+            disable_sdk_tracing()
+
 
 CSS = (
     "body{font-family:system-ui,sans-serif;max-width:60rem;margin:1.5rem auto;"
@@ -127,12 +171,25 @@ async def ask(request: Request) -> HTMLResponse:
     q = str((await request.form()).get("q") or "").strip()[:2000]
     if not q:
         return RedirectResponse("./", status_code=303)
-    async with Session("http") as session:
-        rec = await session.run(q, DRAFTS)
+    if not _begin_ask():
+        return HTMLResponse(
+            "A suite run is in progress; /ask is refused until it finishes.",
+            status_code=409,
+        )
+    try:
+        with capture.capture("nitrd-agent-ask") as cap:
+            async with Session("http") as session:
+                rec = await session.run(q, DRAFTS)
+    finally:
+        _end_ask()
+    # Captured calls survive an exception inside the run (L2); rec.calls do not.
+    recorded = cap.calls if cap.enabled else rec.calls
     calls = "".join(
-        f"<li><code>{escape(c['name'])}</code> "
-        f"<code>{escape(json.dumps(c['args'])[:400])}</code></li>"
-        for c in rec.calls
+        f"<li><code>{escape(str(c.get('name')))}</code> "
+        f"<code>{escape(json.dumps(c.get('args'), default=str)[:400])}</code>"
+        + (f" error: {escape(str(c['error'])[:200])}" if c.get("error") else "")
+        + "</li>"
+        for c in recorded
     )
     drafted = (
         f"<p><strong>{len(rec.drafts)} draft(s) await approval</strong> on "
@@ -227,8 +284,9 @@ def _suite_job() -> None:
 
 def _start_suite() -> bool:
     with _lock:
-        if STATE.get("status") == "running":
+        if _suite_running() or _asks_in_flight > 0:
             return False
+        disable_sdk_tracing()  # already off with no /ask in flight; made certain
         STATE.clear()
         STATE.update(
             status="running",
@@ -244,7 +302,8 @@ async def start_aes(request: Request) -> JSONResponse:
     if _cross_site(request):
         return JSONResponse({"error": "cross-site request refused"}, status_code=403)
     if not _start_suite():
-        return JSONResponse({"error": "already running", **STATE}, status_code=409)
+        reason = "already running" if _suite_running() else "an /ask is in flight"
+        return JSONResponse({"error": reason, **STATE}, status_code=409)
     return JSONResponse({"started": "aes", **STATE})
 
 
@@ -274,6 +333,7 @@ def _maybe_run_on_start() -> None:
 
 @contextlib.asynccontextmanager
 async def _lifespan(app):
+    capture.install()  # collector only, no exporter; tracing stays off
     disable_sdk_tracing()
     _maybe_run_on_start()
     yield

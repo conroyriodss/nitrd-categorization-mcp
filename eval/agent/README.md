@@ -212,9 +212,28 @@ This section records every agent-app change after the first counted run, in orde
        * The precision-vs-required difference (0.833 vs 0.844) comes entirely from that one allowed call.
      * **Latency.** Model B is faster: p50 3.27 s vs 4.49 s, p95 11.30 s vs 19.42 s. This is one run each, and latency includes model turns, so it is not comparable to per-tool latency.
      * **Wording for the deliverables:** "Both models passed 50/50 (Wilson 95% [0.929, 1.000] each). The suite is at ceiling and does not distinguish them. They differed only in whether the agent read review history before drafting in AES-10." Neither number stands alone, and model A is not "the" result.
-3. **Capture, model back to A.** Proposed, not yet built or deployed; see the next section. It is recorded here when deployed.
+3. **Redeploy 2: capture on `/ask`, model back to A** (owner go-ahead 2026-11-07).
+   * **It post-dates both AES runs, so neither result is affected.** `2096c936` ran at `95e5dea` (deployment `01f1da21177f…`), and `3acc8a96` ran at `756334c` (deployment `01f1da5b5f54…`). `capture.py` first exists at `7a16501`, and the interlock in `app.py` at the redeploy-2 commit, both after those runs finished. Neither deployment contained either file.
+   * **What changed:** `src/nitrd_agent/app.py` (the interlock, plus `capture.install()` at startup), the new `src/nitrd_agent/capture.py` (shipped in the snapshot), and `deploy/databricks/nitrd_agent/app.yaml` (`NITRD_AGENT_MODEL=databricks-gpt-6-1-sol`).
+   * **The four pinned files, unchanged at the redeploy-2 commit** (SHA-256 identical to `95e5dea`, `git show <commit>:<path>`):
 
-### Proposed change for redeploy 2 (awaiting the owner's go-ahead)
+     | File | SHA-256 |
+     |---|---|
+     | `src/nitrd_agent/agent.py` | `0c57cbe46875391565338de63c500bc1b17d6db892c30a11c4150a6ae32b39a7` |
+     | `src/nitrd_agent/resources/aes_functional_v1.json` | `9cf941feaf0dd9a47a7def2d24ebc839f6b47291094a0b869ef0b7056aa836b6` |
+     | `src/nitrd_agent/resources/instructions_v1.md` | `f4ff62d2f2b14730ac1f82254169b905ba007d098102079e64886f3b88e361d0` |
+     | `src/nitrd_agent/scoring.py` | `23131a0ff84a29921f328ce8f395102969f92f9699e87a9806b2d8ed4906d164` |
+
+     Also unchanged: `config.py` `caa3c108…` (default model `databricks-gpt-6-1-sol`, `MAX_TURNS` 16), `aes.py` `587e6604…`, `gate.py` `96272e94…`, `db.py` `a0c0c84d…`.
+   * **The suite path stays as measured.**
+     * `aes.run_suite` still turns SDK tracing off first, and `aes.py` and `agent.py` do not reference `capture`.
+     * `/ask` turns tracing on only while no suite is running, and returns 409 while one is.
+     * A suite start returns 409 while any `/ask` is in flight. The last `/ask` to finish turns tracing off, even if it raised.
+     * `capture.install()` replaces the SDK's processors with an in-memory collector. With tracing off, no processor is called, so the suite path is unaffected.
+     * Tested in `tests/test_agent_interlock.py` (8 tests, offline, run in CI). Each 409 check was removed in turn, in a scratch copy: removing the `/ask` check fails 1 test (`test_ask_refused_409_while_suite_running`); removing the suite-start check fails 2.
+   * **Not in this redeploy: saving `/ask` records to a table** (from the proposal below). The app SP's direct grant on schema `users.conroyri` is `USE_SCHEMA` only (UC permissions API, 2026-11-07; inherited or group grants not checked). A new table needs CREATE TABLE, or a pre-created table plus MODIFY: a permission change, left to the owner. Until then `/ask` shows its captured calls on the page only, including after `MaxTurnsExceeded`.
+
+### Proposed change for redeploy 2 (as proposed; built as in "Deployment sequence", step 3)
 
 **What it touches (scope fixed by the owner, 2026-11-07).**
 * **Changes:** `src/nitrd_agent/app.py`, `src/nitrd_agent/db.py`, a new `src/nitrd_agent/capture.py`, new tests, and `deploy/databricks/nitrd_agent/app.yaml` (model back to A).

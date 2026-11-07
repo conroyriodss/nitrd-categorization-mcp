@@ -7,7 +7,8 @@
 # staging. Resources:
 #   mcp-outputs / mcp-classifier / mcp-portal   app, CAN_USE (the three MCP apps)
 #   llm-endpoint     serving endpoint databricks-gpt-6-1-sol, CAN_QUERY
-#   llm-endpoint-b   serving endpoint databricks-gpt-6-sol, CAN_QUERY (second-model run)
+#   llm-endpoint-b   serving endpoint databricks-gpt-6-sol, CAN_QUERY (second-model
+#                    run 3acc8a96; unused since redeploy 2)
 #   sql-warehouse    CAN_USE (harness only: row counts, AES-10 cleanup, results)
 # Table grants to this App's SP (harness only; the model has no SQL tool):
 #   SELECT + MODIFY on review_requests, review_events, routing_events (cleanup
@@ -23,9 +24,11 @@ command:
 env:
   - name: DATABRICKS_WAREHOUSE_ID
     valueFrom: sql-warehouse
-  # Second-model AES run (eval/agent/README.md, "Deployment sequence"); reverted after it.
+  # Model A, the owner's choice (decision 6). Model B (databricks-gpt-6-sol) was
+  # set here for the second-model run 3acc8a96 only, and reverted in redeploy 2
+  # (eval/agent/README.md, "Deployment sequence").
   - name: NITRD_AGENT_MODEL
-    value: databricks-gpt-6-sol
+    value: databricks-gpt-6-1-sol
   - name: NITRD_AGENT_URL_OUTPUTS
     value: https://mcp-nih-grants-outputs-7474654188777746.aws.databricksapps.com/mcp
   - name: NITRD_AGENT_URL_CLASSIFIER
