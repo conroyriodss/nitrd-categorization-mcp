@@ -176,8 +176,9 @@ This section records every agent-app change after the first counted run, in orde
 
 ### Proposed change for redeploy 2 (awaiting the owner's go-ahead)
 
-**What it touches.**
-* **Changes:** `src/nitrd_agent/app.py`, `src/nitrd_agent/db.py`, a new `src/nitrd_agent/capture.py`, new tests, `deploy/databricks/nitrd_agent/app.yaml` (model back to A) and `config.py` (one new constant).
+**What it touches (scope fixed by the owner, 2026-11-07).**
+* **Changes:** `src/nitrd_agent/app.py`, `src/nitrd_agent/db.py`, a new `src/nitrd_agent/capture.py`, new tests, and `deploy/databricks/nitrd_agent/app.yaml` (model back to A).
+* **Not changed:** `config.py`. There is no `MAX_TURNS` change and no new constant.
 * **Untouched:** `agent.py`, `gate.py`, `aes.py`, `scoring.py`, the suite and the instructions.
 
 * **Saving `/ask` records (L2 fix outside `agent.py`).**
@@ -187,15 +188,20 @@ This section records every agent-app change after the first counted run, in orde
   * One table row per `/ask`: prompt, calls, final answer or error, model, commit, UTC time. Values are passed through the exporter's placeholders (`<warehouse-id>`, `<service-principal-id>`, `<workspace-host>`). No email.
 * **The suite path stays as measured.** `aes.py` still turns SDK tracing off for a suite run. `/ask` turns it back on only while no suite is running, and refuses with 409 while one is. So the suite runs with tracing off, exactly as in `2096c936`.
 * **Before anything is deployed:** an offline test with a stub model that raises `MaxTurnsExceeded` after two tool calls must show the record holding both calls. One of the two must be an MCP tool and one the local draft tool, because the SDK's span coverage of MCP tool calls in `openai-agents==0.24.0` is assumed here, not yet verified. If MCP calls produce no function span, this design fails, and I stop and report.
-* **`MAX_TURNS` for interactive use: proposed 40, with the suite at 16.**
-  * **Reasoning:** the successful NEI P30 run made 14 calls for 6 awards. A purposive subset of about 15 awards needs about 30 calls plus a cohort call and a reply. 40 covers that, and still stops a runaway exhaustive attempt within about 2 minutes at the observed latency of about 3 s per model turn. Exhaustive assessment of a 431-award cohort is out of reach at any sensible value; that is L1.
-  * **The constraint:** `agent.py` reads `config.MAX_TURNS` at call time and serves both paths. Without touching it, the only way to give `/ask` a different value is for `app.py` to set `config.MAX_TURNS = config.INTERACTIVE_MAX_TURNS` for `/ask` and restore 16 when a suite starts. Because `/ask` is refused during a suite, the two never overlap. This is a module-level setting, not a per-call argument, and is disclosed as such.
+* **`MAX_TURNS`: stays 16 for both paths (owner decision, 2026-11-07).**
+  * **Rejected:** a proposal to raise it to 40 for `/ask` by setting `config.MAX_TURNS` from `app.py`.
+  * **Why:** a process-wide mutable shared by the measured path and the interactive path, guarded only by the 409 check, risks a suite silently running at the wrong limit. That risk outweighs a slightly larger subset.
+  * **With L2 fixed, 16 is a bound rather than a cliff:** the user gets partial results and an explanation.
+  * **The clean fix, deferred to v2:** a per-call `max_turns` argument through `Session.run`. It requires changing the pinned `agent.py`.
 
 ## Known limitations (recorded 2026-11-06, after the run; nothing changed)
 
 * **L1. Capability boundary, measured on unscripted owner queries at `95e5dea` (owner-attested, [Team-reported]). This replaces the earlier estimate.**
-  * **Assessing a purposive subset works.** NEI P30 FY2021: 14 tool calls, 6 awards assessed, and coverage and non-extrapolation caveats volunteered. The six probabilities and the threshold were re-derived independently ([`../results/agent_runs/unscripted/20261107_nei_p30_verification.json`](../results/agent_runs/unscripted/20261107_nei_p30_verification.json)).
-  * **Exhaustive cohort assessment fails.** The owner's tally over 6 cohort queries: 2 clean refusals (reserved years), 1 full assessment, 3 `MaxTurnsExceeded`.
+  * **Assessing a purposive subset works.** NEI P30 FY2021: 14 tool calls, 6 awards assessed, and coverage and non-extrapolation caveats volunteered. The quoted probabilities and the threshold were re-derived independently and match the transcript exactly ([`../results/agent_runs/unscripted/20261107_nei_p30_verification.json`](../results/agent_runs/unscripted/20261107_nei_p30_verification.json)). These are six purposively selected awards, not a sample and not an accuracy measurement.
+  * **Exhaustive cohort assessment fails.** The owner's corrected tally over eight interactive queries:
+    * 3 clean refusals (two FY2022, one FY2024 NHGRI);
+    * 2 completed assessments (FY2021 NIBIB, flagged non-representative; FY2021 NEI P30, 14 calls);
+    * 3 `MaxTurnsExceeded`.
   * **Why it fails:** `outputs_find_cohort` caps at 200 records, each award needs its own classify call, and `MAX_TURNS` is 16.
   * **Consequence:** this is the documented reason the reviewer portal's operator page, not the agent, is the bulk-submission surface.
   * **Fix, deferred:**
@@ -207,12 +213,12 @@ This section records every agent-app change after the first counted run, in orde
   * **Not fixed:** `agent.py` is pinned (`0c57cbe4…`), and fixing it would break the pre-commitment.
   * **Evidence that the suite does not reach this path:** both suite runs (`c1ab24d7`, `2096c936`) recorded 0 errors, and their maximum was 7 turns of the 16 allowed.
   * **How to read it:** any run that records an error with zero calls means "calls not captured", not "no calls made".
-  * **It is also a product bug, raised to priority for the next agent deploy.** Three of six real cohort queries returned a bare `MaxTurnsExceeded`: no partial result for the user, and no recorded calls. The proposed fix is outside `agent.py`; see "Proposed change for redeploy 2".
+  * **It is also a product bug, raised to priority for the next agent deploy.** Three of eight interactive queries returned a bare `MaxTurnsExceeded`: no partial result for the user, and no recorded calls. The proposed fix is outside `agent.py`; see "Proposed change for redeploy 2".
 * **L3. `MAX_TURNS` serves both the suite and the interactive assistant.**
   * It lives in `config.py`. `config.py` is recorded in the provenance hashes, but it is not one of the test-pinned files.
   * 16 is enough for the suite (maximum observed 7) and too low for interactive cohort questions.
   * Both AES suite runs (`c1ab24d7`, void, and `2096c936`) ran with `MAX_TURNS = 16` and used at most 7 turns. The second-model deployment (`01f1da5b5f54…`) has the same value.
-  * Raising it, separately for interactive use, is flagged as a post-AES change. It is not made here, and it would come with a new provenance record.
+  * It is not raised (owner decision, 2026-11-07; see "Proposed change for redeploy 2"). The clean fix, a per-call `max_turns` through `Session.run`, touches the pinned `agent.py` and is deferred to v2.
 
 
 ### Provenance of the measured configuration (recorded 2026-11-06, before the run at `95e5dea`)

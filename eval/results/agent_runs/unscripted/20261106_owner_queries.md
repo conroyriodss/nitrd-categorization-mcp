@@ -43,8 +43,11 @@ The labelling and limits above apply unchanged. The content below is the owner's
 * **The four queries:**
   * **NEI P30, FY2021: a full assessment of a purposive subset.** The agent made 14 tool calls, assessed 6 awards, and volunteered coverage and non-extrapolation caveats. It quoted probabilities to six decimals and threshold 0.389368.
   * **The other three:** the owner's account of them is limited to the tally below.
-* **Owner's tally over the cohort queries:** 6 cohort queries, of which 2 were clean refusals (FY2022, FY2024), 1 was a full assessment (NEI P30) and 3 ended in `MaxTurnsExceeded` with no partial result and no recorded calls.
-* **Unreconciled:** this record's first section lists two FY2022 refusals and no FY2024 query, while the tally names one FY2022 and one FY2024 refusal. The record is left as the owner gave it; the owner should say which is right.
+* **First tally, superseded:** 6 cohort queries: 2 clean refusals (FY2022, FY2024), 1 full assessment, 3 `MaxTurnsExceeded`. It did not match this record's first section (two FY2022 refusals), and the owner corrected it.
+* **Corrected tally (owner, 2026-11-07): eight interactive queries.**
+  * 3 clean refusals: two FY2022 and one FY2024 (NHGRI).
+  * 2 completed assessments: FY2021 NIBIB (the agent flagged its 50 records as non-representative) and FY2021 NEI P30 (14 calls).
+  * 3 `MaxTurnsExceeded`, with no partial result and no recorded calls (L2).
 
 ### NEI P30 figures, re-derived (not from the transcript)
 
@@ -61,4 +64,12 @@ Re-derived on 2026-11-07 by in-process calls at `95e5dea` (`classifier_classify_
 
 All six are FY2021 NEI P30 core subprojects. The model's suggestion agrees with the listing on all six.
 
-**Not yet compared with the transcript.** The transcript's own numbers have not been given to me, so no discrepancy check has been made against them.
+**Verified (2026-11-07).** The owner compared the transcript with this re-derivation. All five probabilities the agent quoted, and the threshold, match exactly, with no discrepancies.
+* **10250516:** the agent declined to give a score and called it a plausible fit. Its probability is 0.628050: above the threshold, and the award is listed NITRD. Both the restraint and the "plausible fit" judgment were correct.
+* **The agent's qualitative ordering matches the official NITRD listing on all six awards.** These are six purposively selected awards. They are not a sample, and this is not an accuracy measurement.
+
+## Model provenance of the eight queries
+
+* **Page headers.** Each result page's header reads "Model: databricks-gpt-6-1-sol", per the owner, who read the transcripts. The header is rendered from `config.MODEL` of the process that served the page (`app.py`, `_page`), and the agent sends the same `config.MODEL` to the endpoint. A page served by the model-B deployment (`01f1da5b5f54…`, from about 03:35Z on 2026-11-07) would read `databricks-gpt-6-sol`.
+* **`/logz` cross-check.** The six `POST /ask` lines given (2026-11-06, 21:04:25Z to 21:24:49Z) are all before the 03:35Z switch. Those log lines do not cover all eight queries; the rest rely on the page headers.
+* **Conclusion:** all eight queries ran on `databricks-gpt-6-1-sol` at `95e5dea`. None post-dates the switch, so no gpt-6-sol section is needed.
