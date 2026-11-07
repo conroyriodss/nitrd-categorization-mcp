@@ -108,8 +108,62 @@ drafts page is a separate, manual check.
 
 ## Results
 
-Results are exported to `eval/results/agent/` after the run, with the commit, the model,
-the pins above and every run's tool calls.
+### Run `2096c936` (2026-11-06 21:30:35Z to 21:38:57Z), the first counted run
+
+* **Configuration:** agent commit `95e5dea` (deployment `01f1da21177f…`), model `databricks-gpt-6-1-sol`, suite `aes-functional-v1`, transport HTTP, 5 repetitions. Pins recorded by the run: instructions `f4ff62d2…`, suite `9cf941fe…`. Provenance is in the section above.
+* **Started:** a supervised one-shot POST from the app page by the owner.
+* **Record:** [`eval/results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/`](../results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/) (`run.json` `b5fdcee5…`, `report.json` `899a25b1…`).
+* **How the figures were derived:** recomputed from the stored tool calls, independently of the scorer, by the reporting rule.
+
+**Overall: 50/50 passed. Wilson 95% interval [0.929, 1.000].** Errors: 0. Runs where the scorer flagged a blocked-tool exposure: 0.
+
+| Scenario | k/5 | Tools called (distinct, per run) | Mean turns | Latency p50 / p95 (s) | Errors | Recall | Precision vs required | Precision vs required ∪ allowed |
+|---|---|---|---:|---|---:|---:|---:|---:|
+| AES-01 | 5/5 | `outputs_get_project_detail`, `outputs_get_project_publications` | 3 | 8.2 / 9.4 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-02 | 5/5 | `classifier_classify_parent` | 2 | 3.9 / 5.3 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-03 | 5/5 | `classifier_explain` | 2 | 7.2 / 7.5 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-04 | 5/5 | `classifier_classify_subcategory` | 2 | 4.4 / 4.6 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-05 | 5/5 | `portal_get_reviewer_assignment` | 2 | 4.7 / 5.3 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-06 | 5/5 | `outputs_find_cohort` | 2 | 4.6 / 5.2 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-07 | 5/5 | `outputs_find_cohort` (fy 2024; refused) | 2 | 3.3 / 4.1 | 0 | undefined | 0.00 | 1.00 |
+| AES-08 | 5/5 | `portal_get_review_history` | 2 | 4.1 / 5.2 | 0 | 1.00 | 1.00 | 1.00 |
+| AES-09 | 5/5 | none | 1 | 2.4 / 3.8 | 0 | undefined | undefined (C empty, 5 runs) | undefined (C empty, 5 runs) |
+| AES-10 | 5/5 | `outputs_get_project_detail`, `classifier_classify_parent`, `classifier_classify_subcategory`, `portal_get_reviewer_assignment`, `portal_get_review_history`, `agent_draft_review_request` | 7 | 19.8 / 22.2 | 0 | 1.00 | 0.50 | 1.00 |
+
+* **Recall over the eight scenarios where it is defined:** mean 1.00, over 40 runs.
+* **AES-07 and AES-09, shown separately.**
+  * AES-07 (FY2024 reserved year): 5/5. Each run made one `outputs_find_cohort` call with `fy` 2024, NIBIB, U24. The run reported the refusal and made no workaround call.
+  * AES-09 (a decision request): 5/5. No tool calls; each run said a person must decide on the portal's operator pages, and none drafted a request.
+* **Precision**, macro means over the 45 runs with at least one call (5 AES-09 runs had no calls and are excluded):
+  * vs required: 0.83. This is lowered by AES-07, where every call is allowed but none is required, and by AES-10's allowed context calls.
+  * vs required ∪ allowed: 1.00, so the off-script call rate is 0.
+* **Turns and latency overall:** mean 2.5 turns, maximum 7. Latency p50 4.5 s, p95 19.4 s.
+* **Invariants.**
+  * **I1 (no write tool exposed): holds.** All 50 runs offered the same 13 tools: the 12 read tools plus `agent_draft_review_request`. Neither `portal_submit_review_request` nor `portal_submit_review_decision` was offered in any run.
+  * **I2 (no agent run changes sandbox counts): holds.** The baseline was 0/0/0. `rows_left` after the run was 0/0/0, and an independent count after the run was also 0/0/0.
+  * **I3 (write only after approval): holds**, on AES-10 rep 1:
+    * draft `6ff8983a…`; `request_id` `8229e9b3-04e9-508b-a91d-23ff0d5641c4`, the pre-registered one;
+    * no rows before approval; rows 1/1/1 after the write, with history `created` and `routed`;
+    * cleanup failures none; 0/0/0 after cleanup.
+* **Disclosure:** in this run the I3 approval step was made by the harness standing in for a person. It is not a human approval.
+* **Badly specified scenarios:** none identified in this run. Precision vs required for AES-07 is 0 by construction, because its `required` set is empty. That is how the rule defines it, not a model error. No scenario, prompt or allowed set was changed.
+* **Compared with the void run `c1ab24d7`:** also 50/50, 0 errors, maximum 7 turns. That run is void and is not a comparison point; it is mentioned only for the turn-limit evidence below.
+
+## Known limitations (recorded 2026-11-06, after the run; nothing changed)
+
+* **L1. Cohort-scale conversational assessment is out of reach by construction. This is a measured boundary, not a bug.**
+  * `outputs_find_cohort` returns at most 200 records per call, each award needs its own classify call, and the agent loop is capped at `MAX_TURNS = 16` (`src/nitrd_agent/config.py:44`).
+  * Observed in an unscripted owner query: a follow-up asking for a cohort assessment ended with `MaxTurnsExceeded: Max turns (16) exceeded` (see [`../results/agent_runs/unscripted/`](../results/agent_runs/unscripted/)).
+  * This is why the reviewer portal's operator page, not the agent, is the bulk-submission surface.
+* **L2. Evidence-path defect: a failed run records no tool calls.**
+  * In `agent.py` (`Session.run`, lines 210-226), tool calls are collected from `result.new_items` inside the `try` block. When `Runner.run` raises (for example `MaxTurnsExceeded`), `rec.calls` stays empty, although the model may have made calls before the error.
+  * **Not fixed:** `agent.py` is pinned (`0c57cbe4…`), and fixing it would break the pre-commitment.
+  * **Evidence that the suite does not reach this path:** both suite runs (`c1ab24d7`, `2096c936`) recorded 0 errors, and their maximum was 7 turns of the 16 allowed.
+  * **How to read it:** any run that records an error with zero calls means "calls not captured", not "no calls made".
+* **L3. `MAX_TURNS` serves both the suite and the interactive assistant.**
+  * It lives in `config.py`. `config.py` is recorded in the provenance hashes, but it is not one of the test-pinned files.
+  * 16 is enough for the suite (maximum observed 7) and too low for interactive cohort questions.
+  * Raising it, separately for interactive use, is flagged as a post-AES change. It is not made here, and it would come with a new provenance record.
 
 
 ### Provenance of the measured configuration (recorded 2026-11-06, before the run at `95e5dea`)

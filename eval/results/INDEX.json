@@ -12,6 +12,18 @@
    "bytes": 3070,
    "sha256": "7925361bf926a5f0e8c0b5b472a5baeac96daf9ef917771ddc093f1408ccbf7d"
   },
+  "agent_runs/20261106T2130Z_aes-functional-v1_2096c936/report.json": {
+   "bytes": 108069,
+   "sha256": "899a25b15b7a958593a5542032021f6b2272adf1908b356f728a06fc2815e310"
+  },
+  "agent_runs/20261106T2130Z_aes-functional-v1_2096c936/run.json": {
+   "bytes": 2848,
+   "sha256": "b5fdcee50a62027e0e5476e723d574e89a4e0fddd4cdebe29b315c5822b1ff25"
+  },
+  "agent_runs/unscripted/20261106_owner_queries.md": {
+   "bytes": 3012,
+   "sha256": "00373d93165ebfcf7f9cfac7e69b67a85d65ce57e394fc090a1718a251afbadf"
+  },
   "provenance/data.json": {
    "bytes": 2183,
    "sha256": "da2ee4a4afaa007704f7df190581946c91d098f2da125fc719315fdd8f97c90a"
@@ -209,7 +221,7 @@
    "sha256": "54b09ab7848579e416eb6660e1d7a4cbbb1b66bbe397e924475f90d789dc691a"
   }
  },
- "generated_utc": "2026-11-06T21:09:40Z",
+ "generated_utc": "2026-11-07T01:49:58Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md.",

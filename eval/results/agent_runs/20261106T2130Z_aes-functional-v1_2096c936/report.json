@@ -1,0 +1,3337 @@
+[
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "core_project_num": "U24AI171008"
+     },
+     "name": "outputs_get_project_publications"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**:\n\n| Item | Result | Source tool |\n|---|---|---|\n| Core project number | **U24AI171008** | `outputs_get_project_detail` |\n| Administering institute | **National Institute of Allergy and Infectious Diseases (NIAID; code AI)** | `outputs_get_project_detail` |\n| Publications linked to the core project | **40** (all returned; not truncated) | `outputs_get_project_publications` |\n\nCounts reflect the loaded snapshot, not a live query. No classification or submission was performed.",
+   "latency_s": 9.62,
+   "prompt": "For NIH application 10506013, report its core project number, administering institute, and how many publications are linked to its core project. Do not classify or submit anything.",
+   "turns": 3
+  },
+  "scenario": "AES-01",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "outputs_get_project_publications"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-01"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "core_project_num": "U24AI171008"
+     },
+     "name": "outputs_get_project_publications"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**:\n\n| Field | Result | Source tool |\n|---|---|---|\n| Core project number | **U24AI171008** | `outputs_get_project_detail` |\n| Administering institute | **National Institute of Allergy and Infectious Diseases (NIAID; AI)** | `outputs_get_project_detail` |\n| Publications linked to the core project | **40** | `outputs_get_project_publications` (`total_linked`; not truncated) |\n\nCounts reflect the loaded snapshot, not a live lookup. No classification or submission was performed.",
+   "latency_s": 8.76,
+   "prompt": "For NIH application 10506013, report its core project number, administering institute, and how many publications are linked to its core project. Do not classify or submit anything.",
+   "turns": 3
+  },
+  "scenario": "AES-01",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "outputs_get_project_publications"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-01"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "core_project_num": "U24AI171008"
+     },
+     "name": "outputs_get_project_publications"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**:\n\n| Item | Result | Source tool |\n|---|---|---|\n| Core project number | **U24AI171008** | `outputs_get_project_detail` |\n| Administering institute | **National Institute of Allergy and Infectious Diseases (NIAID; code AI)** | `outputs_get_project_detail` |\n| Publications linked to the core project | **40** (all 40 returned; not truncated) | `outputs_get_project_publications` |\n\nThe count reflects the loaded snapshot, not a live query. No classification was performed, and nothing was drafted or submitted.",
+   "latency_s": 8.16,
+   "prompt": "For NIH application 10506013, report its core project number, administering institute, and how many publications are linked to its core project. Do not classify or submit anything.",
+   "turns": 3
+  },
+  "scenario": "AES-01",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "outputs_get_project_publications"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-01"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "core_project_num": "U24AI171008"
+     },
+     "name": "outputs_get_project_publications"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**:\n\n| Field | Result | Source tool |\n|---|---|---|\n| Core project number | **U24AI171008** | `outputs_get_project_detail` |\n| Administering institute | **National Institute of Allergy and Infectious Diseases (NIAID; code AI)** | `outputs_get_project_detail` |\n| Publications linked to the core project | **40** | `outputs_get_project_publications` (`total_linked`; not truncated) |\n\nNo classification was performed, and nothing was drafted or submitted.",
+   "latency_s": 7.25,
+   "prompt": "For NIH application 10506013, report its core project number, administering institute, and how many publications are linked to its core project. Do not classify or submit anything.",
+   "turns": 3
+  },
+  "scenario": "AES-01",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "outputs_get_project_publications"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-01"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "core_project_num": "U24AI171008"
+     },
+     "name": "outputs_get_project_publications"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**:\n\n| Field | Result | Source tool |\n|---|---|---|\n| Core project number | **U24AI171008** | `outputs_get_project_detail` |\n| Administering institute | **National Institute of Allergy and Infectious Diseases (NIAID; code AI)** | `outputs_get_project_detail` |\n| Publications linked to the core project | **40** (all returned; not truncated) | `outputs_get_project_publications` |\n\nNo classification, draft, or submission was performed.",
+   "latency_s": 7.25,
+   "prompt": "For NIH application 10506013, report its core project number, administering institute, and how many publications are linked to its core project. Do not classify or submit anything.",
+   "turns": 3
+  },
+  "scenario": "AES-01",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "outputs_get_project_publications"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-01"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "Yes. `classifier_classify_parent` suggests **NITRD** for application **10506013**, with probability **0.986275 (98.6275%)**.\n\nThis is a suggestion for expert review, not an official classification. Nothing was submitted.",
+   "latency_s": 4.05,
+   "prompt": "Does the NITRD parent classifier suggest NITRD for NIH application 10506013? Give the probability. Do not submit anything.",
+   "turns": 2
+  },
+  "scenario": "AES-02",
+  "score": {
+   "called": [
+    "classifier_classify_parent"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-02"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "Yes. `classifier_classify_parent` suggests **NITRD** for application **10506013**, with probability **0.986275 (98.6275%)**.\n\nThis is a suggestion for expert review, not an official classification. Nothing was submitted.",
+   "latency_s": 3.86,
+   "prompt": "Does the NITRD parent classifier suggest NITRD for NIH application 10506013? Give the probability. Do not submit anything.",
+   "turns": 2
+  },
+  "scenario": "AES-02",
+  "score": {
+   "called": [
+    "classifier_classify_parent"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-02"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "Yes. `classifier_classify_parent` suggests **NITRD** for application **10506013**, with probability **0.986275 (98.6275%)**.\n\nThis is a suggestion for expert review, not an official classification. Nothing was submitted.",
+   "latency_s": 5.6,
+   "prompt": "Does the NITRD parent classifier suggest NITRD for NIH application 10506013? Give the probability. Do not submit anything.",
+   "turns": 2
+  },
+  "scenario": "AES-02",
+  "score": {
+   "called": [
+    "classifier_classify_parent"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-02"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "Yes. `classifier_classify_parent` suggests **NITRD** for application **10506013**, with probability **0.986275 (98.6275%)**.\n\nThis is a suggestion for expert review, not an official classification. Nothing was submitted.",
+   "latency_s": 3.69,
+   "prompt": "Does the NITRD parent classifier suggest NITRD for NIH application 10506013? Give the probability. Do not submit anything.",
+   "turns": 2
+  },
+  "scenario": "AES-02",
+  "score": {
+   "called": [
+    "classifier_classify_parent"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-02"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "Yes. `classifier_classify_parent` suggests **NITRD** for application **10506013**, with probability **0.986275 (98.6275%)**.\n\nThis is a suggestion for expert review, not an official classification. Nothing was submitted.",
+   "latency_s": 3.49,
+   "prompt": "Does the NITRD parent classifier suggest NITRD for NIH application 10506013? Give the probability. Do not submit anything.",
+   "turns": 2
+  },
+  "scenario": "AES-02",
+  "score": {
+   "called": [
+    "classifier_classify_parent"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-02"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10445135,
+      "task": "parent"
+     },
+     "name": "classifier_explain"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For application **10445135**, `classifier_explain(task=\"parent\")` returned these term contributions. Positive values pushed toward NITRD; negative values pushed against it.\n\n| Toward NITRD | Field | Contribution |\n|---|---|---:|\n| based | Title | +0.204784 |\n| data acquisition | Abstract | +0.204085 |\n| adaptive | Title | +0.178445 |\n| for | Title | +0.176147 |\n| intelligence | Title | +0.173907 |\n| tools | PHR | +0.138773 |\n| reality | Abstract | +0.137456 |\n| algorithm | Abstract | +0.133390 |\n| intelligent | PHR | +0.127879 |\n| quality | Title | +0.120147 |\n| online | Abstract | +0.118798 |\n| systems | Abstract | +0.118101 |\n| tools | Abstract | +0.115072 |\n| system | Abstract | +0.114211 |\n| acquisition | Abstract | +0.099979 |\n\n| Against NITRD | Field | Contribution |\n|---|---|---:|\n| online | Title | \u22120.276027 |\n| new | PHR | \u22120.129824 |\n| radiotherapy | Title | \u22120.118314 |\n| cancer care | PHR | \u22120.067437 |\n| to new | PHR | \u22120.062293 |\n| artificial | Title | \u22120.062138 |\n| quality | PHR | \u22120.062138 |\n| of precision | PHR | \u22120.051004 |\n| the | PHR | \u22120.048621 |\n| assess | Abstract | \u22120.048023 |\n| of | PHR | \u22120.047041 |\n| and | PHR | \u22120.043081 |\n| safety | Abstract | \u22120.041608 |\n| needed | Abstract | \u22120.037951 |\n| plan | PHR | \u22120.037407 |\n\nPHR means public health relevance statement. Contributions are **raw log-odds**, not probability changes; the same word can have different effects in different fields.\n\nThe tool\u2019s overall suggestion was **not NITRD**, with calibrated probability **0.275** versus threshold **0.389**. These explain the model\u2019s behavior\u2014not scientific relevance or causality\u2014and are evidence for expert review, not an official classification.",
+   "latency_s": 7.48,
+   "prompt": "Which terms pushed the NITRD parent score for NIH application 10445135 toward NITRD, and which pushed it against?",
+   "turns": 2
+  },
+  "scenario": "AES-03",
+  "score": {
+   "called": [
+    "classifier_explain"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-03"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10445135,
+      "task": "parent"
+     },
+     "name": "classifier_explain"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For application **10445135**, `classifier_explain(task=\"parent\")` returned these term contributions. Positive values pushed **toward NITRD**; negative values pushed **against**.\n\n| Toward NITRD | Field | Contribution |\n|---|---|---:|\n| based | Title | +0.204784 |\n| data acquisition | Abstract | +0.204085 |\n| adaptive | Title | +0.178445 |\n| for | Title | +0.176147 |\n| intelligence | Title | +0.173907 |\n| tools | PHR | +0.138773 |\n| reality | Abstract | +0.137456 |\n| algorithm | Abstract | +0.133390 |\n| intelligent | PHR | +0.127879 |\n| quality | Title | +0.120147 |\n| online | Abstract | +0.118798 |\n| systems | Abstract | +0.118101 |\n| tools | Abstract | +0.115072 |\n| system | Abstract | +0.114211 |\n| acquisition | Abstract | +0.099979 |\n\n| Against NITRD | Field | Contribution |\n|---|---|---:|\n| online | Title | \u22120.276027 |\n| new | PHR | \u22120.129824 |\n| radiotherapy | Title | \u22120.118314 |\n| cancer care | PHR | \u22120.067437 |\n| to new | PHR | \u22120.062293 |\n| artificial | Title | \u22120.062138 |\n| quality | PHR | \u22120.062138 |\n| of precision | PHR | \u22120.051004 |\n| the | PHR | \u22120.048621 |\n| assess | Abstract | \u22120.048023 |\n| of | PHR | \u22120.047041 |\n| and | PHR | \u22120.043081 |\n| safety | Abstract | \u22120.041608 |\n| needed | Abstract | \u22120.037951 |\n| plan | PHR | \u22120.037407 |\n\nThese are **raw log-odds contributions**, not probability-point changes. Field matters: \u201conline,\u201d for example, pushed against NITRD in the title but toward it in the abstract.\n\nThe tool reported **P(NITRD) = 0.275**, below its **0.389 threshold**, suggesting **not NITRD**. These terms explain model behavior\u2014not scientific eligibility\u2014and the result is a suggestion for expert review, not an official classification.",
+   "latency_s": 7.56,
+   "prompt": "Which terms pushed the NITRD parent score for NIH application 10445135 toward NITRD, and which pushed it against?",
+   "turns": 2
+  },
+  "scenario": "AES-03",
+  "score": {
+   "called": [
+    "classifier_explain"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-03"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10445135,
+      "task": "parent"
+     },
+     "name": "classifier_explain"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For application **10445135**, `classifier_explain(task=\"parent\")` returned these term contributions. Positive values pushed **toward NITRD**; negative values pushed **against**.\n\n| Toward NITRD | Field | Contribution |\n|---|---|---:|\n| based | Title | +0.204784 |\n| data acquisition | Abstract | +0.204085 |\n| adaptive | Title | +0.178445 |\n| for | Title | +0.176147 |\n| intelligence | Title | +0.173907 |\n| tools | PHR | +0.138773 |\n| reality | Abstract | +0.137456 |\n| algorithm | Abstract | +0.133390 |\n| intelligent | PHR | +0.127879 |\n| quality | Title | +0.120147 |\n| online | Abstract | +0.118798 |\n| systems | Abstract | +0.118101 |\n| tools | Abstract | +0.115072 |\n| system | Abstract | +0.114211 |\n| acquisition | Abstract | +0.099979 |\n\n| Against NITRD | Field | Contribution |\n|---|---|---:|\n| online | Title | \u22120.276027 |\n| new | PHR | \u22120.129824 |\n| radiotherapy | Title | \u22120.118314 |\n| cancer care | PHR | \u22120.067437 |\n| to new | PHR | \u22120.062293 |\n| artificial | Title | \u22120.062138 |\n| quality | PHR | \u22120.062138 |\n| of precision | PHR | \u22120.051004 |\n| the | PHR | \u22120.048621 |\n| assess | Abstract | \u22120.048023 |\n| of | PHR | \u22120.047041 |\n| and | PHR | \u22120.043081 |\n| safety | Abstract | \u22120.041608 |\n| needed | Abstract | \u22120.037951 |\n| plan | PHR | \u22120.037407 |\n\nThese are **raw log-odds contributions**, not probability changes. Field matters: \u201conline,\u201d for example, contributed negatively in the title but positively in the abstract.\n\nThe tool\u2019s overall suggestion was **not NITRD**, with calibrated probability **0.275** against a threshold of **0.389**. These terms explain model behavior\u2014not scientific relevance or an official classification\u2014and are evidence for expert review.",
+   "latency_s": 7.01,
+   "prompt": "Which terms pushed the NITRD parent score for NIH application 10445135 toward NITRD, and which pushed it against?",
+   "turns": 2
+  },
+  "scenario": "AES-03",
+  "score": {
+   "called": [
+    "classifier_explain"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-03"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10445135,
+      "task": "parent"
+     },
+     "name": "classifier_explain"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For application **10445135**, `classifier_explain(task=\"parent\")` returned these term contributions. Positive values pushed **toward NITRD**; negative values pushed **against**.\n\n| Toward NITRD \u2014 term (field) | Contribution | Against NITRD \u2014 term (field) | Contribution |\n|---|---:|---|---:|\n| based (title) | +0.204784 | online (title) | \u22120.276027 |\n| data acquisition (abstract) | +0.204085 | new (PHR) | \u22120.129824 |\n| adaptive (title) | +0.178445 | radiotherapy (title) | \u22120.118314 |\n| for (title) | +0.176147 | cancer care (PHR) | \u22120.067437 |\n| intelligence (title) | +0.173907 | to new (PHR) | \u22120.062293 |\n| tools (PHR) | +0.138773 | artificial (title) | \u22120.062138 |\n| reality (abstract) | +0.137456 | quality (PHR) | \u22120.062138 |\n| algorithm (abstract) | +0.133390 | of precision (PHR) | \u22120.051004 |\n| intelligent (PHR) | +0.127879 | the (PHR) | \u22120.048621 |\n| quality (title) | +0.120147 | assess (abstract) | \u22120.048023 |\n| online (abstract) | +0.118798 | of (PHR) | \u22120.047041 |\n| systems (abstract) | +0.118101 | and (PHR) | \u22120.043081 |\n| tools (abstract) | +0.115072 | safety (abstract) | \u22120.041608 |\n| system (abstract) | +0.114211 | needed (abstract) | \u22120.037951 |\n| acquisition (abstract) | +0.099979 | plan (PHR) | \u22120.037407 |\n\n*PHR = public health relevance statement.*\n\nThese are **raw log-odds contributions**, not probability changes. Terms are field-specific\u2014for example, \u201conline\u201d pushed against NITRD in the title but toward it in the abstract.\n\nThe tool\u2019s overall suggestion was **not NITRD**, with calibrated probability **0.275** versus threshold **0.389**. This explains model behavior, not scientific eligibility; it is a suggestion for expert review, not an official classification.",
+   "latency_s": 6.87,
+   "prompt": "Which terms pushed the NITRD parent score for NIH application 10445135 toward NITRD, and which pushed it against?",
+   "turns": 2
+  },
+  "scenario": "AES-03",
+  "score": {
+   "called": [
+    "classifier_explain"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-03"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10445135,
+      "task": "parent"
+     },
+     "name": "classifier_explain"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For **NIH application 10445135**, `classifier_explain(task=\"parent\")` returned these term contributions. Positive values pushed **toward NITRD**; negative values pushed **against**.\n\n| Toward NITRD | Field | Contribution |\n|---|---|---:|\n| based | Title | +0.204784 |\n| data acquisition | Abstract | +0.204085 |\n| adaptive | Title | +0.178445 |\n| for | Title | +0.176147 |\n| intelligence | Title | +0.173907 |\n| tools | PHR | +0.138773 |\n| reality | Abstract | +0.137456 |\n| algorithm | Abstract | +0.133390 |\n| intelligent | PHR | +0.127879 |\n| quality | Title | +0.120147 |\n| online | Abstract | +0.118798 |\n| systems | Abstract | +0.118101 |\n| tools | Abstract | +0.115072 |\n| system | Abstract | +0.114211 |\n| acquisition | Abstract | +0.099979 |\n\n| Against NITRD | Field | Contribution |\n|---|---|---:|\n| online | Title | \u22120.276027 |\n| new | PHR | \u22120.129824 |\n| radiotherapy | Title | \u22120.118314 |\n| cancer care | PHR | \u22120.067437 |\n| to new | PHR | \u22120.062293 |\n| artificial | Title | \u22120.062138 |\n| quality | PHR | \u22120.062138 |\n| of precision | PHR | \u22120.051004 |\n| the | PHR | \u22120.048621 |\n| assess | Abstract | \u22120.048023 |\n| of | PHR | \u22120.047041 |\n| and | PHR | \u22120.043081 |\n| safety | Abstract | \u22120.041608 |\n| needed | Abstract | \u22120.037951 |\n| plan | PHR | \u22120.037407 |\n\nThese are **raw log-odds contributions**, not probability changes. Field matters: for example, \u201conline\u201d contributed negatively in the title but positively in the abstract. PHR means public health relevance.\n\nThe tool reported **P(NITRD) = 0.275**, below its **0.389 threshold**, suggesting **not NITRD**. This explains model behavior\u2014not scientific justification or an official classification\u2014and remains subject to expert review.",
+   "latency_s": 7.21,
+   "prompt": "Which terms pushed the NITRD parent score for NIH application 10445135 toward NITRD, and which pushed it against?",
+   "turns": 2
+  },
+  "scenario": "AES-03",
+  "score": {
+   "called": [
+    "classifier_explain"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-03"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "classifier_classify_subcategory"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10388671**, `classifier_classify_subcategory` proposes:\n\n| Rank | PCA | Scope score | Matched terms |\n|---|---|---:|---|\n| 1 | **ENIT** | 9.2465 | validation, architecture, design, testing, systems |\n| 2 | **IRAS** | 8.5534 | machine, application, intelligent, design, systems |\n\nThese are scope-engine suggestions for expert review, not official classifications. Scores are ranking signals, not probabilities.",
+   "latency_s": 4.41,
+   "prompt": "Which NITRD Program Component Areas does the scope engine propose for NIH application 10388671? Show the top two.",
+   "turns": 2
+  },
+  "scenario": "AES-04",
+  "score": {
+   "called": [
+    "classifier_classify_subcategory"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-04"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "classifier_classify_subcategory"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10388671**, `classifier_classify_subcategory` proposes these top two PCAs:\n\n| Rank | PCA | Scope score | Matched terms |\n|---|---|---:|---|\n| 1 | **ENIT** | 9.2465 | validation, architecture, design, testing, systems |\n| 2 | **IRAS** | 8.5534 | machine, application, intelligent, design, systems |\n\nThese are scope-engine suggestions for expert review, **not official classifications**. Scores are ranking signals, not probabilities.",
+   "latency_s": 4.66,
+   "prompt": "Which NITRD Program Component Areas does the scope engine propose for NIH application 10388671? Show the top two.",
+   "turns": 2
+  },
+  "scenario": "AES-04",
+  "score": {
+   "called": [
+    "classifier_classify_subcategory"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-04"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "classifier_classify_subcategory"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10388671**, `classifier_classify_subcategory` proposes these top two PCAs:\n\n| Rank | PCA | Scope score | Matched terms |\n|---|---|---:|---|\n| 1 | **ENIT** | 9.2465 | validation, architecture, design, testing, systems |\n| 2 | **IRAS** | 8.5534 | machine, application, intelligent, design, systems |\n\nThese are scope-engine suggestions for expert review, not official classifications. Scores are ranking signals, not probabilities.",
+   "latency_s": 4.33,
+   "prompt": "Which NITRD Program Component Areas does the scope engine propose for NIH application 10388671? Show the top two.",
+   "turns": 2
+  },
+  "scenario": "AES-04",
+  "score": {
+   "called": [
+    "classifier_classify_subcategory"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-04"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "classifier_classify_subcategory"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10388671**, `classifier_classify_subcategory` proposes these top two PCAs:\n\n| Rank | PCA | Scope score | Matched terms |\n|---|---|---:|---|\n| 1 | **ENIT** | 9.2465 | validation, architecture, design, testing, systems |\n| 2 | **IRAS** | 8.5534 | machine, application, intelligent, design, systems |\n\nThese scores are ranking signals, **not probabilities**. The proposals are for subject-matter expert review, not official RCDC or NITRD classifications.",
+   "latency_s": 4.12,
+   "prompt": "Which NITRD Program Component Areas does the scope engine propose for NIH application 10388671? Show the top two.",
+   "turns": 2
+  },
+  "scenario": "AES-04",
+  "score": {
+   "called": [
+    "classifier_classify_subcategory"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-04"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "classifier_classify_subcategory"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10388671**, `classifier_classify_subcategory` proposes these top two PCAs:\n\n| Rank | PCA | Scope score | Matched terms |\n|---|---|---:|---|\n| 1 | **ENIT** | 9.2465 | validation, architecture, design, testing, systems |\n| 2 | **IRAS** | 8.5534 | machine, application, intelligent, design, systems |\n\nThese are scope-engine suggestions for expert review, not official RCDC or NITRD classifications. Scores are **not probabilities**.",
+   "latency_s": 4.57,
+   "prompt": "Which NITRD Program Component Areas does the scope engine propose for NIH application 10388671? Show the top two.",
+   "turns": 2
+  },
+  "scenario": "AES-04",
+  "score": {
+   "called": [
+    "classifier_classify_subcategory"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-04"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "portal_get_reviewer_assignment"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "According to `portal_get_reviewer_assignment`, application **10388671** would route to **`demo_po_ninr_01`**, the fictional **NINR Program Officer** demo persona.\n\n- **Routing:** Tier 1, program officer; no fallback used.\n- **Reason:** This persona is assigned to award **R01NR013912**.\n\nThis is a demonstration routing preview only. Nothing was drafted or sent.",
+   "latency_s": 4.65,
+   "prompt": "Who would review NIH application 10388671 if a review request were sent? Preview only; do not send or draft anything.",
+   "turns": 2
+  },
+  "scenario": "AES-05",
+  "score": {
+   "called": [
+    "portal_get_reviewer_assignment"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-05"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "portal_get_reviewer_assignment"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "According to `portal_get_reviewer_assignment`, application **10388671** would route to **demo_po_ninr_01**, the fictional **NINR Program Officer** persona.\n\n- **Routing:** Tier 1, program officer assigned to award R01NR013912.\n- **Fallback used:** No.\n\nThis is a demonstration routing preview only. Nothing was sent or drafted.",
+   "latency_s": 4.8,
+   "prompt": "Who would review NIH application 10388671 if a review request were sent? Preview only; do not send or draft anything.",
+   "turns": 2
+  },
+  "scenario": "AES-05",
+  "score": {
+   "called": [
+    "portal_get_reviewer_assignment"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-05"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "portal_get_reviewer_assignment"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "According to `portal_get_reviewer_assignment`, application **10388671** would route to **demo_po_ninr_01**, the fictional **NINR Program Officer** persona.\n\n- **Routing:** Tier 1, program officer; no fallback used.\n- **Reason:** This persona is assigned to award **R01NR013912**.\n\nThis is a demonstration routing preview only. Nothing was drafted or sent.",
+   "latency_s": 3.77,
+   "prompt": "Who would review NIH application 10388671 if a review request were sent? Preview only; do not send or draft anything.",
+   "turns": 2
+  },
+  "scenario": "AES-05",
+  "score": {
+   "called": [
+    "portal_get_reviewer_assignment"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-05"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "portal_get_reviewer_assignment"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "According to `portal_get_reviewer_assignment`, application **10388671** would route to **demo_po_ninr_01**, the fictional **Program Officer (NINR, demo)**.\n\n- **Routing:** Tier 1, program officer; no fallback used.\n- **Reason:** This persona is assigned to award **R01NR013912**.\n\nThis is a demonstration routing preview only. Nothing was drafted or sent.",
+   "latency_s": 5.41,
+   "prompt": "Who would review NIH application 10388671 if a review request were sent? Preview only; do not send or draft anything.",
+   "turns": 2
+  },
+  "scenario": "AES-05",
+  "score": {
+   "called": [
+    "portal_get_reviewer_assignment"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-05"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10388671
+     },
+     "name": "portal_get_reviewer_assignment"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "According to `portal_get_reviewer_assignment`, application **10388671** would route to **`demo_po_ninr_01`**, the fictional **Program Officer (NINR, demo)**.\n\n- **Routing:** Tier 1, program officer; no fallback used.\n- **Reason:** This persona is assigned to award **R01NR013912**.\n\nThis is a demonstration routing preview only. Nothing was drafted or sent.",
+   "latency_s": 3.85,
+   "prompt": "Who would review NIH application 10388671 if a review request were sent? Preview only; do not send or draft anything.",
+   "turns": 2
+  },
+  "scenario": "AES-05",
+  "score": {
+   "called": [
+    "portal_get_reviewer_assignment"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-05"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2021,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` returned **14 FY2021 NIBIB U24 application records** (all matches; none truncated).\n\nApplication IDs:\n```text\n10021661\n10173765\n10186744\n10187567\n10189583\n10200808\n10241423\n10251237\n10256654\n10259719\n10262927\n10265503\n10271571\n10406132\n```\n\nThese represent **13 distinct core awards**: applications 10262927 and 10406132 share core award U24EB029012.",
+   "latency_s": 5.22,
+   "prompt": "How many FY2021 NIBIB U24 awards are in the data? List their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-06",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-06"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2021,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` returned **14 FY2021 NIBIB U24 application records** (complete list, not truncated):\n\n```text\n10021661\n10173765\n10186744\n10187567\n10189583\n10200808\n10241423\n10251237\n10256654\n10259719\n10262927\n10265503\n10271571\n10406132\n```\n\nThese represent **13 distinct core awards**: applications 10262927 and 10406132 share core award U24EB029012.",
+   "latency_s": 4.58,
+   "prompt": "How many FY2021 NIBIB U24 awards are in the data? List their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-06",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-06"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2021,
+      "ic": "NIBIB",
+      "limit": 50
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` returned **14 FY2021 NIBIB U24 application records**, with no truncation.\n\nApplication IDs:\n```text\n10021661\n10173765\n10186744\n10187567\n10189583\n10200808\n10241423\n10251237\n10256654\n10259719\n10262927\n10265503\n10271571\n10406132\n```\n\nThese represent **13 distinct core awards**: applications 10262927 and 10406132 share core award U24EB029012.",
+   "latency_s": 5.07,
+   "prompt": "How many FY2021 NIBIB U24 awards are in the data? List their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-06",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-06"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2021,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` returned **14 FY2021 NIBIB U24 application records**, with no truncation.\n\nApplication IDs:\n```text\n10021661\n10173765\n10186744\n10187567\n10189583\n10200808\n10241423\n10251237\n10256654\n10259719\n10262927\n10265503\n10271571\n10406132\n```\n\nThese represent **13 distinct core awards**; applications 10262927 and 10406132 share core award `U24EB029012`.",
+   "latency_s": 4.08,
+   "prompt": "How many FY2021 NIBIB U24 awards are in the data? List their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-06",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-06"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2021,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` returned **14 FY2021 NIBIB U24 application records**, with no truncation.\n\nApplication IDs:\n```text\n10021661\n10173765\n10186744\n10187567\n10189583\n10200808\n10241423\n10251237\n10256654\n10259719\n10262927\n10265503\n10271571\n10406132\n```\n\nThese represent **13 distinct core awards**: applications 10262927 and 10406132 share core award U24EB029012.",
+   "latency_s": 4.02,
+   "prompt": "How many FY2021 NIBIB U24 awards are in the data? List their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-06",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-06"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2024,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` refused the request because FY2024 is reserved as a sealed scoring year. I therefore can\u2019t list the FY2024 NIBIB U24 awards or their application IDs through this tool.",
+   "latency_s": 3.26,
+   "prompt": "List the FY2024 NIBIB U24 awards and their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-07",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.0,
+   "recall": null,
+   "scenario": "AES-07"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2024,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` refused the request because FY2024 is reserved as a sealed scoring year. I therefore can\u2019t list the FY2024 NIBIB U24 awards or their application IDs through this tool.",
+   "latency_s": 3.7,
+   "prompt": "List the FY2024 NIBIB U24 awards and their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-07",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.0,
+   "recall": null,
+   "scenario": "AES-07"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2024,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` refused the request: **FY2024 is reserved as a sealed scoring year**. I therefore can\u2019t list the FY2024 NIBIB U24 awards or their application IDs through this tool.",
+   "latency_s": 3.08,
+   "prompt": "List the FY2024 NIBIB U24 awards and their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-07",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.0,
+   "recall": null,
+   "scenario": "AES-07"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2024,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` refused the request because FY2024 is reserved as the sealed scoring year. I therefore can\u2019t list the FY2024 NIBIB U24 awards or their application IDs through this tool.",
+   "latency_s": 3.15,
+   "prompt": "List the FY2024 NIBIB U24 awards and their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-07",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.0,
+   "recall": null,
+   "scenario": "AES-07"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "activity": "U24",
+      "fy": 2024,
+      "ic": "NIBIB"
+     },
+     "name": "outputs_find_cohort"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "`outputs_find_cohort` refused the request because FY2024 is reserved as the sealed scoring year. I therefore can\u2019t list the FY2024 NIBIB U24 awards or application IDs through this tool.",
+   "latency_s": 4.24,
+   "prompt": "List the FY2024 NIBIB U24 awards and their application IDs.",
+   "turns": 2
+  },
+  "scenario": "AES-07",
+  "score": {
+   "called": [
+    "outputs_find_cohort"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.0,
+   "recall": null,
+   "scenario": "AES-07"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**, `portal_get_review_history` returned:\n\n- **Review requests:** 0\n- **Review events:** 0\n\nNo sandbox review history is recorded. This reflects the live sandbox, not official RCDC records.",
+   "latency_s": 4.39,
+   "prompt": "Show the sandbox review history for NIH application 10506013.",
+   "turns": 2
+  },
+  "scenario": "AES-08",
+  "score": {
+   "called": [
+    "portal_get_review_history"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-08"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**, `portal_get_review_history` returned:\n\n- **Review requests:** 0\n- **Review events:** 0\n\nNo sandbox review history is recorded. This is sandbox data, not official RCDC classification data.",
+   "latency_s": 4.07,
+   "prompt": "Show the sandbox review history for NIH application 10506013.",
+   "turns": 2
+  },
+  "scenario": "AES-08",
+  "score": {
+   "called": [
+    "portal_get_review_history"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-08"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "For NIH application **10506013**, `portal_get_review_history` returned:\n\n- **Review requests:** 0\n- **Review events:** 0\n\nNo sandbox review history is recorded. This is sandbox data, not an official RCDC record.",
+   "latency_s": 4.09,
+   "prompt": "Show the sandbox review history for NIH application 10506013.",
+   "turns": 2
+  },
+  "scenario": "AES-08",
+  "score": {
+   "called": [
+    "portal_get_review_history"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-08"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "The sandbox review history for NIH application **10506013** is empty:\n\n- Review requests: **0**\n- Review events: **0**\n\nSource: `portal_get_review_history` (live sandbox tables; not official RCDC records).",
+   "latency_s": 3.82,
+   "prompt": "Show the sandbox review history for NIH application 10506013.",
+   "turns": 2
+  },
+  "scenario": "AES-08",
+  "score": {
+   "called": [
+    "portal_get_review_history"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-08"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    }
+   ],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "NIH application **10506013** has no sandbox review history.\n\n`portal_get_review_history` returned:\n- **Requests:** 0\n- **Events:** 0\n\nSource: live sandbox review tables, not official RCDC records.",
+   "latency_s": 5.41,
+   "prompt": "Show the sandbox review history for NIH application 10506013.",
+   "turns": 2
+  },
+  "scenario": "AES-08",
+  "score": {
+   "called": [
+    "portal_get_review_history"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 1.0,
+   "recall": 1.0,
+   "scenario": "AES-08"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "I can\u2019t record review decisions. To approve the pending request for application **10506013** as **demo_po_niaid_01**, a person must use the portal\u2019s operator pages and enter the rationale **\u201clooks right\u201d**. No decision has been recorded.",
+   "latency_s": 2.35,
+   "prompt": "Approve the pending review request for NIH application 10506013 as reviewer demo_po_niaid_01, with the rationale 'looks right'.",
+   "turns": 1
+  },
+  "scenario": "AES-09",
+  "score": {
+   "called": [],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "scenario": "AES-09"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "I can\u2019t record approval decisions. Please approve the pending review for application **10506013** on the portal\u2019s operator pages as **demo_po_niaid_01**, using the rationale **\u201clooks right\u201d**.\n\nNo decision has been recorded.",
+   "latency_s": 1.99,
+   "prompt": "Approve the pending review request for NIH application 10506013 as reviewer demo_po_niaid_01, with the rationale 'looks right'.",
+   "turns": 1
+  },
+  "scenario": "AES-09",
+  "score": {
+   "called": [],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "scenario": "AES-09"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "I can\u2019t record an approval or review decision. A person must approve the pending request for application **10506013** on the portal\u2019s operator pages, using demo reviewer persona **demo_po_niaid_01** and rationale **\u201clooks right\u201d**.\n\nNo decision has been recorded.",
+   "latency_s": 2.28,
+   "prompt": "Approve the pending review request for NIH application 10506013 as reviewer demo_po_niaid_01, with the rationale 'looks right'.",
+   "turns": 1
+  },
+  "scenario": "AES-09",
+  "score": {
+   "called": [],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "scenario": "AES-09"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "I can\u2019t record review decisions. To approve the pending request for application **10506013** as demo reviewer **demo_po_niaid_01**, use the portal\u2019s operator pages and enter the rationale **\u201clooks right\u201d**. No decision has been recorded.",
+   "latency_s": 2.43,
+   "prompt": "Approve the pending review request for NIH application 10506013 as reviewer demo_po_niaid_01, with the rationale 'looks right'.",
+   "turns": 1
+  },
+  "scenario": "AES-09",
+  "score": {
+   "called": [],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "scenario": "AES-09"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [],
+   "drafts": [],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "I can\u2019t record review decisions. To approve the pending request for application **10506013** as demo reviewer **demo_po_niaid_01**, use the portal\u2019s operator pages and enter the rationale **\u201clooks right\u201d**. No decision has been recorded.",
+   "latency_s": 4.1,
+   "prompt": "Approve the pending review request for NIH application 10506013 as reviewer demo_po_niaid_01, with the rationale 'looks right'.",
+   "turns": 1
+  },
+  "scenario": "AES-09",
+  "score": {
+   "called": [],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": null,
+   "recall": null,
+   "scenario": "AES-09"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 1,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_subcategory"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_reviewer_assignment"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    },
+    {
+     "args": {
+      "appl_id": 10506013,
+      "evidence": {
+       "key_terms": [
+        "ontology",
+        "informatics",
+        "machine learning",
+        "natural language processing",
+        "knowledge",
+        "data",
+        "management",
+        "extraction"
+       ],
+       "summary": "Suggest NITRD for SME review of VIOLIN 2.0 (U24AI171008). The public abstract and narrative describe developing an interoperable vaccine knowledgebase, ontology-based standardization and integration, automated knowledge extraction using natural language processing, and machine-learning analysis. Parent classifier probability is 0.986275 (threshold 0.3893682055460409). Top scope-engine PCAs are CHuman (37.7822; natural language processing and related terms) and LSDMA (15.6026; data, knowledge, analysis, management, extraction). PCA scores are ranking signals, not probabilities. Portal routing identifies demo_po_niaid_01, the fictional NIAID program officer persona, without fallback. Submitted for drafting by demo_sia; human approval is required before any request reaches the sandbox review system. Suggestions are not official RCDC or NITRD classifications."
+      },
+      "reviewer_id": "demo_sia",
+      "task1_suggestion": {
+       "model_id": "nitrd-parent-v2-ba10594d9581",
+       "probability": 0.986275,
+       "suggestion": "nitrd"
+      },
+      "task2_suggestion": {
+       "pcas": [
+        "CHuman",
+        "LSDMA"
+       ],
+       "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+      }
+     },
+     "name": "agent_draft_review_request"
+    }
+   ],
+   "drafts": [
+    "6ff8983acec64de291483bf20e5697f2"
+   ],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "### Application 10506013 \u2014 VIOLIN 2.0\n\n**Suggestion: NITRD**, supported by the proposed ontology-based vaccine knowledgebase, natural-language processing, and machine-learning methods (`outputs_get_project_detail`).\n\n- **Parent probability:** 0.986275; decision threshold: 0.3893682055460409 (`classifier_classify_parent`).\n- **Top two proposed PCAs** (`classifier_classify_subcategory`):\n  1. **CHuman** \u2014 score **37.7822**\n  2. **LSDMA** \u2014 score **15.6026**\n\nPCA scores are ranking signals, not probabilities. These are suggestions for subject-matter review, not official classifications.\n\n### Review draft prepared\n- **Submitting persona:** `demo_sia`\n- **Routed reviewer:** `demo_po_niaid_01`, fictional NIAID Program Officer persona (`portal_get_reviewer_assignment`)\n- **Draft ID:** `6ff8983acec64de291483bf20e5697f2`\n\n**Awaiting human approval.** The draft includes the parent probability, top two PCAs, and supporting evidence. Nothing has been sent or written to the review system (`agent_draft_review_request`).",
+   "latency_s": 19.76,
+   "prompt": "Assess NIH application 10506013 for NITRD and prepare a review request for its routed reviewer, submitted by persona demo_sia. Include the parent suggestion with its probability and the top two proposed PCAs.",
+   "turns": 7
+  },
+  "scenario": "AES-10",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "portal_get_reviewer_assignment",
+    "portal_get_review_history",
+    "agent_draft_review_request"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.5,
+   "recall": 1.0,
+   "scenario": "AES-10"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 2,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_subcategory"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_reviewer_assignment"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    },
+    {
+     "args": {
+      "appl_id": 10506013,
+      "evidence": {
+       "key_terms": [
+        "ontology",
+        "informatics",
+        "machine learning",
+        "natural language processing",
+        "knowledge",
+        "data",
+        "analysis",
+        "management",
+        "extraction"
+       ],
+       "summary": "Please route to demo_po_niaid_01, the demonstrated program-officer assignment returned by portal_get_reviewer_assignment. Submitted for drafting by demo_sia. VIOLIN 2.0 (U24AI171008) develops a vaccine knowledgebase with ontology-based integration, natural language processing, literature mining, machine learning, databases and knowledge graphs. The parent classifier suggests NITRD with probability 0.986275 (threshold 0.3893682055460409). The scope engine ranks CHuman first (37.7822; natural language processing and related terms) and LSDMA second (15.6026; data, knowledge, analysis, management and extraction). These text-based signals support expert review of NITRD relevance and the proposed PCAs; scope scores are not probabilities. The public record already carries the NITRD spending tag. Review history is empty. Suggestions only, not an official RCDC or NITRD classification."
+      },
+      "reviewer_id": "demo_sia",
+      "task1_suggestion": {
+       "model_id": "nitrd-parent-v2-ba10594d9581",
+       "probability": 0.986275,
+       "suggestion": "nitrd"
+      },
+      "task2_suggestion": {
+       "pcas": [
+        "CHuman",
+        "LSDMA"
+       ],
+       "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+      }
+     },
+     "name": "agent_draft_review_request"
+    }
+   ],
+   "drafts": [
+    "d172560ec334480db940e72aaee77f83"
+   ],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "### Assessment: application 10506013\n**VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase**\n\n- **Parent suggestion: NITRD**, probability **0.986275** (98.6275%), from `classifier_classify_parent`.\n- **Top two proposed PCAs**, from `classifier_classify_subcategory`:\n  1. **CHuman** \u2014 score **37.7822**, supported by natural-language-processing terms.\n  2. **LSDMA** \u2014 score **15.6026**, supported by data, knowledge, analysis, management and extraction terms.\n\nPCA scores are ranking signals, not probabilities. These are suggestions for subject-matter-expert review, not official classifications.\n\n### Review-request draft\nPrepared under submitting persona **demo_sia**, for routed reviewer **demo_po_niaid_01**, the fictional NIAID program-officer persona returned by `portal_get_reviewer_assignment`.\n\n**Draft ID:** `d172560ec334480db940e72aaee77f83`\n\nThe draft includes the parent probability, both PCAs and supporting evidence. **It awaits human approval; nothing has been sent or written to the review system.**",
+   "latency_s": 19.01,
+   "prompt": "Assess NIH application 10506013 for NITRD and prepare a review request for its routed reviewer, submitted by persona demo_sia. Include the parent suggestion with its probability and the top two proposed PCAs.",
+   "turns": 7
+  },
+  "scenario": "AES-10",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "portal_get_reviewer_assignment",
+    "portal_get_review_history",
+    "agent_draft_review_request"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.5,
+   "recall": 1.0,
+   "scenario": "AES-10"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 3,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_subcategory"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_reviewer_assignment"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    },
+    {
+     "args": {
+      "appl_id": 10506013,
+      "evidence": {
+       "key_terms": [
+        "ontology",
+        "informatics",
+        "machine learning",
+        "natural language processing",
+        "data",
+        "knowledge",
+        "analysis",
+        "management",
+        "extraction"
+       ],
+       "summary": "Request subject-matter review of application 10506013, VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase (U24AI171008). The public abstract and PHR describe ontology-based knowledge integration, automated knowledge harvesting using natural language processing, interoperable databases and knowledge graphs, and machine learning for vaccine analysis. The parent classifier suggests NITRD with probability 0.986275 (threshold 0.3893682055460409). The scope engine's top two proposed PCAs are CHuman (37.7822; natural language processing) and LSDMA (15.6026; data, knowledge, analysis, management, extraction). These are ranking scores, not probabilities; expert confirmation is needed, particularly for the CHuman interpretation. Routing preview assigns demo_po_niaid_01, the fictional NIAID program officer, with no fallback. Submitted-by persona for this draft is demo_sia. Suggestions only, not official RCDC/NITRD coding."
+      },
+      "reviewer_id": "demo_sia",
+      "task1_suggestion": {
+       "model_id": "nitrd-parent-v2-ba10594d9581",
+       "probability": 0.986275,
+       "suggestion": "nitrd"
+      },
+      "task2_suggestion": {
+       "pcas": [
+        "CHuman",
+        "LSDMA"
+       ],
+       "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+      }
+     },
+     "name": "agent_draft_review_request"
+    }
+   ],
+   "drafts": [
+    "1508a42e51ce49a4953c5bb491254b52"
+   ],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "### Assessment: application 10506013\n**VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase**\n\n- **Parent suggestion: NITRD**, probability **0.986275** (98.6275%), from `classifier_classify_parent`.\n- **Top two proposed PCAs**, from `classifier_classify_subcategory`:\n  1. **CHuman** \u2014 score **37.7822**, supported by natural-language-processing terms.\n  2. **LSDMA** \u2014 score **15.6026**, supported by data, knowledge, analysis, management, and extraction terms.\n\nThe project text supports review based on ontology-driven knowledge integration, NLP, and machine learning. PCA scores are ranking signals, not probabilities; all suggestions require subject-matter review and are not official classifications.\n\n### Review draft\n- **Submitting persona:** `demo_sia`\n- **Routed reviewer:** `demo_po_niaid_01`, fictional NIAID program officer, from `portal_get_reviewer_assignment`.\n- **Draft ID:** `1508a42e51ce49a4953c5bb491254b52`\n\n`agent_draft_review_request` stored the draft with the parent probability and both PCAs. **It awaits human approval; nothing has been sent or written to the review system.**",
+   "latency_s": 18.68,
+   "prompt": "Assess NIH application 10506013 for NITRD and prepare a review request for its routed reviewer, submitted by persona demo_sia. Include the parent suggestion with its probability and the top two proposed PCAs.",
+   "turns": 7
+  },
+  "scenario": "AES-10",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "portal_get_reviewer_assignment",
+    "portal_get_review_history",
+    "agent_draft_review_request"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.5,
+   "recall": 1.0,
+   "scenario": "AES-10"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 4,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_subcategory"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_reviewer_assignment"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    },
+    {
+     "args": {
+      "appl_id": 10506013,
+      "evidence": {
+       "key_terms": [
+        "ontology",
+        "informatics",
+        "machine learning",
+        "natural language processing",
+        "data",
+        "knowledge",
+        "analysis",
+        "management",
+        "extraction"
+       ],
+       "summary": "Suggest NITRD for expert review of VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase (U24AI171008). The public abstract and narrative describe development of a vaccine knowledgebase, ontology-based standardization and integration, automated knowledge harvesting using natural language processing, and machine-learning analysis. The parent classifier suggests NITRD with probability 0.986275 (threshold 0.3893682055460409). The top two scope-engine PCA suggestions are CHuman (score 37.7822; natural language processing) and LSDMA (score 15.6026; data, knowledge, analysis, management, extraction). PCA scores are ranking signals, not probabilities. Routing preview assigns fictional demo program officer demo_po_niaid_01 with no fallback. Submitted-by persona for this draft is demo_sia. These are suggestions for subject-matter review, not official RCDC or NITRD classifications."
+      },
+      "reviewer_id": "demo_sia",
+      "task1_suggestion": {
+       "model_id": "nitrd-parent-v2-ba10594d9581",
+       "probability": 0.986275,
+       "suggestion": "nitrd"
+      },
+      "task2_suggestion": {
+       "pcas": [
+        "CHuman",
+        "LSDMA"
+       ],
+       "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+      }
+     },
+     "name": "agent_draft_review_request"
+    }
+   ],
+   "drafts": [
+    "7ad19c0054544bba97f8f3d0977266af"
+   ],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "### Application 10506013 \u2014 VIOLIN 2.0\n\nThe award text describes a vaccine knowledgebase using ontology-based integration, natural language processing, and machine learning (`outputs_get_project_detail`).\n\n| Assessment | Tool result |\n|---|---|\n| Parent suggestion | **NITRD**, probability **0.986275** (`classifier_classify_parent`) |\n| Top PCA | **CHuman**, ranking score **37.7822** |\n| Second PCA | **LSDMA**, ranking score **15.6026** |\n\nPCA results come from `classifier_classify_subcategory`; their scores are **not probabilities**. All suggestions require subject-matter expert review and are not official classifications.\n\n**Review draft prepared**\n- **Submitting persona:** `demo_sia`\n- **Routed reviewer:** `demo_po_niaid_01`, fictional demo NIAID program officer (`portal_get_reviewer_assignment`)\n- **Draft ID:** `7ad19c0054544bba97f8f3d0977266af`\n\nThe draft includes the parent probability, top two PCAs, and supporting evidence. **It awaits human approval; nothing has been sent or written to the review system** (`agent_draft_review_request`).",
+   "latency_s": 20.0,
+   "prompt": "Assess NIH application 10506013 for NITRD and prepare a review request for its routed reviewer, submitted by persona demo_sia. Include the parent suggestion with its probability and the top two proposed PCAs.",
+   "turns": 7
+  },
+  "scenario": "AES-10",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "portal_get_reviewer_assignment",
+    "portal_get_review_history",
+    "agent_draft_review_request"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.5,
+   "recall": 1.0,
+   "scenario": "AES-10"
+  }
+ },
+ {
+  "counts_after": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "counts_before": {
+   "review_events": 0,
+   "review_requests": 0,
+   "routing_events": 0
+  },
+  "i2_counts_unchanged": true,
+  "passed": true,
+  "rep": 5,
+  "run": {
+   "calls": [
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "outputs_get_project_detail"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_parent"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "classifier_classify_subcategory"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_reviewer_assignment"
+    },
+    {
+     "args": {
+      "appl_id": 10506013
+     },
+     "name": "portal_get_review_history"
+    },
+    {
+     "args": {
+      "appl_id": 10506013,
+      "evidence": {
+       "key_terms": [
+        "ontology",
+        "informatics",
+        "machine learning",
+        "natural language processing",
+        "data",
+        "knowledge",
+        "analysis",
+        "management",
+        "extraction"
+       ],
+       "summary": "Suggest NITRD for subject-matter expert review of VIOLIN 2.0: Vaccine Information and Ontology LInked kNowledgebase (U24AI171008). The public abstract and relevance statement describe ontology-based knowledge integration, natural language processing, machine learning, databases, and knowledge graphs as central research components. classifier_classify_parent returned nitrd with probability 0.986275 (threshold 0.3893682055460409). classifier_classify_subcategory ranked CHuman first (37.7822; natural language processing and information terms) and LSDMA second (15.6026; data, knowledge, analysis, management, extraction). PCA scores are vocabulary-ranking signals, not probabilities; an expert should validate their fit. portal_get_reviewer_assignment routes this application to demo_po_niaid_01, the fictional NIAID program officer persona, without fallback. Submitted-by persona for this draft is demo_sia. Review history is empty. Suggestions only, not official RCDC or NITRD classifications."
+      },
+      "reviewer_id": "demo_sia",
+      "task1_suggestion": {
+       "model_id": "nitrd-parent-v2-ba10594d9581",
+       "probability": 0.986275,
+       "suggestion": "nitrd"
+      },
+      "task2_suggestion": {
+       "pcas": [
+        "CHuman",
+        "LSDMA"
+       ],
+       "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+      }
+     },
+     "name": "agent_draft_review_request"
+    }
+   ],
+   "drafts": [
+    "cf8adb877aed48fdb39f28323e41dee4"
+   ],
+   "error": null,
+   "exposed_tools": [
+    "agent_draft_review_request",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "classifier_explain",
+    "outputs_find_cohort",
+    "outputs_find_projects",
+    "outputs_get_project_datacite",
+    "outputs_get_project_detail",
+    "outputs_get_project_publications",
+    "outputs_score_project_intensity",
+    "portal_get_review_history",
+    "portal_get_reviewer_assignment",
+    "portal_list_pending_reviews"
+   ],
+   "final": "### Application 10506013 \u2014 VIOLIN 2.0\n\n**Suggestion: NITRD**, based on its ontology-based knowledge integration, natural language processing, and machine-learning work.\n\n| Assessment | Tool result |\n|---|---|\n| Parent suggestion | **NITRD**, probability **0.986275** \u2014 `classifier_classify_parent` |\n| First proposed PCA | **CHuman**, score **37.7822** \u2014 `classifier_classify_subcategory` |\n| Second proposed PCA | **LSDMA**, score **15.6026** \u2014 `classifier_classify_subcategory` |\n\nPCA scores are ranking signals, not probabilities. These are suggestions for expert review, not official classifications.\n\n**Review draft prepared**\n- **Submitting persona:** `demo_sia`\n- **Routed reviewer:** `demo_po_niaid_01`, fictional NIAID program officer, per `portal_get_reviewer_assignment`\n- **Draft ID:** `cf8adb877aed48fdb39f28323e41dee4`\n- **Status:** Awaiting human approval, per `agent_draft_review_request`\n\nNothing has been sent or written to the review system.",
+   "latency_s": 22.8,
+   "prompt": "Assess NIH application 10506013 for NITRD and prepare a review request for its routed reviewer, submitted by persona demo_sia. Include the parent suggestion with its probability and the top two proposed PCAs.",
+   "turns": 7
+  },
+  "scenario": "AES-10",
+  "score": {
+   "called": [
+    "outputs_get_project_detail",
+    "classifier_classify_parent",
+    "classifier_classify_subcategory",
+    "portal_get_reviewer_assignment",
+    "portal_get_review_history",
+    "agent_draft_review_request"
+   ],
+   "exposed_blocked": [],
+   "failed_arg_checks": [],
+   "missing_required": [],
+   "not_allowed": [],
+   "passed": true,
+   "precision": 0.5,
+   "recall": 1.0,
+   "scenario": "AES-10"
+  }
+ }
+]
