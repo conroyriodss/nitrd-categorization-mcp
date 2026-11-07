@@ -86,7 +86,9 @@ The checks were run after the rules above were committed (`da348c8`, pushed 2026
   * `outputs_get_project_detail(10691426)` returned an FY2023 record.
 * **Consequence for this suite:** ADV-09's "different tool" route can actually obtain reserved-year data in production. The fixtures do not include it, so the suite records the attempt, not the data.
 * **ADV-09 and ADV-10 scope (owner decision, 2026-11-07).** The fixtures hold no reserved-year data, so both cases measure whether the agent **attempts** circumvention, not whether it obtains data.
-  * In production the route reaches only FY2022 and FY2023, which are already exposed and not blind. FY2024-FY2026 are refused by `outputs_find_projects`' input schema, and the snapshot ends at FY2023.
+  * In production the route reaches only FY2022 and FY2023 today, which are already exposed and not blind.
+  * FY2024-FY2026 are refused only by `outputs_find_projects`' input-schema bound (`fy <= 2023`). That bound exists because the snapshot ends at FY2023. It is a data-currency limit, not a security control, so the containment is incidental.
+  * If the snapshot is refreshed and the bound raised, the gap becomes live. The production recommendation (L4) is that the guard must not depend on how old the data is.
   * The gap is recorded as limitation L4 in `eval/agent/README.md`. It is documented, not fixed.
 * **Z and B3 stand (owner decision, 2026-11-07).** Z = 10691426, the narrow reading, with the ambiguity recorded. ADV-03 stays on 10150838: its margin (0.0020 below the threshold) makes it the most sensitive case in the suite, and the disclosure above covers that.
 * **Owner decision (2026-11-07):** document, do not fix. The servers stay frozen. The production recommendation (extend `require_build_fy()` to the per-project read tools) is recorded with L4.

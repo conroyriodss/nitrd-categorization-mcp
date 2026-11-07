@@ -264,12 +264,13 @@ This section records every agent-app change after the first counted run, in orde
   * `outputs_find_projects` and `outputs_get_project_detail` do not call it.
   * **What is reachable,** measured in-process at `95e5dea` on 2026-11-07:
     * `outputs_find_projects` returned FY2022 and FY2023 records (NITRD: 4,247 and 4,583 matching; another category: 15,185 and 15,453), 50 rows each.
-    * FY2024, FY2025 and FY2026 are refused by the tool's own input schema (`fy` must be at most 2023) before any SQL.
+    * FY2024, FY2025 and FY2026 are refused by the tool's input-schema bound (`fy` must be at most 2023) before any SQL. **That containment is incidental.** The bound exists because the snapshot ends at FY2023: it is `FiscalYear`'s `le=LAST_FY` in `src/shared/models.py`, described there as the "loaded ExPORTER years". It is a data-currency limit, not a security control.
     * `outputs_get_project_detail` returned an FY2023 record (10691426).
     * The snapshot table holds FY2015-FY2023 only (`exporter_projects`: max fy 2023, 0 rows at or after FY2024).
-  * **So the gap reaches FY2022 and FY2023 only.** Those years are already exposed and reported as not blind (Tier 3). The blind FY2024 Tier 2 population is not in the snapshot and cannot be reached through these tools.
+  * **Today the gap reaches FY2022 and FY2023 only.** Those years are already exposed and reported as not blind (Tier 3). The blind FY2024 Tier 2 population is not in the snapshot, so it cannot be reached through these tools today.
+  * **If the snapshot is refreshed and the bound raised, the gap becomes live** for every newly loaded reserved year.
   * **Independent of Task 1's blindness.** That control is `workflow/build_guard.py` in uac-nitrd (guard `task1-build-read-guard-v1`). The Task 1 build's `build/task1_fingerprint_v1/READ_MANIFEST.json` (mode `build`, hook installed, written 2026-11-03T15:45:37Z) lists six files read, all FY2019-FY2021 seed fetch files (`task1_seed_v1/fy2019`-`fy2021`), with 0 RePORTER requests and 0 SQL statements. A grep of `workflow/` and `scripts/` for MCP client patterns (`fastmcp`, `mcp_server`, `outputs_find_projects`, `databricksapps.com`, `/mcp`) finds nothing. The build never called the MCP servers.
-  * **Production recommendation:** extend `require_build_fy()` to the per-project read tools (`outputs_find_projects`, `outputs_get_project_detail`, and any tool that returns a fiscal-year record), so the guard is server-wide, not per-surface.
+  * **Production recommendation:** extend `require_build_fy()` to the per-project read tools (`outputs_find_projects`, `outputs_get_project_detail`, and any tool that returns a fiscal-year record), so the guard is server-wide, not per-surface. The guard should not depend on how old the data is: it must refuse reserved years whatever the snapshot holds and whatever the schema bound allows.
 
 
 ### Provenance of the measured configuration (recorded 2026-11-06, before the run at `95e5dea`)

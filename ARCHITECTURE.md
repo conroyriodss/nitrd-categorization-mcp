@@ -35,7 +35,7 @@ README covers what it does; [DEMO.md](DEMO.md) covers how to drive it.
        |  MCP over streamable HTTP (workspace OAuth)
   HOSTING        Databricks Apps: one service principal per App; Unity Catalog grants per App; App logs
        |
-  SERVER         3 MCP servers: closed schemas, reserved-year guard before SQL, writes only from reviewer-portal
+  SERVER         3 MCP servers: closed schemas, reserved-year guard before SQL on cohort/operator surfaces, writes only from reviewer-portal
                  -> 3 sandbox tables held by CHECK constraints (sandbox = true, demonstration label)
 ```
 

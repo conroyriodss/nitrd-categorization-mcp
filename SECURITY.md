@@ -81,7 +81,7 @@ The suite crosses three boundaries. Each has different controls, and different g
 
 | Boundary | What sits there | What this repository controls | What it cannot control |
 | --- | --- | --- | --- |
-| **Server** | The three MCP servers (`src/nih_grants_outputs`, `src/nitrd_classifier`, `src/reviewer_portal`) and the sandbox tables | Closed Pydantic input and output schemas; the reserved-year guard before any SQL; writes only from `reviewer-portal`, only to three sandbox tables, held there by table `CHECK` constraints; idempotent submits; one transaction per request; sanitized error messages | Who the caller really is: `reviewer_id` is a parameter, not an authenticated identity |
+| **Server** | The three MCP servers (`src/nih_grants_outputs`, `src/nitrd_classifier`, `src/reviewer_portal`) and the sandbox tables | Closed Pydantic input and output schemas; the reserved-year guard before SQL on the cohort and operator surfaces (not the per-project read tools; see below); writes only from `reviewer-portal`, only to three sandbox tables, held there by table `CHECK` constraints; idempotent submits; one transaction per request; sanitized error messages | Who the caller really is: `reviewer_id` is a parameter, not an authenticated identity |
 | **Client host** | The MCP host and any LLM agent driving it: MCP Inspector, a chat host, the planned agent | Tool descriptions and annotations (every tool declares `readOnlyHint`, `destructiveHint` and `idempotentHint`); the read, infer and write split, so a host can gate `reviewer-portal` on confirmation | Whether a human confirmed a write; whether the agent follows instructions hidden in abstracts or publication metadata (untrusted content returned by the read tools) |
 | **Hosting** | Databricks Apps, workspace OAuth, Unity Catalog grants, the SQL warehouse, App logs | One service principal per App; grants scoped per App (`SELECT` on read tables; `SELECT, MODIFY` on the three sandbox tables for the portal only; [deploy/databricks/README.md](deploy/databricks/README.md)) | Platform behaviour itself. The App does not act with the caller's data permissions, and the three Apps have not been tested as separate authorization domains |
 
@@ -101,7 +101,9 @@ These are enforced in code or in the tables, not only described:
 - **Reserved-year guard.** `require_build_fy()` ([`src/shared/guardrail.py`](src/shared/guardrail.py)) refuses
   FY2022-FY2026, and any year after FY2021, before any SQL runs. It is called by `outputs_find_cohort`, the
   portal's cohort selector and the prior-year lookup. The classifier tools take text, not a fiscal year, so the
-  guard does not apply to them.
+  guard does not apply to them. The per-project read tools (`outputs_find_projects`,
+  `outputs_get_project_detail`) do not call it, and they return FY2022 and FY2023 records. That is a known
+  limitation, documented but not fixed (L4 in [`eval/agent/README.md`](eval/agent/README.md)).
 - **No delete tool.** None of the 14 tools deletes anything. `DELETE` statements appear only in test and e2e
   cleanup code, run by the owner or the e2e runner. The portal's service principal holds `MODIFY` on the sandbox
   tables, so deletion is prevented by the tool surface, not by the grants.
