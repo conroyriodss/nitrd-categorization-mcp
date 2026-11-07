@@ -162,6 +162,17 @@ drafts page is a separate, manual check.
 * **Latency.** "Agent-level latency p50 4.5 s, p95 19.4 s per run, including model turns; not comparable to per-tool latency."
 * **Unscripted queries.** Tier [Team-reported]: owner-attested, content not captured, timestamps from the app's `/logz` access log without request content. They are not suite runs and not scored, and they are not [Verified].
 
+## Deployment sequence of the agent app (provenance)
+
+This section records every agent-app change after the first counted run, in order, so the sequence does not have to be reconstructed from run records. The four servers stay at `95e5dea`. The four pinned files (`agent.py`, the suite, the instructions, `scoring.py`) are never touched.
+
+1. **`95e5dea`, model `databricks-gpt-6-1-sol`.** Deployment `01f1da21177f156b866f7025dde59eb6`. Counted run `2096c936`.
+2. **Model B, the same code.** `deploy/databricks/nitrd_agent/app.yaml` sets `NITRD_AGENT_MODEL=databricks-gpt-6-sol`, and the app gains the resource `llm-endpoint-b` (serving endpoint `databricks-gpt-6-sol`, CAN_QUERY). `src/` is byte-identical to `95e5dea`.
+   * `config.MODEL` is read from `NITRD_AGENT_MODEL`. `pins()` and the results row record `config.MODEL`, so the run names the effective model. This was checked before the run by importing `config` with the variable set: `pins()["model"]` is `databricks-gpt-6-sol`; without it, the default is `databricks-gpt-6-1-sol`.
+   * Model B is used for one suite run only, and then reverted (step 3).
+   * A model change is a new run under the same suite id, not a new suite.
+3. **Capture, model back to A.** Planned: `/ask` records saved to a table, and `NITRD_AGENT_MODEL` reverted to `databricks-gpt-6-1-sol`. It is recorded here when deployed.
+
 ## Known limitations (recorded 2026-11-06, after the run; nothing changed)
 
 * **L1. Cohort-scale conversational assessment is out of reach by construction. This is a measured boundary, not a bug.**
