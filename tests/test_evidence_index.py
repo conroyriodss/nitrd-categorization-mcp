@@ -1,7 +1,8 @@
 """eval/results/INDEX.json covers every file under eval/results/, with the right hashes.
 
-The claim-to-artifact map (eval/README.md section 0) says every cited run is exported under
-eval/results/ and hashed in INDEX.json. This test makes that sentence a checked property.
+The claim-to-artifact map (eval/README.md section 0) says every cited run is
+under eval/results/ and hashed in INDEX.json. This test makes that sentence a
+checked property.
 It fails if:
 * a file is added without re-indexing (scripts/export_evidence.py --index-only);
 * an indexed file is changed;
@@ -38,7 +39,12 @@ def test_every_hash_and_size_matches():
 
 def test_adversarial_artifacts_are_indexed():
     adv = [f for f in INDEX["files"] if f.startswith("adv_runs/")]
-    for kind in ("_counted_", "_dryrun-controls_", "_recheck-controls_", "_delivery-check_"):
+    for kind in (
+        "_counted_",
+        "_dryrun-controls_",
+        "_recheck-controls_",
+        "_delivery-check_",
+    ):
         assert any(kind in f for f in adv), kind
     counted = [f for f in adv if "_counted_" in f]
     for name in ("runs.jsonl", "manifest.json", "report.json", "exposure.json"):

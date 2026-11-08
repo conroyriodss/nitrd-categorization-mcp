@@ -318,10 +318,14 @@ def main(argv=None) -> int:
         on_disk = {
             str(p.relative_to(ROOT)): s
             for p in sorted(OUT.rglob("*"))
-            if p.is_file() and p.name != "INDEX.json" and (s := secrets_in(p.read_bytes()))
+            if p.is_file()
+            and p.name != "INDEX.json"
+            and (s := secrets_in(p.read_bytes()))
         }
         if on_disk:
-            raise SystemExit(f"credential-like content found, index not written: {on_disk}")
+            raise SystemExit(
+                f"credential-like content found, index not written: {on_disk}"
+            )
         rows: dict = {}
     else:
         from pyspark.sql import SparkSession
