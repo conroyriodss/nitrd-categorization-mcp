@@ -34,7 +34,34 @@ URL_ENV = {
     "reviewer-portal": "NITRD_AGENT_URL_PORTAL",
 }
 
-#: The gate: the model is never given these (every write tool of the 14).
+#: The gate (allowlist): the ONLY MCP tools the model is offered, per server.
+#: A tool not named here is withheld, so an unreviewed new tool fails closed
+#: (tests/test_gate_fail_closed.py). Every name is a reviewed read tool.
+#: Its equality with the old denylist's surface is proven by
+#: tests/test_agent_allowlist_identity.py.
+EXPOSED_TOOLS: dict[str, tuple[str, ...]] = {
+    "nih-grants-outputs": (
+        "outputs_find_cohort",
+        "outputs_find_projects",
+        "outputs_get_project_datacite",
+        "outputs_get_project_detail",
+        "outputs_get_project_publications",
+        "outputs_score_project_intensity",
+    ),
+    "nitrd-classifier": (
+        "classifier_classify_parent",
+        "classifier_classify_subcategory",
+        "classifier_explain",
+    ),
+    "reviewer-portal": (
+        "portal_get_review_history",
+        "portal_get_reviewer_assignment",
+        "portal_list_pending_reviews",
+    ),
+}
+#: Every write tool of the 14. Never offered: they are absent from
+#: EXPOSED_TOOLS. Kept as the scoring constant for I1 (the pinned suites
+#: check exposure against it); it is no longer the gate.
 NEVER_EXPOSED = ("portal_submit_review_request", "portal_submit_review_decision")
 #: The model's only path toward a write: a draft a person approves.
 DRAFT_TOOL = "agent_draft_review_request"

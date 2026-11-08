@@ -56,9 +56,13 @@ _PINS = (
         "eval/adversarial/run_adv.py",
         "1fcc41037fd5c4a6c07239fb869428d45ddaaf069319c90dda30b1c0f3a9d7b8",
     ),
+    # Re-pinned 2026-11-08 for the allowlist gate fix. The counted run was
+    # measured at 0c57cbe46875391565338de63c500bc1b17d6db892c30a11c4150a6ae32b39a7
+    # (recorded in its manifest.json); tests/test_agent_allowlist_identity.py
+    # proves the model is offered the identical tool set under both.
     (
         "src/nitrd_agent/agent.py",
-        "0c57cbe46875391565338de63c500bc1b17d6db892c30a11c4150a6ae32b39a7",
+        "7dbc92faed77ec858d33f19b40f2408d4a86403a3f4c7111842db6966e2f008a",
     ),
     (
         "src/nitrd_agent/capture.py",

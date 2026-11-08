@@ -43,6 +43,17 @@ def bearer(w) -> str:
     return w.config.authenticate()["Authorization"].split(" ", 1)[1]
 
 
+def tool_filter(server: str):
+    """The gate: an allowlist, on every server. A tool not in
+    config.EXPOSED_TOOLS[server] is withheld from the model; an unlisted
+    server raises KeyError, so it fails closed too."""
+    from agents.mcp import create_static_tool_filter
+
+    return create_static_tool_filter(
+        allowed_tool_names=list(config.EXPOSED_TOOLS[server])
+    )
+
+
 def server_urls(w) -> dict[str, str]:
     out = {}
     for name, app in config.SERVERS:
@@ -90,18 +101,14 @@ class Session:
         from agents.mcp import (
             MCPServerStdio,
             MCPServerStreamableHttp,
-            create_static_tool_filter,
         )
         from openai import AsyncOpenAI
 
         token = bearer(self.w)
         self._stack = AsyncExitStack()
-        blocked = create_static_tool_filter(
-            blocked_tool_names=list(config.NEVER_EXPOSED)
-        )
         urls = server_urls(self.w) if self.transport == "http" else {}
         for name, _ in config.SERVERS:
-            filt = blocked if name == "reviewer-portal" else None
+            filt = tool_filter(name)
             if self.transport == "http":
                 server = MCPServerStreamableHttp(
                     params={

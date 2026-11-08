@@ -5,11 +5,16 @@ classification logic, then asserts the SAFE property (the gate fires).
 A failing assertion here means the gate fails OPEN for new tools.
 
 RESULT at 490a09c (first run, 2026-11-08): the runtime approval gate and the
-reserved-year guard FAIL OPEN for an unclassified new tool. Those two tests
-are marked xfail(strict=True): they record the defect, keep CI green, and
-turn red (XPASS) as soon as a fix makes the gate fail closed, so the marker
-must then be removed. The CI tripwires (count and annotation) do catch an
-unclassified tool.
+reserved-year guard FAILED OPEN for an unclassified new tool (a4718e7, both
+xfail strict).
+
+Runtime gate: FIXED by the allowlist (config.EXPOSED_TOOLS via
+agent.tool_filter, every server). It XPASSed and is now a plain passing test;
+tests/test_agent_allowlist_identity.py proves the model's surface did not
+change.
+
+Reserved-year guard: still fails open, xfail strict; the fix is deferred to
+the production recommendations because it requires unfreezing the servers.
 
 The servers are not modified: every dummy is registered in a child process
 that imports the frozen server module and adds one tool before serving it.
@@ -63,10 +68,12 @@ def _child(code: str) -> dict:
 
 
 def _through_agent_filter() -> tuple[list[str], str | None]:
-    from agents.mcp import MCPServerStdio, create_static_tool_filter
+    from agents.mcp import MCPServerStdio
 
-    # Exactly the filter Session.__aenter__ builds (src/nitrd_agent/agent.py:99-104).
-    filt = create_static_tool_filter(blocked_tool_names=list(config.NEVER_EXPOSED))
+    from nitrd_agent.agent import tool_filter
+
+    # Exactly the filter Session.__aenter__ applies to the portal.
+    filt = tool_filter("reviewer-portal")
 
     async def go():
         params = {
@@ -91,11 +98,6 @@ def _through_agent_filter() -> tuple[list[str], str | None]:
     return asyncio.run(go())
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="FAILS OPEN: the agent's gate is a denylist (config.NEVER_EXPOSED), "
-    "applied to the reviewer-portal server only (agent.py:99-104)",
-)
 def test_runtime_gate_blocks_unclassified_new_tool():
     pytest.importorskip("agents")
     names, executed = _through_agent_filter()
@@ -225,7 +227,8 @@ def test_reserved_year_guard_positive_control():
 @pytest.mark.xfail(
     strict=True,
     reason="FAILS OPEN: require_build_fy is called per tool (opt-in), not in "
-    "the data layer; shared.sql.run_query has no year check",
+    "the data layer; shared.sql.run_query has no year check. Fix deferred to "
+    "the production recommendations: it requires unfreezing the servers.",
 )
 def test_reserved_year_guard_covers_unclassified_new_tool():
     r = _child(RESERVED.format(calls=[NEW]))[NEW[0]]

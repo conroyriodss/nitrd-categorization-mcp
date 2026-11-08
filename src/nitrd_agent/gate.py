@@ -1,6 +1,7 @@
 """The human-approval gate: the model drafts, a person approves, the app writes.
 
-The model never gets portal_submit_review_request (config.NEVER_EXPOSED). Its
+The model never gets portal_submit_review_request: it is offered only the
+reviewed read tools of config.EXPOSED_TOOLS (an allowlist, every server). Its
 only route toward a write is agent_draft_review_request, which stores the
 intended arguments in memory and writes nothing. A person approves a draft in
 the app; the APP then calls portal_submit_review_request with those arguments

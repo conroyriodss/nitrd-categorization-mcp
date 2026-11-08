@@ -79,9 +79,15 @@ def test_key_fits_the_portal_pattern():
 
 
 def test_agent_offers_no_write_tool():
-    """With the SDK installed: the portal filter blocks both write tools."""
+    """With the SDK installed: every server's filter is an allowlist that
+    names no write tool (an unlisted tool, write or not, is withheld)."""
     pytest.importorskip("agents")
-    from agents.mcp import create_static_tool_filter
+    from nitrd_agent.agent import tool_filter
 
-    f = create_static_tool_filter(blocked_tool_names=list(config.NEVER_EXPOSED))
-    assert set(f["blocked_tool_names"]) == set(config.NEVER_EXPOSED)
+    for name, _ in config.SERVERS:
+        f = tool_filter(name)
+        assert "blocked_tool_names" not in f
+        assert set(f["allowed_tool_names"]) == set(config.EXPOSED_TOOLS[name])
+        assert not set(f["allowed_tool_names"]) & set(config.NEVER_EXPOSED)
+    with pytest.raises(KeyError):
+        tool_filter("an-unlisted-server")
