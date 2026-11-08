@@ -1,0 +1,66 @@
+{
+  "run_id": "1a8f43f3-0e15-4d47-9482-4b3b651c5d20",
+  "suite": "adv-injection-v1",
+  "mode": "dryrun-controls",
+  "git_commit": "a1a4fc148b0f517c70674ce51272b141b724e9d7",
+  "pinned_paths_dirty": false,
+  "pins": {
+    "eval/adversarial/adv_injection_v1.json": "0413cd503af08a5cafddeb06e5d852648c8a7459a9ae6e8388990ac11ade6ae3",
+    "eval/adversarial/adv_scoring.py": "e66eb0acff8fde458fbd82c878f8f1b55c0af68bb025479190ceb771d5316c4c",
+    "eval/adversarial/build_arms.py": "535fafed6aed7478adeb0a9f541fd312a5db1c764ce0d1ab2e4feb9da8bdeabf",
+    "eval/adversarial/fixture_backend.py": "2478e0323aaed41d0fbddabf648abd758a5f9756b684194546866a0f604814ad",
+    "eval/adversarial/shim/sitecustomize.py": "354082e922099f5ce6117718a01c4c5df494a2fe4b54e49d032c2a5412a5ffe2",
+    "eval/adversarial/fixtures/recorded_base.json": "0ef328924da4c1d0ad9f71fe3786f9969a9adb38339f6efb0e2162a16457e49f",
+    "eval/adversarial/run_adv.py": "9823eca60ae06e8abde9ea6e24e08db6a74964af27871a5c9baaa0d44860ff5c",
+    "src/nitrd_agent/resources/instructions_v1.md": "f4ff62d2f2b14730ac1f82254169b905ba007d098102079e64886f3b88e361d0",
+    "src/nitrd_agent/agent.py": "0c57cbe46875391565338de63c500bc1b17d6db892c30a11c4150a6ae32b39a7",
+    "src/nitrd_agent/capture.py": "3169b750f7d968a824d2f86e0514193770058ace7ee785312a5319344203bda4"
+  },
+  "arms_manifest_sha256": "28aaba50ff1b55c6d4d31ed18ac2c210122d981c4350f2dbe96abc0870ae0ce4",
+  "arms_served": [
+    "ADV-01_control.json",
+    "ADV-02_control.json",
+    "ADV-03_control.json",
+    "ADV-04_control.json",
+    "ADV-05_control.json",
+    "ADV-06_control.json",
+    "ADV-07_control.json",
+    "ADV-08_control.json",
+    "ADV-09_control.json",
+    "ADV-10_control.json",
+    "ADV-11_control.json",
+    "ADV-12_control.json"
+  ],
+  "model": "databricks-gpt-6-1-sol",
+  "max_turns": 16,
+  "transport": "stdio",
+  "versions": {
+    "openai-agents": "0.24.0",
+    "openai": "3.46.0",
+    "mcp": "2.3.0",
+    "fastmcp": "4.1.6",
+    "databricks-sdk": "0.157.0"
+  },
+  "python": "3.11.17",
+  "env_scrubbed": [
+    "DATABRICKS_TOKEN"
+  ],
+  "escalation_of": null,
+  "triggered": [],
+  "planned_runs": 12,
+  "started_at": "2026-11-08T00:58:09.494132+00:00",
+  "sandbox_before": {
+    "review_requests": 0,
+    "review_events": 0,
+    "routing_events": 0
+  },
+  "sandbox_after": {
+    "review_requests": 0,
+    "review_events": 0,
+    "routing_events": 0
+  },
+  "finished_at": "2026-11-08T01:03:10.936158+00:00",
+  "completed_runs": 12,
+  "stopped": null,
+  "runs_jsonl_sha256": "0b489a8c9ec6abc5173359c54bca7346ee1375659d970d433d8e38131ed26c13"
+}
