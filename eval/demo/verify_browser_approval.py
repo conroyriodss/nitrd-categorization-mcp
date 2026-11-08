@@ -45,6 +45,18 @@ Steps (one run, not a measurement):
   8. Index the files in eval/results/demo/ (export_evidence.py
      --index-only) and commit; CI fails on unindexed results files.
 
+Added 2026-11-08 (two read-only modes; the modes above are unchanged):
+  6b. observe --request-id UUID --where PAGE --appears yes|no|unclear
+      [--notes TEXT]: after verify and BEFORE cleanup, record one
+      observation per operator page: whether the agent-draft request appears
+      anywhere a human could act on it. Run once per page. It is an
+      observation, not a pass/fail test. It writes the owner's answer and the
+      sandbox counts at that moment, and reads no page itself.
+  7b. history --since ISO_UTC [--request-id UUID]: after cleanup, list every
+      Delta version of the three tables since the predict time, with
+      operation and principal, plus the counts now. This is the
+      Delta-history half of "cleanup to 0/0/0".
+
 Checks made by verify:
   * one request row, a created event and a routed event;
   * the key is "agent-draft:" + draft_id, and request_id equals both
@@ -139,7 +151,14 @@ def write(name: str, obj: dict) -> Path:
 
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["precheck", "predict", "verify", "cleanup"])
+    ap.add_argument(
+        "mode",
+        choices=["precheck", "predict", "verify", "cleanup", "observe", "history"],
+    )
+    ap.add_argument("--where", help="observe: the page looked at")
+    ap.add_argument("--appears", choices=["yes", "no", "unclear"])
+    ap.add_argument("--notes", default="")
+    ap.add_argument("--since", help="history: predict time, ISO UTC")
     ap.add_argument("--draft-id")
     ap.add_argument("--request-id")
     ap.add_argument("--approver-email")
@@ -167,7 +186,62 @@ def main(argv: list[str]) -> int:
         )
         return 0
 
+    if a.mode == "history":
+        if not a.since:
+            raise SystemExit("history needs --since (the predict time, ISO UTC)")
+        since = datetime.fromisoformat(a.since.replace("Z", "+00:00"))
+        versions = {}
+        for k, t in TABLES.items():
+            rows = sql(f"DESCRIBE HISTORY {t}")
+            versions[k] = [
+                {f: r.get(f) for f in ("version", "timestamp", "userName", "operation")}
+                | {"operationMetrics": r.get("operationMetrics")}
+                for r in rows
+                if datetime.fromisoformat(
+                    str(r["timestamp"]).replace("Z", "+00:00")
+                ).replace(tzinfo=UTC)
+                >= since.astimezone(UTC)
+            ]
+        c = counts()
+        write(
+            f"{stamp()}_history.json",
+            {
+                "since_utc": since.isoformat(),
+                "request_id": a.request_id,
+                "versions_since": versions,
+                "sandbox_counts_now": c,
+                "zero": not any(c.values()),
+            },
+        )
+        print(json.dumps({k: len(v) for k, v in versions.items()} | {"counts": c}))
+        return 0 if not any(c.values()) else 1
+
     rid = str(UUID(a.request_id))
+    if a.mode == "observe":
+        if not a.where or not a.appears:
+            raise SystemExit("observe needs --where PAGE and --appears yes|no|unclear")
+        req = sql(
+            f"SELECT request_id, idempotency_key, status, appl_id, fy "
+            f"FROM {TABLES['review_requests']} WHERE request_id = :rid",
+            {"rid": rid},
+        )
+        write(
+            f"{stamp()}_observe_{rid[:8]}.json",
+            {
+                "what": "Observation, not a pass/fail test: does an agent-draft "
+                "request appear anywhere a human could act on it?",
+                "observed_at_utc": datetime.now(UTC).isoformat(),
+                "request_id": rid,
+                "request_row_present": len(req) == 1,
+                "request_row": req[0] if req else None,
+                "where": a.where,
+                "appears": a.appears,
+                "notes": a.notes,
+                "sandbox_counts_now": counts(),
+            },
+        )
+        return 0
+
     if a.mode == "cleanup":
         if not a.confirm:
             raise SystemExit("cleanup deletes rows; pass --confirm")
