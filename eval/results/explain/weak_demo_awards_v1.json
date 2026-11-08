@@ -1,0 +1,947 @@
+{
+ "awards": {
+  "10388671": {
+   "parent_classifier": {
+    "classifier_classify_parent": {
+     "abstain_reason": null,
+     "appl_id": 10388671,
+     "cohort": "not_used_in_training",
+     "fy": 2022,
+     "fy2019_half": null,
+     "model": {
+      "calibration": "CalibratedClassifierCV(sigmoid, GroupKFold(5) by core, ensemble=False)",
+      "model_id": "nitrd-parent-v2-ba10594d9581",
+      "sklearn_version": "1.9.1",
+      "threshold": 0.3893682055460409,
+      "threshold_fy": 2019,
+      "train_fys": [
+       2015,
+       2016,
+       2017,
+       2018
+      ]
+     },
+     "notice": "Suggestion only. Not RCDC / demonstration only.",
+     "probability": 0.580214,
+     "source": {
+      "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+      "tables": [
+       "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+       "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+      ]
+     },
+     "suggestion": "nitrd",
+     "top_features": [
+      {
+       "contribution": 0.466415,
+       "field": "title",
+       "term": "predicting"
+      },
+      {
+       "contribution": 0.369104,
+       "field": "title",
+       "term": "three"
+      },
+      {
+       "contribution": 0.229944,
+       "field": "title",
+       "term": "for"
+      },
+      {
+       "contribution": 0.200197,
+       "field": "title",
+       "term": "patient"
+      },
+      {
+       "contribution": 0.198681,
+       "field": "phr",
+       "term": "surveillance"
+      },
+      {
+       "contribution": 0.178192,
+       "field": "phr",
+       "term": "machine learning"
+      },
+      {
+       "contribution": 0.175472,
+       "field": "abstract",
+       "term": "machine"
+      },
+      {
+       "contribution": 0.167627,
+       "field": "abstract",
+       "term": "machine learning"
+      },
+      {
+       "contribution": 0.156892,
+       "field": "abstract",
+       "term": "data"
+      },
+      {
+       "contribution": 0.143927,
+       "field": "abstract",
+       "term": "ehr"
+      }
+     ]
+    },
+    "classifier_classify_subcategory": {
+     "appl_id": 10388671,
+     "fy": 2022,
+     "notice": "Ranking signal for a reviewer; scores are not probabilities and are not comparable with parent probabilities. Not RCDC / demonstration only.",
+     "ranked_pcas": [
+      {
+       "matched_terms": [
+        "validation",
+        "architecture",
+        "design",
+        "testing",
+        "systems"
+       ],
+       "pca": "ENIT",
+       "score": 9.2465
+      },
+      {
+       "matched_terms": [
+        "machine",
+        "application",
+        "intelligent",
+        "design",
+        "systems"
+       ],
+       "pca": "IRAS",
+       "score": 8.5534
+      },
+      {
+       "matched_terms": [
+        "timely",
+        "usability",
+        "productivity"
+       ],
+       "pca": "SPSQ",
+       "score": 6.7616
+      },
+      {
+       "matched_terms": [
+        "data",
+        "system",
+        "methods"
+       ],
+       "pca": "EHCS",
+       "score": 5.663
+      },
+      {
+       "matched_terms": [
+        "real-time",
+        "systems",
+        "complex"
+       ],
+       "pca": "CNPS",
+       "score": 5.6629
+      }
+     ],
+     "source": {
+      "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+      "tables": [
+       "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+       "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+      ]
+     },
+     "status": "ranked",
+     "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+    },
+    "classifier_explain": {
+     "appl_id": 10388671,
+     "caveats": [
+      "Contributions are in raw log-odds before sigmoid calibration; the calibrated probability is a monotone transform of their sum.",
+      "They describe what the model keyed on, not why the project is or is not NITRD; they are not causal effects.",
+      "Only terms in the training vocabulary count; new wording is invisible."
+     ],
+     "features": [
+      {
+       "contribution": 0.466415,
+       "field": "title",
+       "term": "predicting"
+      },
+      {
+       "contribution": 0.369104,
+       "field": "title",
+       "term": "three"
+      },
+      {
+       "contribution": 0.229944,
+       "field": "title",
+       "term": "for"
+      },
+      {
+       "contribution": -0.201845,
+       "field": "title",
+       "term": "nursing"
+      },
+      {
+       "contribution": 0.200197,
+       "field": "title",
+       "term": "patient"
+      },
+      {
+       "contribution": 0.198681,
+       "field": "phr",
+       "term": "surveillance"
+      },
+      {
+       "contribution": 0.178192,
+       "field": "phr",
+       "term": "machine learning"
+      },
+      {
+       "contribution": 0.175472,
+       "field": "abstract",
+       "term": "machine"
+      },
+      {
+       "contribution": 0.167627,
+       "field": "abstract",
+       "term": "machine learning"
+      },
+      {
+       "contribution": 0.156892,
+       "field": "abstract",
+       "term": "data"
+      },
+      {
+       "contribution": 0.143927,
+       "field": "abstract",
+       "term": "ehr"
+      },
+      {
+       "contribution": 0.140406,
+       "field": "phr",
+       "term": "care"
+      },
+      {
+       "contribution": 0.129909,
+       "field": "abstract",
+       "term": "user"
+      },
+      {
+       "contribution": 0.129511,
+       "field": "abstract",
+       "term": "system"
+      },
+      {
+       "contribution": 0.126456,
+       "field": "phr",
+       "term": "machine"
+      },
+      {
+       "contribution": -0.11979,
+       "field": "title",
+       "term": "care"
+      },
+      {
+       "contribution": 0.117617,
+       "field": "phr",
+       "term": "data"
+      },
+      {
+       "contribution": -0.071977,
+       "field": "phr",
+       "term": "nursing"
+      },
+      {
+       "contribution": -0.058735,
+       "field": "phr",
+       "term": "work"
+      },
+      {
+       "contribution": -0.055072,
+       "field": "phr",
+       "term": "and healthcare"
+      },
+      {
+       "contribution": -0.049284,
+       "field": "abstract",
+       "term": "allocation"
+      },
+      {
+       "contribution": -0.046485,
+       "field": "title",
+       "term": "instability"
+      },
+      {
+       "contribution": -0.043147,
+       "field": "abstract",
+       "term": "safety"
+      },
+      {
+       "contribution": -0.042981,
+       "field": "phr",
+       "term": "where"
+      },
+      {
+       "contribution": -0.042459,
+       "field": "phr",
+       "term": "and"
+      },
+      {
+       "contribution": -0.041024,
+       "field": "phr",
+       "term": "healthcare"
+      },
+      {
+       "contribution": -0.035352,
+       "field": "phr",
+       "term": "on"
+      },
+      {
+       "contribution": -0.034413,
+       "field": "abstract",
+       "term": "clinically"
+      },
+      {
+       "contribution": -0.033563,
+       "field": "phr",
+       "term": "very"
+      },
+      {
+       "contribution": -0.032794,
+       "field": "abstract",
+       "term": "care we"
+      }
+     ],
+     "fy": 2022,
+     "method": "Exact per-term log-odds contributions (tf-idf value x coefficient) of the single refit logistic-regression model; with the intercept they sum to the raw logit.",
+     "pca_matches": null,
+     "source": {
+      "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+      "tables": [
+       "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+       "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+      ]
+     },
+     "summary": "Suggested NITRD (P=0.580, threshold 0.389). Strongest terms toward NITRD: 'predicting' (title), 'three' (title), 'for' (title); against: 'nursing' (title), 'care' (title), 'nursing' (phr).",
+     "task": "parent"
+    },
+    "probability_matches_deployed_run": {
+     "deployed": 0.580214,
+     "here": 0.580214
+    },
+    "rationale_summary_verbatim": "Suggested NITRD (P=0.580, threshold 0.389). Strongest terms toward NITRD: 'predicting' (title), 'three' (title), 'for' (title); against: 'nursing' (title), 'care' (title), 'nursing' (phr)."
+   },
+   "task1_fingerprint_v1": {
+    "against_nitrd": [
+     {
+      "coefficient": -2.453048,
+      "contribution": -0.200732,
+      "term": "vs",
+      "tfidf": 0.08183
+     },
+     {
+      "coefficient": -1.503382,
+      "contribution": -0.093055,
+      "term": "build",
+      "tfidf": 0.061897
+     },
+     {
+      "coefficient": -1.102041,
+      "contribution": -0.091081,
+      "term": "allocation",
+      "tfidf": 0.082648
+     },
+     {
+      "coefficient": -0.71022,
+      "contribution": -0.089113,
+      "term": "forecasting",
+      "tfidf": 0.125472
+     },
+     {
+      "coefficient": -1.311822,
+      "contribution": -0.080245,
+      "term": "building",
+      "tfidf": 0.061171
+     },
+     {
+      "coefficient": -1.637101,
+      "contribution": -0.079267,
+      "term": "implications",
+      "tfidf": 0.048419
+     },
+     {
+      "coefficient": -2.40004,
+      "contribution": -0.076908,
+      "term": "sufficient",
+      "tfidf": 0.032045
+     },
+     {
+      "coefficient": -1.764075,
+      "contribution": -0.076762,
+      "term": "rates",
+      "tfidf": 0.043514
+     },
+     {
+      "coefficient": -0.685577,
+      "contribution": -0.076575,
+      "term": "alarm",
+      "tfidf": 0.111694
+     },
+     {
+      "coefficient": -1.537878,
+      "contribution": -0.06527,
+      "term": "relevant",
+      "tfidf": 0.042441
+     }
+    ],
+    "check_intercept_plus_contributions_equals_logit": true,
+    "intercept": -5.956752,
+    "logit": 1.266522,
+    "score": 0.780147,
+    "terms_in_vocabulary": 322,
+    "toward_nitrd": [
+     {
+      "coefficient": 17.212648,
+      "contribution": 0.997737,
+      "term": "machine",
+      "tfidf": 0.057965
+     },
+     {
+      "coefficient": 15.848514,
+      "contribution": 0.955335,
+      "term": "machine learning",
+      "tfidf": 0.060279
+     },
+     {
+      "coefficient": 13.284147,
+      "contribution": 0.601147,
+      "term": "learning",
+      "tfidf": 0.045253
+     },
+     {
+      "coefficient": 8.501985,
+      "contribution": 0.382522,
+      "term": "ehr",
+      "tfidf": 0.044992
+     },
+     {
+      "coefficient": 9.736902,
+      "contribution": 0.280354,
+      "term": "data",
+      "tfidf": 0.028793
+     },
+     {
+      "coefficient": 1.844021,
+      "contribution": 0.240908,
+      "term": "intelligent",
+      "tfidf": 0.130642
+     },
+     {
+      "coefficient": 4.963086,
+      "contribution": 0.239133,
+      "term": "decision support",
+      "tfidf": 0.048182
+     },
+     {
+      "coefficient": 2.408493,
+      "contribution": 0.223255,
+      "term": "learning models",
+      "tfidf": 0.092695
+     },
+     {
+      "coefficient": 3.516535,
+      "contribution": 0.220907,
+      "term": "database",
+      "tfidf": 0.06282
+     },
+     {
+      "coefficient": 3.382119,
+      "contribution": 0.208692,
+      "term": "multi",
+      "tfidf": 0.061704
+     }
+    ]
+   },
+   "text_fields_chars": {
+    "abstract": 2763,
+    "phr": 863,
+    "title": 80
+   }
+  },
+  "10445135": {
+   "parent_classifier": {
+    "classifier_classify_parent": {
+     "abstain_reason": null,
+     "appl_id": 10445135,
+     "cohort": "not_used_in_training",
+     "fy": 2022,
+     "fy2019_half": null,
+     "model": {
+      "calibration": "CalibratedClassifierCV(sigmoid, GroupKFold(5) by core, ensemble=False)",
+      "model_id": "nitrd-parent-v2-ba10594d9581",
+      "sklearn_version": "1.9.1",
+      "threshold": 0.3893682055460409,
+      "threshold_fy": 2019,
+      "train_fys": [
+       2015,
+       2016,
+       2017,
+       2018
+      ]
+     },
+     "notice": "Suggestion only. Not RCDC / demonstration only.",
+     "probability": 0.275149,
+     "source": {
+      "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+      "tables": [
+       "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+       "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+      ]
+     },
+     "suggestion": "not_nitrd",
+     "top_features": [
+      {
+       "contribution": 0.204784,
+       "field": "title",
+       "term": "based"
+      },
+      {
+       "contribution": 0.204085,
+       "field": "abstract",
+       "term": "data acquisition"
+      },
+      {
+       "contribution": 0.178445,
+       "field": "title",
+       "term": "adaptive"
+      },
+      {
+       "contribution": 0.176147,
+       "field": "title",
+       "term": "for"
+      },
+      {
+       "contribution": 0.173907,
+       "field": "title",
+       "term": "intelligence"
+      },
+      {
+       "contribution": 0.138773,
+       "field": "phr",
+       "term": "tools"
+      },
+      {
+       "contribution": 0.137456,
+       "field": "abstract",
+       "term": "reality"
+      },
+      {
+       "contribution": 0.13339,
+       "field": "abstract",
+       "term": "algorithm"
+      },
+      {
+       "contribution": 0.127879,
+       "field": "phr",
+       "term": "intelligent"
+      },
+      {
+       "contribution": 0.120147,
+       "field": "title",
+       "term": "quality"
+      }
+     ]
+    },
+    "classifier_classify_subcategory": {
+     "appl_id": 10445135,
+     "fy": 2022,
+     "notice": "Ranking signal for a reviewer; scores are not probabilities and are not comparable with parent probabilities. Not RCDC / demonstration only.",
+     "ranked_pcas": [
+      {
+       "matched_terms": [
+        "capture",
+        "needed",
+        "knowledge",
+        "data"
+       ],
+       "pca": "LSDMA",
+       "score": 8.841
+      },
+      {
+       "matched_terms": [
+        "challenges",
+        "efficiency",
+        "system",
+        "data"
+       ],
+       "pca": "EHCS",
+       "score": 7.4548
+      },
+      {
+       "matched_terms": [
+        "quality",
+        "assurance",
+        "development"
+       ],
+       "pca": "SPSQ",
+       "score": 7.4547
+      },
+      {
+       "matched_terms": [
+        "systems",
+        "effective",
+        "communications",
+        "data"
+       ],
+       "pca": "HCIA",
+       "score": 6.3561
+      },
+      {
+       "matched_terms": [
+        "systems",
+        "complex",
+        "real-time"
+       ],
+       "pca": "CNPS",
+       "score": 5.6629
+      }
+     ],
+     "source": {
+      "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+      "tables": [
+       "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+       "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+      ]
+     },
+     "status": "ranked",
+     "vocabulary_id": "vocabulary-scope-only-2026-10-24"
+    },
+    "classifier_explain": {
+     "appl_id": 10445135,
+     "caveats": [
+      "Contributions are in raw log-odds before sigmoid calibration; the calibrated probability is a monotone transform of their sum.",
+      "They describe what the model keyed on, not why the project is or is not NITRD; they are not causal effects.",
+      "Only terms in the training vocabulary count; new wording is invisible."
+     ],
+     "features": [
+      {
+       "contribution": -0.276027,
+       "field": "title",
+       "term": "online"
+      },
+      {
+       "contribution": 0.204784,
+       "field": "title",
+       "term": "based"
+      },
+      {
+       "contribution": 0.204085,
+       "field": "abstract",
+       "term": "data acquisition"
+      },
+      {
+       "contribution": 0.178445,
+       "field": "title",
+       "term": "adaptive"
+      },
+      {
+       "contribution": 0.176147,
+       "field": "title",
+       "term": "for"
+      },
+      {
+       "contribution": 0.173907,
+       "field": "title",
+       "term": "intelligence"
+      },
+      {
+       "contribution": 0.138773,
+       "field": "phr",
+       "term": "tools"
+      },
+      {
+       "contribution": 0.137456,
+       "field": "abstract",
+       "term": "reality"
+      },
+      {
+       "contribution": 0.13339,
+       "field": "abstract",
+       "term": "algorithm"
+      },
+      {
+       "contribution": -0.129824,
+       "field": "phr",
+       "term": "new"
+      },
+      {
+       "contribution": 0.127879,
+       "field": "phr",
+       "term": "intelligent"
+      },
+      {
+       "contribution": 0.120147,
+       "field": "title",
+       "term": "quality"
+      },
+      {
+       "contribution": 0.118798,
+       "field": "abstract",
+       "term": "online"
+      },
+      {
+       "contribution": -0.118314,
+       "field": "title",
+       "term": "radiotherapy"
+      },
+      {
+       "contribution": 0.118101,
+       "field": "abstract",
+       "term": "systems"
+      },
+      {
+       "contribution": 0.115072,
+       "field": "abstract",
+       "term": "tools"
+      },
+      {
+       "contribution": 0.114211,
+       "field": "abstract",
+       "term": "system"
+      },
+      {
+       "contribution": 0.099979,
+       "field": "abstract",
+       "term": "acquisition"
+      },
+      {
+       "contribution": -0.067437,
+       "field": "phr",
+       "term": "cancer care"
+      },
+      {
+       "contribution": -0.062293,
+       "field": "phr",
+       "term": "to new"
+      },
+      {
+       "contribution": -0.062138,
+       "field": "title",
+       "term": "artificial"
+      },
+      {
+       "contribution": -0.062138,
+       "field": "phr",
+       "term": "quality"
+      },
+      {
+       "contribution": -0.051004,
+       "field": "phr",
+       "term": "of precision"
+      },
+      {
+       "contribution": -0.048621,
+       "field": "phr",
+       "term": "the"
+      },
+      {
+       "contribution": -0.048023,
+       "field": "abstract",
+       "term": "assess"
+      },
+      {
+       "contribution": -0.047041,
+       "field": "phr",
+       "term": "of"
+      },
+      {
+       "contribution": -0.043081,
+       "field": "phr",
+       "term": "and"
+      },
+      {
+       "contribution": -0.041608,
+       "field": "abstract",
+       "term": "safety"
+      },
+      {
+       "contribution": -0.037951,
+       "field": "abstract",
+       "term": "needed"
+      },
+      {
+       "contribution": -0.037407,
+       "field": "phr",
+       "term": "plan"
+      }
+     ],
+     "fy": 2022,
+     "method": "Exact per-term log-odds contributions (tf-idf value x coefficient) of the single refit logistic-regression model; with the intercept they sum to the raw logit.",
+     "pca_matches": null,
+     "source": {
+      "snapshot": "Fixed snapshot of public NIH ExPORTER FY2015-2023, iCite and PubMed records, loaded 2026-10; no live API calls.",
+      "tables": [
+       "users.conroyri.nitrd_hackathon_v1_exporter_projects",
+       "users.conroyri.nitrd_hackathon_v1_exporter_abstracts"
+      ]
+     },
+     "summary": "Suggested not NITRD (P=0.275, threshold 0.389). Strongest terms toward NITRD: 'based' (title), 'data acquisition' (abstract), 'adaptive' (title); against: 'online' (title), 'new' (phr), 'radiotherapy' (title).",
+     "task": "parent"
+    },
+    "probability_matches_deployed_run": {
+     "deployed": 0.275149,
+     "here": 0.275149
+    },
+    "rationale_summary_verbatim": "Suggested not NITRD (P=0.275, threshold 0.389). Strongest terms toward NITRD: 'based' (title), 'data acquisition' (abstract), 'adaptive' (title); against: 'online' (title), 'new' (phr), 'radiotherapy' (title)."
+   },
+   "task1_fingerprint_v1": {
+    "against_nitrd": [
+     {
+      "coefficient": -1.659554,
+      "contribution": -0.131512,
+      "term": "procedure",
+      "tfidf": 0.079246
+     },
+     {
+      "coefficient": -1.712558,
+      "contribution": -0.130597,
+      "term": "original",
+      "tfidf": 0.076259
+     },
+     {
+      "coefficient": -0.718019,
+      "contribution": -0.122412,
+      "term": "linac",
+      "tfidf": 0.170485
+     },
+     {
+      "coefficient": -0.534647,
+      "contribution": -0.100583,
+      "term": "mr linac",
+      "tfidf": 0.18813
+     },
+     {
+      "coefficient": -0.770431,
+      "contribution": -0.08994,
+      "term": "mr",
+      "tfidf": 0.11674
+     },
+     {
+      "coefficient": -3.382258,
+      "contribution": -0.069695,
+      "term": "interventions",
+      "tfidf": 0.020606
+     },
+     {
+      "coefficient": -1.082494,
+      "contribution": -0.066959,
+      "term": "transfer learning",
+      "tfidf": 0.061856
+     },
+     {
+      "coefficient": -1.186582,
+      "contribution": -0.059095,
+      "term": "organ",
+      "tfidf": 0.049803
+     },
+     {
+      "coefficient": -0.817871,
+      "contribution": -0.059036,
+      "term": "cancer care",
+      "tfidf": 0.072183
+     },
+     {
+      "coefficient": -1.050759,
+      "contribution": -0.058155,
+      "term": "near real",
+      "tfidf": 0.055346
+     }
+    ],
+    "check_intercept_plus_contributions_equals_logit": true,
+    "intercept": -5.956752,
+    "logit": 1.187518,
+    "score": 0.766297,
+    "terms_in_vocabulary": 288,
+    "toward_nitrd": [
+     {
+      "coefficient": 8.168196,
+      "contribution": 0.61473,
+      "term": "intelligence",
+      "tfidf": 0.075259
+     },
+     {
+      "coefficient": 5.40194,
+      "contribution": 0.607295,
+      "term": "ai",
+      "tfidf": 0.112422
+     },
+     {
+      "coefficient": 7.387475,
+      "contribution": 0.578314,
+      "term": "artificial intelligence",
+      "tfidf": 0.078283
+     },
+     {
+      "coefficient": 7.252289,
+      "contribution": 0.485552,
+      "term": "artificial",
+      "tfidf": 0.066952
+     },
+     {
+      "coefficient": 9.180987,
+      "contribution": 0.407804,
+      "term": "reality",
+      "tfidf": 0.044418
+     },
+     {
+      "coefficient": 13.284147,
+      "contribution": 0.334937,
+      "term": "learning",
+      "tfidf": 0.025213
+     },
+     {
+      "coefficient": 2.286715,
+      "contribution": 0.2589,
+      "term": "online",
+      "tfidf": 0.113219
+     },
+     {
+      "coefficient": 6.494541,
+      "contribution": 0.251233,
+      "term": "algorithm",
+      "tfidf": 0.038684
+     },
+     {
+      "coefficient": 2.573917,
+      "contribution": 0.209372,
+      "term": "segmentation",
+      "tfidf": 0.081344
+     },
+     {
+      "coefficient": 5.189536,
+      "contribution": 0.185057,
+      "term": "automated",
+      "tfidf": 0.03566
+     }
+    ]
+   },
+   "text_fields_chars": {
+    "abstract": 3270,
+    "phr": 612,
+    "title": 80
+   }
+  }
+ },
+ "classifier_code_identical_to_95e5dea": true,
+ "deployed_reference_run": "eval/results/runs/20261106T2038Z_e2e_e1969ce8/report.log",
+ "fingerprint_meta": {
+  "C": 16.0,
+  "fingerprint_id": "task1-fingerprint-v1",
+  "label_fy": 2021,
+  "train_nitrd": 2727,
+  "train_records": 58441,
+  "universe_rule": "task1-universe-qvr-recon-v1"
+ },
+ "fingerprint_model_sha256": "b703083d8a122015071bdf9c7035f2b5e3375b6dae3fdcc42e847f46b49049ce",
+ "generated_utc": "2026-11-08T15:46:41Z",
+ "nitrd_mcp_commit": "46260a1f96fd8057551464d14f98ef797a6624f1",
+ "parent_model_sha256": "92d97bd138f3ec48da3a9bf3d1a03bac19d5624fc9d0aac8b12a2cba05f8c10c",
+ "text_source": "ExPORTER snapshot text (title, abstract, phr) as read by the classifier (nitrd_classifier.data.project_text); the fingerprint was built on RePORTER seed text, so its score here is on the classifier's text",
+ "uac_nitrd_commit": "48b8c50bedd47b8a02e489f0adef373ba78d6f61"
+}
