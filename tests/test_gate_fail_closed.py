@@ -13,8 +13,15 @@ agent.tool_filter, every server). It XPASSed and is now a plain passing test;
 tests/test_agent_allowlist_identity.py proves the model's surface did not
 change.
 
-Reserved-year guard: still fails open, xfail strict; the fix is deferred to
-the production recommendations because it requires unfreezing the servers.
+Reserved-year guard: still fails open, xfail strict. The fix is DECLINED,
+not deferred (owner decision 2026-11-08; eval/RESERVED_YEARS.md). The guard's
+shape does not match its rationale. FY2022 reserved status protects one
+reviewer's blinding on a 45-project judging sample. The guard refuses
+fy-input queries, which is over-broad: it blocks demo and parity fixtures
+that the protocol excludes from the sample. It is also under-inclusive: it
+does not block per-project reads of a sampled appl_id, the only real risk.
+The matching control is procedural (the protocol's "do not ... run the MCP
+tools on them until judging is finished").
 
 The servers are not modified: every dummy is registered in a child process
 that imports the frozen server module and adds one tool before serving it.
@@ -227,8 +234,10 @@ def test_reserved_year_guard_positive_control():
 @pytest.mark.xfail(
     strict=True,
     reason="FAILS OPEN: require_build_fy is called per tool (opt-in), not in "
-    "the data layer; shared.sql.run_query has no year check. Fix deferred to "
-    "the production recommendations: it requires unfreezing the servers.",
+    "the data layer; shared.sql.run_query has no year check. Fix DECLINED, "
+    "not deferred: the guard's shape (refusing fy inputs) does not match its "
+    "rationale (one reviewer's blinding on sampled appl_ids), and the matching "
+    "control is procedural. See eval/RESERVED_YEARS.md.",
 )
 def test_reserved_year_guard_covers_unclassified_new_tool():
     r = _child(RESERVED.format(calls=[NEW]))[NEW[0]]

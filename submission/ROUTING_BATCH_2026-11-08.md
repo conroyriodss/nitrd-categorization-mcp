@@ -44,3 +44,50 @@ For the owner to route. **The DOCX and the deck are not edited here** (owner rul
 | 398 (slide 11, pilot → production) | Measure agent tool selection, hostile-metadata injection, leakage and approval bypass in Harness 11-12. | Extend agent testing to more models, payload families, leakage and approval bypass in Harness 11-12; make injection flagging fire every time, as a structured field. |
 
 **Checked and left unchanged:** lines 373 (Failure recovery: Not measured) and 381 (future work) are not about agent evaluation.
+
+## Correction (added 2026-11-08): what the audit tables record
+
+Source: `src/reviewer_portal/data.py:87` (events store the persona only); `pages.py` `log_action` (the signed-in user goes to operator-page app logs only). Factual correction, independent of fix (c).
+
+| Line | Old text | New text |
+| --- | --- | --- |
+| DOCX 294 (Governed write semantics, last sentence) | "Every submit, route, and decision writes an audit event recording the persona acted-as and the signed-in workspace user." | "Every submit, route, and decision writes an audit event recording the persona acted-as. The signed-in workspace user is not stored in the review tables. It is written only to the portal app's logs, and only for actions taken on the operator pages." |
+| DOCX 300 (Implemented in this prototype, clause) | "audit events distinguish the persona acted-as from the signed-in workspace user" | "audit events record the persona acted-as; the signed-in user appears only in operator-page app logs" |
+
+## Correction (added 2026-11-08): human approval is enforced only in the client
+
+The claim being corrected: that human approval is enforced. What is true at evaluation time:
+* The portal enforces ordering and single-decision semantics.
+* Human approval is enforced only by the agent's tool filter, which is client configuration.
+* Any identity that reaches the portal, including a service principal, can drive a request to approved.
+
+Demonstration: lifecycle run `d74756ca` at `95e5dea`. In Delta v298 appl 10506013 is `pending`; in v299 it is `approved` by `demo_po_niaid_01`. The portal service principal wrote both, with no human action.
+
+The wording is written so that fix (c) turns it into a before-and-after: once (c) ships, append the sentence in the last row.
+
+| Line | Old text | New text |
+| --- | --- | --- |
+| DOCX 289 (Separation by side effect) | "...gate the only writing server on user confirmation — a per-server trust decision hosts already support." | "...gate the only writing server on user confirmation. That is client configuration. The portal enforces ordering and single-decision semantics, but at the time of evaluation any identity reaching it, including a service principal, could drive a request to approved. Lifecycle run d74756ca shows this: Delta v298 pending, then v299 approved, written by the portal service principal with no human action." |
+| Deck 19 (title subtitle) | "An MCP Service-\"Write\" prototype: shortlist, classify, and refresh — with the human in the loop." | "An MCP Service-\"Write\" prototype: shortlist, classify, and refresh — with human approval in the agent's tool filter (client-side; see governance)." |
+| Deck 347 | "The reusable pattern is human-reviewed writing paired with evidence judges can inspect without cloud access." | "The reusable pattern is writing that needs human review in the client, with ordering enforced by the server, paired with evidence judges can inspect without cloud access." |
+| After (c) lands (append to DOCX 289) | — | "Since commit <sha>, the portal refuses decisions from service-principal identities (run <id>)." |
+
+Checked and left unchanged: deck lines 4, 60, 62 and 79 describe the workflow, not enforcement.
+
+## Correction (added 2026-11-08): the reserved-year guard is not a security control
+
+This is a different claim from the human-approval correction above. The reserved-year guard is an evaluation-integrity control for an internal human judging exercise: it keeps one reviewer blind to model output and RCDC labels on a 45-project FY2022 sample, and judging has not started. It does not enforce that blinding:
+* it refuses year inputs, not per-project reads by appl_id;
+* it is opt-in per tool;
+* the matching control is procedural.
+
+Source: `eval/RESERVED_YEARS.md`. The data-layer fix is declined.
+
+| Line | Old text | New text |
+| --- | --- | --- |
+| DOCX 292 (in "3. Security considerations", first two sentences) | "Reserved-year guard. Cohort and operator surfaces refuse FY2022–2026 before SQL (require_build_fy()), keeping those builder-facing surfaces from reserved-year labels." | "Reserved-year guard (evaluation integrity, not security). Cohort and operator surfaces refuse FY2022–2026 inputs before SQL (require_build_fy()). The purpose is research integrity for an internal exercise: keeping one reviewer blind to model output and RCDC labels on a 45-project FY2022 judging sample (eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md). The guard does not enforce that blinding. It refuses year inputs, not the per-project reads by appl_id that could expose a sampled project, and it is opt-in per tool. The blinding is kept procedurally: the protocol forbids running the MCP tools on sampled projects until judging is finished (eval/RESERVED_YEARS.md). FY2022 is Tier 3 (burned) in the Task 1 pre-registration, so the guard has no bearing on the FY2024 blind result." (The rest of the paragraph is unchanged.) |
+| DOCX 300 (Implemented in this prototype, clause) | "reserved-year guards constrain builder-facing queries;" | Delete the clause from this list. After the paragraph's last sentence, add: "The reserved-year guard is an evaluation-integrity control for an internal judging exercise, not a security control (see Reserved-year guard)." |
+| Deck 125 and 174 (notes, first sentence) | "The reserved-year guard covers outputs_find_cohort, operator pages and analysis_run_validation before SQL." | "The reserved-year guard covers outputs_find_cohort and the operator pages before SQL (no analysis_run_validation surface exists). It is an evaluation-integrity control for an internal judging exercise, keeping one reviewer blind on a 45-project FY2022 sample. It is not a security control and does not enforce that blinding; the protocol does, procedurally." |
+
+Checked and left unchanged:
+* DOCX 44 and 201, and deck 116, describe the uac-nitrd Task 1 build read guard (`workflow/build_guard.py`). They already frame it as held-out discipline (evaluation integrity), not as a security control.
