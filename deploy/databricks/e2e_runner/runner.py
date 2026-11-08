@@ -256,8 +256,14 @@ def _candidate_headers(w) -> dict[str, dict[str, str] | str]:
     return out
 
 
-def _probe(http: httpx.Client, url: str, headers: dict[str, str]) -> dict[str, Any]:
-    """Raw answers to GET /health and an MCP initialize POST (no redirects)."""
+def _probe(
+    http: httpx.Client, url: str, headers: dict[str, str], whoami: bool = False
+) -> dict[str, Any]:
+    """Raw answers to GET /health and an MCP initialize POST (no redirects).
+
+    whoami=True (the portal only) also records GET /whoami: the identity
+    headers the Apps proxy forwarded for THIS caller (fix (c), step 1).
+    """
     init = {
         "jsonrpc": "2.0",
         "id": 1,
@@ -290,6 +296,12 @@ def _probe(http: httpx.Client, url: str, headers: dict[str, str]) -> dict[str, A
             }
         except Exception as exc:
             out[name] = {"error": f"{type(exc).__name__}: {exc}"}
+    if whoami:
+        try:
+            r = http.get(f"{url}/whoami", headers=headers)
+            out["GET /whoami"] = {"status": r.status_code, "body": r.text[:1000]}
+        except Exception as exc:
+            out["GET /whoami"] = {"error": f"{type(exc).__name__}: {exc}"}
     return out
 
 
@@ -320,7 +332,9 @@ def _auth_probe() -> tuple[bool, dict[str, Any], str]:
                 "apps": {},
             }
             for package, url in urls.items():
-                entry["apps"][APPS[package]] = _probe(http, url, headers)
+                entry["apps"][APPS[package]] = _probe(
+                    http, url, headers, whoami=package == "reviewer_portal"
+                )
             entry["all_ok"] = all(
                 p.get("POST /mcp initialize", {}).get("status") == 200
                 for p in entry["apps"].values()
