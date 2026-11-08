@@ -12,7 +12,7 @@ For the owner to route. **The DOCX and the deck are not edited here** (owner rul
 * Not exhaustive: a claim worded differently would be missed.
 
 **Sources**
-* `eval/agent/README.md`, sections "Agent functional suite" and "Adversarial suite `adv-injection-v1`" A-C.
+* `eval/agent/README.md`, sections "Agent tool-selection evidence: AES functional suite v1" and "Adversarial suite `adv-injection-v1`" A-C.
 * The claim map in `eval/README.md` section 0.
 
 **Framing rules applied**
