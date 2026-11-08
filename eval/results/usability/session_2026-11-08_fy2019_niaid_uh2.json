@@ -1,0 +1,107 @@
+{
+ "what": "Single unstructured session with the target user (a senior NIH program officer), 2026-11-08. n=1. NOT a usability study: no protocol, no task script, no measures, no second participant. Findings are recorded whether or not they are fixed.",
+ "session": {
+  "date_utc": "2026-11-08",
+  "participant": "one senior NIH program officer (the target user); operating the portal as persona demo_sia (submit) and demo_ic_rep_niaid (decide)",
+  "build": "servers at 95e5dea (portal deployment 01f1da21102b1ac7bf1ce8a133d8fa2a)",
+  "cohort_used": "FY2019 NIAID (AI) UH2, 5 records",
+  "cohort_refused": "FY2021 NEI (EY) P30, 229 records"
+ },
+ "sandbox_snapshot_before_cleanup": {
+  "requests": [
+   {"appl_id": 9724345, "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c", "idempotency_key": "cohort:2019:NIAID:UH2:9724345", "status": "pending", "assigned_reviewer_id": "demo_ic_rep_niaid", "decided_by": null,
+    "parent": {"suggestion": "nitrd", "probability": 0.96416, "band": "high", "threshold": 0.3893682055460409, "model_id": "nitrd-parent-v2-ba10594d9581"},
+    "stored_explain": {"toward": [["computational", "abstract", 0.92243], ["data", "title", 0.826221], ["software", "abstract", 0.679226], ["software", "phr", 0.418879], ["computational methods", "abstract", 0.355011]], "against": [["data and", "phr", -0.142899], ["cytometry", "title", -0.13918], ["through", "phr", -0.131554], ["of", "title", -0.079388], ["the", "phr", -0.06083]]},
+    "stored_top_pcas": [{"pca": "LSDMA", "score": 19.33, "matched_terms": ["data analysis", "data", "analysis", "provenance", "knowledge"]}, {"pca": "EHCS", "score": 11.7314, "matched_terms": ["analytics", "data", "approaches", "methods", "software", "novel"]}],
+    "subcategory_status": "ranked", "prior_year": {"continuing": true, "max_fy": 2018, "years": [{"fy": 2018, "is_nitrd": true, "records": 1}]}},
+   {"appl_id": 9725122, "request_id": "1bf43ca7-3c89-55a3-af28-c6987545acee", "idempotency_key": "cohort:2019:NIAID:UH2:9725122", "status": "pending", "assigned_reviewer_id": "demo_ic_rep_niaid", "decided_by": null,
+    "parent": {"suggestion": "not_nitrd", "probability": 0.000204, "band": "clear_negative", "threshold": 0.3893682055460409, "model_id": "nitrd-parent-v2-ba10594d9581"},
+    "stored_explain": {"toward": [["data", "abstract", 0.170669], ["asthma", "phr", 0.109853], ["cells at", "phr", 0.092378], ["phenotype", "title", 0.08689], ["allergen", "phr", 0.075399]], "against": []},
+    "stored_top_pcas": [], "subcategory_status": "not_requested", "prior_year": {"continuing": false, "max_fy": 2018, "years": []}},
+   {"appl_id": 9730348, "request_id": "60a0c742-c528-5859-8578-63a13c9e026b", "idempotency_key": "cohort:2019:NIAID:UH2:9730348", "status": "pending", "assigned_reviewer_id": "demo_ic_rep_niaid", "decided_by": null,
+    "parent": {"suggestion": "nitrd", "probability": 0.98965, "band": "high", "threshold": 0.3893682055460409, "model_id": "nitrd-parent-v2-ba10594d9581"},
+    "stored_explain": {"toward": [["data", "title", 0.745239], ["computational", "phr", 0.605694], ["visualization", "title", 0.523655], ["tools", "abstract", 0.404911], ["computational", "abstract", 0.404253]], "against": [["data and", "phr", -0.149764], ["samples", "abstract", -0.08629], ["in", "title", -0.069405], ["flow cytometry", "phr", -0.068839], ["exploration and", "title", -0.064579]]},
+    "stored_top_pcas": [{"pca": "LSDMA", "score": 16.8451, "matched_terms": ["data analysis", "data", "analysis", "access"]}, {"pca": "EHCS", "score": 9.9397, "matched_terms": ["data", "methods", "approaches", "while", "novel"]}],
+    "subcategory_status": "ranked", "prior_year": {"continuing": true, "max_fy": 2018, "years": [{"fy": 2018, "is_nitrd": true, "records": 1}]}},
+   {"appl_id": 9797472, "request_id": "6ba15846-6243-50a8-bc03-82097efc7cd8", "idempotency_key": "cohort:2019:NIAID:UH2:9797472", "status": "approved", "assigned_reviewer_id": "demo_ic_rep_niaid", "decided_by": "demo_ic_rep_niaid",
+    "parent": {"suggestion": "nitrd", "probability": 0.931061, "band": "high", "threshold": 0.3893682055460409, "model_id": "nitrd-parent-v2-ba10594d9581"},
+    "stored_explain": {"toward": [["data", "title", 0.934309], ["visualization", "title", 0.387745], ["data", "abstract", 0.378054], ["data", "phr", 0.357364], ["informatics", "phr", 0.346165]], "against": [["study", "title", -0.134806], ["structured", "title", -0.100605], ["through", "phr", -0.07861], ["an interactive", "phr", -0.075825], ["clinical data", "title", -0.072144]]},
+    "stored_top_pcas": [{"pca": "SPSQ", "score": 6.7616, "matched_terms": ["providing", "characteristics", "usability"]}, {"pca": "LSDMA", "score": 5.663, "matched_terms": ["data", "analysis", "access"]}],
+    "subcategory_status": "ranked", "prior_year": {"continuing": false, "max_fy": 2018, "years": []}},
+   {"appl_id": 9810625, "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38", "idempotency_key": "cohort:2019:NIAID:UH2:9810625", "status": "approved", "assigned_reviewer_id": "demo_ic_rep_niaid", "decided_by": "demo_ic_rep_niaid",
+    "parent": {"suggestion": "nitrd", "probability": 0.492246, "band": "positive_near_threshold", "threshold": 0.3893682055460409, "model_id": "nitrd-parent-v2-ba10594d9581"},
+    "stored_explain": {"toward": [["ontology", "title", 0.540935], ["ontology", "abstract", 0.484939], ["visualization", "title", 0.466255], ["data", "phr", 0.339881], ["data", "abstract", 0.304885]], "against": [["vaccine", "title", -0.163886], ["pathways", "title", -0.157673], ["induced", "title", -0.1288], ["better", "phr", -0.096125], ["vaccine", "abstract", -0.09256]]},
+    "stored_top_pcas": [{"pca": "LSDMA", "score": 19.33, "matched_terms": ["data analysis", "analysis", "data", "knowledge", "insights"]}, {"pca": "EHCS", "score": 5.663, "matched_terms": ["data", "approaches", "methods"]}],
+    "subcategory_status": "ranked", "prior_year": {"continuing": false, "max_fy": 2018, "years": []}}
+  ],
+  "review_events": [
+   {"appl_id": 9724345, "event_type": "classified", "actor_id": "demo_sia", "at": "2026-11-08 19:19:50.812000"},
+   {"appl_id": 9724345, "event_type": "created", "actor_id": "demo_sia", "at": "2026-11-08 19:19:50.812000"},
+   {"appl_id": 9725122, "event_type": "classified", "actor_id": "demo_sia", "at": "2026-11-08 19:19:58.987000"},
+   {"appl_id": 9725122, "event_type": "created", "actor_id": "demo_sia", "at": "2026-11-08 19:19:58.987000"},
+   {"appl_id": 9730348, "event_type": "classified", "actor_id": "demo_sia", "at": "2026-11-08 19:20:07.265000"},
+   {"appl_id": 9730348, "event_type": "created", "actor_id": "demo_sia", "at": "2026-11-08 19:20:07.265000"},
+   {"appl_id": 9797472, "event_type": "classified", "actor_id": "demo_sia", "at": "2026-11-08 19:20:15.447000"},
+   {"appl_id": 9797472, "event_type": "created", "actor_id": "demo_sia", "at": "2026-11-08 19:20:15.447000"},
+   {"appl_id": 9810625, "event_type": "classified", "actor_id": "demo_sia", "at": "2026-11-08 19:20:23.841000"},
+   {"appl_id": 9810625, "event_type": "created", "actor_id": "demo_sia", "at": "2026-11-08 19:20:23.841000"},
+   {"appl_id": 9810625, "event_type": "approved", "actor_id": "demo_ic_rep_niaid", "at": "2026-11-08 19:25:07.962000"},
+   {"appl_id": 9797472, "event_type": "approved", "actor_id": "demo_ic_rep_niaid", "at": "2026-11-08 19:25:26.384000"}
+  ]
+ },
+ "checks": {
+  "F1_lsdma_19_33": {
+   "question": "LSDMA scores exactly 19.33 on 9724345 and 9810625 with different matched-term lists: coincidence or cap?",
+   "answer": "Not a cap. The score is a plain sum of discrete per-term weights (engine.py _pca_score; no cap in the engine). The two lists share data analysis 11.1821, data 1.3863, analysis 1.7918, knowledge 2.4849 and differ only in provenance vs insights, each 2.4849 = ln(12) (a term in exactly one of 12 PCA scope texts, base weight 1). Weights take few distinct values (base x ln(12/k), x3 for phrases), so equal sums are structural. Same mechanism: 5.663 for LSDMA on 9797472 and EHCS on 9810625 with different terms.",
+   "recomputed_weights": {
+    "9724345_LSDMA": [["data analysis", 11.1821], ["data", 1.3863], ["analysis", 1.7918], ["provenance", 2.4849], ["knowledge", 2.4849]],
+    "9810625_LSDMA": [["data analysis", 11.1821], ["analysis", 1.7918], ["data", 1.3863], ["knowledge", 2.4849], ["insights", 2.4849]],
+    "9797472_LSDMA": [["data", 1.3863], ["analysis", 1.7918], ["access", 2.4849]],
+    "9810625_EHCS": [["data", 1.3863], ["approaches", 1.7918], ["methods", 2.4849]]
+   },
+   "method": "nitrd_classifier.subcategory.engine.propose_public re-run in process on the exporter title/abstract/phr for 9724345, 9730348, 9797472, 9810625; each recomputed top-2 score equals the stored score.",
+   "also_seen": "function word 'while' is a matched EHCS term on 9730348 (weight 1.7918)."
+  },
+  "F2_function_words": {
+   "stored_against_terms_that_are_function_words_or_fragments": {"9724345": ["data and", "through", "of", "the"], "9730348": ["data and", "in", "exploration and"], "9797472": ["through", "an interactive"]},
+   "note": "Stored rationale is the top 5 terms each way. The parent TF-IDF vocabulary keeps function words and fragment bigrams; their contributions are real model behaviour, so hiding them on screen is a presentation choice that must be disclosed on the card."
+  },
+  "F3_intercept": {
+   "model_id": "nitrd-parent-v2-ba10594d9581",
+   "model_sha256_prefix": "92d97bd138f3ec48",
+   "sklearn": "1.9.1 (matches the model's training version)",
+   "intercept": -3.0829,
+   "calibration": "sigmoid: p = 1/(1+exp(a*logit+b)), a=-0.991041, b=1.863589; calibrated log-odds = 0.991*logit - 1.864, so the baseline on the calibrated scale is about -4.92",
+   "decomposition_9725122": {"intercept": -3.0829, "sum_positive_terms": 2.424, "n_positive_terms": 182, "sum_negative_terms": -6.0352, "n_negative_terms": 449, "logit": -6.694, "p_calibrated": 0.000204, "stored_against": []},
+   "reading_checked": "Partly confirmed. The intercept is large and negative and the card never shows it. But on 9725122 the negative terms (-6.04 over 449 terms) outweigh the intercept (-3.08): the call does not rest on the prior alone.",
+   "root_cause": "For a not_nitrd call the portal does not call classifier_explain (submission.py step 5); cohort.evidence_from_results falls back to the parent call's top_features, which are the positive contributions only (classify_parent.py: top_features=expl.positive[:10]). So every not_nitrd card stores against=[] and shows only terms TOWARD NITRD, then 'Against: none'. Structural, not specific to 9725122.",
+   "other_cards": {"9724345": {"logit": 5.2024, "pos": 12.124, "neg": -3.8388}, "9730348": {"logit": 6.482, "pos": 12.8411, "neg": -3.2763}, "9797472": {"logit": 4.5071, "pos": 11.3636, "neg": -3.7736}, "9810625": {"logit": 1.8491, "pos": 9.2286, "neg": -4.2967}}
+  },
+  "F4_prior_year": {
+   "stored": "prior_year block computed at submission (shared/prior_year.py, bound :min_fy=FIRST_FY and :max_fy=FY-1).",
+   "range": "exporter data spans FY2015-FY2023; the query already covers FY2015 to FY-1, every prior year in the data. Extending the range adds nothing, and would change stored evidence at submission, not display."
+  },
+  "F5_state_loss": {
+   "diagnosis": "Form state lost on POST/redirect re-render; not a stored-state bug.",
+   "mechanism": "Each card is its own <form method=post action=/operator/decide>; only the submitted card's fields are sent; the handler answers 303 to the review page (pages.py decide); the page is re-rendered from the tables; the page script keeps no client-side draft state. Unsubmitted text and choices in other cards exist only in the browser and are discarded by the reload.",
+   "data_check": "Snapshot: exactly two approved events (9810625 at 19:25:07.962Z, 9797472 at 19:25:26.384Z, both demo_ic_rep_niaid, identical rationale text); the other three requests stayed pending with no decision event. No stored state was lost or altered."
+  },
+  "E1_cap_refusal": {
+   "cohort": "FY2021 NEI (EY) P30",
+   "records": 229,
+   "limit": 200,
+   "message": "Cohort exceeds 200 projects; narrow by activity code",
+   "where": "cohort selector preview: Submit rendered disabled with the message (pages.py, total > selector.HARD_CAP); a bypassing POST is refused again server-side by selector.check_size before classification",
+   "before_any_classification": "The preview calls only outputs_find_cohort; the classifier is not called (code). Delta history shows no write to the three review tables between 18:40:15Z (the owner's runner run) and 19:19:55Z (the UH2 submission).",
+   "records_count_source": "count(*) = count(distinct application_id) = 229 in nitrd_hackathon_v1_exporter_projects for fy=2021, administering_ic=EY, activity=P30",
+   "time_of_refusal": "not recorded",
+   "observed_by": "the participant"
+  }
+ },
+ "cleanup": {
+  "by": "conroyri@nih.gov (Genie Code session, at the owner's request)",
+  "deleted": {"review_events": {"version": 324, "at": "2026-11-08T19:42:10.173Z", "rows": 12}, "routing_events": {"version": 281, "at": "2026-11-08T19:42:12.378Z", "rows": 5}, "review_requests": {"version": 327, "at": "2026-11-08T19:42:13.959Z", "rows": 5}},
+  "counts_after": {"review_requests": 0, "review_events": 0, "routing_events": 0},
+  "writes_before_cleanup": "review_requests v320-v326, review_events v317-v323, routing_events v276-v280, all by the portal app SP 06f65816, 19:19:55Z-19:25:28Z"
+ }
+}

@@ -46,7 +46,7 @@ Steps (one run, not a measurement):
      --index-only) and commit; CI fails on unindexed results files.
 
 Added 2026-11-08 (two read-only modes; the modes above are unchanged):
-  6b. observe --request-id UUID --question behavioural|design --where PAGE
+  6b. observe --request-id UUID --question behavioural|design|cap --where PAGE
       --appears yes|no|unclear [--notes TEXT]: after verify and BEFORE
       cleanup, record one observation per operator page: whether the
       agent-draft request appears anywhere a human could act on it.
@@ -161,9 +161,10 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--notes", default="")
     ap.add_argument(
         "--question",
-        choices=["behavioural", "design"],
+        choices=["behavioural", "design", "cap"],
         help="observe: behavioural = the agent's own draft (the normal path); "
-        "design = the fallback request seeded with seed_agent_prefix_request.py",
+        "design = the fallback request seeded with seed_agent_prefix_request.py; "
+        "cap = does the review page refuse or truncate a cohort over 200",
     )
     ap.add_argument("--since", help="history: predict time, ISO UTC")
     ap.add_argument("--draft-id")
@@ -227,7 +228,7 @@ def main(argv: list[str]) -> int:
     if a.mode == "observe":
         if not a.where or not a.appears or not a.question:
             raise SystemExit(
-                "observe needs --question behavioural|design, --where PAGE "
+                "observe needs --question behavioural|design|cap, --where PAGE "
                 "and --appears yes|no|unclear"
             )
         question = {
@@ -236,6 +237,9 @@ def main(argv: list[str]) -> int:
             "design": "Does the cohort-prefix listing exclude a request whose "
             "key carries the 'agent-draft:' prefix? (Seeded via the portal tool; "
             "says nothing about the agent's behaviour, which stays open.)",
+            "cap": "Does /operator/review apply the 200-project cohort ceiling "
+            "(refuse, or omit cards) for a cohort over 200? A third candidate "
+            "explanation, independent of the key prefix.",
         }[a.question]
         req = sql(
             f"SELECT request_id, idempotency_key, status, appl_id, fy "

@@ -291,14 +291,18 @@
   "transcripts/20261103T2015Z_readonly_10506013.json": {
    "bytes": 25423,
    "sha256": "54b09ab7848579e416eb6660e1d7a4cbbb1b66bbe397e924475f90d789dc691a"
+  },
+  "usability/session_2026-11-08_fy2019_niaid_uh2.json": {
+   "bytes": 13411,
+   "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-08T13:53:17Z",
+ "generated_utc": "2026-11-08T19:47:19Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
-  "explain/": "Written by eval/explain/explain_weak_awards.py (2026-11-08). Explainability for demo awards 10388671 and 10445135. Parent-classifier output from the frozen classifier code, run in process (identical to 95e5dea). Its probabilities equal the deployed run e1969ce8 to 6 dp. task1-fingerprint-v1 term contributions are computed from the committed uac-nitrd model (48b8c50, SHA-256 checked). Document and deck evidence only; no portal change.",
   "adv_runs/": "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are control arms only and compute no success rate. In the counted run, report.json is the pinned rule's output and exposure.json is a post-hoc observation (see eval/agent/README.md, adversarial suite).",
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md.",
+  "explain/": "Written by eval/explain/explain_weak_awards.py (2026-11-08). Explainability for demo awards 10388671 and 10445135. Parent-classifier output from the frozen classifier code, run in process (identical to 95e5dea). Its probabilities equal the deployed run e1969ce8 to 6 dp. task1-fingerprint-v1 term contributions are computed from the committed uac-nitrd model (48b8c50, SHA-256 checked). Document and deck evidence only; no portal change.",
   "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted.",
   "runs/20261106T2048Z_auth_69cbcac7/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
  },
