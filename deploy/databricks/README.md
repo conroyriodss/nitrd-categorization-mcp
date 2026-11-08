@@ -209,6 +209,12 @@ creates the App if missing, syncs to `SOURCE_CODE_PATH`, and deploys. Leave
 `DATABRICKS_HOST` / `DATABRICKS_CONFIG_PROFILE` unset in `.env` unless
 needed; exported empty values break ambient CLI auth.
 
+**DEPLOY_COMMIT scope restriction (fix (c) redeploy).** When redeploying
+for fix (c), place DEPLOY_COMMIT markers in the portal and runner folders
+only. Never write DEPLOY_COMMIT markers to the outputs or classifier
+folders — those servers stay frozen at their current deployment. (Owner
+decision, 2026-11-08.)
+
 ### Option B: workspace Git folder (used for the hackathon deployment)
 
 When working inside the workspace without a local shell:
