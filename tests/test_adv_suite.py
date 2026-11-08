@@ -51,6 +51,19 @@ _PINS = (
         "src/nitrd_agent/resources/instructions_v1.md",
         "f4ff62d2f2b14730ac1f82254169b905ba007d098102079e64886f3b88e361d0",
     ),
+    # The run itself (owner condition: pinning the driver fixes the run).
+    (
+        "eval/adversarial/run_adv.py",
+        "9823eca60ae06e8abde9ea6e24e08db6a74964af27871a5c9baaa0d44860ff5c",
+    ),
+    (
+        "src/nitrd_agent/agent.py",
+        "0c57cbe46875391565338de63c500bc1b17d6db892c30a11c4150a6ae32b39a7",
+    ),
+    (
+        "src/nitrd_agent/capture.py",
+        "3169b750f7d968a824d2f86e0514193770058ace7ee785312a5319344203bda4",
+    ),
 )
 PINNED = {ROOT / rel: sha for rel, sha in _PINS}
 # SHA-256 of build_arms.manifest(build_arms.build_all()) as canonical JSON:
@@ -66,6 +79,13 @@ B1, B3, Z = 10213736, 10150838, 10691426
 
 def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_driver_records_exactly_the_pinned_files():
+    import run_adv
+
+    assert set(run_adv.PINNED_PATHS) == {rel for rel, _ in _PINS}
+    assert run_adv.ARMS_MANIFEST_SHA256 == ARMS_MANIFEST_SHA256
 
 
 @pytest.mark.parametrize("path", list(PINNED), ids=lambda p: p.name)

@@ -231,7 +231,7 @@ This section records every agent-app change after the first counted run, in orde
      * A suite start returns 409 while any `/ask` is in flight. The last `/ask` to finish turns tracing off, even if it raised.
      * `capture.install()` replaces the SDK's processors with an in-memory collector. With tracing off, no processor is called, so the suite path is unaffected.
      * Tested in `tests/test_agent_interlock.py` (8 tests, offline, run in CI). Each 409 check was removed in turn, in a scratch copy: removing the `/ask` check fails 1 test (`test_ask_refused_409_while_suite_running`); removing the suite-start check fails 2.
-   * **Not in this redeploy: saving `/ask` records to a table** (from the proposal below). The app SP's direct grant on schema `users.conroyri` is `USE_SCHEMA` only (UC permissions API, 2026-11-07; inherited or group grants not checked). A new table needs CREATE TABLE, or a pre-created table plus MODIFY: a permission change, left to the owner. Until then `/ask` shows its captured calls on the page only, including after `MaxTurnsExceeded`.
+   * **Not in this redeploy: saving `/ask` records to a table.** The owner decided against it (2026-11-07); see L5.
 
 ### Proposed change for redeploy 2 (as proposed; built as in "Deployment sequence", step 3)
 
@@ -292,6 +292,17 @@ This section records every agent-app change after the first counted run, in orde
   * **Production recommendation:** extend `require_build_fy()` to the per-project read tools (`outputs_find_projects`, `outputs_get_project_detail`, and any tool that returns a fiscal-year record), so the guard is server-wide, not per-surface. The guard should not depend on how old the data is: it must refuse reserved years whatever the snapshot holds and whatever the schema bound allows.
   * **Stale docstring (recorded, not fixed).** The `src/shared/guardrail.py` module docstring lists `analysis_run_validation (validation path)` as a guarded surface. No such function exists in nitrd-mcp, uac-nitrd or uac-witness, history included. The real callers are `outputs_find_cohort`, the portal's cohort selector and `shared/prior_year.py`. The file is frozen server source, and a docstring is not worth a four-app redeploy, so it stays as is; `docs/DECISIONS_LOG.md` is corrected. **Production recommendation:** correct the docstring to name the real callers (and the per-project tools, once guarded) at the next server change.
 
+* **L5. `/ask` records are not persisted (owner decision, 2026-11-07).**
+  * `/ask` shows its captured tool calls on the page, including after `MaxTurnsExceeded`, and keeps nothing once the page is gone.
+  * **Not done:** no new table and no permission change. The app SP's direct grant on schema `users.conroyri` is `USE_SCHEMA` only (UC permissions API, 2026-11-07; inherited or group grants not checked).
+  * **Never written to `agent_eval_runs` as a workaround.** That table holds the measured suite runs only and stays clean.
+  * **Where the approval demo's evidence comes from:** the portal side, the same way the lifecycle runs are evidenced:
+    * the draft;
+    * the pre-registered request_id;
+    * the created and routed events;
+    * the warehouse rows;
+    * cleanup to 0/0/0.
+  * **Production recommendation:** persist one record per interactive request (prompt, captured calls with `calls_source`, answer or error, model, commit, UTC time), with identifiers redacted as in `scripts/export_evidence.py`. Use a dedicated table that the app's SP owns, under its own grant, separate from evaluation results.
 
 ### Provenance of the measured configuration (recorded 2026-11-06, before the run at `95e5dea`)
 
