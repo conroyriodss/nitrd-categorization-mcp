@@ -46,8 +46,8 @@ Steps (one run, not a measurement):
      --index-only) and commit; CI fails on unindexed results files.
 
 Added 2026-11-08 (two read-only modes; the modes above are unchanged):
-  6b. observe --request-id UUID --where PAGE --appears yes|no|unclear
-      [--notes TEXT]: after verify and BEFORE cleanup, record one
+  6b. observe --request-id UUID --question behavioural|design --where PAGE
+      --appears yes|no|unclear [--notes TEXT]: after verify and BEFORE cleanup, record one
       observation per operator page: whether the agent-draft request appears
       anywhere a human could act on it. Run once per page. It is an
       observation, not a pass/fail test. It writes the owner's answer and the
@@ -158,6 +158,12 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--where", help="observe: the page looked at")
     ap.add_argument("--appears", choices=["yes", "no", "unclear"])
     ap.add_argument("--notes", default="")
+    ap.add_argument(
+        "--question",
+        choices=["behavioural", "design"],
+        help="observe: behavioural = the agent's own draft (the normal path); "
+        "design = the fallback request seeded with seed_agent_prefix_request.py",
+    )
     ap.add_argument("--since", help="history: predict time, ISO UTC")
     ap.add_argument("--draft-id")
     ap.add_argument("--request-id")
@@ -218,18 +224,30 @@ def main(argv: list[str]) -> int:
 
     rid = str(UUID(a.request_id))
     if a.mode == "observe":
-        if not a.where or not a.appears:
-            raise SystemExit("observe needs --where PAGE and --appears yes|no|unclear")
+        if not a.where or not a.appears or not a.question:
+            raise SystemExit(
+                "observe needs --question behavioural|design, --where PAGE "
+                "and --appears yes|no|unclear"
+            )
+        question = {
+            "behavioural": "Does the agent's own output (an agent-drafted, "
+            "human-approved request) reach a human on the operator pages?",
+            "design": "Does the cohort-prefix listing exclude a request whose "
+            "key carries the 'agent-draft:' prefix? (Seeded via the portal tool; "
+            "says nothing about the agent's behaviour, which stays open.)",
+        }[a.question]
         req = sql(
             f"SELECT request_id, idempotency_key, status, appl_id, fy "
             f"FROM {TABLES['review_requests']} WHERE request_id = :rid",
             {"rid": rid},
         )
         write(
-            f"{stamp()}_observe_{rid[:8]}.json",
+            f"{stamp()}_observe_{a.question}_{rid[:8]}.json",
             {
                 "what": "Observation, not a pass/fail test: does an agent-draft "
                 "request appear anywhere a human could act on it?",
+                "question_kind": a.question,
+                "question": question,
                 "observed_at_utc": datetime.now(UTC).isoformat(),
                 "request_id": rid,
                 "request_row_present": len(req) == 1,
