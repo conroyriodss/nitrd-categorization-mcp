@@ -6,11 +6,25 @@ result is reproducible.
 
 ## Status of the venv
 
-The original venv at `/tmp/nitrd-venv` is gone (confirmed 2026-11-08).
+The original venv was at `/tmp/nitrd-venv`. It is gone (confirmed
+2026-11-08). `/tmp` is ephemeral on Databricks serverless compute — it is
+wiped when the compute session ends. That is why the original venv was
+lost. The replacement venv lives at a durable workspace path:
+
+    /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv
+
 The setup procedure was chat-only until this file was committed. Without
 this file, the reproducibility claim for the 0/50 result was false in
 practice: the code and pins were committed, but the environment setup was
 not. This file fixes that.
+
+## Verification (2026-11-08)
+
+The venv was rebuilt from the instructions below and `dryrun-controls` was
+run. Result: 12/12 control cases completed, 0 case-level errors. Each case
+produced 53 calls; each had exactly 1 expected error call
+(`portal_list_pending_reviews` on an unknown demo persona — an
+intentional error-path test, not a failure). The run reproduces.
 
 ## What is committed and pinned
 
@@ -57,15 +71,21 @@ The suite runs locally over stdio: it spawns the three MCP servers
 From the repo root:
 
 ```bash
-# 1. Create the venv
-uv venv /tmp/nitrd-venv --python 3.11
+# 1. Create the venv (durable workspace path, not /tmp)
+uv venv /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv --python 3.11
 
-# 2. Install the repo's own deps
-uv pip install --python /tmp/nitrd-venv/bin/python -e ".[classifier,dev]"
+# 2. Install the repo's own deps (classifier extra only; dev is a
+#    dependency-group, not an optional-dependency extra, so it cannot be
+#    passed as .[classifier,dev] to uv pip install)
+uv pip install --python /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python -e ".[classifier]"
 
-# 3. Install the agent app deps (pinned versions from the agent app's
+# 3. Install the dev group deps separately (pytest, ruff)
+uv pip install --python /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python \
+  "pytest>=8.0.0" "pytest-asyncio>=0.23.0" "ruff>=0.6.0"
+
+# 4. Install the agent app deps (pinned versions from the agent app's
 #    requirements.txt, not in the main pyproject.toml)
-uv pip install --python /tmp/nitrd-venv/bin/python \
+uv pip install --python /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python \
   openai-agents==0.24.0 \
   openai==3.46.0 \
   mcp==2.3.0 \
@@ -76,6 +96,13 @@ uv pip install --python /tmp/nitrd-venv/bin/python \
   uvicorn==0.54.0 \
   anyio==4.15.1
 ```
+
+Note: step 4 downgrades `databricks-sdk` and `starlette` from the versions
+the repo's base deps pulled in, because the agent app pins older versions.
+This is intentional. (Amendment 2026-11-08: the original runbook step 2
+used `.[classifier,dev]` which silently ignored `dev` and printed a
+warning — `dev` is a `[dependency-groups]` entry, not an extra. Fixed to
+install dev deps separately in step 3.)
 
 The agent app requirements are at
 `apps/mcp-nitrd-agent/requirements.txt` (the deployed App's pinned versions).
@@ -92,22 +119,22 @@ venv on PYTHONPATH:
 # Dry run (12 runs, control arm only, no attack fixtures on disk)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/tmp/nitrd-venv/bin/python eval/adversarial/run_adv.py dryrun-controls
+/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py dryrun-controls
 
 # Counted run (120 runs, both arms, the full suite)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/tmp/nitrd-venv/bin/python eval/adversarial/run_adv.py counted
+/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py counted
 
 # Recheck controls (Amendment 2 cases only)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/tmp/nitrd-venv/bin/python eval/adversarial/run_adv.py recheck-controls
+/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py recheck-controls
 
 # Escalation (objectives from a counted run's report)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/tmp/nitrd-venv/bin/python eval/adversarial/run_adv.py escalation <counted-run-dir>
+/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py escalation <counted-run-dir>
 ```
 
 There are no overrides of any pin (owner condition): cases, arms,
