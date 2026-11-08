@@ -191,6 +191,43 @@ def _commit() -> str:
     return _git_head(ROOT) or "unknown"
 
 
+def _commits() -> dict[str, Any]:
+    """The runner's own commit and, per server app, what is deployed: the
+    active deployment and its DEPLOY_COMMIT marker if this SP can read it
+    (else the error, so an unreadable commit is visible, never guessed)."""
+    out: dict[str, Any] = {"runner": _commit(), "servers": {}}
+    try:
+        w = _workspace()
+    except Exception as exc:
+        out["servers"] = f"{type(exc).__name__}: {exc}"
+        return out
+    for package, name in APPS.items():
+        entry: dict[str, Any] = {"app": name}
+        try:
+            dep = w.apps.get(name).active_deployment
+            entry["deployment_id"] = dep.deployment_id if dep else None
+            entry["source_code_path"] = dep.source_code_path if dep else None
+            entry["create_time"] = dep.create_time if dep else None
+        except Exception as exc:
+            entry["deployment_error"] = f"{type(exc).__name__}: {str(exc)[:200]}"
+            dep = None
+        entry["commit"], errors = None, []
+        # Same marker names as _commit(): the workspace may store it as .py.
+        for marker in ("DEPLOY_COMMIT", "DEPLOY_COMMIT.py"):
+            if not (dep and dep.source_code_path):
+                break
+            try:
+                with w.workspace.download(f"{dep.source_code_path}/{marker}") as f:
+                    entry["commit"] = f.read().decode().strip()
+                break
+            except Exception as exc:
+                errors.append(f"{marker}: {type(exc).__name__}: {str(exc)[:160]}")
+        if entry["commit"] is None:
+            entry["commit_error"] = errors or "no active deployment"
+        out["servers"][package] = entry
+    return out
+
+
 def _rows_left() -> dict[str, int]:
     db = _db()
     return {
@@ -615,6 +652,10 @@ def _job(kind: str, run_id: str) -> None:
             report = f"{report}\n\n--- auth diagnostics ---\n{diag_report}"
         except Exception as exc:
             report = f"{report}\n\n--- auth diagnostics failed: {exc!r} ---"
+    try:
+        summary = {**(summary or {}), "commits": _commits()}
+    except Exception as exc:  # never lose the run over its provenance
+        summary = {**(summary or {}), "commits": f"{type(exc).__name__}: {exc}"}
     result = {
         **STATE,
         "passed": passed,
