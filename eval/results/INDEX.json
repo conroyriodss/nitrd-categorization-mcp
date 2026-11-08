@@ -4,6 +4,58 @@
    "bytes": 2730,
    "sha256": "1d64af5abb21b0ee769a288008a1c4888467796885e33b8f93b6b51e062d399c"
   },
+  "adv_runs/20261108T0057Z_adv-injection-v1_dryrun-controls_1a8f43f3/manifest.json": {
+   "bytes": 2568,
+   "sha256": "d19baa3bdf043c42a3af9dc99b0eb9cbef10e747872fcea699f3a8afc56e3125"
+  },
+  "adv_runs/20261108T0057Z_adv-injection-v1_dryrun-controls_1a8f43f3/runs.jsonl": {
+   "bytes": 129328,
+   "sha256": "0b489a8c9ec6abc5173359c54bca7346ee1375659d970d433d8e38131ed26c13"
+  },
+  "adv_runs/20261108T0057Z_adv-injection-v1_dryrun-controls_1a8f43f3/timing.json": {
+   "bytes": 624,
+   "sha256": "7e7b6911e804294432029f408fdef7d973d262de1b5677716bff33de23183da3"
+  },
+  "adv_runs/20261108T0057Z_adv-injection-v1_dryrun-controls_1a8f43f3/utility.json": {
+   "bytes": 1560,
+   "sha256": "d9c8b0a7962ea1ee4a9cd400e997052bfd0e337a43a8c2d7a59c82c76ce876df"
+  },
+  "adv_runs/20261108T0209Z_adv-injection-v1_recheck-controls_b7beddb6/manifest.json": {
+   "bytes": 2405,
+   "sha256": "63e65e15a5f7e02846f101dc31b5863712383d9420f50913d2023037eddc26c1"
+  },
+  "adv_runs/20261108T0209Z_adv-injection-v1_recheck-controls_b7beddb6/runs.jsonl": {
+   "bytes": 86160,
+   "sha256": "7d870a0633a108ee15b7d3323d48c0449bc63424f4bc69d11cde696a29b34767"
+  },
+  "adv_runs/20261108T0209Z_adv-injection-v1_recheck-controls_b7beddb6/timing.json": {
+   "bytes": 643,
+   "sha256": "c13e52ef4755451e0ad8373991396e7b8185d64087aef2bce14c1efbc895bb01"
+  },
+  "adv_runs/20261108T0209Z_adv-injection-v1_recheck-controls_b7beddb6/utility.json": {
+   "bytes": 947,
+   "sha256": "613d5cf71cecbbe33e39bf396431ab97d3c1cfda94eb77d2bc066689517b7ee8"
+  },
+  "adv_runs/20261108T0215Z_adv-injection-v1_delivery-check_e06d2a1.json": {
+   "bytes": 10386,
+   "sha256": "7a9255a6184b6381684630b36da62530efb69c57dca40956cdfdfb5c7318beb0"
+  },
+  "adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/exposure.json": {
+   "bytes": 1047,
+   "sha256": "5b1b51e21ac4dbe7eb4d57e5209f25415ceaa850b037263126bda80551be1e74"
+  },
+  "adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/manifest.json": {
+   "bytes": 2874,
+   "sha256": "b15685e9c8364dbcff79881967ef39b18ca05089d34afad6071465dc7853332d"
+  },
+  "adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/report.json": {
+   "bytes": 113241,
+   "sha256": "362cab5babed291f2c3ff462e1e34c326cfb47c3905e62e47f37505ced262e66"
+  },
+  "adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/runs.jsonl": {
+   "bytes": 1410297,
+   "sha256": "b9371ba7d195461c41ba969839ede2d6e34e544206e015e95acb3d36e9897071"
+  },
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/report.json": {
    "bytes": 107866,
    "sha256": "8973d2f328db95f2eab7d3ab94f5754f7658d570ce13cad8a82c564bffa94d0c"
@@ -233,9 +285,10 @@
    "sha256": "54b09ab7848579e416eb6660e1d7a4cbbb1b66bbe397e924475f90d789dc691a"
   }
  },
- "generated_utc": "2026-11-07T20:23:06Z",
+ "generated_utc": "2026-11-08T03:36:40Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
+  "adv_runs/": "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are control arms only and compute no success rate. In the counted run, report.json is the pinned rule's output and exposure.json is a post-hoc observation (see eval/agent/README.md, adversarial suite).",
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md.",
   "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted.",
   "runs/20261106T2048Z_auth_69cbcac7/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."

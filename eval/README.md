@@ -42,13 +42,14 @@ The bullets below describe the Task 1 flag.
 ## 0. Claim-to-artifact map (verifiable from this repository)
 
 Judges see the repositories, not the Databricks workspace. Every measured claim in the table below points at a
-committed file. The one exception is CI status, which points at public GitHub Actions logs. Every runner run cited in
-the three repositories is exported under `results/runs/` and hashed in `results/INDEX.json` (audited
-2026-11-06). The void agent run `c1ab24d7` is exported too, marked VOID, under
-[`results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/`](results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/)
-(reason in its `run.json` and in `INDEX.json` `notes`; see [`agent/README.md`](agent/README.md)); it is not a result. Run records were exported verbatim from the workspace by
-[`scripts/export_evidence.py`](../scripts/export_evidence.py) (credential scan before writing; a hit
-aborts the export) and are hashed in [`results/INDEX.json`](results/INDEX.json). Three workspace
+committed file. The one exception is CI status, which points at public GitHub Actions logs.
+
+Every file under `results/` is hashed (SHA-256 and size) in [`results/INDEX.json`](results/INDEX.json). [`tests/test_evidence_index.py`](../tests/test_evidence_index.py) fails CI if a file is unindexed, changed, or listed but missing. Runs are kept in three places:
+* **Runner runs:** every runner run cited in the three repositories is under `results/runs/` (audited 2026-11-06).
+* **Agent evaluation runs:** under `results/agent_runs/`. This includes the void run `c1ab24d7`, marked VOID, under [`results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/`](results/agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/). The reason is in its `run.json` and in `INDEX.json` `notes` (see [`agent/README.md`](agent/README.md)); it is not a result.
+* **Adversarial suite:** under `results/adv_runs/`. This holds the dry run, the control recheck, the counted run, and the delivery-check record.
+
+Runner and agent-evaluation records were exported verbatim from the workspace by [`scripts/export_evidence.py`](../scripts/export_evidence.py). It scans for credentials before writing, and a hit aborts the export. The adversarial records were not exported from the workspace: the run driver and the delivery check wrote them straight into the repository. They were then indexed with `export_evidence.py --index-only`, which runs the same credential scan over every file first. Three workspace
 identifiers that are not credentials (workspace host name, Apps service-principal IDs, warehouse ID)
 are replaced by placeholders such as `<workspace-host>`. Each replacement is counted per file under
 `redactions` in INDEX.json; no other byte is changed.
@@ -82,6 +83,9 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 | A read step sequence returns grounded evidence for one demo award | [`results/transcripts/`](results/transcripts/) (e2e steps 1-8 on appl 10506013, live tables) | arguments and structured results per step; lists truncated, person names omitted. Steps 9-10 write rows, so their record is the deployed e2e run above |
 | Which model and which data | [`results/provenance/model.json`](results/provenance/model.json), [`data.json`](results/provenance/data.json) | model ID, training years, config, file hashes; each read table's source, rows, Delta version |
 | No credentials in history or in the model binary | [`results/provenance/history_sweep.json`](results/provenance/history_sweep.json), [`model_scan.json`](results/provenance/model_scan.json) | patterns searched, counts per repository, disclosed non-credential findings |
+| Agent functional suite `aes-functional-v1`: 50/50 on each of two models, Wilson 95% [0.929, 1.000] each. Both reach the ceiling, so the suite does not discriminate between them | [`results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/`](results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/) (`databricks-gpt-6-1-sol` at `95e5dea`); [`results/agent_runs/20261107T1811Z_aes-functional-v1_3acc8a96/`](results/agent_runs/20261107T1811Z_aes-functional-v1_3acc8a96/) (`databricks-gpt-6-sol` at `756334c`) | per-run `passed`, calls and score in `report.json`; model and commit in `run.json` |
+| Prompt injection, `adv-injection-v1`, counted run (120 runs): 0 of the 50 headline attack runs in which the payload reached the model succeeded, Wilson 95% [0, 0.071]. The pinned rule's own output: 0/55, [0, 0.065]. Whether the agent told the user about the payload is being recounted: the scorer's recorded flag undercounts (see [`agent/README.md`](agent/README.md)) | [`results/adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/`](results/adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/) (`report.json` pinned output; `exposure.json` post-hoc) | per-run calls, drafts and fixture events in `runs.jsonl`; `manifest.json` carries the pins and its `runs_jsonl_sha256` matches INDEX.json; findings in [`agent/README.md`](agent/README.md) |
+| Adversarial pre-run checks: dry run (12 controls), control recheck after Amendment 2 (6), payload delivery on all 12 cases | `results/adv_runs/20261108T0057Z_..._dryrun-controls_1a8f43f3/`, `20261108T0209Z_..._recheck-controls_b7beddb6/`, `20261108T0215Z_adv-injection-v1_delivery-check_e06d2a1.json` | `timing.json`, `utility.json`; delivery per case. Amendment 2 is in `adversarial/SPEC_adv-injection-v1.md` |
 | Agent-level tool selection | none | **Not measured** (section 2) |
 
 Environment-bound and why: the Unity Catalog tables (public ExPORTER, iCite and PubMed bulk data

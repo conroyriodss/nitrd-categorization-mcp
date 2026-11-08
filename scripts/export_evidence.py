@@ -25,6 +25,12 @@ IDs to replace come from NITRD_EXPORT_REDACT_SP_IDS / NITRD_EXPORT_REDACT_WAREHO
 Usage (Databricks notebook / serverless):
     python scripts/export_evidence.py --runs 053b101d e1969ce8 d2ddab69 d74756ca ee2b5080 69cbcac7 \
         --parity d2ddab69 --agent-runs c1ab24d7 [--step-g DIR ...]
+
+    python scripts/export_evidence.py --index-only
+
+--index-only exports nothing and needs no Spark. It re-indexes every file already under eval/results/
+(for example the adversarial runs in adv_runs/, which the run driver writes directly). It runs the
+credential scan over every file first and aborts on a hit. It keeps earlier redaction counts and notes.
 """
 
 from __future__ import annotations
@@ -55,6 +61,12 @@ VOID_RUNS = {
 }
 # Fixed reader notes, keyed by path relative to eval/results (prefix match on directories).
 NOTES = {
+    "adv_runs/": (
+        "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, "
+        "no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are "
+        "control arms only and compute no success rate. In the counted run, report.json is the pinned rule's "
+        "output and exposure.json is a post-hoc observation (see eval/agent/README.md, adversarial suite)."
+    ),
     "runs/20261106T1747Z_auth_249358ff/": (
         "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. "
         "It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
@@ -282,7 +294,12 @@ def tool_utilization(parity_row: dict) -> tuple[dict, str]:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--runs", nargs="+", required=True, help="8-char run_id prefixes")
+    ap.add_argument("--runs", nargs="+", default=[], help="8-char run_id prefixes")
+    ap.add_argument(
+        "--index-only",
+        action="store_true",
+        help="export nothing; scan and re-index the files already under eval/results/",
+    )
     ap.add_argument(
         "--agent-runs",
         nargs="*",
@@ -294,13 +311,25 @@ def main(argv=None) -> int:
         "--parity", help="run_id prefix used for the tool-utilization readout"
     )
     a = ap.parse_args(argv)
-    from pyspark.sql import SparkSession
+    if a.index_only == bool(a.runs or a.agent_runs or a.step_g or a.parity):
+        ap.error("give either --index-only or --runs (with the other export options)")
+    if a.index_only:
+        files: dict[Path, bytes] = {}
+        on_disk = {
+            str(p.relative_to(ROOT)): s
+            for p in sorted(OUT.rglob("*"))
+            if p.is_file() and p.name != "INDEX.json" and (s := secrets_in(p.read_bytes()))
+        }
+        if on_disk:
+            raise SystemExit(f"credential-like content found, index not written: {on_disk}")
+        rows: dict = {}
+    else:
+        from pyspark.sql import SparkSession
 
-    spark = SparkSession.builder.getOrCreate()
-
-    files, rows = export_runs(spark, a.runs)
-    files.update(export_step_g(a.step_g))
-    files.update(export_agent_runs(spark, a.agent_runs))
+        spark = SparkSession.builder.getOrCreate()
+        files, rows = export_runs(spark, a.runs)
+        files.update(export_step_g(a.step_g))
+        files.update(export_agent_runs(spark, a.agent_runs))
     if a.parity:
         util, md = tool_utilization(rows[a.parity])
         files[OUT / "tool_utilization.json"] = (
