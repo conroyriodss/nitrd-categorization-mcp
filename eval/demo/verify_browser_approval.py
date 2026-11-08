@@ -48,10 +48,11 @@ Steps (one run, not a measurement):
 Added 2026-11-08 (two read-only modes; the modes above are unchanged):
   6b. observe --request-id UUID --question behavioural|design --where PAGE
       --appears yes|no|unclear [--notes TEXT]: after verify and BEFORE
-      cleanup, record one observation per operator page: whether the agent-draft request appears
-      anywhere a human could act on it. Run once per page. It is an
-      observation, not a pass/fail test. It writes the owner's answer and the
-      sandbox counts at that moment, and reads no page itself.
+      cleanup, record one observation per operator page: whether the
+      agent-draft request appears anywhere a human could act on it.
+      Run once per page. It is an observation, not a pass/fail test.
+      It writes the owner's answer and the sandbox counts at that
+      moment, and reads no page itself.
   7b. history --since ISO_UTC [--request-id UUID]: after cleanup, list every
       Delta version of the three tables since the predict time, with
       operation and principal, plus the counts now. This is the
