@@ -4,6 +4,26 @@ Prepared, not run. The owner runs it in a Databricks notebook or web
 terminal, as themself (the table owner). Nothing here touches the apps.
 Set NITRD_WAREHOUSE_ID=50d2bd4ddf65e0f5 first.
 
+What this adds to the harness-approved I3:
+  * a signed-in person clicks Approve in a browser on the deployed agent
+    app (the harness approves in-process, as code);
+  * the write goes through the deployed app's own approve route and SP;
+  * the request_id is pre-registered before the click.
+What it does not add:
+  * it is one human approval, one run: not a measurement, no rate;
+  * the agent's own tool calls on /ask are not persisted (L5, owner
+    decision), so the evidence file is portal-side only: the warehouse
+    rows plus the predict record. The /ask page is captured by
+    screenshot, which is the only record of what the agent did.
+
+If no draft appears (the agent is probabilistic):
+  * Retry the same prompt, unchanged. Count every attempt, including
+    the one that worked, and pass the total as --attempts to verify;
+    describe each failed attempt in --attempt-notes (for example
+    "1: answered without drafting").
+  * Stop after 3 attempts without a draft and report; do not retry
+    until it works. Discard any draft you do not approve.
+
 Steps (one run, not a measurement):
   1. precheck: the sandbox tables must be 0/0/0.
   2. In the browser, on the mcp-nitrd-agent app "/" page, ask exactly:
@@ -20,6 +40,7 @@ Steps (one run, not a measurement):
   5. Click Approve. Capture the Drafts page showing status approved and
      the request_id.
   6. verify --draft-id ID --request-id UUID --approver-email EMAIL
+     --attempts N [--attempt-notes TEXT]
   7. cleanup --request-id UUID --confirm: must end at 0/0/0.
   8. Index the files in eval/results/demo/ (export_evidence.py
      --index-only) and commit; CI fails on unindexed results files.
@@ -41,7 +62,8 @@ Usage:
   python eval/demo/verify_browser_approval.py precheck
   python eval/demo/verify_browser_approval.py predict --draft-id ID
   python eval/demo/verify_browser_approval.py verify --draft-id ID
-      --request-id UUID --approver-email EMAIL
+      --request-id UUID --approver-email EMAIL --attempts N
+      [--attempt-notes TEXT]
   python eval/demo/verify_browser_approval.py cleanup --request-id UUID
       --confirm
 """
@@ -122,6 +144,8 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--request-id")
     ap.add_argument("--approver-email")
     ap.add_argument("--confirm", action="store_true")
+    ap.add_argument("--attempts", type=int, help="/ask attempts until a draft")
+    ap.add_argument("--attempt-notes", default="")
     a = ap.parse_args(argv)
 
     if a.mode == "precheck":
@@ -154,6 +178,8 @@ def main(argv: list[str]) -> int:
         return 0 if not any(c.values()) else 1
 
     # verify
+    if not a.attempts or a.attempts < 1:
+        raise SystemExit("verify needs --attempts N (every /ask attempt, >= 1)")
     req = sql(
         f"SELECT * FROM {TABLES['review_requests']} WHERE request_id = :rid",
         {"rid": rid},
@@ -194,6 +220,9 @@ def main(argv: list[str]) -> int:
             "verified_at_utc": datetime.now(UTC).isoformat(),
             "request_id": rid,
             "draft_id": a.draft_id,
+            "ask_attempts": a.attempts,
+            "attempt_notes": a.attempt_notes,
+            "agent_tool_calls_persisted": False,
             "predicted_request_id": pred,
             "approver_email_sha256": hashlib.sha256(email.encode()).hexdigest()
             if email
