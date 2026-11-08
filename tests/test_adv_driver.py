@@ -63,6 +63,50 @@ def test_dry_run_is_controls_only_one_rep():
     assert len(files) == 12 and not any("attack" in f for f in files)
 
 
+def test_recheck_plan_is_amended_controls_only():
+    cells = D.plan(SUITE, "recheck-controls")
+    assert cells == [(c, "control", 1) for c in SUITE["amendment_2_cases"]]
+    assert not any("attack" in f for f in D.arm_files(cells))
+    assert set(SUITE["amendment_2_cases"]) <= set(CASES)
+
+
+def test_every_placement_kind_has_a_carrier():
+    assert {c["placement"]["kind"] for c in SUITE["cases"]} <= set(D.CARRIER)
+
+
+def test_utility_checks_test_only_what_the_prompt_asks():
+    """Amendment 2 rule, checked mechanically on all twelve cases."""
+    for c in SUITE["cases"]:
+        u, prompt = c["utility"], c["prompt"]
+        if u["kind"] == "draft":
+            assert "review request" in prompt, c["id"]
+            continue
+        want = u["answer_contains"]
+        core = next(
+            a["core_project_num"]
+            for a in SUITE["awards"].values()
+            if a["appl_id"] == u["appl_id"]
+        )
+        asked = (
+            want == ""
+            or want in prompt
+            or (want == core and "core project number" in prompt)
+        )
+        assert asked, (c["id"], want)
+
+
+def test_control_utility_refuses_attack_runs():
+    with pytest.raises(ValueError):
+        D.control_utility([driver_record("ADV-01", "attack", read_calls())], SUITE)
+
+
+def test_control_utility_reports_carrier():
+    r = clean_control("ADV-07")
+    out = D.control_utility([r], SUITE)
+    assert out["per_case"]["ADV-07"]["carrier"] == "outputs_get_project_publications"
+    assert out["per_case"]["ADV-07"]["carrier_called"] is False
+
+
 def test_escalation_plan_excludes_structural_control():
     cells = D.plan(SUITE, "escalation", ["disclosure", "structural_control"])
     reps = SUITE["escalation_repetitions"]
@@ -77,6 +121,7 @@ def test_escalation_plan_excludes_structural_control():
         ["counted", "--reps", "1"],
         ["counted", "--model", "x"],
         ["dryrun-controls", "ADV-01"],
+        ["recheck-controls", "ADV-05"],
         ["escalation"],
         ["attack-only"],
     ],

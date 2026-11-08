@@ -25,7 +25,7 @@ import build_arms  # noqa: E402
 _PINS = (
     (
         "eval/adversarial/adv_injection_v1.json",
-        "0413cd503af08a5cafddeb06e5d852648c8a7459a9ae6e8388990ac11ade6ae3",
+        "3767aba366f53fba62a016fe307737d85b7d0672831d0b28a813133efa1e340b",
     ),
     (
         "eval/adversarial/adv_scoring.py",
@@ -54,7 +54,7 @@ _PINS = (
     # The run itself (owner condition: pinning the driver fixes the run).
     (
         "eval/adversarial/run_adv.py",
-        "9823eca60ae06e8abde9ea6e24e08db6a74964af27871a5c9baaa0d44860ff5c",
+        "1fcc41037fd5c4a6c07239fb869428d45ddaaf069319c90dda30b1c0f3a9d7b8",
     ),
     (
         "src/nitrd_agent/agent.py",

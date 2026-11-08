@@ -4,6 +4,7 @@ Usage, from the repo root (one positional mode, nothing else):
 
     python eval/adversarial/run_adv.py counted
     python eval/adversarial/run_adv.py dryrun-controls
+    python eval/adversarial/run_adv.py recheck-controls
     python eval/adversarial/run_adv.py escalation <counted-run-dir>
 
 What runs is read from the pinned case file `adv_injection_v1.json`: cases,
@@ -18,6 +19,9 @@ only the rules. The modes differ only in which (case, arm, rep) cells run:
   timing and pipeline checks. No attack fixture is written to disk or served
   to a server: all 24 are built in memory only, to check the arm-manifest pin.
   No success rate is computed (SPEC, "Dry run").
+* `recheck-controls`: CONTROL arm only, rep 1, for the cases listed in the
+  case file's `amendment_2_cases` (SPEC Amendment 2). Like the dry run, it
+  writes and serves no attack arm and computes no success rate.
 * `escalation`: the objectives a counted run's report triggered (section 4b),
   except the structural control. Every case in them, both arms,
   `escalation_repetitions` each. The run's own manifest must carry the same
@@ -67,7 +71,14 @@ ROOT = HERE.parents[1]
 CASES = HERE / "adv_injection_v1.json"
 OUT_ROOT = ROOT / "eval" / "results" / "adv_runs"
 ARMS = ("attack", "control")
-MODES = ("counted", "dryrun-controls", "escalation")
+MODES = ("counted", "dryrun-controls", "recheck-controls", "escalation")
+CONTROL_ONLY = ("dryrun-controls", "recheck-controls")
+# The tool whose result carries each placement kind (SPEC Amendment 2).
+CARRIER = {
+    "project_field": "outputs_get_project_detail",
+    "publication_title": "outputs_get_project_publications",
+    "review_history": "portal_get_review_history",
+}
 WRITE_TOOLS = ("portal_submit_review_request", "portal_submit_review_decision")
 SERVERS_PER_SESSION = 3
 # Same value as tests/test_adv_suite.py; a mismatch stops the run.
@@ -108,6 +119,8 @@ def plan(
         return [(c, a, r) for c in cases for r in range(1, reps + 1) for a in ARMS]
     if mode == "dryrun-controls":
         return [(c, "control", 1) for c in cases]
+    if mode == "recheck-controls":
+        return [(c, "control", 1) for c in suite["amendment_2_cases"]]
     if mode == "escalation":
         objs = [o for o in triggered if o != "structural_control"]
         chosen = [c for o in objs for c in suite["objectives"][o]]
@@ -182,6 +195,35 @@ def violations(record: dict[str, Any]) -> list[str]:
     if not record.get("capture_enabled"):
         out.append("capture was not enabled")
     return out
+
+
+def carrier_called(case: dict, record: dict) -> bool:
+    """Did the run call the tool whose result carries this case's placement?"""
+    tool = CARRIER[case["placement"]["kind"]]
+    return any(c.get("name") == tool for c in record.get("calls") or [])
+
+
+def control_utility(records: list[dict], suite: dict) -> dict[str, Any]:
+    """Per-case utility (section 4a) and carrier call, control runs only."""
+    import adv_scoring
+
+    cases = {c["id"]: c for c in suite["cases"]}
+    per = {}
+    for r in records:
+        if r["arm"] != "control":
+            raise ValueError("control_utility is for control runs only")
+        c = cases[r["case"]]
+        per[r["case"]] = {
+            "kind": c["utility"]["kind"],
+            "pass": adv_scoring.utility(c, r, suite),
+            "carrier": CARRIER[c["placement"]["kind"]],
+            "carrier_called": carrier_called(c, r),
+        }
+    return {
+        "per_case": per,
+        "total": {"pass": sum(v["pass"] for v in per.values()), "n": len(per)},
+        "carrier_called": sum(v["carrier_called"] for v in per.values()),
+    }
 
 
 def read_events(path: Path) -> list[dict[str, Any]]:
@@ -359,7 +401,7 @@ def main(argv: list[str]) -> int:
             raise SystemExit("nothing triggered: no escalation (section 4b)")
 
     dirty = git("status", "--porcelain", "--", "eval/adversarial", "src")
-    if mode != "dryrun-controls" and dirty:
+    if mode != "dryrun-controls" and dirty:  # recheck-controls must be clean too
         raise SystemExit(f"pinned paths have uncommitted changes:\n{dirty}")
 
     cells = plan(suite, mode, triggered)
@@ -465,14 +507,17 @@ def main(argv: list[str]) -> int:
         stopped=stop,
         runs_jsonl_sha256=sha256(out / "runs.jsonl"),
     )
-    if mode == "dryrun-controls":
+    if mode in CONTROL_ONLY:
         timing = {
-            "note": "dry run, control arms only, rep 1: timing and pipeline "
-            "checks only; no success rate is computed or reported (SPEC, Dry run)",
+            "note": f"{mode}: control arms only, rep 1: timing, pipeline and "
+            "control utility only; no success rate is computed (SPEC section 9, "
+            "Amendment 2)",
             "timing": _summary_timing(records),
             "pipeline": _pipeline_health(records),
         }
         (out / "timing.json").write_text(json.dumps(timing, indent=2))
+        util = control_utility(records, suite)
+        (out / "utility.json").write_text(json.dumps(util, indent=2))
     elif stop is None:
         rep_ = adv_scoring.report(records, suite)
         (out / "report.json").write_text(json.dumps(rep_, indent=2, default=str))
