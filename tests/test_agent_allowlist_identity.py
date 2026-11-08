@@ -98,6 +98,55 @@ def test_allowlist_offers_exactly_the_measured_surface(capsys):
     assert not set(new_all) & set(config.NEVER_EXPOSED)
 
 
+#: Counted runs whose per-run record carries the tool set the model was offered
+#: under the measured denylist gate. AES ran over HTTP against the deployed
+#: apps; the adversarial run over stdio.
+COUNTED_RUNS = (
+    "eval/results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936",
+    "eval/results/agent_runs/20261107T1811Z_aes-functional-v1_3acc8a96",
+    "eval/results/adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17",
+)
+
+
+def _recorded_surfaces(folder: Path) -> dict[tuple[str, ...], int]:
+    import json
+
+    seen: dict[tuple[str, ...], int] = {}
+    for f in sorted(folder.glob("*.json*")):
+        text = f.read_text()
+        docs = text.splitlines() if f.suffix == ".jsonl" else [text]
+        for doc in docs:
+            try:
+                stack = [json.loads(doc)]
+            except ValueError:
+                continue
+            while stack:
+                x = stack.pop()
+                if isinstance(x, dict):
+                    tools = x.get("exposed_tools")
+                    if isinstance(tools, list) and tools:
+                        key = tuple(sorted(tools))
+                        seen[key] = seen.get(key, 0) + 1
+                    stack.extend(x.values())
+                elif isinstance(x, list):
+                    stack.extend(x)
+    return seen
+
+
+@pytest.mark.parametrize("run", COUNTED_RUNS, ids=lambda r: r.rsplit("_", 1)[-1])
+def test_allowlist_equals_surface_recorded_in_counted_runs(run, capsys):
+    """CI-runnable (no SDK): every per-run record of a counted run lists
+    exactly the allowlist plus the draft tool, over the transport it used."""
+    allow = {n for v in config.EXPOSED_TOOLS.values() for n in v}
+    allow |= {config.DRAFT_TOOL}
+    seen = _recorded_surfaces(ROOT / run)
+    with capsys.disabled():
+        for k, n in seen.items():
+            print(f"\n{run}: {n} records, {len(k)} tools, equal={set(k) == allow}")
+    assert seen, f"no exposed_tools records in {run}"
+    assert set(seen) == {tuple(sorted(allow))}
+
+
 def test_allowlist_matches_every_non_write_tool_in_process():
     """CI-runnable companion (no SDK): the allowlist names every tool of the
     three servers except the write tools, and nothing else."""

@@ -73,9 +73,15 @@ is only in the old set and nothing is only in the new one. A perturbed allowlist
 name dropped, or a write tool added) fails the test.
 
 The model's surface is unchanged, so the AES (`2096c936`, `3acc8a96`) and
-adversarial (`6ab39b17`) results apply to the fixed build. Both suites ran over stdio,
-the transport this test uses. The deployed app applies the same filter over HTTP, and
-that HTTP listing was not separately checked here.
+adversarial (`6ab39b17`) results apply to the fixed build.
+
+Correction to `c91e1bf`, whose commit message said all these runs were over stdio:
+the two AES runs were over HTTP against the deployed apps, and only the adversarial
+run was over stdio. The same test file therefore also checks the counted runs' own
+records. Every per-run `exposed_tools` record lists exactly the allowlist plus the
+draft tool: 13 tools in 50/50 records in each AES run, and in all 120 adversarial
+records. A live HTTP listing through the fixed gate was not run, because this
+notebook's identity cannot authenticate to the Apps.
 
 `agent.py` is re-pinned in `tests/test_adv_suite.py` to `7dbc92fa…`. The counted
 run's `manifest.json` keeps the measured hash. The deployed agent
