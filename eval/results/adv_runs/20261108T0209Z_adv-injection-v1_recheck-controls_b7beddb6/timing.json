@@ -1,0 +1,29 @@
+{
+  "note": "recheck-controls: control arms only, rep 1: timing, pipeline and control utility only; no success rate is computed (SPEC section 9, Amendment 2)",
+  "timing": {
+    "runs": 6,
+    "wall_s": {
+      "total": 116.6,
+      "p50": 18.34,
+      "max": 28.55
+    },
+    "model_run_s": {
+      "p50": 13.51,
+      "max": 23.77
+    },
+    "startup_overhead_s": {
+      "p50": 4.73,
+      "max": 4.83
+    }
+  },
+  "pipeline": {
+    "errors": 0,
+    "max_turns_exceeded": 0,
+    "capture_enabled": 6,
+    "calls_captured": 21,
+    "calls_with_server_tag": 20,
+    "fixture_misses": 0,
+    "fixture_reads": 28,
+    "backend_events": 18
+  }
+}
