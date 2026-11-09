@@ -4,14 +4,23 @@ Generated from `eval/adversarial/run_adv.py` and `pyproject.toml`.
 Commits the full setup and run procedure for `adv-injection-v1` so the 0/50
 result is reproducible.
 
-## Status of the venv
+## The environment is rebuilt each session
 
-The original venv was at `/tmp/nitrd-venv`. It is gone (confirmed
-2026-11-08). `/tmp` is ephemeral on Databricks serverless compute — it is
-wiped when the compute session ends. That is why the original venv was
-lost. The replacement venv lives at a durable workspace path:
+No persistent interpreter is available on this compute. Reproducibility here
+means a verified rebuild procedure (below), not a venv that survives.
+Rebuild the venv from these instructions at the start of every session.
 
-    /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv
+* Historical note: the original venv was at `/tmp/nitrd-venv`. `/tmp` is
+  ephemeral on Databricks serverless compute and is wiped when the session
+  ends, so that venv was lost (confirmed 2026-11-08).
+* A workspace path does not fix this. On 2026-11-08 the venv was rebuilt at
+  `/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv`. By 2026-11-09 its
+  `bin/python` pointed at a uv-managed interpreter under
+  `/home/spark-.../.local/share/uv/python/`, which no longer existed. The
+  venv folder survives, but the interpreter does not.
+* Rebuild time: 11 s for steps 1-4 on 2026-11-09 (uv 0.13.4, Python
+  3.11.17). That was measured once, on this compute. A cold uv cache may be
+  slower.
 
 The setup procedure was chat-only until this file was committed. Without
 this file, the reproducibility claim for the 0/50 result was false in
@@ -21,10 +30,12 @@ not. This file fixes that.
 ## Verification (2026-11-08)
 
 The venv was rebuilt from the instructions below and `dryrun-controls` was
-run. Result: 12/12 control cases completed, 0 case-level errors. Each case
-produced 53 calls; each had exactly 1 expected error call
-(`portal_list_pending_reviews` on an unknown demo persona — an
-intentional error-path test, not a failure). The run reproduces.
+run at 36d6115. Artifact: `eval/results/adv_runs/20261108T2255Z_adv-injection-v1_dryrun-controls_9802585f/`
+(committed c83913f). It shows:
+* 12/12 control cases completed, 0 case-level errors.
+* Utility 12/12.
+* 43 tool calls in total across the 12 cases (2 to 5 per case), none with
+  an error.
 
 ## What is committed and pinned
 
@@ -68,24 +79,26 @@ The suite runs locally over stdio: it spawns the three MCP servers
 3. The agent app dependencies (not in `pyproject.toml`; they live in
    `apps/mcp-nitrd-agent/requirements.txt`).
 
-From the repo root:
+From the repo root. `VENV` can be any path, since it is rebuilt each session:
 
 ```bash
-# 1. Create the venv (durable workspace path, not /tmp)
-uv venv /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv --python 3.11
+VENV=/tmp/nitrd-adv
+
+# 1. Create the venv
+uv venv $VENV --python 3.11
 
 # 2. Install the repo's own deps (classifier extra only; dev is a
 #    dependency-group, not an optional-dependency extra, so it cannot be
 #    passed as .[classifier,dev] to uv pip install)
-uv pip install --python /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python -e ".[classifier]"
+uv pip install --python $VENV/bin/python -e ".[classifier]"
 
 # 3. Install the dev group deps separately (pytest, ruff)
-uv pip install --python /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python \
+uv pip install --python $VENV/bin/python \
   "pytest>=8.0.0" "pytest-asyncio>=0.23.0" "ruff>=0.6.0"
 
 # 4. Install the agent app deps (pinned versions from the agent app's
 #    requirements.txt, not in the main pyproject.toml)
-uv pip install --python /Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python \
+uv pip install --python $VENV/bin/python \
   openai-agents==0.24.0 \
   openai==3.46.0 \
   mcp==2.3.0 \
@@ -112,29 +125,29 @@ pinned test hashes.
 
 ## Run commands
 
-From `run_adv.py` docstring (lines 5-22), run from the repo root with the
-venv on PYTHONPATH:
+From `run_adv.py` docstring (lines 5-22), run from the repo root, in the
+same shell where `VENV` was set:
 
 ```bash
 # Dry run (12 runs, control arm only, no attack fixtures on disk)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py dryrun-controls
+$VENV/bin/python eval/adversarial/run_adv.py dryrun-controls
 
 # Counted run (120 runs, both arms, the full suite)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py counted
+$VENV/bin/python eval/adversarial/run_adv.py counted
 
 # Recheck controls (Amendment 2 cases only)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py recheck-controls
+$VENV/bin/python eval/adversarial/run_adv.py recheck-controls
 
 # Escalation (objectives from a counted run's report)
 NITRD_ADV_WAREHOUSE_ID=50d2bd4ddf65e0f5 \
 PYTHONDONTWRITEBYTECODE=1 \
-/Workspace/Users/conroyri@nih.gov/.venvs/nitrd-adv/bin/python eval/adversarial/run_adv.py escalation <counted-run-dir>
+$VENV/bin/python eval/adversarial/run_adv.py escalation <counted-run-dir>
 ```
 
 There are no overrides of any pin (owner condition): cases, arms,
@@ -158,3 +171,10 @@ The allowlist identity proof (12=12 over stdio; the counted runs'
 `exposed_tools` records all equal allowlist+draft = 13 tools) means the
 result stands for the shipped build. This runbook is about
 reproducibility, not re-running.
+
+## Notes
+
+* Commit c83913f's message gives this runbook's path as `eval/demo/`; it is
+  `eval/adversarial/`. It also repeats the per-case call-count claim (53
+  calls, one expected `portal_list_pending_reviews` error), which its own
+  artifact does not support. The message stands; this is the correction.
