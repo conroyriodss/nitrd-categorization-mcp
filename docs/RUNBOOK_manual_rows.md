@@ -145,7 +145,7 @@ Why this row exists: fix (c) permits only a listed person to decide. So the depl
 Pass condition (all three parts):
 * **12a.** An override with corrections is accepted. The warehouse holds status `override`, `decided_by`, the exact rationale, `corrected_parent_label = true` and `corrected_pcas = [LSDMA, SPSQ]`. Exactly one `override` event carries the same corrections in its details.
 * **12b.** A second decision on the same request is refused as final, and nothing is written.
-* **12c.** A decision as a non-assigned persona is refused by the persona rule, and nothing is written; the card stays pending.
+* **12c, a server-side enforcement test.** A decision submitted under a non-assigned persona is refused by the server's persona rule. Nothing is written, and the card stays pending. This is its own result: the persona rule is ENFORCED BY THE SERVER, not merely hidden by the page. It belongs to the same class of property as the x-forwarded-* spoof test (`eval/results/auth/20261109_header_integrity_whoami.json`): a value the page controls is altered by hand, and the server must still decide correctly.
 
 Cohort: FY2019, NIAID, UH2, the same 5 projects as row 10, all expected to route to `demo_ic_rep_niaid` (confirm on the page). Request ids are as in the row 10 table above.
 
@@ -156,7 +156,7 @@ Cohort: FY2019, NIAID, UH2, the same 5 projects as row 10, all expected to route
 
 The cards are chosen so the parts do not mask each other:
 * 9797472 is not used. Row 10 decided it, and its event ids repeat.
-* 12c runs on a different, still-pending card. Then the only rule that can refuse it is the persona rule (check 6), and "still pending afterwards" is part of the pass. On the 12a card, check 6 would also fire first (it runs before check 7). A refusal there would not show the card unchanged.
+* 12c runs on a different, still-pending card, so that a refusal can come only from the persona rule (check 6), and "still pending afterwards" is part of the pass. (Check 6 runs before check 7, so it would also fire first on the 12a card, but a refusal there could not show the card unchanged.)
 
 Repeated ids: as in row 10, these request ids are the same ones written and deleted on 2026-11-08 and in row 10. An event id is `uuid5(request_id, kind)`, so the override event on 9724345 gets the same id whenever that card is overridden. Tell the runs apart by Delta version and timestamp.
 
@@ -202,9 +202,12 @@ As row 10, step 10.1: `/operator/select`, FY **2019**, IC **NIAID**, activity **
    * an accepted decision: STOP; finality is broken.
 5. Reload tab A. 9724345 must still show **override**, with the 12a rationale and corrections.
 
-### 12.5 Part 12c: the non-assigned persona (card 9725122, browser developer tools)
+### 12.5 Part 12c: server-side enforcement of the persona rule (card 9725122, browser developer tools)
 
-The page never offers this. A card's form is shown only to its assigned persona, and it carries the persona in a hidden field. This part edits that field to reach the server's rule, because the server rule is the one the tool path depends on: the tool path has no page in front of it.
+What this tests: whether the server enforces the persona rule, or whether only the page hides it.
+* The page does not offer this path. A card's decision form is rendered only for its assigned persona. Any other persona sees "Pending: decided by ... Act as ...", with no form. The form carries the persona in a hidden `reviewer_id` field.
+* This part edits that hidden field deliberately, to send the server a request the page would never send.
+* A refusal shows that check 6 is enforced server-side. That matters beyond the page: the MCP tool path has no page in front of it at all. This is the same property class as the x-forwarded-* spoof test.
 
 1. In tab A, on card **9725122** (still pending; the form reads "Decision as demo_ic_rep_niaid"), right-click the form and choose **Inspect**.
 2. Within that card's `<form ... class="decide">`, find `<input type="hidden" name="reviewer_id" value="demo_ic_rep_niaid">`. Change the value to `demo_ic_rep_nimh`, an active persona that is not the assignee.
@@ -214,9 +217,18 @@ The page never offers this. A card's form is shown only to its assigned persona,
 4. Expect **"Request refused"**, with the text `Request 1bf43ca7-3c89-55a3-af28-c6987545acee is assigned to demo_ic_rep_niaid, not demo_ic_rep_nimh.` Copy it verbatim.
 5. Not a pass:
    * the uniform approver refusal: STOP;
-   * an "already ..." (finality) refusal: wrong card;
-   * an accepted decision: STOP; the persona rule is broken.
+   * an "already ..." (finality) refusal: wrong card; stop and report.
 6. Reload the review page as `demo_ic_rep_niaid`. 9725122 must still be pending, with the form shown.
+
+**STOP CONDITION: the decision is ACCEPTED under the non-assigned persona.** Any redirect back to the review page, or the card showing a decision by `demo_ic_rep_nimh` or anyone else, means check 6 is enforced only by the page. That is a B3-scale finding, and the owner decides what happens next. Stop immediately:
+* Do NOT clean up. Do not run 12.7's cleanup or history, and do not delete or change any row.
+* Do NOT continue the row. Do not retry, do not decide any other card, and do not re-submit.
+* Capture the state as it is:
+  * the page: a screenshot and its text, with the UTC time of the click;
+  * the portal Logs tab: every line around the click, pasted verbatim (the log rotates);
+  * the row state: Genie Code reads the three review tables read-only (counts, the 9725122 request row, its events), and that read is recorded as found;
+  * keep the warehouse rows exactly as they are until the owner decides.
+* Then report to the owner.
 
 ### 12.6 Portal log (Apps console, mcp-nitrd-reviewer-portal, Logs tab)
 
@@ -238,7 +250,7 @@ Paste these lines verbatim; the log rotates.
 * **Cleanup:** once per request_id, as in 10.5, ending at 0/0/0, exit 0.
 * **History:** `--since <PRECHECK_UTC>`. Expect the inserts, ONE decision update (12a), the deletes and 0/0/0. No write at the 12b or 12c times is the warehouse proof that both refusals wrote nothing.
 
-Evidence: `eval/results/auth/<DATE>_row12_decision_rules.json`, holding the page texts, the log lines, the warehouse check, cleanup and history. Index it and commit.
+Evidence: `eval/results/auth/<DATE>_row12_decision_rules.json`, holding the page texts, the log lines, the warehouse check, cleanup and history. 12c is recorded there as its own result (`server_side_enforcement_persona_rule`). The record says the page does not offer the path and the hidden field was edited deliberately, and it cross-references the spoof test. Index it and commit.
 
 ## After the rows
 
