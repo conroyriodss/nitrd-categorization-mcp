@@ -124,6 +124,10 @@
    "bytes": 5322,
    "sha256": "1842506d7144977c6491191be56461f5f6d8ef276d7a5e8d315abb24cb72392e"
   },
+  "auth/20261109_check0_timing_corroboration.json": {
+   "bytes": 4260,
+   "sha256": "1eb734f0c55fbf113d0f462cc684893bbe293573e66bfe6a2c84bf3a78427577"
+  },
   "auth/20261109_header_integrity_whoami.json": {
    "bytes": 3280,
    "sha256": "5e53e84d14a30453285b91e05ae40ceae894edcca51d003eac2be5ab63039fbf"
@@ -457,12 +461,12 @@
    "sha256": "358073a0575ca18578fc31370287089efc637c8a7cf19ed05ee0ceddc9d859a2"
   },
   "tool_utilization.json": {
-   "bytes": 3593,
-   "sha256": "2a7fa86d7fef573d316816955147332d10fab82184b223ad21d4ad585633ec6f"
+   "bytes": 4820,
+   "sha256": "b59777f5007ec515d84c2bc4088b95a28c588825005cf6c885bb48cfdbe10c7c"
   },
   "tool_utilization.md": {
-   "bytes": 1709,
-   "sha256": "ad1e071af8807999910e134be53dffb197aafcf5230da878fe74bec886b7023d"
+   "bytes": 2595,
+   "sha256": "5741a102b8b8192f39866333bc37ee021fe608d201b81d682eda10f0877ae2c5"
   },
   "tools_list/nih_grants_outputs.json": {
    "bytes": 43826,
@@ -489,7 +493,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T21:58:02Z",
+ "generated_utc": "2026-11-09T22:10:56Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",

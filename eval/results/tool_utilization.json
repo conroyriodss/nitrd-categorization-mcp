@@ -1,20 +1,40 @@
 {
  "cases": 71,
- "git_commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
  "identical": 71,
- "remote_ms_p50": 558.7,
- "remote_ms_p95": 1523.7,
- "source_run": "d2ddab69-2d04-4b7b-9c62-cc58d916ab82",
- "started_at": "2026-11-06T20:41:28.576129",
+ "remote_ms_p50": 530.0,
+ "remote_ms_p95": 1481.4,
+ "runner_commit": "6056f3767da5d07c8c4c8614be3e9938d31cd642",
+ "server_commits": {
+  "nih_grants_outputs": {
+   "app": "mcp-nih-grants-outputs",
+   "commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
+   "commit_source": "--server-commits (read outside the runner)",
+   "deployment_id": "01f1da210f4a11caa9445fa060354dca"
+  },
+  "nitrd_classifier": {
+   "app": "mcp-nitrd-classifier",
+   "commit": "95e5dea1323ec30d2706c8fdc68f91b6c210bd22",
+   "commit_source": "--server-commits (read outside the runner)",
+   "deployment_id": "01f1da210f791e38ba4e82977ba781ff"
+  },
+  "reviewer_portal": {
+   "app": "mcp-nitrd-reviewer-portal",
+   "commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+   "commit_source": "--server-commits (read outside the runner)",
+   "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db"
+  }
+ },
+ "source_run": "47501246-aca9-4db2-845d-4f4c851c2af3",
+ "started_at": "2026-11-09T21:47:30.590205",
  "tools": {
   "classifier_classify_parent": {
    "cases": 5,
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 597,
-   "remote_ms_max_in_run_summary": 597.1,
-   "remote_ms_median": 542,
+   "remote_ms_max": 1000,
+   "remote_ms_max_in_run_summary": 999.5,
+   "remote_ms_median": 506,
    "server": "classifier"
   },
   "classifier_classify_subcategory": {
@@ -22,9 +42,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 498,
-   "remote_ms_max_in_run_summary": 497.6,
-   "remote_ms_median": 474,
+   "remote_ms_max": 563,
+   "remote_ms_max_in_run_summary": 563.1,
+   "remote_ms_median": 470,
    "server": "classifier"
   },
   "classifier_explain": {
@@ -32,9 +52,9 @@
    "error_results": 1,
    "ok_results": 8,
    "passed": 9,
-   "remote_ms_max": 534,
-   "remote_ms_max_in_run_summary": 534.5,
-   "remote_ms_median": 484,
+   "remote_ms_max": 572,
+   "remote_ms_max_in_run_summary": 572.2,
+   "remote_ms_median": 506,
    "server": "classifier"
   },
   "outputs_find_cohort": {
@@ -42,9 +62,9 @@
    "error_results": 3,
    "ok_results": 4,
    "passed": 7,
-   "remote_ms_max": 698,
-   "remote_ms_max_in_run_summary": 697.8,
-   "remote_ms_median": 434,
+   "remote_ms_max": 1571,
+   "remote_ms_max_in_run_summary": 1571.1,
+   "remote_ms_median": 335,
    "server": "outputs"
   },
   "outputs_find_projects": {
@@ -52,9 +72,9 @@
    "error_results": 1,
    "ok_results": 1,
    "passed": 2,
-   "remote_ms_max": 869,
-   "remote_ms_max_in_run_summary": 868.6,
-   "remote_ms_median": 822.0,
+   "remote_ms_max": 1313,
+   "remote_ms_max_in_run_summary": 1313.4,
+   "remote_ms_median": 1002.5,
    "server": "outputs"
   },
   "outputs_get_project_datacite": {
@@ -62,9 +82,9 @@
    "error_results": 0,
    "ok_results": 5,
    "passed": 5,
-   "remote_ms_max": 809,
-   "remote_ms_max_in_run_summary": 808.6,
-   "remote_ms_median": 752,
+   "remote_ms_max": 696,
+   "remote_ms_max_in_run_summary": 696.2,
+   "remote_ms_median": 649,
    "server": "outputs"
   },
   "outputs_get_project_detail": {
@@ -72,9 +92,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 1134,
-   "remote_ms_max_in_run_summary": 1134.1,
-   "remote_ms_median": 626,
+   "remote_ms_max": 670,
+   "remote_ms_max_in_run_summary": 670.4,
+   "remote_ms_median": 534,
    "server": "outputs"
   },
   "outputs_get_project_publications": {
@@ -82,9 +102,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 1715,
-   "remote_ms_max_in_run_summary": 1715.1,
-   "remote_ms_median": 1436,
+   "remote_ms_max": 1986,
+   "remote_ms_max_in_run_summary": 1985.7,
+   "remote_ms_median": 1449,
    "server": "outputs"
   },
   "outputs_score_project_intensity": {
@@ -92,9 +112,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 1530,
-   "remote_ms_max_in_run_summary": 1530.5,
-   "remote_ms_median": 1352,
+   "remote_ms_max": 1512,
+   "remote_ms_max_in_run_summary": 1511.7,
+   "remote_ms_median": 1435,
    "server": "outputs"
   },
   "portal_get_review_history": {
@@ -102,9 +122,9 @@
    "error_results": 0,
    "ok_results": 5,
    "passed": 5,
-   "remote_ms_max": 1194,
-   "remote_ms_max_in_run_summary": 1194.3,
-   "remote_ms_median": 938,
+   "remote_ms_max": 1155,
+   "remote_ms_max_in_run_summary": 1154.9,
+   "remote_ms_median": 958,
    "server": "portal"
   },
   "portal_get_reviewer_assignment": {
@@ -112,9 +132,9 @@
    "error_results": 1,
    "ok_results": 4,
    "passed": 5,
-   "remote_ms_max": 974,
-   "remote_ms_max_in_run_summary": 974.1,
-   "remote_ms_median": 580,
+   "remote_ms_max": 1083,
+   "remote_ms_max_in_run_summary": 1082.6,
+   "remote_ms_median": 539,
    "server": "portal"
   },
   "portal_list_pending_reviews": {
@@ -122,19 +142,20 @@
    "error_results": 2,
    "ok_results": 8,
    "passed": 10,
-   "remote_ms_max": 559,
-   "remote_ms_max_in_run_summary": 558.7,
-   "remote_ms_median": 439.5,
+   "remote_ms_max": 437,
+   "remote_ms_max_in_run_summary": 436.9,
+   "remote_ms_median": 341.0,
    "server": "portal"
   },
   "portal_submit_review_decision": {
    "cases": 1,
    "error_results": 1,
+   "note": "Latency changed because of fix (c), not run-to-run spread. The parity probe (an all-zero request_id) is now refused at check 0, the approver check, before anything is read: the runner SP is not a listed approver. Before the fix (run d2ddab69 at 95e5dea: 437 ms remote, 362 ms in-process) the same probe passed the input checks and reached the not-found check, which reads the warehouse. See eval/results/auth/20261109_check0_timing_corroboration.json.",
    "ok_results": 0,
    "passed": 1,
-   "remote_ms_max": 437,
-   "remote_ms_max_in_run_summary": 437.3,
-   "remote_ms_median": 437,
+   "remote_ms_max": 42,
+   "remote_ms_max_in_run_summary": 41.7,
+   "remote_ms_median": 42,
    "server": "portal"
   },
   "portal_submit_review_request": {
@@ -142,9 +163,9 @@
    "error_results": 2,
    "ok_results": 0,
    "passed": 2,
-   "remote_ms_max": 27,
-   "remote_ms_max_in_run_summary": 27.0,
-   "remote_ms_median": 26.5,
+   "remote_ms_max": 40,
+   "remote_ms_max_in_run_summary": 39.8,
+   "remote_ms_median": 39.5,
    "server": "portal"
   }
  },

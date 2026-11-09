@@ -1,0 +1,24 @@
+{
+ "what": "CORROBORATION, not a performance claim. The parity probe of portal_submit_review_decision (an all-zero request_id), timed across the five committed parity runs, is independent evidence that fix (c)'s check 0 (the approver check) runs before anything is read. Until now, that ordering was established by two things: code inspection (src/reviewer_portal/decisions.py, submit_decision) and the structural test tests/test_approvers_portal.py::test_check_0_runs_first_and_has_no_default, which asserts that require_approver is the first statement. Timing confirms it by a different route: it looks at the deployed system's behaviour, not its source.",
+ "source": "Per-case lines in each run's report.log (eval/results/runs/*_parity_*/report.log), parsed with scripts/export_evidence.py CASE_RE. Format: outcome remote/in-process, bytes, remote_ms/inprocess_ms.",
+ "probe": "portal_submit_review_decision {decision: approved, rationale: 'parity probe: request does not exist', request_id: 00000000-0000-0000-0000-000000000000, reviewer_id: demo_sia, an active persona} (tests/test_parity.py, NO_SUCH_REQUEST). It passes every input check (persona, decision, rationale, corrections), so without check 0 the first refusal is check 5, 'No review request', which needs data.request_by_id, a warehouse query.",
+ "runs": [
+  {"run": "5704d50c", "date": "2026-11-03", "portal": "eb64604 (pre-fix)", "bytes": 163, "remote_ms": 505, "inprocess_ms": 361, "path": "both sides reach check 5 (warehouse read, not found)"},
+  {"run": "6e0e5d36", "date": "2026-11-06", "portal": "b6d521d (pre-fix)", "bytes": 163, "remote_ms": 398, "inprocess_ms": 306, "path": "both sides reach check 5"},
+  {"run": "d2ddab69", "date": "2026-11-06", "portal": "95e5dea (pre-fix)", "bytes": 163, "remote_ms": 437, "inprocess_ms": 362, "path": "both sides reach check 5"},
+  {"run": "7f3b2f82", "date": "2026-11-09", "portal": "d7bad89 (fix (c))", "bytes": 126, "remote_ms": 28, "inprocess_ms": 421, "path": "deployed: refused at check 0 (runner SP not listed; portal log line 20:43:52Z, not_in_set). In-process: ran as the test approver (conftest fixture defect, since fixed), passed check 0 and reached check 5. The run FAILED parity because the two sides differed."},
+  {"run": "47501246", "date": "2026-11-09", "portal": "d7bad89 (fix (c)); runner 6056f37", "bytes": 126, "remote_ms": 42, "inprocess_ms": 3, "path": "both sides refused at check 0 (deployed: not_in_set, portal log 21:48:07Z; in-process: absent, no HTTP request)"}
+ ],
+ "reading": [
+  "Every pre-fix run, on either side, takes 306-505 ms: the probe reaches the not-found check, which is a warehouse round trip.",
+  "Every check-0 refusal takes 3 ms in-process and 28-42 ms deployed, an order of magnitude less. The deployed figure is the Apps HTTP round trip with no data access behind it.",
+  "7f3b2f82 is a within-run control. At the same time, with the same probe, the side refused at check 0 took 28 ms, and the side that passed check 0 took 421 ms. The only difference between them was whether check 0 refused. This isolates the ordering better than the before/after comparison, which also spans commits and days.",
+  "For reference, other probes in 47501246 that are refused by input validation, with no data access, take 16-42 ms remote and 2-4 ms in-process (find_cohort limit 51/201 and FY2022: 16-17 ms; classifier_explain bogus task: 24 ms; list_pending_reviews 'nobody': 29 ms; submit_review_request invalid: 39-40 ms). Probes that read the warehouse before failing take 505-1083 ms remote (get_project_detail, classify_parent, get_reviewer_assignment with appl_id 1). The check-0 refusal sits in the first band.",
+  "The byte change 163 -> 126 is the not-found message being replaced by the uniform refusal text."
+ ],
+ "does_not_establish": [
+  "Not a latency or performance claim: one probe per run, wall-clock, single runs.",
+  "Timing cannot exclude a fast, cached or in-memory read. It is consistent with no warehouse access, and the absence of a read rests on the code and the structural test; timing is a second, independent line of evidence for the same ordering.",
+  "It covers the tool path (/mcp). For the /operator/decide and agent-approve paths, the order is shown by code and CI only."
+ ]
+}

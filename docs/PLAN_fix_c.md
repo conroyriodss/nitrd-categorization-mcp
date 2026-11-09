@@ -138,6 +138,12 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
 
      A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9, 10 and 11 are committed.
 
+     **Check 0 runs before any read: timing corroboration (2026-11-09).** This is corroboration, not a performance claim. Until now the ordering rested on code inspection and on `tests/test_approvers_portal.py::test_check_0_runs_first_and_has_no_default`, which asserts that `require_approver` is the first statement. The parity probe's timing confirms it by a different route, the deployed system's behaviour:
+     * Pre-fix runs (5704d50c, 6e0e5d36, d2ddab69): 398-505 ms deployed and 306-362 ms in-process. The probe reaches the not-found check, which is a warehouse read.
+     * Check-0 refusals: 28 and 42 ms deployed, 3 ms in-process. That is the same band as input-validation refusals that touch no data (16-42 ms).
+     * The within-run control is 7f3b2f82. In the same run, the deployed side refused at check 0 in 28 ms, while the in-process side, which passed check 0 as the test approver, reached the not-found check in 421 ms.
+     * Timing cannot rule out a fast cached read; the absence of a read still rests on the code. Evidence: `eval/results/auth/20261109_check0_timing_corroboration.json`. A security-section sentence is proposed in `submission/DRAFT_security_section_fix_c.md`.
+
      **Who can exercise the decision path (2026-11-09).** Beyond the matrix: the control permits only a listed person to decide, so on the deployed portal only a person can exercise the rules behind check 0. Every automated deployed call of `portal_submit_review_decision` ends at check 0, by design. Row 12 is the human pass through the override, finality and persona rules. Until it runs, warehouse persistence of a decision rests on row 10's single approve, and for an override on nothing. See "Coverage moved to CI" below.
 
      The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
