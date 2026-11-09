@@ -38,9 +38,11 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
 * **Tool names offered:** `tests/test_agent_allowlist_identity.py` passed (5/5) on 2026-11-09 in the adversarial venv. It does not run in the dev env, which lacks `agents` and SKIPS it.
   * Old gate (a4718e7, hash-checked 0c57cbe4) and new gate both offer the same 12 MCP tools, plus the draft tool in both.
   * The 120 records of 6ab39b17 show the same 13 tools.
-* **Tool definitions offered:** checked separately, 2026-11-09, with an ad hoc script that was not committed.
+* **Correction (2026-11-09):** Genie Code first reported this test as passing. It had been SKIPPED (missing `agents`) in the run it cited, which showed "87 passed, 1 skipped". The 5/5 above is the later run in the adversarial venv.
+* **Tool definitions offered:** checked separately, 2026-11-09. Now committed as indexed evidence: `eval/results/adv_bridge/` (script, output JSON and README with the 12 sha256 pairs). The comparison is 021defd7 vs aed2590; `src/` is identical to deployed d7bad89. It is a point-in-time record, not a CI test.
   * Method: the server trees of 021defd7 (via `git archive`; import paths confirmed to resolve to that tree, which has no fix (c) code) and of HEAD both listed their tools in-process. The 12 offered definitions (description, input and output schema, annotations) were compared by sha256.
   * Result: all 12 are identical. The server changes since 021defd7 are confined to the portal's decision tool (never offered), `/whoami`, and the decision path.
+* **Owner decision (2026-11-09):** conclusion (a) accepted. The evaluation-document sentences are in `submission/ROUTING_BATCH_2026-11-08.md`, amendment "Adversarial bridge".
 * **Conclusion:** the only behavioural difference is the filter mechanism. The resulting tool set, names and definitions, is identical, so the counted result transfers to the shipped build.
   * What that does NOT cover: the served model behind `databricks-gpt-6-1-sol` is the same endpoint name, not a pinned weight. The result describes the model as measured on 2026-11-08, and the transport is stdio, not the deployed apps.
 

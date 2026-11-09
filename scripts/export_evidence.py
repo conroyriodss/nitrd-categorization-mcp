@@ -61,6 +61,12 @@ VOID_RUNS = {
 }
 # Fixed reader notes, keyed by path relative to eval/results (prefix match on directories).
 NOTES = {
+    "adv_bridge/": (
+        "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool "
+        "definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed "
+        "d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; "
+        "no export or redaction needed."
+    ),
     "adv_runs/": (
         "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, "
         "no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are "

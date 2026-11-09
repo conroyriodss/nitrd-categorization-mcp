@@ -237,3 +237,39 @@ Applied to the rows that carry the number:
 **Does the DOCX still cite parity run 5704d50c?**
 * The committed copy (474dcf55) does not: 0 occurrences. It cites 6e0e5d36, which is also superseded (the new row in item 2).
 * If 11-06b names 5704d50c, that is a superseded citation, and it gets a row in the same form. This is unverified until 11-06b is supplied.
+
+## Amendment (2026-11-09): adversarial bridge (owner accepted conclusion (a))
+
+Source: `docs/PLAN_fix_c.md`, "Adversarial counted result vs the shipped agent". Each claim names its own artifact. Placement is the owner's choice: DOCX §4, "Adversarial evaluation", after the result.
+
+| Anchor | Old text | New text |
+| --- | --- | --- |
+| DOCX §4 adversarial evaluation (append after the result) | — | "The counted run (6ab39b17) measured the agent before a later change to how its tool gate is built: a denylist on the portal server became an allowlist on every server. That change touches nothing else in the agent, including its instructions, turn limit, model and client. A committed test (tests/test_agent_allowlist_identity.py) shows the same 12 tool names are offered under both. A recorded comparison (eval/results/adv_bridge/) shows their descriptions and schemas are identical. So the counted result describes the shipped agent's tool surface. It describes the model endpoint databricks-gpt-6-1-sol as it behaved on 2026-11-08: an endpoint name, not a pinned model weight. The run used local stdio servers, not the deployed apps." |
+
+## Amendment (2026-11-09): lessons-learned entry (draft)
+
+Proposed for DOCX §4, Lessons learned. Placement is the owner's choice. Each instance is listed with the record it is cited from.
+
+| Anchor | Old text | New text |
+| --- | --- | --- |
+| DOCX §4 lessons learned (new entry) | — | See the draft below. |
+
+**Draft.** *The check that mattered most was repeatedly the one that silently did not run.* In this project, the most consequential failures were checks that did not do their job, and their failure looked exactly like success. A detector that never fires, a gate that never meets the case it exists for, a count that is copied rather than taken, and a test that is skipped all report the same thing as a clean pass. Five instances:
+
+1. **A detector read 0/60.** The adversarial scorer's flagging regex recorded that the agent reported the payload in 0 of 60 attack runs. A full manual read, under a criterion committed before reading, found 10 of 60. The regex missed paraphrase.
+2. **A gate met only the cases it enumerated.** The approval gate was a denylist naming the two write tools, on one server. A new, unenumerated tool on any server would have been offered to the model and run with no approval. No such tool ever reached it, so nothing ever failed. An audit test found the defect, and the gate became an allowlist.
+3. **A sandbox row count was repeated rather than re-measured.** A count was carried forward and reported as current, without being taken again.
+4. **A smoke assertion was assumed stale.** The 2026-11-03 smoke failure was a stale expected tool count (5 vs 6), fixed in the runner the same day. Six days later it was assumed to be still stale, and a possible live cause, until the fix was checked and found present in the deployed builds.
+5. **A skipped test was reported as passing.** The identity test that bridges the counted adversarial result to the shipped agent was reported as passing. In the run cited it had been skipped, for a missing dependency ("87 passed, 1 skipped"). Run where the dependency is installed, it passes 5/5.
+
+**Rule.** Validate every detector on known positives before trusting its zeros. Treat a skip as a failure until it is explained. Prefer controls whose default is refusal, so that an unanticipated case is stopped rather than allowed: the approval gate is now an allowlist, and the portal's approver check refuses when its list is empty or the header is absent. Even then, a refuse-by-default control passes every negative test while doing nothing. So its own positive evidence, the logged refusal reason, is what shows it works.
+
+**Citations (for the owner; not part of the entry text):**
+
+| # | Record | Status |
+| --- | --- | --- |
+| 1 | `eval/agent/README.md`, adversarial suite: the recount section (line 228) and the scorer limitation (lines 237, 260); `eval/adversarial/RECOUNT_flagging_criterion.md` (committed before the read, 9d06323); recount commit 47c7dd3 | committed |
+| 2 | `eval/agent/README.md`, "Gate fix (2026-11-08): denylist replaced by an allowlist"; `tests/test_gate_fail_closed.py` (a4718e7, the audit); fix c91e1bf, correction 46260a1 | committed |
+| 3 | **No committed record found.** I searched `docs/`, `eval/`, `submission/` and the commit messages for a repeated or not-re-measured row count and found none. The owner is to point to the record; until then the instance stays out of the final text. | **citation needed** |
+| 4 | The fix: `eval/README.md` line 70 (smoke a9204bb7, stale count 5 vs 6, fixed in caaf641, 2026-11-03). The assumption (2026-11-09) and the check that disproved it were recorded only in session notes, not in a committed file. This entry would be the first committed record of it. | fix committed; assumption not |
+| 5 | `docs/PLAN_fix_c.md`, "Adversarial counted result vs the shipped agent", correction line (2026-11-09) | committed in this change |
