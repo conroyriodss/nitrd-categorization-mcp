@@ -20,7 +20,7 @@ For the owner to route. **The DOCX and the deck are not edited here** (owner rul
 * The injection result leads with the exposed denominator.
 * Flagging is stated as inconsistent, and the pre-registered hypothesis as failed, with no replacement.
 
-**Not in this batch:** the browser approval demo. It has not been run. Any line about it waits for its evidence file.
+**Browser approval demo:** run on 2026-11-09. Its finding is a separate observation at the end of this file ("an agent-drafted, approved request did not appear on the operator pages"). Evidence: `eval/results/demo/` (see `RUNS.md` there).
 
 ## Evaluation document (`NITRD_Evaluation_2026-11-06.docx.txt`)
 
@@ -91,3 +91,36 @@ Source: `eval/RESERVED_YEARS.md`. The data-layer fix is declined.
 
 Checked and left unchanged:
 * DOCX 44 and 201, and deck 116, describe the uac-nitrd Task 1 build read guard (`workflow/build_guard.py`). They already frame it as held-out discipline (evaluation integrity), not as a security control.
+
+## Observation (added 2026-11-09): an agent-drafted, approved request did not appear on the operator pages
+
+This is a different claim from the human-approval and reserved-year corrections above. Those are about what the portal enforces. This one is about where an approved agent draft goes.
+
+What was observed, at the time of evaluation:
+* A review request drafted by the agent and approved by a person in the browser did not appear on any operator page checked. The pages were the landing page, the cohort selector, and the cohort's review page three ways: unfiltered, filtered to the assigned persona, and filtered to the assigned persona and pending.
+* Throughout, the request row existed with status `pending`, and the sandbox held exactly that request (1/1/1).
+* The absence was predicted before the pages were observed, in the committed runbook (`eval/demo/RUNBOOK_browser_approval.md`, 57aa57c).
+
+Source: `eval/results/demo/`, run 2, request `c224dd3f-074b-5637-b224-73739200b8ef`, whose request_id was pre-registered before the click. The five observations are `20261109T0046{33,39,44,50,55}Z_observe_behavioural_c224dd3f.json`. Run 1 (`a834fd06`, not pre-registered) gave the same result on all five pages. `RUNS.md` gives the reason for two runs.
+
+Not established by these runs (caveat, separable from the observation):
+* The cause. The cohort (FY2021 NEI P30) has 229 awards, over the 200-award cap, and the request's key carries the `agent-draft:` prefix. These runs do not separate the two.
+* The review page for all personas with only `state=pending` was not observed.
+
+**Recommendation.** Evidence tier: code inspection only, NOT confirmed on the deployed app. Code inspection shows the 200-award cap is not applied to the review page, so the `agent-draft:` key prefix is the likely cause.
+* The review page lists requests whose key starts with the cohort prefix `cohort:{fy}:{IC code}:{activity}:` (`src/reviewer_portal/pages.py:1163-1164`; `data.py:125-129` `COHORT_REQUESTS_SQL`, `data.py:269-276` `cohort_prefix`/`cohort_key`, `data.py:426-431` `cohort_requests`). A key starting `agent-draft:` cannot match.
+* The cap (`selector.HARD_CAP = 200`) is applied only on the selector preview and submit (`pages.py:346`, `selector.py:220`). The review read uses `COHORT_READ_LIMIT = 500`, commented "so a cohort read is never cut" (`data.py:67-68`, used at `data.py:431`).
+* The deployed portal is 95e5dea. The only portal commit since is 62e65ab (`routes.py`, GET /whoami), which does not touch the listing.
+* Recommended change: the decide-by-request_id view, fix (c) step 3 (`docs/PLAN_fix_c.md`). Its acceptance test, an approved agent-draft request appearing on it, is to be recorded as the prefix-vs-cap discrimination (owner decision, 2026-11-09).
+* A separate probe (seed one cohort-keyed request into the same cohort) was cancelled by the owner on 2026-11-09. The code settles the cap, and the view's acceptance test answers the deployed question. The probe key first proposed, `cohort:2021:NEI:P30:10213736`, was also wrong. The key carries the IC code (`EY`), not `NEI`, so that request could never have matched the review page, and its "no" would have been ambiguous.
+
+The wording is written so that a later view can turn it into a before-and-after, as with d74756ca: if it lands, append the sentence in the last row.
+
+Checked: no current DOCX or deck line says an agent-drafted request reaches an operator page (grep for draft, operator, review page, queue, approve). So the rows below add text and replace none. Placement is the owner's choice.
+
+| Line | Old text | New text |
+| --- | --- | --- |
+| DOCX 289 (Separation by side effect, after the human-approval sentence added above) | — | "At the time of evaluation, a review request drafted by the agent and approved by a person in the browser did not appear on any operator page checked: the landing page, the cohort selector, and the cohort's review page unfiltered, filtered to the assigned persona, and filtered to the assigned persona and pending. The request row existed and was pending throughout, with the sandbox holding exactly that request (1/1/1). The absence was predicted in the committed runbook before the pages were observed (eval/results/demo/, request c224dd3f, pre-registered)." |
+| Deck 380 (slide 11 notes, after the agent sentences) | — | "An agent-drafted request that a person approved did not appear on any operator page we checked, although its row existed and was pending. We predicted that before looking." |
+| DOCX 310 (§5 recommendations, append) | — | "Make an approved agent-drafted request reachable on an operator page (a decide-by-request_id view). Code inspection, not confirmed on the deployed app, shows the review page lists only cohort-keyed requests (src/reviewer_portal/data.py:125-129, 269-276) and does not apply the 200-award cap (pages.py:346, selector.py:220; data.py:67-68, 431). The agent-draft: key prefix is therefore the likely cause." |
+| After a view lands (append to DOCX 289) | — | "Since commit <sha>, an approved agent-drafted request appears on <page> (run <id>)." |
