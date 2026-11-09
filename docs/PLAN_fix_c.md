@@ -96,8 +96,9 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | 10 | Deployed, manual | owner decides on `/operator/decide` | accepted; recorded by persona; the owner's sign-in is in the action log |
      | 11 | Deployed, manual | owner approves an agent draft | accepted; one pending request created |
      | 11 MEASURED 2026-11-09 | | | **Pass, counted with a disclosed gap (owner decision).** Draft 68845306 was accepted. One pending request was created: eab10ab8, created + routed, no decision, the approver in no column, written by the portal SP. **predict did not run, so this is NOT pre-registered.** The request_id matches uuid5(REQUEST_NAMESPACE, `agent-draft:<draft_id>`), checked after the fact; the draft_id was reported before the click (owner-attested). Separate finding: the approval UI shows draft args and tool names but not tool results, so the approver cannot check grounding. Evidence: `eval/results/auth/20261109_row11_agent_approve.json`. |
+     | 12 | Deployed, manual (added 2026-11-09; run after the re-run parity and e2e are green) | owner, on `/operator/decide`: (a) override with corrections; (b) a second decision on that request; (c) a decision as a non-assigned persona | (a) accepted, with status, decided_by, rationale, `corrected_parent_label` and `corrected_pcas` on the warehouse, and one override event carrying the corrections; (b) refused as final, nothing written; (c) refused by the persona rule, nothing written, card still pending. Procedure: `docs/RUNBOOK_manual_rows.md`, row 12. |
 
-     Rows 10 and 11 procedure: `docs/RUNBOOK_rows_10_11.md`.
+     Rows 10 and 11 procedure: `docs/RUNBOOK_manual_rows.md`.
 
      **Evidence matrix (owner, 2026-11-09).** For each path and outcome: whether it is measured on the DEPLOYED app or only in CI.
 
@@ -109,7 +110,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
 
      A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9, 10 and 11 are committed.
 
-     **Coverage cost (2026-11-09).** Beyond the matrix: on the tool path, every automated deployed call of `portal_submit_review_decision` now ends at check 0. The decision rules behind check 0 have moved to CI, and their warehouse persistence is no longer exercised automatically anywhere. See "Coverage moved to CI" below.
+     **Who can exercise the decision path (2026-11-09).** Beyond the matrix: the control permits only a listed person to decide, so on the deployed portal only a person can exercise the rules behind check 0. Every automated deployed call of `portal_submit_review_decision` ends at check 0, by design. Row 12 is the human pass through the override, finality and persona rules. Until it runs, warehouse persistence of a decision rests on row 10's single approve, and for an override on nothing. See "Coverage moved to CI" below.
 
      The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
 
@@ -143,7 +144,9 @@ Run ids are read back from `users.conroyri.nitrd_hackathon_v1_e2e_runs`. Every r
 | contract | b5de1708 | passed: 90/90 checks (classifier 41, cohort 18, outputs 16, portal 15) |
 | auth | b6941165 | passed: both header sources reach all three apps |
 
-The stale-claims window stays OPEN until parity passes and the lifecycle refusal lines are read.
+The stale-claims window stays OPEN until parity and e2e re-run green and the owner has read the lifecycle refusal lines.
+
+Runner redeployed for the parity and label fixes (owner-approved, 2026-11-09). Runner only, at 6056f37: Git folder checkout, `DEPLOY_COMMIT.py` = 6056f3767da5d07c8c4c8614be3e9938d31cd642, app.yaml and requirements.txt byte-identical to the committed files. Deployment 01f1dc84085a1aecb157990680a86c6d (21:25:05Z) is SUCCEEDED, RUNNING. `src/` and `deploy/` are unchanged from d7bad89 (empty diff), so the in-process side matches the portal deployed at d7bad89. The portal, agent, outputs and classifier apps are untouched.
 
 * **Parity 7f3b2f82, one case differs.** The case is `portal_submit_review_decision` on the all-zero request_id. Both sides returned an error, as expected, and table counts were the same before and after. The two sides answered as different identities:
   * The deployed portal refused the runner SP with the uniform refusal.
@@ -170,7 +173,9 @@ The stale-claims window stays OPEN until parity passes and the lifecycle refusal
 
 ## Coverage moved to CI (fix (c), recorded 2026-11-09)
 
-Hardening the control cost deployed coverage. This is recorded at two levels.
+This is a consequence of the design, not a loss we could not recover. Fix (c) permits only a listed person to decide. So the deployed decision path can only be exercised by a person, and the automated runner, by design, never gets past check 0. Row 12 is that human exercise for the override with its corrections, the finality rule and the persona rule. What stays CI-only is listed below. Automating it on the deployed app would mean listing the runner's identity as an approver, which is the ability fix (c) removed.
+
+The detail is recorded at two levels.
 
 **(a) The parity decision probe.**
 * Before fix (c), both sides of the `portal_submit_review_decision` probe on the all-zero request_id reached the not-found check. The case compared that rule, deployed vs in-process.
@@ -192,10 +197,19 @@ Hardening the control cost deployed coverage. This is recorded at two levels.
 | history order; the override event carries the corrections | L12 | CI only |
 | decision and corrections persisted on the warehouse | L13 | **not exercised automatically anywhere**: CI uses FakeSql, and deployed is refused at check 0 |
 
-The only post-fix deployed pass through these rules is manual: row 10, one `approved` decision on `/operator/decide`, recorded under the assigned persona. It is checked on the warehouse, then cleaned up (`eval/results/auth/20261109_row10_operator_decide.json`).
+**The human pass (row 12, `docs/RUNBOOK_manual_rows.md`).** Run after the re-run parity and e2e are green. It covers, in order of value:
+* (a) An override with corrections, checked on the warehouse. This is the L13 case: status, decided_by, rationale and both correction fields, plus the override event carrying the corrections.
+* (b) A second decision on the same request, which must be refused (finality, check 7).
+* (c) A decision as a non-assigned persona, which must be refused (check 6).
 
-No deployed run after the fix covers an override, a refused rule behind check 0, or a second decision.
+**L13 status in the interim, until row 12 runs:**
+* Warehouse persistence of a decision is evidenced only by row 10's single manual `approved` decision on `/operator/decide`. It was recorded under the assigned persona, checked on the warehouse and cleaned up (`eval/results/auth/20261109_row10_operator_decide.json`).
+* For an override and its corrections there is no post-fix deployed evidence at all.
+* There is no post-fix deployed evidence of a refused rule behind check 0 or of a second decision.
 
-We do not restore coverage by listing the runner SP. That would give the automated identity the ability fix (c) removed.
+**What stays CI-only after row 12, and why.**
+* The rationale bounds, the three override-corrections refusals, the queue checks (L11) and the history order (L12) are not in row 12. Row 12a checks the override event itself.
+* They remain covered offline by `test_lifecycle_offline`. Row 12 checks one override, one finality refusal and one persona refusal by hand. It is not a repeated automated check.
+* Making any of these automated on the deployed app would require listing the runner SP as an approver. That would give the automated identity the ability fix (c) removed, so we do not.
 
 Deliverables sentence (proposed, not approved): `submission/DRAFT_security_section_fix_c.md`.

@@ -1,9 +1,12 @@
-# Runbook: fix (c) acceptance rows 10 and 11 (deployed, manual)
+# Runbook: fix (c) manual deployed rows 10, 11 and 12
 
-These are the positive controls on the deployed apps. A listed person (the owner, `conroyri@nih.gov`, the only entry in `NITRD_APPROVERS`) is accepted.
+(Renamed from `docs/RUNBOOK_rows_10_11.md` on 2026-11-09, when row 12 was added. The old path holds a pointer, because committed evidence cites it.)
+
+These are the rows only a person can run on the deployed apps. A listed person (the owner, `conroyri@nih.gov`, the only entry in `NITRD_APPROVERS`) is accepted.
 
 * Row 10: a review decision on the portal's `/operator/decide`.
 * Row 11: a draft authorisation on the agent's approve route.
+* Row 12: the decision rules behind check 0, on the deployed portal: an override with corrections, a second decision, and a decision as a non-assigned persona. Run it after the re-run parity and e2e are green.
 
 Row 9 (the deployed tool path refuses the runner SP and logs `not_in_set`) is recorded in `eval/results/auth/20261109_row9_approver_refused_3174122a.json`. Acceptance table: `docs/PLAN_fix_c.md`, step 2.
 
@@ -14,7 +17,7 @@ Both rows write sandbox rows. The same discipline as the browser demo applies (`
 * history after cleanup;
 * every artifact indexed and committed.
 
-Run row 10 and row 11 separately. Each starts and ends at 0/0/0.
+Run each row separately. Each starts and ends at 0/0/0.
 
 ## Setup (terminal, both rows)
 
@@ -135,7 +138,109 @@ Pass condition (acceptance row 11): the authorisation is accepted, and exactly o
 7. **Steps 7 and 7b, cleanup and history:** must end at 0/0/0.
 8. **Step 8:** index and commit, as in that runbook.
 
-## After both rows
+## Row 12: the decision rules behind check 0, as a listed person
+
+Why this row exists: fix (c) permits only a listed person to decide. So the deployed decision path can only be exercised by a person, and the runner never gets past check 0. Before the fix, lifecycle L7-L13 exercised these rules deployed (last in d74756ca). Row 12 exercises three of them by hand on the d7bad89 portal, highest value first. See `docs/PLAN_fix_c.md`, "Coverage moved to CI".
+
+Pass condition (all three parts):
+* **12a.** An override with corrections is accepted. The warehouse holds status `override`, `decided_by`, the exact rationale, `corrected_parent_label = true` and `corrected_pcas = [LSDMA, SPSQ]`. Exactly one `override` event carries the same corrections in its details.
+* **12b.** A second decision on the same request is refused as final, and nothing is written.
+* **12c.** A decision as a non-assigned persona is refused by the persona rule, and nothing is written; the card stays pending.
+
+Cohort: FY2019, NIAID, UH2, the same 5 projects as row 10, all expected to route to `demo_ic_rep_niaid` (confirm on the page). Request ids are as in the row 10 table above.
+
+| part | card | request_id |
+| --- | --- | --- |
+| 12a, 12b | 9724345 | 49f99042-043e-5bac-94d9-2c2107dea80c |
+| 12c | 9725122 | 1bf43ca7-3c89-55a3-af28-c6987545acee |
+
+The cards are chosen so the parts do not mask each other:
+* 9797472 is not used. Row 10 decided it, and its event ids repeat.
+* 12c runs on a different, still-pending card. Then the only rule that can refuse it is the persona rule (check 6), and "still pending afterwards" is part of the pass. On the 12a card, check 6 would also fire first (it runs before check 7). A refusal there would not show the card unchanged.
+
+Repeated ids: as in row 10, these request ids are the same ones written and deleted on 2026-11-08 and in row 10. An event id is `uuid5(request_id, kind)`, so the override event on 9724345 gets the same id whenever that card is overridden. Tell the runs apart by Delta version and timestamp.
+
+The three rationales (copy exactly; each is at least 10 characters):
+* 12a: `fix (c) row 12a override to NITRD (LSDMA, SPSQ)`
+* 12b: `fix (c) row 12b second decision, must be refused`
+* 12c: `fix (c) row 12c non-assigned persona, must be refused`
+
+### 12.0 Precheck
+
+    python eval/demo/verify_browser_approval.py precheck
+
+Expect 0/0/0 and exit 0. Note the UTC time; it is `--since` for 12.7.
+
+### 12.1 Submit the cohort
+
+As row 10, step 10.1: `/operator/select`, FY **2019**, IC **NIAID**, activity **UH2**, 5 projects, then **Submit**. Copy the review page URL.
+
+### 12.2 Open the 12a card in TWO tabs, as the assignee
+
+1. On the review page, under **Acting as**, choose `demo_ic_rep_niaid`. Expect 5 cards assigned.
+2. Open the same review URL, with the same persona, in a second tab. Call the tabs A and B.
+3. In both tabs, find card **9724345**. It shows the form "Decision as demo_ic_rep_niaid". Leave tab B untouched; do not reload it after 12.3.
+4. Note the card's classifier suggestion and its "suggested" PCAs, so the evidence records what the override departs from.
+
+### 12.3 Part 12a: the override (tab A)
+
+1. Choose decision **override**. The "Override: your own call" fieldset becomes active.
+2. Choose corrected label **NITRD**, and tick **LSDMA** and **SPSQ**, only those two.
+3. Rationale: the 12a text.
+4. Click **Record decision**. Record the UTC time.
+5. Expect a redirect to the same view at that card, showing **override** by `demo_ic_rep_niaid`, "Corrected: NITRD; PCAs LSDMA, SPSQ." and the rationale.
+6. Open the card's **Audit trail**. Expect `created`, `classified`, `routed` (as for 9797472 in row 10), then `override` by `demo_ic_rep_niaid` as the last entry.
+7. STOP on the uniform refusal ("Decision refused: your sign-in is not authorised..."), or on any refusal page.
+
+### 12.4 Part 12b: the second decision (tab B, the stale form)
+
+1. In tab B, still showing the pending form for 9724345 (not reloaded), choose **approved**.
+2. Rationale: the 12b text. Click **Record decision**. Record the UTC time.
+3. Expect the page **"Request refused"**, with the text `Request 49f99042-043e-5bac-94d9-2c2107dea80c was already override by demo_ic_rep_niaid at ...` and "Nothing was classified or written." Copy the text verbatim.
+4. Not a pass:
+   * the uniform approver refusal: STOP;
+   * an accepted decision: STOP; finality is broken.
+5. Reload tab A. 9724345 must still show **override**, with the 12a rationale and corrections.
+
+### 12.5 Part 12c: the non-assigned persona (card 9725122, browser developer tools)
+
+The page never offers this. A card's form is shown only to its assigned persona, and it carries the persona in a hidden field. This part edits that field to reach the server's rule, because the server rule is the one the tool path depends on: the tool path has no page in front of it.
+
+1. In tab A, on card **9725122** (still pending; the form reads "Decision as demo_ic_rep_niaid"), right-click the form and choose **Inspect**.
+2. Within that card's `<form ... class="decide">`, find `<input type="hidden" name="reviewer_id" value="demo_ic_rep_niaid">`. Change the value to `demo_ic_rep_nimh`, an active persona that is not the assignee.
+   * Edit only that card's form.
+   * The legend still reads "demo_ic_rep_niaid"; that is display only.
+3. Choose **approved**. Rationale: the 12c text. Click **Record decision**. Record the UTC time.
+4. Expect **"Request refused"**, with the text `Request 1bf43ca7-3c89-55a3-af28-c6987545acee is assigned to demo_ic_rep_niaid, not demo_ic_rep_nimh.` Copy it verbatim.
+5. Not a pass:
+   * the uniform approver refusal: STOP;
+   * an "already ..." (finality) refusal: wrong card;
+   * an accepted decision: STOP; the persona rule is broken.
+6. Reload the review page as `demo_ic_rep_niaid`. 9725122 must still be pending, with the form shown.
+
+### 12.6 Portal log (Apps console, mcp-nitrd-reviewer-portal, Logs tab)
+
+Paste these lines verbatim; the log rotates.
+* **12a:** ONE `"event": "operator_decision"` line, with `"decision": "override"`, `"reviewer_id": "demo_ic_rep_niaid"`, `"appl_id": 9724345`, and `"operator_session": {"user": "conroyri@nih.gov", ...}`.
+* **12b and 12c:** one `"event": "operator_refusal"` line each, with `"path": "/operator/decide"`, `"check": "decision_refused"`, the refusal text as `refusal_reason`, the submitted `input_values`, and the owner's `operator_session`.
+* No `approver_refused` line at any of the three times.
+
+### 12.7 Warehouse check (Genie Code, read-only), then cleanup and history
+
+* **Requests:** 5 rows.
+  * 9724345: `override`, `decided_by = demo_ic_rep_niaid`, `decision_rationale` equal to the 12a text, `corrected_parent_label = true`, `corrected_pcas = [LSDMA, SPSQ]`.
+  * 9725122 and the other three: `pending`, with `decided_by` and the corrections null.
+* **Events:**
+  * 9724345: `created` and `classified`, then exactly ONE decision event, `override`, with `actor_id = demo_ic_rep_niaid` and details carrying `corrected_parent_label: true` and `corrected_pcas: [LSDMA, SPSQ]`. 12b wrote no second event.
+  * 9725122: `created` and `classified` only. 12c wrote nothing.
+  * Review events in total: 11 (5 created, 5 classified, 1 override), as in row 10. Routing: 5 routed events.
+* **The owner's email** appears in no column.
+* **Cleanup:** once per request_id, as in 10.5, ending at 0/0/0, exit 0.
+* **History:** `--since <PRECHECK_UTC>`. Expect the inserts, ONE decision update (12a), the deletes and 0/0/0. No write at the 12b or 12c times is the warehouse proof that both refusals wrote nothing.
+
+Evidence: `eval/results/auth/<DATE>_row12_decision_rules.json`, holding the page texts, the log lines, the warehouse check, cleanup and history. Index it and commit.
+
+## After the rows
 
 * Genie Code records rows 10 and 11 in `docs/PLAN_fix_c.md` (acceptance table) and indexes the evidence.
 * Genie Code fills both halves of the bracketed after-sentence in `submission/DRAFT_security_section_fix_c.md` at once.

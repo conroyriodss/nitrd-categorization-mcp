@@ -219,7 +219,7 @@ Invalid if: `passed: false` (no candidate header reaches all three apps).
 This is diagnostic, not a pass/fail test of the suite — but if it fails,
 every other run will fail too.
 
-**Reading `summary.commits.servers` (every run kind):** since the cca45b8 redeploy (2026-11-09), the runner reports `ResourceDoesNotExist` for every server's DEPLOY_COMMIT marker. The markers DO exist for the portal, agent and runner (`DEPLOY_COMMIT.py`, containing d7bad89b9c70c4bbcc4e43326a272ba065e07e2d, read 2026-11-09 by the owner's identity). Outputs and classifier have no marker: they were deployed at 95e5dea before markers were written. The error is the declined CAN_READ grant for runner SP 0b542439, shown as a not-found message (smoke 7acde97d, auth 4e1c1af4).
+**Reading `summary.commits.servers` (every run kind):** since the cca45b8 redeploy (2026-11-09), the runner reports `ResourceDoesNotExist` for every server's DEPLOY_COMMIT marker. The markers DO exist for the portal and agent (`DEPLOY_COMMIT.py`, containing d7bad89b9c70c4bbcc4e43326a272ba065e07e2d, read 2026-11-09 by the owner's identity). The runner has one too: d7bad89 until 21:25Z on 2026-11-09, 6056f3767da5d07c8c4c8614be3e9938d31cd642 after (tests-only redeploy). `summary.commits.runner` reports it. Outputs and classifier have no marker: they were deployed at 95e5dea before markers were written. The error is the declined CAN_READ grant for runner SP 0b542439, shown as a not-found message (smoke 7acde97d, auth 4e1c1af4).
 
 ## After the battery
 
