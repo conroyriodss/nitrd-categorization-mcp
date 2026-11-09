@@ -92,6 +92,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | 8 | Deployed, runner lifecycle | runner SP submits, then the assigned persona's valid decision | L7c refused; L8c created + routed, still pending; L13c warehouse row pending and undecided; L14 cleanup to 0 |
      | 9 | **Deployed, portal server log, tool path** | the row-8 refusals | **each logs `via: tool`, `reason: not_in_set`, `received: 0b542439-4c28-4b16-9377-81fef5a0b1c2` (the runner SP's UUID). That proves the header reached the tool over /mcp. If it logs `absent`, the control is BROKEN-CLOSED: every deployed negative test still passes while the control does nothing. STOP and report. A passing negative suite is not success.** |
      | 8, 9 MEASURED 2026-11-09 | | | **Both pass.** Lifecycle 3174122a (runner d7bad89, portal deployment 01f1dc4f..., 15:27:26-15:29:00Z): 4 labels, 14/14 each, L7c and L8c on all four, rows_left 0/0/0 (`eval/results/runs/20261109T1527Z_lifecycle_3174122a/`). Portal log, read by the owner from the Apps Logs tab: 4 `approver_refused` lines, one per refused decision, all `via: tool`, `reason: not_in_set`, `received: 0b542439-...` (`eval/results/auth/20261109_row9_approver_refused_3174122a.json`). Established: the header reaches the tool over /mcp, the set deployed, and the control discriminates. Not established: no listed human accepted on the deployed tool path. |
+     | 10 MEASURED 2026-11-09 | | | **Pass, as a non-regression test.** The owner had already decided through this page on 2026-11-08 at 95e5dea, before any check. The listed owner's approval of 9797472 was accepted. It is recorded as `demo_ic_rep_niaid` (decided_by, actor_id). The action log has `operator_session.user` = the owner, and there is no `approver_refused` line. 0 identity matches in 21 rows. Cleaned up to 0/0/0, with history. Deterministic ids repeat the 2026-11-08 session's; this is an observation, see SECURITY.md. Evidence: `eval/results/auth/20261109_row10_operator_decide.json`. |
      | 10 | Deployed, manual | owner decides on `/operator/decide` | accepted; recorded by persona; the owner's sign-in is in the action log |
      | 11 | Deployed, manual | owner approves an agent draft | accepted; one pending request created |
 
@@ -105,7 +106,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | decide page | DEPLOYED (row 10) | CI only (test 5) |
      | agent approve | DEPLOYED (row 11) | CI only (test 6) |
 
-     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Row 9 is committed; rows 10 and 11 are in progress.
+     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9 and 10 are committed; row 11 is in progress.
 
      The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
 

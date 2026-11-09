@@ -1,6 +1,7 @@
 {
   "what": "Fix (c) acceptance row 10 (docs/PLAN_fix_c.md, step 2; procedure docs/RUNBOOK_rows_10_11.md): a listed person (conroyri@nih.gov) makes a review decision on the deployed portal's /operator/decide. Pass: accepted; recorded by persona; the owner's sign-in in the portal action log.",
-  "status": "PARTIAL. Warehouse check (runbook 10.4) recorded below. Still to add: the operator_decision log line (owner paste), cleanup output, history output.",
+  "status": "PASS. Accepted, recorded by persona, and the owner's sign-in is in the action log. No approver_refused line. Sandbox cleaned to 0/0/0, history recorded.",
+  "framing": "A NON-REGRESSION test, not a new capability. The owner decided through this same page on 2026-11-08 at 95e5dea, before any approver check existed. Fix (c) did not enable human decisions; it removed everyone else's. Row 9 shows an unlisted identity can no longer decide on the tool path; row 10 shows the listed person still can on the decide page.",
   "portal": {"deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db", "deployed_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d"},
   "sandbox_writes": {
     "cohort_submit_utc": "2026-11-09T17:53:03.375Z to 17:53:41.331Z (5 transactions by the portal SP, one per project; Delta versions review_requests 346-350, review_events 343-347, routing_events 300-304)",
@@ -30,10 +31,47 @@
     "why": "request_id = uuid5(namespace, idempotency_key), and the cohort keys are deterministic (cohort:2019:NIAID:UH2:<appl_id>). Event ids are derived from the request_id, so they repeat too.",
     "checked": "Against review_requests v326, review_events v323 and routing_events v280 (the last 2026-11-08 versions before cleanup): all 5 request_ids and all 16 event ids repeat (5 created, 5 classified, 5 routed, 1 approved). 9797472's decision event id 1337f128-... is the same as on 2026-11-08, when 9797472 and 9810625 were approved by demo_ic_rep_niaid.",
     "first_life": "2026-11-08: inserted 19:19:55.622Z-19:20:27.754Z; 2 decisions 19:25:10.892Z and 19:25:28.822Z; deleted 19:42:10.173Z (review_events, 12 rows), 19:42:12.378Z (routing_events, 5), 19:42:13.959Z (review_requests, 5), by conroyri@nih.gov. Record: eval/usability/SESSION_2026-11-08.md, eval/results/usability/session_2026-11-08_fy2019_niaid_uh2.json.",
-    "second_life": "2026-11-09: inserted 17:53:03.375Z-17:53:41.331Z; 1 decision 17:55:09.926Z; deleted at row-10 cleanup (to be recorded here).",
+    "second_life": "2026-11-09: inserted 17:53:03.375Z-17:53:41.331Z; 1 decision 17:55:09.926Z; deleted 18:07:01.853Z-18:07:37.639Z by conroyri@nih.gov.",
     "how_to_read_history": "Delta history of the three tables shows these ids inserted and deleted twice. Tell the two lives apart by Delta version and timestamp (or the event at), not by id."
   },
-  "log_line_operator_decision": "PENDING owner paste (Apps console, mcp-nitrd-reviewer-portal, Logs tab, around 17:55:06Z).",
-  "cleanup": "PENDING",
-  "history": "PENDING"
+  "log_line_operator_decision": {
+    "how_obtained": "The owner read it from the Apps console, mcp-nitrd-reviewer-portal, Logs tab, deployment 01f1dc4ff3c61144bb1da6d2aad008db, and pasted it verbatim. Not retrievable by the runner or by Genie Code; app logs rotate.",
+    "time_utc": "2026-11-09T17:55:12.081169Z",
+    "line": "{\"appl_id\": 9797472, \"decision\": \"approved\", \"event\": \"operator_decision\", \"event_id\": \"1337f128-8dff-5b2c-8410-28bbf7249c60\", \"operator_session\": {\"request_id\": \"29cd1529-c60c-4242-9cf6-8743104a4c1b\", \"session_id\": \"91fe96ca20534d89934b03cfa59c5d28\", \"user\": \"conroyri@nih.gov\"}, \"request_id\": \"6ba15846-6243-50a8-bc03-82097efc7cd8\", \"reviewer_id\": \"demo_ic_rep_niaid\", \"timestamp\": \"2026-11-09T17:55:12.081169+00:00\"}",
+    "no_approver_refused_line": "owner-observed: none around the decision"
+  },
+  "page_observations_owner": "Card shows approved by demo_ic_rep_niaid at 2026-11-09T17:55:06+00:00, the rationale above, and an audit trail of 4 events (was 3). Cohort as submitted: 5 classified, 0 failed, all routed to demo_ic_rep_niaid. Only 9797472 was decided.",
+  "warehouse_crosscheck_of_owner_observations": "9797472 has 3 events before the decision (review_events v347 plus its routed event) and 4 after. All 5 requests have classification_status ok. The log line's event_id and request_id equal the warehouse rows.",
+  "establishes": [
+    "On the deployed portal (d7bad89), a listed person's review decision on /operator/decide is accepted and recorded once.",
+    "It is recorded by persona: decided_by and the event's actor_id are demo_ic_rep_niaid. The person is in no row; the signed-in user appears only in the app's action log.",
+    "The decide page reads the proxy-set identity: the action log's operator_session.user is the owner, and no refusal was logged.",
+    "With row 9: the same deployment refuses an unlisted identity (tool path) and accepts the listed one (decide page). Both paths share check 0."
+  ],
+  "does_not_establish": [
+    "That a listed person is accepted on the tool path over /mcp (CI only, test 4).",
+    "That an unlisted person is refused on the decide page (CI only, test 5). It would need a second, non-listed human sign-in, which is deliberately not created.",
+    "Anything about tamper-evidence: a MODIFY principal can still change the audit tables."
+  ],
+  "event_id_observation": {
+    "kind": "OBSERVATION, not a defect",
+    "derivation": "Confirmed in code and by recomputation. request_id = uuid5(REQUEST_NAMESPACE, idempotency_key) (src/reviewer_portal/data.py:61). event_id = uuid5(request_id, kind), with kind 'created', 'routed', 'decision' or 'classification:<attempt>' (data.py:259-266, event_id_for). uuid5(UUID('6ba15846-6243-50a8-bc03-82097efc7cd8'), 'decision') = 1337f128-8dff-5b2c-8410-28bbf7249c60.",
+    "what_was_seen": "The 2026-11-09 decision on 9797472 has the same request_id and decision event_id as the 2026-11-08 decision on the same award. The owner attests the 2026-11-08 action-log line at 2026-11-08T19:25:30.685463Z, with a different session_id. The warehouse row at review_requests v326 has the 2026-11-08 decision_at 19:25:26.384Z and rationale 'yes this ok to go forward'; the 2026-11-09 rationale differs.",
+    "why_not_a_defect": "Deterministic ids are the idempotency design: a retried submit or decision cannot create a second row. The two rows never coexisted: the first was deleted 2026-11-08 19:42:10Z, the second written 2026-11-09 17:55:09Z.",
+    "consequence": "Two distinct human actions, on different days in different sessions, share one audit event id. In the event table they differ only by timestamp (and the free-text rationale), because session and signed-in user live only in the app log. An event id identifies a (request, kind) pair, not an act. Telling the acts apart needs the at timestamp or Delta version, joined to the app log.",
+    "recorded_beside": "SECURITY.md, Audit trail bullet, next to 'a principal with MODIFY can change it'."
+  },
+  "cleanup": {
+    "by": "Genie Code at the owner's request, as conroyri@nih.gov, eval/demo/verify_browser_approval.py cleanup --request-id <id> --confirm, once per request",
+    "delete_window_utc": "2026-11-09T18:07:01.853Z-18:07:37.639Z",
+    "rows_deleted": {"review_requests": 5, "review_events": 11, "routing_events": 5},
+    "exit_codes": "1, 1, 1, 1, 0 (non-zero while rows remained; the last printed 0/0/0)",
+    "sandbox_after_cleanup": {"review_requests": 0, "review_events": 0, "routing_events": 0}
+  },
+  "history": {
+    "file": "eval/results/demo/20261109T180808Z_history.json (verify_browser_approval.py history --since 2026-11-09T17:50:00Z, exit 0)",
+    "versions_since": {"review_requests": "11 = 6 portal-SP TRANSACTION (5 inserts + 1 decision) + 5 DELETE by conroyri@nih.gov", "review_events": "11 = 6 portal-SP TRANSACTION + 5 DELETE", "routing_events": "10 = 5 portal-SP TRANSACTION + 5 DELETE"},
+    "counts_now": {"review_requests": 0, "review_events": 0, "routing_events": 0},
+    "no_other_writer": "Only the portal SP and conroyri@nih.gov appear since 17:50Z."
+  }
 }

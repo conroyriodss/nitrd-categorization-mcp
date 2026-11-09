@@ -1,6 +1,6 @@
 # Draft: evaluation document, security section (fix (c))
 
-Status: DRAFT. Paragraphs 1-3 were approved by the owner on 2026-11-09; the general-form sentences in paragraph 3 are the owner's addition. Not yet in `submission/NITRD_Evaluation_2026-11-06.docx`. The bracketed sentence is filled in only after the post-(c) battery and the manual rows of `docs/PLAN_fix_c.md` step 2 are green. Until then, the stale-claims window in that plan applies: nothing here describes the shipped build.
+Status: DRAFT. Paragraphs 1-3 were approved by the owner on 2026-11-09; the general-form sentences in paragraph 3 are the owner's addition. Not yet in `submission/NITRD_Evaluation_2026-11-06.docx`. The after-the-fix sentence was filled in on 2026-11-09 at the owner's direction, after acceptance rows 9 and 10 passed. It is not yet approved. Row 11 and the post-(c) battery are still open. Until the battery closes it, the stale-claims window in `docs/PLAN_fix_c.md` applies to every other claim about the shipped build.
 
 ## Paragraph
 
@@ -10,15 +10,15 @@ Before relying on the header, we tested its integrity. A request carrying x-forw
 
 The deployed MCP tool path has no human positive control, because no person can call the decision tool over /mcp in our test harness. What stands in for it is the refusal reason the portal logs: a service principal's refused decision must log `not_in_set` with that principal's id, which shows the header reached the tool. A refusal logged as `absent` would mean the control refuses everything without ever seeing an identity, and it would not count as a pass. In general, a control that refuses every request passes every negative test, so a negative suite alone cannot establish that a control works. That is why the logged reason, not the suite result, is the evidence here. A person deciding is shown on the deployed portal only through its review page, which runs the same check.
 
-[After the fix: "Since commit <sha>, the portal refuses decisions from service-principal identities (run <id>; the portal log records not_in_set with the service principal's id), and the same kind of request is decided by a listed person on the review page (run <id>)."]
+Since commit d7bad89, the deployed portal refuses decisions from identities not on the approver list. In lifecycle run 3174122a, all four decisions submitted by the runner's service principal over the MCP tool were refused. For each one, the portal log records `not_in_set` with that principal's id. A listed person can still decide, as before the fix. On 2026-11-09 the owner's decision on the review page of the same deployment was accepted and recorded under the assigned persona. The owner's sign-in appears only in the portal's action log. The fix did not create the ability for a person to decide: the owner had decided through the same page on 2026-11-08, before any approver check existed. What the fix removed is every other identity's ability to decide.
 
-Evidence held for the bracket, NOT yet filled in. Both halves are filled at once, after row 10 (owner, 2026-11-09):
-* First half, evidenced: commit `d7bad89`, lifecycle run `3174122a`. The portal log has four `approver_refused` lines, `reason: not_in_set`, `received: 0b542439-...` (the runner SP), `via: tool`, 15:27:50-15:28:50Z on deployment `01f1dc4ff3c61144bb1da6d2aad008db`. Source: `eval/results/auth/20261109_row9_approver_refused_3174122a.json`.
-* Second half, open: row 10 (`docs/RUNBOOK_rows_10_11.md`).
+[Proposed addition, beside the MODIFY limitation; not approved: "Audit event ids are deterministic for idempotency, so two human decisions on the same award made on different days can share one event id; the table tells them apart only by timestamp and rationale, and who acted is recorded only in the portal's application log."]
 
 ## Sources
 
 * `eval/results/auth/20261109_header_integrity_whoami.json`: the /whoami bodies and the spoof test.
 * `docs/PLAN_fix_c.md`, step 2: the design, the acceptance table (row 9 is the refusal-reason measurement) and the mutation checks.
 * `eval/results/auth/20261109_row9_approver_refused_3174122a.json` and `eval/results/runs/20261109T1527Z_lifecycle_3174122a/`: row 9, the deployed refusal and its logged reason.
+* `eval/results/auth/20261109_row10_operator_decide.json`: row 10, a non-regression test. The listed person is still accepted on the decide page. It includes the action-log line, the warehouse check, cleanup and history.
+* `eval/usability/SESSION_2026-11-08.md`: the owner's decisions through the same page at 95e5dea, before fix (c).
 * d74756ca: the before state. It is in the stale-claims window, so cite it only as the BEFORE.

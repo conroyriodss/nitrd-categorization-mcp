@@ -112,6 +112,14 @@ These are enforced in code or in the tables, not only described:
   fields on `review_requests`. The operator pages also log one JSON line per decision or retry, with the persona
   acted as and the signed-in workspace user side by side. The trail is not tamper-evident: a principal with
   `MODIFY` can change it.
+- **Audit event ids identify a (request, kind) pair, not an act.** Ids are deterministic for idempotency.
+  `request_id = uuid5(namespace, idempotency_key)` and `event_id = uuid5(request_id, kind)`
+  ([`src/reviewer_portal/data.py`](src/reviewer_portal/data.py)). Re-submitting a cohort after cleanup
+  reproduces the same ids. Two distinct human decisions, on different days and in different sessions, can then
+  share one audit event id (observed on 2026-11-08 and 2026-11-09 for award 9797472;
+  `eval/results/auth/20261109_row10_operator_decide.json`). The two rows never coexisted. In the event table they
+  differ only by timestamp and the free-text rationale. No field identifies who acted: the session and the
+  signed-in user are only in the app log.
 - **No PII in the data written.** The read tables are public ExPORTER, iCite and PubMed data. PI names are public
   award fields, shown on review cards but not written to the sandbox tables. Personas are fictional, and their
   award assignment is synthetic. The sandbox tables record persona IDs (`requested_by`, `decided_by`,

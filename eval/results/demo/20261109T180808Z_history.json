@@ -1,0 +1,242 @@
+{
+  "since_utc": "2026-11-09T17:50:00+00:00",
+  "request_id": null,
+  "versions_since": {
+    "review_requests": [
+      {
+        "version": "356",
+        "timestamp": "2026-11-09T18:07:34.964Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"17788\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"375\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"303\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"72\"}"
+      },
+      {
+        "version": "355",
+        "timestamp": "2026-11-09T18:07:27.087Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"18871\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"357\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"281\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"76\"}"
+      },
+      {
+        "version": "354",
+        "timestamp": "2026-11-09T18:07:18.896Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"17946\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"367\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"295\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"72\"}"
+      },
+      {
+        "version": "353",
+        "timestamp": "2026-11-09T18:07:10.954Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"15316\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"369\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"295\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"74\"}"
+      },
+      {
+        "version": "352",
+        "timestamp": "2026-11-09T18:07:01.853Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"18079\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"549\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"472\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"77\"}"
+      },
+      {
+        "version": "351",
+        "timestamp": "2026-11-09T17:55:09.926Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"UPDATE\\\",\\\"operationMetrics\\\":{\\\"numRemovedFiles\\\":\\\"1\\\",\\\"numRemovedBytes\\\":\\\"17554\\\",\\\"numCopiedRows\\\":\\\"0\\\",\\\"numDeletionVectorsAdded\\\":\\\"0\\\",\\\"executionTimeMs\\\":\\\"1547\\\",\\\"numDeletionVectorsUpdated\\\":\\\"0\\\",\\\"scanTimeMs\\\":\\\"444\\\",\\\"numAddedFiles\\\":\\\"1\\\",\\\"numUpdatedRows\\\":\\\"1\\\",\\\"numDeletionVectorsRemoved\\\":\\\"0\\\",\\\"numAddedChangeFiles\\\":\\\"0\\\",\\\"numAddedBytes\\\":\\\"18871\\\",\\\"rewriteTimeMs\\\":\\\"1101\\\"}}]\",\"txnId\":\"5aa1c009-3277-44ee-a033-4a4b1d86f148\"}"
+      },
+      {
+        "version": "350",
+        "timestamp": "2026-11-09T17:53:41.331Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"17788\\\"}}]\",\"txnId\":\"20c6a6fc-e403-4435-a594-a28715cdeece\"}"
+      },
+      {
+        "version": "349",
+        "timestamp": "2026-11-09T17:53:32.391Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"17554\\\"}}]\",\"txnId\":\"62e35a48-71a5-41b8-a55f-884528081310\"}"
+      },
+      {
+        "version": "348",
+        "timestamp": "2026-11-09T17:53:23.346Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"17946\\\"}}]\",\"txnId\":\"089b636b-69ae-4780-9ff1-c4564e262407\"}"
+      },
+      {
+        "version": "347",
+        "timestamp": "2026-11-09T17:53:13.198Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"15316\\\"}}]\",\"txnId\":\"f6a1e243-c98a-4d54-858f-60c09d9ca4d5\"}"
+      },
+      {
+        "version": "346",
+        "timestamp": "2026-11-09T17:53:03.375Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"18079\\\"}}]\",\"txnId\":\"f61b59e0-7a61-4053-a893-f813257eab7c\"}"
+      }
+    ],
+    "review_events": [
+      {
+        "version": "353",
+        "timestamp": "2026-11-09T18:07:36.308Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"2\",\"numRemovedBytes\":\"12917\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"350\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"2\",\"scanTimeMs\":\"304\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "352",
+        "timestamp": "2026-11-09T18:07:28.463Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"3\",\"numRemovedBytes\":\"16715\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"342\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"3\",\"scanTimeMs\":\"296\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "351",
+        "timestamp": "2026-11-09T18:07:20.231Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"2\",\"numRemovedBytes\":\"13117\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"329\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"2\",\"scanTimeMs\":\"283\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "350",
+        "timestamp": "2026-11-09T18:07:12.331Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"2\",\"numRemovedBytes\":\"10717\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"362\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"2\",\"scanTimeMs\":\"314\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"48\"}"
+      },
+      {
+        "version": "349",
+        "timestamp": "2026-11-09T18:07:03.875Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"2\",\"numRemovedBytes\":\"13227\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"745\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"2\",\"scanTimeMs\":\"697\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"48\"}"
+      },
+      {
+        "version": "348",
+        "timestamp": "2026-11-09T17:55:09.926Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"3921\\\"}}]\",\"txnId\":\"5aa1c009-3277-44ee-a033-4a4b1d86f148\"}"
+      },
+      {
+        "version": "347",
+        "timestamp": "2026-11-09T17:53:41.331Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4102\\\"}},{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"8815\\\"}}]\",\"txnId\":\"20c6a6fc-e403-4435-a594-a28715cdeece\"}"
+      },
+      {
+        "version": "346",
+        "timestamp": "2026-11-09T17:53:32.391Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4102\\\"}},{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"8692\\\"}}]\",\"txnId\":\"62e35a48-71a5-41b8-a55f-884528081310\"}"
+      },
+      {
+        "version": "345",
+        "timestamp": "2026-11-09T17:53:23.346Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4100\\\"}},{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"9017\\\"}}]\",\"txnId\":\"089b636b-69ae-4780-9ff1-c4564e262407\"}"
+      },
+      {
+        "version": "344",
+        "timestamp": "2026-11-09T17:53:13.198Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4102\\\"}},{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"6615\\\"}}]\",\"txnId\":\"f6a1e243-c98a-4d54-858f-60c09d9ca4d5\"}"
+      },
+      {
+        "version": "343",
+        "timestamp": "2026-11-09T17:53:03.375Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4102\\\"}},{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"9125\\\"}}]\",\"txnId\":\"f61b59e0-7a61-4053-a893-f813257eab7c\"}"
+      }
+    ],
+    "routing_events": [
+      {
+        "version": "309",
+        "timestamp": "2026-11-09T18:07:37.639Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"4610\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"360\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"314\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "308",
+        "timestamp": "2026-11-09T18:07:29.799Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"4609\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"346\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"300\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "307",
+        "timestamp": "2026-11-09T18:07:21.747Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"4608\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"399\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"353\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "306",
+        "timestamp": "2026-11-09T18:07:13.807Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"4610\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"394\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"348\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"46\"}"
+      },
+      {
+        "version": "305",
+        "timestamp": "2026-11-09T18:07:05.679Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"4610\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"543\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"494\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"49\"}"
+      },
+      {
+        "version": "304",
+        "timestamp": "2026-11-09T17:53:41.331Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4610\\\"}}]\",\"txnId\":\"20c6a6fc-e403-4435-a594-a28715cdeece\"}"
+      },
+      {
+        "version": "303",
+        "timestamp": "2026-11-09T17:53:32.391Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4609\\\"}}]\",\"txnId\":\"62e35a48-71a5-41b8-a55f-884528081310\"}"
+      },
+      {
+        "version": "302",
+        "timestamp": "2026-11-09T17:53:23.346Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4608\\\"}}]\",\"txnId\":\"089b636b-69ae-4780-9ff1-c4564e262407\"}"
+      },
+      {
+        "version": "301",
+        "timestamp": "2026-11-09T17:53:13.198Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4610\\\"}}]\",\"txnId\":\"f6a1e243-c98a-4d54-858f-60c09d9ca4d5\"}"
+      },
+      {
+        "version": "300",
+        "timestamp": "2026-11-09T17:53:03.375Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4610\\\"}}]\",\"txnId\":\"f61b59e0-7a61-4053-a893-f813257eab7c\"}"
+      }
+    ]
+  },
+  "sandbox_counts_now": {
+    "review_requests": 0,
+    "review_events": 0,
+    "routing_events": 0
+  },
+  "zero": true
+}
