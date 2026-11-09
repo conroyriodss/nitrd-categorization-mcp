@@ -124,8 +124,8 @@ Design rules this follows:
 
 | Property | Evidence |
 | --- | --- |
-| Deployed equals in-process, for all 14 tools | parity run, 71/71 byte-identical, all five apps at `95e5dea`: [`eval/results/runs/20261106T2041Z_parity_d2ddab69/`](eval/results/runs/20261106T2041Z_parity_d2ddab69/) |
-| The 10-step workflow over HTTP | [`eval/results/runs/20261106T2038Z_e2e_e1969ce8/`](eval/results/runs/20261106T2038Z_e2e_e1969ce8/) (`95e5dea`) |
+| Deployed equals in-process, for all 14 tools | parity run, 71/71 byte-identical, on the shipped build (portal `d7bad89`, outputs and classifier `95e5dea`, runner `6056f37`): [`eval/results/runs/20261109T2147Z_parity_47501246/`](eval/results/runs/20261109T2147Z_parity_47501246/). Earlier, all five apps at `95e5dea`: [`eval/results/runs/20261106T2041Z_parity_d2ddab69/`](eval/results/runs/20261106T2041Z_parity_d2ddab69/) |
+| The 10-step workflow over HTTP | [`eval/results/runs/20261109T2150Z_e2e_d08b246f/`](eval/results/runs/20261109T2150Z_e2e_d08b246f/) (shipped build). Earlier, at `95e5dea`: [`eval/results/runs/20261106T2038Z_e2e_e1969ce8/`](eval/results/runs/20261106T2038Z_e2e_e1969ce8/) |
 | Write-path rules, and that tests leave no rows | Step G.5 JUnit + manifest: [`eval/results/step_g/`](eval/results/step_g/) |
 | Schema and description rules | `tests/test_scaffold.py`, `tests/test_portal_tools.py` (CI) |
 

@@ -125,8 +125,8 @@
    "sha256": "1842506d7144977c6491191be56461f5f6d8ef276d7a5e8d315abb24cb72392e"
   },
   "auth/20261109_check0_timing_corroboration.json": {
-   "bytes": 4260,
-   "sha256": "1eb734f0c55fbf113d0f462cc684893bbe293573e66bfe6a2c84bf3a78427577"
+   "bytes": 5450,
+   "sha256": "a1673b6205b679931d13b966e8e5a54ef22aa12dfe8845da1a5d8283c90fb34d"
   },
   "auth/20261109_header_integrity_whoami.json": {
    "bytes": 3280,
@@ -493,7 +493,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T22:10:56Z",
+ "generated_utc": "2026-11-09T22:19:05Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",
