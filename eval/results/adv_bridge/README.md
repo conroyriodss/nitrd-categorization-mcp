@@ -12,6 +12,7 @@ The counted adversarial run 6ab39b17 ran at repo commit 021defd7. Between that c
 * This is a point-in-time comparison of two fixed commits, 021defd7 and aed2590. It is not an invariant, and it is deliberately not a CI test.
 * aed2590's `src/` is identical to d7bad89, the commit deployed on 2026-11-09 (`git diff --quiet d7bad89 aed2590 -- src`).
 * The definitions are rendered by one library for both trees: fastmcp 4.1.6, Python 3.11.17, from the adversarial venv rebuilt on 2026-11-09. So this compares what the SOURCE declares. It is not a record of what the counted run's own fastmcp rendered (its manifest does not record the fastmcp version), and not of what the deployed apps (fastmcp 4.0.11) serve.
+* Why this does not weaken the conclusion: identical source rendered by one fixed renderer gives identical definitions by construction, so the result holds whichever fastmcp version renders. What the caveat bounds is disclosed separately: the counted run used local stdio servers, not the deployed apps, so it never described the deployed configuration.
 
 ## Method
 

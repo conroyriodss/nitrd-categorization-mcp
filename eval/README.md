@@ -122,7 +122,7 @@ log.
 The draft scenarios cover retrieval accuracy, classification evidence,
 routing, write-path behaviour, idempotency, error handling, clarification,
 audit retrieval, multi-tool chaining, and hostile metadata. Any scenario that
-assumes authenticated end users or verified submission approval exceeds the
+assumes authenticated end users or verified draft authorisation exceeds the
 MVP and must be marked unsupported before execution.
 
 ### Model and analysis boundaries
@@ -231,7 +231,7 @@ The apps started at 20:32:43-20:32:52Z, about 14 minutes before this run, and sm
 * For each chain, a strict check confirms that the `request_id` the portal returns equals the UUIDv5 of the run's idempotency key. The key is registered for cleanup before the submit is sent.
 * Registered values in `e1969ce8`: `a208ad0b-8f1f-5bc9-9a2d-f78ad204ab36`, `683d21dc-d795-56cf-9b4b-d25861878b72` and `a2dd527d-ef46-5b47-8093-44090f0fa3b1`, at `report.log` lines 20, 52 and 84 (chains 10506013, 10388671 and 10445135, in run order). In `f4d4fff2` they were `d879876f…`, `d54cea00…` and `0424599a…`; the values differ between runs, and in each run they equal the UUIDv5 of that run's key.
 * Because the identifier is known before the row exists, the cleanup can find every row a run may have written, even if the response is lost. Orphan-free cleanup is therefore structural; it does not depend on the write returning.
-* The agent's approval gate uses the same derivation: the same namespace, and `request_id = uuid5(namespace, idempotency_key)`, set by the app at approval. Compare `src/nitrd_agent/gate.py:27-47` with `src/reviewer_portal/data.py:60-63`. This is shown in code only; no valid agent run exercises it (`c1ab24d7` is void).
+* The agent's draft-authorisation gate uses the same derivation: the same namespace, and `request_id = uuid5(namespace, idempotency_key)`, set by the app at draft authorisation. Compare `src/nitrd_agent/gate.py:27-47` with `src/reviewer_portal/data.py:60-63`. This is shown in code only; no valid agent run exercises it (`c1ab24d7` is void).
 
 **Failure behaviour: what is and is not tested.** The e2e suite in this run has 11 tests, all passed (`report.log` line 238). Four of them inject faults, all simulated in-process with fakes and monkeypatching:
 * `test_request_id_is_registered_before_the_write`: a fake portal raises "connection dropped after the write". The test checks that the request_id was already registered and equals the UUIDv5 of the key.
@@ -339,7 +339,7 @@ are infrastructure identities, not reviewer authentication.
 
 Project descriptions, abstracts, and publication metadata can contain
 untrusted instructions. The agent should treat them as data, never as authority
-to change a reviewer, approve a write, or disclose credentials. Resistance to
+to change a reviewer, authorise a write, or disclose credentials. Resistance to
 such instructions is **Not measured** at agent level.
 
 During development, a write started in a conversational turn could persist

@@ -2,7 +2,7 @@
 
 Owner decisions from 2026-11-08 and 2026-11-09. Until now these were held only in chat; this file is the committed record.
 
-What is being fixed: the portal enforces ordering and single-decision semantics, but not who decides. Any identity reaching it, including a service principal, could drive a request to approved (lifecycle run d74756ca: Delta v298 pending, v299 approved, written by the portal SP). See `submission/ROUTING_BATCH_2026-11-08.md`, "human approval is enforced only in the client".
+What is being fixed: the portal enforces ordering and single-decision semantics, but not who decides. Any identity reaching it, including a service principal, could have the portal record an `approved` review decision (lifecycle run d74756ca: Delta v298 pending, v299 approved, written by the portal SP). See `submission/ROUTING_BATCH_2026-11-08.md`, "human approval is enforced only in the client".
 
 ## Rules
 
@@ -97,8 +97,8 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
    * **The deployed tool path has no human positive control.** No person can call `portal_submit_review_decision` over /mcp from the runner. The logged refusal reason (row 9) stands in for one. A person deciding is shown on the deployed portal only through `/operator/decide` (row 10), which shares check 0 with the tool. The same statement is in the security-section draft (`submission/DRAFT_security_section_fix_c.md`), so it does not live only in this plan.
    * Mutation checks (2026-11-09): replacing the portal check with a no-op fails 13 tests; making it case-sensitive fails 8; always-allow in the agent fails 7; a no-op on the lifecycle refusal path fails 4.
 3. **Decide-by-request_id view**, a separate commit after (c) is green.
-   * Needed because the browser demo (2026-11-09, `eval/results/demo/`) showed an approved agent-drafted request on no operator page checked, while its row existed and was pending.
-   * **Acceptance test:** an approved `agent-draft:` request appears on the view. This shows the request is reachable on the new view. It does NOT discriminate prefix from cap: a by-request_id view bypasses the cohort listing, where both candidate causes act.
+   * Needed because the browser demo (2026-11-09, `eval/results/demo/`) showed an agent-drafted request on no operator page checked, while its row existed and was pending. A person had authorised it for submission in the browser (draft authorisation); no review decision had been recorded.
+   * **Acceptance test:** an authorised `agent-draft:` request (still pending) appears on the view. This shows the request is reachable on the new view. It does NOT discriminate prefix from cap: a by-request_id view bypasses the cohort listing, where both candidate causes act.
    * Prefix vs cap stays settled only by code inspection of the deployed 95e5dea portal (see the record below). The cancelled probe was the only test that would have settled it empirically.
    * Correction (2026-11-09): this plan first said, on the owner's instruction, that the acceptance test was the prefix-vs-cap discrimination. Genie Code flagged that it bypasses the listing, and the owner accepted the correction.
 

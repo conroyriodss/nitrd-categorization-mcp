@@ -138,14 +138,14 @@ From here on, each row is anchored by its quoted old text. Line numbers are kept
   * Deck 365-367 matches cell by cell; table cells are separate lines in the extract.
   * No row's text has changed or vanished **in that copy**.
 * **NOT checked against 11-06b.** No file named or dated 11-06b exists in the repo or the workspace, so no row has been confirmed against the live document. Until 11-06b is supplied and checked, every row is anchored to 474dcf55/bd5ba682 only. Rows whose quote is missing from 11-06b will be reported, not re-created.
-* The figure check below suggests 11-06b differs from the committed copy. The reviewer quoted IDs (c224dd3f, 5704d50c, 778bd3ab, d74756ca, 41/41/41) that do not occur in the committed DOCX or deck.
+* ~~The figure check below suggests 11-06b differs from the committed copy. The reviewer quoted IDs (c224dd3f, 5704d50c, 778bd3ab, d74756ca, 41/41/41) that do not occur in the committed DOCX or deck.~~ Withdrawn 2026-11-09 (owner): c224dd3f and d74756ca are in this batch, which the reviewer also had, so they cannot show divergence. The proper test is in "Amendment (2026-11-09): does 11-06b diverge?" below.
 
 ### Terms: two approval events
 
 The documents and this batch use "approved" and "approval" for two different events. From here on:
 
 * **Draft authorisation:** a person, in the agent app in the browser, authorises an agent-drafted review request for submission. The app then submits it. Nothing is decided: the request is created `pending`. The 2026-11-09 browser demo (request c224dd3f) produced a draft authorisation.
-* **Recorded decision:** the portal records a decision on a request. Its value is one of `approved | rejected | deferred | override`. Lifecycle run d74756ca recorded an `approved` decision with no authorisation by anyone, from the portal service principal.
+* **Review decision:** the portal records a decision on a request (the name matches the tool `portal_submit_review_decision`). Its value is one of `approved | rejected | deferred | override`. Lifecycle run d74756ca recorded an `approved` decision with no authorisation by anyone, from the portal service principal.
 * Each term is defined once, where it first appears in each deliverable. Placement is the owner's choice; the DOCX glossary and deck slide 4 notes are the candidates.
 
 Applied to the rows above:
@@ -158,9 +158,12 @@ Applied to the rows above:
 | Same section, line 61 | "Human approval is enforced only by the agent's tool filter" | "Draft authorisation is enforced only by the agent's tool filter; nothing on the server checks who records a decision" |
 | Step 3 acceptance wording, both appends ("an approved agent-drafted request appears") | "approved agent-drafted request" | "authorised agent-drafted request" |
 
-The validation map (`eval/README.md` section 0) and `docs/PLAN_fix_c.md` use the same conflation, in the step 3 "approved agent-draft" wording. Their edits are listed here and are NOT applied yet (the owner's rule for deliverables applies to the map too):
-* `PLAN_fix_c.md` step 3: "an approved agent-draft: request" becomes "an authorised agent-draft: request (still pending)".
-* `eval/README.md`: rows that cite d74756ca as "approved" become "recorded an `approved` decision". This waits for the map edit after the battery.
+Terms accepted by the owner on 2026-11-09: "draft authorisation" as proposed, and "review decision" in place of the proposed "recorded decision". Applied on 2026-11-09 to `docs/PLAN_fix_c.md` and the validation map (`eval/README.md`):
+* `PLAN_fix_c.md`, opening paragraph: "could drive a request to approved" becomes "could have the portal record an `approved` review decision".
+* `PLAN_fix_c.md`, step 3: the demo request is described as authorised for submission (draft authorisation) with no review decision recorded. The acceptance test now reads "an authorised `agent-draft:` request (still pending)".
+* `eval/README.md`: "verified submission approval" becomes "verified draft authorisation"; "The agent's approval gate ... set by the app at approval" becomes "draft-authorisation gate ... at draft authorisation"; "approve a write" becomes "authorise a write".
+* Correction to the earlier listing: no row of the map cites d74756ca as "approved". The lifecycle row (line 71) names the four review decision types, which is correct as it stands, so it is unchanged.
+* "Approval bypass" is kept as written in the not-measured rows and in the approved item 5 sentence.
 
 ### Item 1: two defects in our own agreed text
 
@@ -229,7 +232,7 @@ Applied to the rows that carry the number:
 | Parity 71/71 | `eval/results/runs/20261106T2041Z_parity_d2ddab69/run.json`: 71 cases, failures [] (also 71/71 in 6e0e5d36 and 5704d50c) | match |
 | Parent PR-AUC 0.862 on 35,090 records, 1,528 NITRD | `eval/classifier_evaluation.md` lines 18 and 31 | match ([Repo-reported]: a committed report, not re-executed here) |
 | κ 0.42 | report.json: tier2 A `kappa_primary` 0.41609, CI [0.4002, 0.4313] | match (rounded) |
-| Benchmark range 0.56-0.82 | report.json `benchmarks`: Mateen 0.56, Neves 0.62, human SR screening 0.72 | **partly unverified.** 0.56 matches. 0.82 (the Hanegraaf included-study mean, as the DOCX itself says) is in no committed artifact found (report.json, uac-nitrd docs, results, README). It is cited only in the DOCX. |
+| Benchmark range 0.56-0.82 | report.json `benchmarks`: Mateen 0.56, Neves 0.62, human SR screening 0.72 | 0.56 matches. ~~0.82 partly unverified~~ (withdrawn 2026-11-09: 0.82 is an external literature value and needs a paper citation, not a committed artifact). The real defect is that the two places disagree about the set; see "benchmark set reconciliation" below. |
 | Request c224dd3f-074b-5637-b224-73739200b8ef | `eval/results/demo/20261109T004251Z_browser_approval_c224dd3f.json` and 5 more files | exists. Not in the committed DOCX or deck. |
 | 41/41/41 at Step G | `scripts/migrations/STEP_G_ACCEPTANCE.md` G.5 results: 41 requests, 41 created + 41 classified, 41 routing events; `docs/DECISIONS_LOG.md:124` | match ([Repo-reported]) |
 | Runs 5704d50c, 778bd3ab, d74756ca | `eval/results/runs/` directories exist for all three | exist. None is cited in the committed DOCX or deck. |
@@ -258,7 +261,7 @@ Proposed for DOCX §4, Lessons learned. Placement is the owner's choice. Each in
 
 1. **A detector read 0/60.** The adversarial scorer's flagging regex recorded that the agent reported the payload in 0 of 60 attack runs. A full manual read, under a criterion committed before reading, found 10 of 60. The regex missed paraphrase.
 2. **A gate met only the cases it enumerated.** The approval gate was a denylist naming the two write tools, on one server. A new, unenumerated tool on any server would have been offered to the model and run with no approval. No such tool ever reached it, so nothing ever failed. An audit test found the defect, and the gate became an allowlist.
-3. **A sandbox row count was repeated rather than re-measured.** A count was carried forward and reported as current, without being taken again.
+3. **A sandbox row count was repeated rather than re-measured.** A count from a sandbox run at about 19:12Z on 2026-11-08 was reported again later as the current state, without being taken again. At 19:29:55Z the tables actually held 5 requests, 12 review events and 5 routing events: the owner had submitted the FY2019 NIAID UH2 cohort in between.
 4. **A smoke assertion was assumed stale.** The 2026-11-03 smoke failure was a stale expected tool count (5 vs 6), fixed in the runner the same day. Six days later it was assumed to be still stale, and a possible live cause, until the fix was checked and found present in the deployed builds.
 5. **A skipped test was reported as passing.** The identity test that bridges the counted adversarial result to the shipped agent was reported as passing. In the run cited it had been skipped, for a missing dependency ("87 passed, 1 skipped"). Run where the dependency is installed, it passes 5/5.
 
@@ -270,6 +273,62 @@ Proposed for DOCX §4, Lessons learned. Placement is the owner's choice. Each in
 | --- | --- | --- |
 | 1 | `eval/agent/README.md`, adversarial suite: the recount section (line 228) and the scorer limitation (lines 237, 260); `eval/adversarial/RECOUNT_flagging_criterion.md` (committed before the read, 9d06323); recount commit 47c7dd3 | committed |
 | 2 | `eval/agent/README.md`, "Gate fix (2026-11-08): denylist replaced by an allowlist"; `tests/test_gate_fail_closed.py` (a4718e7, the audit); fix c91e1bf, correction 46260a1 | committed |
-| 3 | **No committed record found.** I searched `docs/`, `eval/`, `submission/` and the commit messages for a repeated or not-re-measured row count and found none. The owner is to point to the record; until then the instance stays out of the final text. | **citation needed** |
-| 4 | The fix: `eval/README.md` line 70 (smoke a9204bb7, stale count 5 vs 6, fixed in caaf641, 2026-11-03). The assumption (2026-11-09) and the check that disproved it were recorded only in session notes, not in a committed file. This entry would be the first committed record of it. | fix committed; assumption not |
+| 3 | Owner-attested (2026-11-09). This entry is its first committed record; it is not separately committed. Supporting detail: the correction (19:29:55Z: 5 requests, 12 review events, 5 routing events, the FY2019 NIAID UH2 cohort) and the 19:42Z cleanup versions. | recorded here for the first time |
+| 4 | The fix: `eval/README.md` line 70 (smoke a9204bb7, stale count 5 vs 6, fixed in caaf641, 2026-11-03; caaf641 is an ancestor of deployed d7bad89). The assumption (2026-11-09) and the check that disproved it are not separately committed. | recorded here for the first time |
 | 5 | `docs/PLAN_fix_c.md`, "Adversarial counted result vs the shipped agent", correction line (2026-11-09) | committed in this change |
+
+## Amendment (2026-11-09): does 11-06b diverge?
+
+**Method.** I checked five owner-supplied quotes, which no batch row contains, against the committed DOCX 474dcf55. The check covered the DOCX XML text and its committed `.txt` extract, plus the deck bd5ba682 for completeness. Matching was exact, then repeated with whitespace, quotes and dashes normalised; both gave the same result.
+
+| Quote | In DOCX 474dcf55 | Nearest committed text |
+| --- | --- | --- |
+| "A principal with MODIFY can change the audit tables: the trail is not tamper-evident." | present | |
+| "Personas are chosen, not proven" | present | |
+| "The shortlist budget is set over the full universe before partitioning into Tier 2 and exposed Tier 2x." | present | |
+| "[Repo-reported] A byte-identical rebuild of the fingerprint from committed code was reported." | **absent** | DOCX line 44: "[Verified] a rebuild of the fingerprint from committed code was byte-identical". 11-06b relabels the claim from [Verified] to [Repo-reported]. |
+| "Committed records for 315b5bc2 and 3d778528 were not located" | **absent** | 315b5bc2 (smoke) and 3d778528 (lifecycle) occur in no committed revision after 54fed8b. They were cited as [Verified] in the first committed copy (54fed8b, DOCX line 45) and removed by 7a00bfe. |
+
+**Reading.** 3 of 5 are present and 2 are absent, so 11-06b diverges from 474dcf55, in at least two edits that carry evidence labels.
+* Both absent quotes revise claims that the committed revisions handle differently: one downgrades a [Verified] label, and the other discloses records the repo history dropped rather than disclosed.
+* 5704d50c and 778bd3ab are in no batch revision before this amendment (0 occurrences in the batch at cf6b643). They are in the DOCX at 54fed8b and 7a00bfe, and not at 474dcf55. If the reviewer quoted them from 11-06b, then 11-06b keeps citations that a36b5cc rescoped away. That fits 11-06b descending from a pre-a36b5cc revision and being edited apart from the repo copy since.
+* That is an inference from two IDs. The extent of divergence is unknown until 11-06b is committed and diffed.
+
+## Amendment (2026-11-09): where the deliverables live
+
+* **Owner rule (2026-11-09):** the repo copy of the DOCX and deck is authoritative. Every revision is committed before it is sent anywhere. This is the runbook lesson applied to the submission itself.
+* **Search, 2026-11-09:** I searched all of `/Workspace` (every user folder, `.git` pruned) for `.docx` and `.pptx` modified since 2026-11-05, and `/Workspace` and `/Volumes` for any name containing `06b`.
+  * The only DOCX and PPTX found are the committed copies (`submission/NITRD_Evaluation_2026-11-06.docx`, `submission/NITRD_Hackathon_Presentation_2026-11-06.pptx`).
+  * No file named for 11-06b exists in the workspace or any readable volume. 11-06b lives outside Databricks, on the owner's machine or a mail or drive copy that Genie Code cannot reach.
+* **Pending:** the owner uploads the 11-06b DOCX and PPTX. Then they are committed under `submission/` with plain-text extracts and SHA-256s, with the place they had been living recorded here. Item 3 is redone against them and the item 2 sweep repeated. Every row whose quoted old text is missing is reported, and no deleted block is re-created.
+
+## Amendment (2026-11-09): benchmark set reconciliation (proposal; 0.82 is not struck)
+
+0.82 is an external literature value: the Hanegraaf included-study mean. Its absence from report.json is expected, and it needs a paper citation, not a committed artifact. My item 6 row called it "unverified", which was the wrong test, and that wording is withdrawn. The defect is that the two places disagree about what the benchmark SET is.
+
+**What each value is attached to.**
+
+| Value | Pre-registration (uac-nitrd `docs/TASK1_PREREGISTRATION.md` §6 item 7, 8409dc3, 2026-11-04) and report.json (`benchmarks`, faadcd2) | DOCX 474dcf55 (§2.5, table and note) and deck bd5ba682 |
+| --- | --- | --- |
+| 0.56 | Mateen et al. 2013, κ (`mateen_2013_kappa`, what: "titles vs titles+abstracts screening, 96-97% agreement") | Mateen, title/abstract screening, κ 0.56; 96-97% agreement. Same. |
+| 0.62 | Neves et al. 2023, κ (`neves_2023_kappa`, what: "automatic classification of experimental models", the paper's title) | Neves, first annotation round, κ 0.62 overall, label range 0.42-0.82. Same value; the DOCX adds the first-round qualification and a label range. |
+| 0.72 | "human systematic-review abstract screening, kappa about 0.72 (BMJ Open 2024;14(3):e076912)" (`human_sr_screening_kappa`, ref only, no author or "what" field). The citation is to Hanegraaf et al.'s paper, which is not named. | Not in the range. The note (DOCX line 267) says the paper reports 0.72 for the authors' own abstract and full-text screening, and that it is not used. The deck notes say "The evaluation now uses Hanegraaf's synthesis mean 0.82 ... 0.72 is its own-review screening agreement." |
+| 0.82 | absent | Hanegraaf et al. 2024, BMJ Open 14:e076912, mean κ across 12 included abstract-screening studies (SD 0.11). It is the top of the stated range "0.56-0.82". |
+| ICC ≈ 0 | Pier et al. 2018 (`nih_peer_review_icc`) | In the separate ICC table, outside the κ range. Consistent. |
+
+**Diagnosis.**
+* Both documents cite the same Hanegraaf paper, but they cite different statistics from it.
+  * The pre-registration and the scoring report attached the authors' own screening agreement, 0.72 (description "human systematic-review abstract screening").
+  * The DOCX attaches the synthesis mean, 0.82, and says why.
+* The deck's word "now" records that the choice changed after the pre-registration. Both values are in the paper, so neither is wrong. The disagreement is undisclosed: a reader of report.json and a reader of the DOCX see different sets with no statement that the set changed.
+* A second, smaller ambiguity: 0.82 is also the top of Neves's label range in the same table. So "0.56-0.82" has two possible sources for its upper bound.
+* No conclusion changes. κ 0.42 is below 0.56, 0.62, 0.72 and 0.82, and the pre-registration says κ is "interpreted against these analogs, not tested against them".
+
+**Proposed reconciliation (owner routes).**
+1. **The pre-registered set stays as pre-registered.** report.json and the pre-registration are frozen and are not edited. The DOCX names the pre-registered set as such: κ 0.56 (Mateen), 0.62 (Neves) and about 0.72 (Hanegraaf, the authors' own screening agreement).
+2. **0.82 is kept as a disclosed post-registration addition, not a replacement.** Proposed DOCX §2.5 benchmark-scope text: "Pre-registered analogs (uac-nitrd pre-registration §6 item 7): κ 0.56 (Mateen), 0.62 (Neves) and about 0.72 (Hanegraaf et al.'s own abstract and full-text screening). Added after pre-registration, as context: Hanegraaf's mean across 12 included abstract-screening studies, 0.82 (SD 0.11); both values are in the paper. The range of cited estimates is 0.56-0.82. Model-vs-listing κ 0.42 is below each."
+3. **The Hanegraaf table row shows both statistics.** It names 0.72 as the pre-registered value and 0.82 as the added synthesis mean, and drops "is not used" from the line 267 note. The Neves label range is footnoted as a per-label spread and not a member of the set.
+4. **Deck:** in the slide notes at extract lines 32, 209, 290 and 297, "now uses ... 0.82" and "not the authors' own 0.72" become "adds ... 0.82 beside the pre-registered 0.72". Face line 46 is unchanged.
+5. **report.json and the pre-registration get no edit.** A one-line reader note in this repo's validation map records that report.json carries the pre-registered set, and the deliverables add 0.82.
+
+I checked what each value is attached to, in both places, on 2026-11-09, from the files cited above. The Hanegraaf attributions of 0.72 and 0.82 are the owner's statement and the DOCX's. I have not read the paper itself.
