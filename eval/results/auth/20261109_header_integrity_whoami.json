@@ -1,0 +1,47 @@
+{
+  "what": "Fix (c) step 1: identity headers the Databricks Apps proxy forwards to the reviewer portal, and whether client-supplied x-forwarded-* headers survive the proxy. /whoami is read-only; no sandbox rows were written.",
+  "date_utc": "2026-11-09",
+  "portal": {
+    "app": "mcp-nitrd-reviewer-portal",
+    "commit": "cca45b89bb0a3a091f7cb2946d002850c70851b1",
+    "deployment_id": "01f1dbe172c91731bb6df95bca9d8e52",
+    "route": "GET /whoami (src/reviewer_portal/routes.py, added 62e65ab)"
+  },
+  "measurements": {
+    "runner_sp": {
+      "caller": "mcp-nitrd-e2e-runner service principal 0b542439-4c28-4b16-9377-81fef5a0b1c2 (oauth-m2m)",
+      "source": "runner auth run 4e1c1af4-378f-4b05-be22-8bc703da75b4 (e2e_runs), both candidate token sources returned the same body",
+      "headers_sent_by_client": "Authorization only (no x-forwarded-*)",
+      "status": 200,
+      "body": "{\"service\":\"reviewer-portal\",\"headers\":{\"x-forwarded-email\":{\"present\":true,\"value\":\"0b542439-4c28-4b16-9377-81fef5a0b1c2\"},\"x-forwarded-user\":{\"present\":true,\"value\":\"72442556496727@7474654188777746\"},\"x-forwarded-preferred-username\":{\"present\":true,\"value\":\"app-2vrjmx mcp-nitrd-e2e-runner\"}}}"
+    },
+    "owner_browser": {
+      "caller": "owner conroyri@nih.gov, signed in, browser",
+      "source": "owner report in session",
+      "headers_sent_by_client": "none added",
+      "body": "{\"service\":\"reviewer-portal\",\"headers\":{\"x-forwarded-email\":{\"present\":true,\"value\":\"conroyri@nih.gov\"},\"x-forwarded-user\":{\"present\":true,\"value\":\"78305781156038@7474654188777746\"},\"x-forwarded-preferred-username\":{\"present\":true,\"value\":\"conroyri@nih.gov\"}}}"
+    },
+    "spoof_test": {
+      "caller": "owner conroyri@nih.gov, signed in, browser devtools",
+      "source": "owner report in session; outgoing headers confirmed in the browser Network tab (Request Headers)",
+      "headers_sent_by_client": {
+        "x-forwarded-email": "spoof-test@example.invalid",
+        "x-forwarded-preferred-username": "spoof-test@example.invalid"
+      },
+      "headers_received_by_app": {
+        "x-forwarded-email": "conroyri@nih.gov",
+        "x-forwarded-preferred-username": "conroyri@nih.gov",
+        "x-forwarded-user": "78305781156038@7474654188777746"
+      }
+    }
+  },
+  "conclusions": [
+    "The Apps proxy overwrites client-supplied x-forwarded-email and x-forwarded-preferred-username with the caller's authenticated identity. On this path the header is authoritative for identity.",
+    "x-forwarded-user is email-shaped for BOTH callers (<id>@<workspace id>), so a pattern match on '@' cannot tell a service principal from a person. For the SP, x-forwarded-email holds its application id (a UUID), not an email. So the control checks x-forwarded-email by exact match against an explicit approver set."
+  ],
+  "residual": "INFERENCE, not a measurement: the spoof test ran on the owner's (human) path only. The runner-probe confirmation on the SP path was declined on schedule grounds. Proxy ingress handling is assumed not to vary by principal type.",
+  "not_tested": [
+    "x-forwarded-user was not supplied by the client in the spoof test",
+    "the /mcp POST path was not spoof-tested; the GET /whoami path was"
+  ]
+}

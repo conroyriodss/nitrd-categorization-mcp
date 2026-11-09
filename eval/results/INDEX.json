@@ -108,6 +108,10 @@
    "bytes": 2980,
    "sha256": "385f423827ae6f233c5a54a3882bb2d38de52a5978ed94211f64beda7ac4723f"
   },
+  "auth/20261109_header_integrity_whoami.json": {
+   "bytes": 3280,
+   "sha256": "5e53e84d14a30453285b91e05ae40ceae894edcca51d003eac2be5ab63039fbf"
+  },
   "demo/20261109T003017Z_browser_approval_a834fd06.json": {
    "bytes": 5788,
    "sha256": "67c24ee38895c8ae2549b4cba93a19c43beccda76593deedc86da849fcf57c61"
@@ -377,7 +381,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T00:55:15Z",
+ "generated_utc": "2026-11-09T14:18:02Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_runs/": "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are control arms only and compute no success rate. In the counted run, report.json is the pinned rule's output and exposure.json is a post-hoc observation (see eval/agent/README.md, adversarial suite).",

@@ -30,7 +30,11 @@ As of the cca45b8 redeploy (2026-11-09 02:01Z: portal deployment 01f1dbe172c9173
      * Runner SP (auth run 4e1c1af4): `{"service":"reviewer-portal","headers":{"x-forwarded-email":{"present":true,"value":"0b542439-4c28-4b16-9377-81fef5a0b1c2"},"x-forwarded-user":{"present":true,"value":"72442556496727@7474654188777746"},"x-forwarded-preferred-username":{"present":true,"value":"app-2vrjmx mcp-nitrd-e2e-runner"}}}`
      * Owner in the browser: `{"service":"reviewer-portal","headers":{"x-forwarded-email":{"present":true,"value":"conroyri@nih.gov"},"x-forwarded-user":{"present":true,"value":"78305781156038@7474654188777746"},"x-forwarded-preferred-username":{"present":true,"value":"conroyri@nih.gov"}}}`
      * For the SP, `x-forwarded-email` holds its application id, and `x-forwarded-user` is email-shaped (`<id>@<workspace id>`) for both callers. So a pattern match on `@` cannot tell an SP from a person.
-   * Header integrity: NOT yet measured. Does the proxy overwrite or pass through client-supplied `x-forwarded-*` headers? This gates step 2.
+   * Header integrity, measured 2026-11-09 (`eval/results/auth/20261109_header_integrity_whoami.json`):
+     * The owner sent `x-forwarded-email` and `x-forwarded-preferred-username` = `spoof-test@example.invalid`, confirmed in the browser Network tab.
+     * The app received `conroyri@nih.gov` for both. The Apps proxy overwrites client-supplied `x-forwarded-*` headers, so the header is authoritative for identity.
+     * Residual, an INFERENCE: this was tested on the owner's path only. The runner-probe check on the SP path was declined on schedule grounds, and proxy ingress handling is assumed not to vary by principal type.
+   * Step 2 design chosen by the owner: Option A, an exact-match `x-forwarded-email` allowlist. Option B (SCIM lookup) is the production recommendation only.
 2. **Enforcement, built on what step 1 measured.**
    * No "email-shaped" check. Resolve the identity through the workspace API or an explicit approver set.
    * Propose the design first and wait for the owner.
