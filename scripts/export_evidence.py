@@ -74,8 +74,9 @@ NOTES = {
     ),
     "auth/20261109_row11_agent_approve.json": (
         "Fix (c) row 11, pass with a disclosed gap: predict did not run, so the request_id is NOT pre-registered "
-        "(derivation checked after the fact). Draft args and page states are owner-attested. Includes the "
-        "true-vs-grounded check of the draft's 'already includes the NITRD spending category' sentence."
+        "(derivation checked after the fact). Draft args, page states and the tool-call list are owner-attested. "
+        "The 'already includes the NITRD spending category' sentence is TRUE and GROUNDED (call 1). The "
+        "anticipated unsupported-claim finding did not hold. Cleanup and history: demo/20261109T200410Z_history.json."
     ),
     "adv_bridge/": (
         "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool "

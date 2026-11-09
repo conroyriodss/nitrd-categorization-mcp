@@ -1,6 +1,6 @@
 {
   "what": "Fix (c) acceptance row 11 (docs/PLAN_fix_c.md, step 2; procedure docs/RUNBOOK_rows_10_11.md): a listed person (conroyri@nih.gov) authorises an agent draft on the deployed agent's approve route. Pass: accepted; one pending request created.",
-  "status": "PASS, counted with a disclosed gap (owner decision, 2026-11-09): predict did not run before the click, so the request_id was NOT pre-registered.",
+  "status": "PASS, counted with a disclosed gap (owner decision, 2026-11-09): predict did not run before the click, so the request_id was NOT pre-registered. Cleaned to 0/0/0, history recorded.",
   "owner_reasons_for_counting": [
     "The acceptance criterion is 'accepted; one pending request created', and it is met.",
     "Pre-registration belongs to the browser-demo protocol, not to row 11.",
@@ -48,9 +48,28 @@
   "evidence_claim_check": {
     "claim": "The public award record already includes the NITRD spending category.",
     "true": "YES. In the snapshot (users.conroyri.nitrd_hackathon_v1_exporter_projects), 10213736 (FY2021, P30EY026877) has nih_spending_cats 'Bioengineering;Data Science;Eye Disease and Disorders of Vision;Networking and Information Technology R&D (NITRD);Neurosciences'. That includes the RCDC parent category (RePORTER id 329), stored by name. FY2021 is a build year, so this is not a reserved-year label read.",
-    "grounded": "AVAILABLE in a tool result, but the call is not confirmed for this run. outputs_get_project_detail returns spending_categories and is_nitrd (src/nih_grants_outputs/tools/get_project_detail.py; identical at the deployed 95e5dea and d7bad89). For 10213736 those would be the list above and is_nitrd true, so the claim is supported IF that tool was called with 10213736. The tool-call list for this /ask run was shown on the /ask page but was not captured. The only committed record of the same prompt (c224dd3f, eval/results/demo/20261109T004251Z_browser_approval_c224dd3f.json) called outputs_get_project_detail first, and flagged the same sentence as 'source not checked'. Checked in code: classifier_classify_parent takes an appl_id and returns suggestion, probability, cohort, top_features and model info, with no category field. portal_get_review_history returns sandbox requests only, and the sandbox held none at the time (0/0/0 after the row-10 cleanup). Its prior-year evidence (PriorYear.is_nitrd) is not confirmed to be in this run's result.",
-    "what_the_gate_shows": "Separately from the claim's truth: the Drafts page shows the draft's arguments only, and the /ask page shows tool names and arguments, not tool results. The approver cannot check from the approval UI whether a sentence in the evidence summary is grounded. The gate checks who authorises, not what is authorised."
+    "grounded": "YES. Call 1 of this run was outputs_get_project_detail {\"appl_id\": 10213736} (tool-call list below). That tool returns spending_categories and is_nitrd (src/nih_grants_outputs/tools/get_project_detail.py; identical at the deployed 95e5dea and d7bad89). For 10213736 they are the category list above, which includes NITRD, and is_nitrd true. The sentence restates that result. The other calls cannot be its source: classifier_classify_parent returns no category field (checked in code), and portal_get_review_history had no sandbox requests to return (0/0/0 after the row-10 cleanup).",
+    "tool_calls_owner_attested": {
+      "source": "The owner read these from the /ask page for this run and reported them on 2026-11-09. The page shows tool names and arguments, not results. Not a committed artifact.",
+      "calls_in_order": [
+        "outputs_get_project_detail {\"appl_id\": 10213736}",
+        "classifier_classify_parent {\"appl_id\": 10213736}",
+        "portal_get_review_history {\"appl_id\": 10213736}",
+        "agent_draft_review_request {appl_id 10213736, reviewer_id demo_sia, task1_suggestion {nitrd, 0.99967, nitrd-parent-v2-ba10594d9581}, evidence {...}}"
+      ],
+      "same_as": "The same set and order as c224dd3f (eval/results/demo/20261109T004251Z_browser_approval_c224dd3f.json)."
+    },
+    "anticipated_finding": "The owner anticipated 'a human authorised a draft containing an unsupported claim'. It did NOT hold: the sentence is true (snapshot) and grounded (call 1). The c224dd3f note 'source not checked' for the same sentence is now answered for this run, not for c224dd3f.",
+    "what_the_gate_shows": "Separately from the claim's truth: the Drafts page shows the draft's arguments only, and the /ask page shows tool names and arguments, not tool results. The approver cannot check from the approval UI whether a sentence in the evidence summary is grounded. The gate checks who authorises, not what is authorised. Written up separately from fix (c): eval/agent/FINDING_approval_ui_grounding.md and submission/DRAFT_approval_gate_finding.md."
   },
-  "cleanup": "PENDING (owner or Genie Code): eval/demo/verify_browser_approval.py cleanup --request-id eab10ab8-bbfe-5334-84bd-6bfdaba198ad --confirm",
-  "history": "PENDING: verify_browser_approval.py history --since 2026-11-09T18:10:00Z"
+  "cleanup": {
+    "by": "Genie Code at the owner's request, as conroyri@nih.gov: eval/demo/verify_browser_approval.py cleanup --request-id eab10ab8-bbfe-5334-84bd-6bfdaba198ad --confirm (exit 0)",
+    "deletes_utc": {"review_requests": "v358 2026-11-09T20:03:49.294Z", "review_events": "v355 20:03:51.279Z", "routing_events": "v311 20:03:52.970Z"},
+    "sandbox_after_cleanup": {"review_requests": 0, "review_events": 0, "routing_events": 0}
+  },
+  "history": {
+    "file": "eval/results/demo/20261109T200410Z_history.json (history --since 2026-11-09T18:10:00Z --request-id eab10ab8-..., exit 0)",
+    "versions_since": "2 per table: one portal-SP TRANSACTION at 18:59:00.485Z (the approval's write) and one DELETE by conroyri@nih.gov (cleanup). No other writer.",
+    "counts_now": {"review_requests": 0, "review_events": 0, "routing_events": 0}
+  }
 }

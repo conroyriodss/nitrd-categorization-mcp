@@ -1,0 +1,60 @@
+{
+  "since_utc": "2026-11-09T18:10:00+00:00",
+  "request_id": "eab10ab8-bbfe-5334-84bd-6bfdaba198ad",
+  "versions_since": {
+    "review_requests": [
+      {
+        "version": "358",
+        "timestamp": "2026-11-09T20:03:49.294Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"14765\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"566\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"491\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"75\"}"
+      },
+      {
+        "version": "357",
+        "timestamp": "2026-11-09T18:59:00.485Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"14765\\\"}}]\",\"txnId\":\"007b6512-1741-4386-ac2e-6833b3dfafa4\"}"
+      }
+    ],
+    "review_events": [
+      {
+        "version": "355",
+        "timestamp": "2026-11-09T20:03:51.279Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"4160\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"697\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"644\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"53\"}"
+      },
+      {
+        "version": "354",
+        "timestamp": "2026-11-09T18:59:00.485Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"4160\\\"}}]\",\"txnId\":\"007b6512-1741-4386-ac2e-6833b3dfafa4\"}"
+      }
+    ],
+    "routing_events": [
+      {
+        "version": "311",
+        "timestamp": "2026-11-09T20:03:52.970Z",
+        "userName": "conroyri@nih.gov",
+        "operation": "DELETE",
+        "operationMetrics": "{\"numRemovedFiles\":\"1\",\"numRemovedBytes\":\"5187\",\"numCopiedRows\":\"0\",\"numDeletionVectorsAdded\":\"0\",\"numDeletionVectorsRemoved\":\"0\",\"numAddedChangeFiles\":\"0\",\"executionTimeMs\":\"562\",\"numDeletionVectorsUpdated\":\"0\",\"numDeletedRows\":\"1\",\"scanTimeMs\":\"512\",\"numAddedFiles\":\"0\",\"numAddedBytes\":\"0\",\"rewriteTimeMs\":\"50\"}"
+      },
+      {
+        "version": "310",
+        "timestamp": "2026-11-09T18:59:00.485Z",
+        "userName": "06f65816-a82e-4597-abf1-c570283871f5",
+        "operation": "TRANSACTION",
+        "operationMetrics": "{\"intermediateOperationMetrics\":\"[{\\\"operationName\\\":\\\"WRITE\\\",\\\"operationMetrics\\\":{\\\"numFiles\\\":\\\"1\\\",\\\"numOutputRows\\\":\\\"1\\\",\\\"numOutputBytes\\\":\\\"5187\\\"}}]\",\"txnId\":\"007b6512-1741-4386-ac2e-6833b3dfafa4\"}"
+      }
+    ]
+  },
+  "sandbox_counts_now": {
+    "review_requests": 0,
+    "review_events": 0,
+    "routing_events": 0
+  },
+  "zero": true
+}
