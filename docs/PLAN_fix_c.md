@@ -124,7 +124,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | 10 | Deployed, manual | owner decides on `/operator/decide` | accepted; recorded by persona; the owner's sign-in is in the action log |
      | 11 | Deployed, manual | owner approves an agent draft | accepted; one pending request created |
      | 11 MEASURED 2026-11-09 | | | **Pass, counted with a disclosed gap (owner decision).** Draft 68845306 was accepted. One pending request was created: eab10ab8, created + routed, no decision, the approver in no column, written by the portal SP. **predict did not run, so this is NOT pre-registered.** The request_id matches uuid5(REQUEST_NAMESPACE, `agent-draft:<draft_id>`), checked after the fact; the draft_id was reported before the click (owner-attested). Separate finding: the approval UI shows draft args and tool names but not tool results, so the approver cannot check grounding. Evidence: `eval/results/auth/20261109_row11_agent_approve.json`. |
-     | 12 | Deployed, manual (added 2026-11-09; run after the re-run parity and e2e are green) | owner, on `/operator/decide`: (a) override with corrections; (b) a second decision on that request; (c) a decision as a non-assigned persona | (a) accepted, with status, decided_by, rationale, `corrected_parent_label` and `corrected_pcas` on the warehouse, and one override event carrying the corrections; (b) refused as final, nothing written; (c) SERVER-SIDE ENFORCEMENT TEST: the page does not offer the path, and the hidden `reviewer_id` is edited deliberately to test the server. It must be refused by the persona rule, with nothing written and the card still pending; the same property class as the x-forwarded-* spoof test. If (c) is ACCEPTED: STOP, no cleanup, capture page, log and row state; check 6 would be UI-only (B3-scale), and the owner decides. Procedure: `docs/RUNBOOK_manual_rows.md`, row 12. **MEASURED 2026-11-09 (precheck 22:14:24Z): (a) PASS, override stored at 22:29:54Z with NITRD, [LSDMA, SPSQ] and one override event carrying them; (b) PASS, refused as final at 22:30:46Z; (c) PASS, refused by the persona rule at 22:35:40Z, card still pending. History shows no write at either refusal time. Cleanup and history 0/0/0. Evidence: `eval/results/auth/20261109_row12_decision_rules.json`.** |
+     | 12 | Deployed, manual (added 2026-11-09; run after the re-run parity and e2e are green) | owner, on `/operator/decide`: (a) override with corrections; (b) a second decision on that request; (c) a decision as a non-assigned persona | (a) accepted, with status, decided_by, rationale, `corrected_parent_label` and `corrected_pcas` on the warehouse, and one override event carrying the corrections; (b) refused as final, nothing written; (c) SERVER-SIDE ENFORCEMENT TEST: the page does not offer the path, and the hidden `reviewer_id` is edited deliberately to test the server. It must be refused by the persona rule, with nothing written and the card still pending; the same property class as the x-forwarded-* spoof test. If (c) is ACCEPTED: STOP, no cleanup, capture page, log and row state; check 6 would be UI-only (B3-scale), and the owner decides. Procedure: `docs/RUNBOOK_manual_rows.md`, row 12. **MEASURED 2026-11-09 (precheck 22:14:24Z): (a) PASS, override stored at 22:29:54Z with NITRD, [LSDMA, SPSQ] and one override event carrying them; (b) PASS, refused as final at 22:30:46Z; (c) PASS, two-sided: the tampered value demo_ic_rep_nimh is in the logged input_values, so the tamper landed, AND the server refused it by the persona rule at 22:35:40Z; the card stayed pending. There is no approver_refused line after 22:14:24Z (owner-attested), which excludes a check-0 misfire. The override event_id equals uuid5(request_id, 'decision') in the log and on the warehouse. History shows no write at either refusal time. Cleanup and history 0/0/0. Evidence: `eval/results/auth/20261109_row12_decision_rules.json`.** |
 
      Rows 10 and 11 procedure: `docs/RUNBOOK_manual_rows.md`.
 
@@ -143,7 +143,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      * Support: pre-fix runs (5704d50c, 6e0e5d36, d2ddab69) take 398-505 ms deployed and 306-362 ms in-process; the probe reaches the not-found check, a warehouse read. Check-0 refusals take 28 and 42 ms deployed and 3 ms in-process, the same band as input-validation refusals that touch no data (16-42 ms).
      * Timing cannot rule out a fast cached read; the absence of a read still rests on the code. Evidence: `eval/results/auth/20261109_check0_timing_corroboration.json`. A security-section sentence is proposed in `submission/DRAFT_security_section_fix_c.md`.
 
-     **Who can exercise the decision path (2026-11-09).** Beyond the matrix: the control permits only a listed person to decide, so on the deployed portal only a person can exercise the rules behind check 0. Every automated deployed call of `portal_submit_review_decision` ends at check 0, by design. Row 12 is the human pass through the override, finality and persona rules. Until it runs, warehouse persistence of a decision rests on row 10's single approve, and for an override on nothing. See "Coverage moved to CI" below.
+     **Who can exercise the decision path (2026-11-09).** Beyond the matrix: the control permits only a listed person to decide, so on the deployed portal only a person can exercise the rules behind check 0. Every automated deployed call of `portal_submit_review_decision` ends at check 0, by design. Row 12 is the human pass through the override, finality and persona rules. It ran on 2026-11-09 and all three parts passed. Warehouse persistence of a decision now rests on row 10's approve and row 12a's override with both corrections. See "Coverage moved to CI" below.
 
      The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
 
@@ -206,7 +206,7 @@ Runner redeployed for the parity and label fixes (owner-approved, 2026-11-09). R
 
 ## Coverage moved to CI (fix (c), recorded 2026-11-09)
 
-This is a consequence of the design, not a loss we could not recover. Fix (c) permits only a listed person to decide. So the deployed decision path can only be exercised by a person, and the automated runner, by design, never gets past check 0. Row 12 is that human exercise for the override with its corrections, the finality rule and the persona rule. What stays CI-only is listed below. Automating it on the deployed app would mean listing the runner's identity as an approver, which is the ability fix (c) removed.
+This is a consequence of the design, not a loss we could not recover. Fix (c) permits only a listed person to decide. So the deployed decision path can only be exercised by a person, and the automated runner, by design, never gets past check 0. Row 12 is that human exercise for the override with its corrections, the finality rule and the persona rule. It ran on 2026-11-09, and all three parts passed (`eval/results/auth/20261109_row12_decision_rules.json`). What stays CI-only is listed below. Automating it on the deployed app would mean listing the runner's identity as an approver, which is the ability fix (c) removed.
 
 The detail is recorded at two levels.
 
@@ -219,18 +219,18 @@ The detail is recorded at two levels.
 * The runner SP can never pass check 0. So every automated deployed exercise of `portal_submit_review_decision` now ends at the approver gate: lifecycle L7c/L8c/L13c and the parity probe.
 * Before the fix, deployed lifecycle L7-L13 reached the rules behind check 0. The last such run was d74756ca (2026-11-06, portal 95e5dea): 4 labels, no failures.
 
-| Rule behind check 0 | Deployed (before the fix: lifecycle L-check, d74756ca) | Now |
-| --- | --- | --- |
-| decision by a non-assigned persona refused | L7 | CI only (`test_lifecycle_offline`, FakeSql) |
-| rationale too short refused | L7 | CI only |
-| override corrections biconditional (3 rules) | L7 | CI only |
-| assigned decision recorded (status, decided_by, rationale, event) | L9 | CI only |
-| second decision refused (decisions are final; the pending-state check) | L10 | CI only |
-| decided request leaves the pending queue | L11 | CI only |
-| history order; the override event carries the corrections | L12 | CI only |
-| decision and corrections persisted on the warehouse | L13 | **not exercised automatically anywhere**: CI uses FakeSql, and deployed is refused at check 0. Exercised by hand: row 10 (approve) and row 12a (override with corrections) |
+| Rule behind check 0 | Deployed (before the fix: lifecycle L-check, d74756ca) | Now, automated | Now, deployed by a human |
+| --- | --- | --- | --- |
+| decision by a non-assigned persona refused | L7 | CI only (`test_lifecycle_offline`, FakeSql) | row 12c: server-side, with the tamper confirmed in the log |
+| rationale too short refused | L7 | CI only | none |
+| override corrections biconditional (3 rules) | L7 | CI only | none (12a exercises the accepted case only) |
+| assigned decision recorded (status, decided_by, rationale, event) | L9 | CI only | rows 10 (approve) and 12a (override) |
+| second decision refused (decisions are final; the pending-state check) | L10 | CI only | row 12b |
+| decided request leaves the pending queue | L11 | CI only | none |
+| history order; the override event carries the corrections | L12 | CI only | the override event carrying both corrections: row 12a, on the warehouse; history order: none |
+| decision and corrections persisted on the warehouse | L13 | **not exercised automatically anywhere**: CI uses FakeSql, and deployed is refused at check 0 | **covered**: row 10 (approve) and row 12a (override with both corrections, checked on the warehouse) |
 
-**The human pass (row 12, `docs/RUNBOOK_manual_rows.md`).** Run after the re-run parity and e2e are green. It covers, in order of value:
+**The human pass (row 12, `docs/RUNBOOK_manual_rows.md`).** Run after the re-run parity and e2e were green. It ran on 2026-11-09, and all three parts passed. It covers, in order of value:
 * (a) An override with corrections, checked on the warehouse. This is the L13 case: status, decided_by, rationale and both correction fields, plus the override event carrying the corrections.
 * (b) A second decision on the same request, which must be refused (finality, check 7).
 * (c) A server-side enforcement test of the persona rule (check 6). The page does not offer a decision under a non-assigned persona, so the hidden `reviewer_id` is edited deliberately and the server must refuse it. This is recorded as its own result, in the same property class as the x-forwarded-* spoof test (`eval/results/auth/20261109_header_integrity_whoami.json`): the server, not the page, enforces who may decide for whom. An acceptance stops the row with no cleanup. It would make check 6 UI-only, a B3-scale finding for the owner to decide on.
@@ -242,7 +242,7 @@ The detail is recorded at two levels.
 
 **What stays CI-only after row 12, and why.**
 * The rationale bounds, the three override-corrections refusals, the queue checks (L11) and the history order (L12) are not in row 12. Row 12a checks the override event itself.
-* They remain covered offline by `test_lifecycle_offline`. Row 12 checks one override, one finality refusal and one persona refusal by hand. It is not a repeated automated check.
+* They remain covered offline by `test_lifecycle_offline`. Row 12 checks one override, one finality refusal and one persona refusal by hand. It is not a repeated automated check: a regression in these rules on a later deploy would be caught by CI, not on the deployed app, until a human re-runs row 12.
 * Making any of these automated on the deployed app would require listing the runner SP as an approver. That would give the automated identity the ability fix (c) removed, so we do not.
 
 Deliverables sentence (proposed, not approved): `submission/DRAFT_security_section_fix_c.md`.

@@ -13,6 +13,14 @@
   "correction": "Agrees with the parent call. Replaces EHCS with SPSQ. Exercises both correction fields.",
   "page_text": "override by demo_ic_rep_niaid at 2026-11-09T22:29:54+00:00. Corrected: NITRD; PCAs LSDMA, SPSQ. Rationale: fix (c) row 12a override with corrections",
   "portal_log": {"event": "operator_decision", "appl_id": 9724345, "decision": "override", "reviewer_id": "demo_ic_rep_niaid", "event_id": "aacf0448-aff7-5486-b6c8-c8577f4d851f", "timestamp": "2026-11-09T22:30:00.011908+00:00"},
+  "event_id_derivation": {
+   "claim": "event_id = uuid5(request_id, 'decision') (src/reviewer_portal/data.py event_id_for), the same derivation as in the row 10 event_id observation",
+   "computed": "uuid5(49f99042-043e-5bac-94d9-2c2107dea80c, 'decision') = aacf0448-aff7-5486-b6c8-c8577f4d851f",
+   "portal_log": "aacf0448-aff7-5486-b6c8-c8577f4d851f",
+   "warehouse": "aacf0448-aff7-5486-b6c8-c8577f4d851f (the override row in review_events VERSION AS OF 381, read after cleanup by Delta time travel; that version holds 5 created, 5 classified, 1 override)",
+   "positive_control": "uuid5(6ba15846-6243-50a8-bc03-82097efc7cd8, 'decision') = 1337f128-8dff-5b2c-8410-28bbf7249c60, row 10's logged event_id",
+   "result": "MATCH: the computed, logged and stored values are identical"
+  },
   "result": "PASS"
  },
  "12b_finality": {
@@ -31,10 +39,19 @@
   "input": "approved; rationale 'fix (c) row 12c non-assigned persona, must be refused' (53 chars)",
   "page_text": "Request refused. Request 1bf43ca7-3c89-55a3-af28-c6987545acee is assigned to demo_ic_rep_niaid, not demo_ic_rep_nimh. Hint: Only the assigned persona may decide. Nothing was classified or written.",
   "portal_log": {"event": "operator_refusal", "path": "/operator/decide", "check": "decision_refused", "status": 422, "input_values": {"decision": "approved", "reviewer_id": "demo_ic_rep_nimh", "rationale_chars": "53", "corrected_parent_label": null, "corrected_pcas": null}, "timestamp": "2026-11-09T22:35:40.203164+00:00"},
-  "result": "PASS: refused by check 6 on the server; the card stayed pending; nothing written (see history)",
+  "two_sided_result": {
+   "tamper_landed": "YES. The portal logged input_values.reviewer_id = demo_ic_rep_nimh, the edited value; the form held demo_ic_rep_niaid before the edit. This is the positive control on the tamper itself: the edited value reached the server, so the refusal cannot be explained by the devtools edit failing.",
+   "server_refused": "YES. Refused by check 6, the assignee rule, which names itself in the text: 'is assigned to demo_ic_rep_niaid, not demo_ic_rep_nimh'. Status 422. The card stayed pending, and history shows no write.",
+   "why_both_sides": "A refusal alone would be ambiguous about what the server received. The logged input value settles it: the server received the tampered value and refused it by the rule under test."
+  },
+  "result": "PASS, two-sided: the tamper landed AND the server refused it by the persona rule; the card stayed pending; nothing written (see history)",
   "same_property_class_as": "eval/results/auth/20261109_header_integrity_whoami.json (x-forwarded-* spoof test): a value the page controls is altered by hand, and the server still decides correctly. It matters for the MCP tool path too, which has no page in front of it."
  },
- "approver_refusals_during_row": "none: no approver_refused line in the portal log lines the owner supplied for 22:26-22:36Z. The approver check passed for the listed owner, so 12b and 12c reached checks 7 and 6.",
+ "approver_check_not_the_cause": {
+  "observation": "No approver_refused line anywhere in the portal log after 22:14:24Z. Owner-attested from the Apps Logs tab of deployment 01f1dc4ff3c61144bb1da6d2aad008db; Genie Code cannot read app logs.",
+  "reading": "Check 0 passed on all three attempts (12a, 12b, 12c), as expected for a listed approver. Each refusal names its own rule: 12b finality ('was already override'), 12c the assignee rule ('is assigned to ... not ...'). Neither is the uniform approver refusal text.",
+  "excluded": "The alternative explanation, that the approver check misfired, is excluded by the log's completeness. The window has no approver_refused line, and every refusal in it is an operator_refusal naming a later rule."
+ },
  "warehouse_check": {
   "by": "Genie Code, read-only, before cleanup",
   "review_requests": "5 rows. 9724345: override, decided_by demo_ic_rep_niaid, decision_at 2026-11-09 22:29:54.942, decision_rationale 'fix (c) row 12a override with corrections', corrected_parent_label true, corrected_pcas [\"LSDMA\",\"SPSQ\"]. 9725122, 9730348, 9797472, 9810625: pending; decided_by, decision_at, rationale and corrections null; all assigned to demo_ic_rep_niaid",
