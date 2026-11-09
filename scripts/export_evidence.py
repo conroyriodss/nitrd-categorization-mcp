@@ -61,6 +61,11 @@ VOID_RUNS = {
 }
 # Fixed reader notes, keyed by path relative to eval/results (prefix match on directories).
 NOTES = {
+    "auth/20261109_row9_approver_refused_3174122a.json": (
+        "Fix (c) row 9. The four portal-log lines were read by the owner from the Apps console Logs tab "
+        "(not retrievable by the runner) and transcribed verbatim; app logs rotate. Pairs with "
+        "runs/20261109T1527Z_lifecycle_3174122a/. The runner SP id is kept verbatim: it is the measured value."
+    ),
     "adv_bridge/": (
         "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool "
         "definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed "

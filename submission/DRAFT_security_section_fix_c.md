@@ -12,8 +12,13 @@ The deployed MCP tool path has no human positive control, because no person can 
 
 [After the fix: "Since commit <sha>, the portal refuses decisions from service-principal identities (run <id>; the portal log records not_in_set with the service principal's id), and the same kind of request is decided by a listed person on the review page (run <id>)."]
 
+Evidence held for the bracket, NOT yet filled in. Both halves are filled at once, after row 10 (owner, 2026-11-09):
+* First half, evidenced: commit `d7bad89`, lifecycle run `3174122a`. The portal log has four `approver_refused` lines, `reason: not_in_set`, `received: 0b542439-...` (the runner SP), `via: tool`, 15:27:50-15:28:50Z on deployment `01f1dc4ff3c61144bb1da6d2aad008db`. Source: `eval/results/auth/20261109_row9_approver_refused_3174122a.json`.
+* Second half, open: row 10 (`docs/RUNBOOK_rows_10_11.md`).
+
 ## Sources
 
 * `eval/results/auth/20261109_header_integrity_whoami.json`: the /whoami bodies and the spoof test.
 * `docs/PLAN_fix_c.md`, step 2: the design, the acceptance table (row 9 is the refusal-reason measurement) and the mutation checks.
+* `eval/results/auth/20261109_row9_approver_refused_3174122a.json` and `eval/results/runs/20261109T1527Z_lifecycle_3174122a/`: row 9, the deployed refusal and its logged reason.
 * d74756ca: the before state. It is in the stale-claims window, so cite it only as the BEFORE.

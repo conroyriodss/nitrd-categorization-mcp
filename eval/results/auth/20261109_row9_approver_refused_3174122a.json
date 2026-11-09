@@ -1,0 +1,46 @@
+{
+  "what": "Fix (c) acceptance row 9 (docs/PLAN_fix_c.md, step 2): the portal's server-side refusal reason for the deployed lifecycle run's refused decisions. This is the load-bearing measurement for fix (c) on the deployed MCP tool path.",
+  "how_obtained": "The owner read these lines from the Databricks Apps console, Logs tab of mcp-nitrd-reviewer-portal, on 2026-11-09, and pasted them verbatim. They are not retrievable by the runner or by Genie Code: no REST access to app logs, and app calls redirect to OAuth. App logs rotate, so this file is the durable copy. The four approver_refused lines and the build line are reproduced exactly as pasted.",
+  "portal": {
+    "app": "mcp-nitrd-reviewer-portal",
+    "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db",
+    "deployment_create_time": "2026-11-09T15:12:17Z",
+    "deployed_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+    "approver_set_configured": "NITRD_APPROVERS: conroyri@nih.gov (deploy/databricks/reviewer_portal/app.yaml, copied to the app root, byte-identical)",
+    "build_log_line": {"time_utc": "2026-11-09T15:13:19Z", "text": "Updated file: python/source_code/src/reviewer_portal/approvers.py"}
+  },
+  "lifecycle_run": {
+    "run_id": "3174122a-ef25-482f-910e-85b16073d75c",
+    "record": "eval/results/runs/20261109T1527Z_lifecycle_3174122a/ (exported verbatim from users.conroyri.nitrd_hackathon_v1_e2e_runs on 2026-11-09)",
+    "runner_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+    "started_at_utc": "2026-11-09T15:27:26.673Z",
+    "finished_at_utc": "2026-11-09T15:29:00.319Z",
+    "passed": true,
+    "labels": "4 (10506013 approved, 10388671 rejected, 10445135 deferred, 10075931 override), 14/14 checks each, L7c and L8c passed on every label",
+    "rows_left": {"review_requests": 0, "review_events": 0, "routing_events": 0},
+    "server_commits_recorded": "summary.commits.servers.reviewer_portal.deployment_id = 01f1dc4ff3c61144bb1da6d2aad008db (matches); commit null with DEPLOY_COMMIT ResourceDoesNotExist (the runner SP cannot read the marker; the declined CAN_READ grant, docs/PLAN_fix_c.md)"
+  },
+  "log_lines_verbatim": [
+    {"time_utc": "2026-11-09T15:27:50Z", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+    {"time_utc": "2026-11-09T15:28:13Z", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+    {"time_utc": "2026-11-09T15:28:31Z", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+    {"time_utc": "2026-11-09T15:28:50Z", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"}
+  ],
+  "consistency_checks": {
+    "count": "4 lines for 4 refused decisions (one L7c per label). An earlier session note expecting 5 was wrong: 5 is the offline refusal test's project count, not the live run's.",
+    "timing": "All four lines fall inside the run window 15:27:26.673Z-15:29:00.319Z, about 18-23 s apart, one per label.",
+    "received": "0b542439-4c28-4b16-9377-81fef5a0b1c2 is the runner app's service principal (the x-forwarded-email value it sends, measured by /whoami in eval/results/auth/20261109_header_integrity_whoami.json).",
+    "reason": "not_in_set on all four; no set_empty and no absent."
+  },
+  "establishes": [
+    "The x-forwarded-email header reaches the decision tool over POST /mcp on the deployed portal: the tool logged the caller's identity, not absent.",
+    "The approver set deployed: the reason is not_in_set, not set_empty, so NITRD_APPROVERS was non-empty in the running app.",
+    "The control discriminates on identity on the deployed tool path: it refused this caller because the identity it received is not listed, not because it refuses everything blind."
+  ],
+  "does_not_establish": [
+    "No listed human has been accepted on the deployed tool path. No person can call portal_submit_review_decision over /mcp from the runner, so the deployed tool path has a negative measurement only. The positive side on the deployed app is row 10 (/operator/decide, which shares check 0) and row 11 (agent approve route), both still to be run.",
+    "Header integrity for service principals is still an inference: the spoof test ran on a human sign-in only.",
+    "Nothing about the outputs or classifier apps, which are unchanged at 95e5dea."
+  ],
+  "secrets": "The runner SP's application id is kept verbatim because it is the measured value; this follows eval/results/auth/20261109_header_integrity_whoami.json. It is an identifier, not a credential."
+}
