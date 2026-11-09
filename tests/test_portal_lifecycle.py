@@ -21,6 +21,17 @@ checks the rows on the warehouse, then deletes exactly that request's rows
 (unless NITRD_E2E_KEEP_ROWS=1) and checks that none are left.
 
 Set NITRD_LIFECYCLE_REPORT=<path> to write the per-project checks as JSON.
+
+Fix (c) splits the scenario. Live, the caller is this process's own identity:
+the runner's service principal over http, or no HTTP request at all over
+stdio. Neither is a listed approver, so live runs take the REFUSAL path. The
+assigned persona's valid decision is refused by check 0, nothing is written,
+the request stays pending with only created + routed, and L13 confirms that
+on the warehouse. The decision path (L7-L12) runs offline, as the conftest
+approver. On the deployed portal the only person-decides check is manual
+(a listed person on /operator/decide). The deployed TOOL path has no human
+positive control: the logged refusal reason, not_in_set with the runner SP's
+UUID, stands in for one (docs/PLAN_fix_c.md).
 """
 
 from __future__ import annotations
@@ -35,7 +46,7 @@ from uuid import uuid4
 import pytest
 from fastmcp import Client
 
-from reviewer_portal import data
+from reviewer_portal import approvers, data
 from reviewer_portal.app import mcp as portal_mcp
 from tests.test_smoke_e2e import (
     _FIXTURE,
@@ -68,8 +79,17 @@ class Check:
 class Lifecycle:
     """Runs the scenario against one portal client and records checks."""
 
-    def __init__(self, portal: Client, project: dict, key: str, live: bool):
+    def __init__(
+        self,
+        portal: Client,
+        project: dict,
+        key: str,
+        live: bool,
+        expect_refusal: bool | None = None,
+    ):
         self.portal, self.project, self.key, self.live = portal, project, key, live
+        # Fix (c): live callers are not approvers (module docstring).
+        self.expect_refusal = live if expect_refusal is None else expect_refusal
         self.appl = project["appl_id"]
         self.decision = DECISIONS[self.appl]
         self.rid = str(data.request_id_for(key))
@@ -174,6 +194,9 @@ class Lifecycle:
         decide: dict[str, Any] = {"request_id": self.rid, "decision": self.decision}
         if self.decision == "override":
             decide |= {"corrected_parent_label": True, "corrected_pcas": self.pcas}
+        if self.expect_refusal:
+            await self.refused(reviewer, decide)
+            return
         err, w = await self.call(
             "portal_submit_review_decision",
             **decide,
@@ -256,6 +279,33 @@ class Lifecycle:
                 det or hist,
             )
 
+    async def refused(self, reviewer: str, decide: dict[str, Any]) -> None:
+        """Fix (c): the assigned persona's otherwise-valid decision, made by a
+        caller that is not a listed approver, is refused and writes nothing."""
+        err, w = await self.call(
+            "portal_submit_review_decision",
+            **decide,
+            reviewer_id=reviewer,
+            rationale=RATIONALE,
+        )
+        self.check(
+            "L7c a valid decision by a non-approver caller is refused (fix (c))",
+            err and approvers.REFUSAL in str(w),
+            w,
+        )
+        events = await self.my_events()
+        self.check(
+            "L8c the refused decision left only created + routed",
+            events == ["created", "routed"],
+            events,
+        )
+        mine = await self.pending_ids(reviewer)
+        self.check(
+            "L8c the request is still pending in the assigned queue",
+            mine is not None and self.rid in mine,
+            f"{reviewer}: {mine}",
+        )
+
     async def biconditional_refusals(self, reviewer: str) -> None:
         """Override corrections must agree; each violation is refused by its own
         rule (the message names it), so one rule cannot mask another."""
@@ -330,6 +380,22 @@ def _verify_and_clean_up(run: Lifecycle) -> None:
     try:
         rows = _rows_for(db, run.rid)
         req = rows["requests"]
+        if run.expect_refusal:
+            run.check(
+                "L13c warehouse request row is still pending, undecided",
+                len(req) == 1
+                and req[0]["status"] == "pending"
+                and req[0]["decided_by"] is None
+                and req[0]["sandbox"] is True,
+                req,
+            )
+            types = sorted(e["event_type"] for e in rows["events"])
+            run.check(
+                "L13c warehouse holds only created + routed events",
+                types == ["created", "routed"],
+                types,
+            )
+            return
         run.check(
             "L13 warehouse request row has the decision",
             len(req) == 1
@@ -430,6 +496,25 @@ async def test_lifecycle_offline(project):
     failed = [f"{c.name} :: {c.detail}" for c in run.checks if not c.ok]
     extra = OVERRIDE_CHECKS if run.decision == "override" else 0
     assert not failed and len(run.checks) == 14 + extra, failed
+
+
+REFUSAL_CHECKS = 10  # L1, L2, L3, L4, L5, L6 x2, L7c, L8c x2
+
+
+@pytest.mark.parametrize("project", PROJECTS, ids=lambda p: str(p["appl_id"]))
+async def test_lifecycle_offline_refusal_path(project, monkeypatch):
+    """The live (refusal) path, in-process: the real header reader finds no
+    HTTP request, so the caller is `absent`, exactly as over stdio."""
+    from tests.conftest import REAL_FORWARDED_EMAIL
+
+    monkeypatch.setattr(approvers, "forwarded_email", REAL_FORWARDED_EMAIL)
+    async with Client(portal_mcp) as portal:
+        run = Lifecycle(
+            portal, project, f"lifecycle-{uuid4()}", live=False, expect_refusal=True
+        )
+        await run.run()
+    failed = [f"{c.name} :: {c.detail}" for c in run.checks if not c.ok]
+    assert not failed and len(run.checks) == REFUSAL_CHECKS, failed
 
 
 def test_each_demo_project_has_a_distinct_decision():

@@ -8,6 +8,7 @@ What is being fixed: the portal enforces ordering and single-decision semantics,
 
 * (c) is the only server unfreeze. The outputs and classifier apps stay frozen at their current deployment.
 * Redeploy only the portal and runner apps. DEPLOY_COMMIT markers go in those two folders only (`deploy/databricks/README.md`, "DEPLOY_COMMIT scope restriction"). The marker names the commit actually deployed.
+  * Amended 2026-11-09 (owner): the agent app is redeployed too, for enforcement point (c), the approve route. `src/nitrd_agent/app.py` is not a pinned file. The owner is told before that redeploy, as for the others.
 * Tell the owner before each redeploy.
 * Every run artifact records the runner commit and the server commits (`summary.commits`). The post-(c) battery runs entirely on the new runner.
 * Declined: a CAN_READ grant for runner SP 0b542439. If the runner cannot read the commit markers, record the error.
@@ -38,6 +39,39 @@ As of the cca45b8 redeploy (2026-11-09 02:01Z: portal deployment 01f1dbe172c9173
 2. **Enforcement, built on what step 1 measured.**
    * No "email-shaped" check. Resolve the identity through the workspace API or an explicit approver set.
    * Propose the design first and wait for the owner.
+   * **Built 2026-11-09 (Option A, owner GO with changes 1-3).** Commits: "fix (c) 1/3" (portal), "fix (c) 2/3" (agent), "fix (c) 3/3" (runner lifecycle split, this plan, battery runbook, security draft).
+     * Gate, before building point (a): `get_http_headers()` on the DEPLOYED fastmcp 4.0.11 does not strip `x-forwarded-*`.
+       * Source read: fastmcp-slim 4.0.11, `server/dependencies.py:600-662`. The exclusion list is host, content-*, connection, transport, accept, authorization, cookie, proxy-*, mcp-session-id.
+       * Runtime check on 4.0.11 over streamable HTTP: the tool saw all three `x-forwarded-*` headers unchanged (names lowercased).
+       * In-process, it saw `{}`.
+       * `uv.lock` pins the same 4.0.11, so CI tests the deployed version.
+     * Rule: `x-forwarded-email` ONLY, compared with the approver set after `strip().lower()` on both sides.
+       * The approver set is `NITRD_APPROVERS`, read on every call. The portal's is in `deploy/databricks/reviewer_portal/app.yaml`; the agent's is configured separately in `deploy/databricks/nitrd_agent/app.yaml`.
+       * Unset or empty, or an absent header: refused. There is no fallback header and no test-mode allow.
+       * CHANGE 1, case-insensitive (owner): a case-sensitive match fails closed on a case variant and silently locks out a legitimate approver. Databricks identities are not case-distinguishable in practice.
+     * Enforcement points:
+       * (a) `portal_submit_review_decision` and (b) `POST /operator/decide`: check 0 in `decisions.submit_decision`, the single chokepoint. It runs before any read or write. `approver_email` and `via` are required keywords with no default. The persona check (6) is unchanged and orthogonal.
+       * (c) the agent's `POST /drafts/{id}/approve`, checked before the draft is claimed. The agent's own SP still CREATES pending requests after a listed person approves; creating is not a decision.
+     * Code: `src/reviewer_portal/approvers.py`, duplicated as `src/nitrd_agent/approvers.py`. Not in `src/shared`, which is in the frozen outputs and classifier builds (parity premise).
+     * Refusal: one uniform text that names no identity and no reason. CHANGE 3: the reason (`set_empty | absent | not_in_set`) and the received value are logged server-side only (`reviewer_portal.approvers`, `nitrd_agent.approvers`). The reason is a measurement.
+   * **Acceptance tests.** Offline rows are in CI (`tests/test_approvers_portal.py`, `tests/test_approvers_agent.py`, `tests/test_portal_lifecycle.py`).
+
+     | # | Where | Case | Pass condition |
+     | --- | --- | --- | --- |
+     | 1 | CI | rule table (both modules, same rows) | set unset / empty / separators only -> set_empty; header absent / blank -> absent; SP UUID, SP's email-shaped x-forwarded-user, spoof, suffix-extended email -> not_in_set |
+     | 2 | CI | rule table | exact, different-case, and whitespace-padded received value accepted; entries normalized too |
+     | 3 | CI, tool over real streamable HTTP (uvicorn, 4.0.11) | SP UUID / unknown / absent / listed value only in other headers | refused; `record_decision` never called; still pending with created + routed; reason logged with the received value |
+     | 4 | CI, same | listed email (mixed case) | recorded once; created + routed + approved (offline positive control) |
+     | 5 | CI, `/operator/decide` | the cases of rows 3 and 4 | refused page (422) with no write, or 303 with one write |
+     | 6 | CI, agent approve | the cases of rows 3 and 4 | write tool never called and draft unclaimed; or exactly one write |
+     | 7 | CI, all three | empty set, listed person | all refused, `set_empty` |
+     | 8 | Deployed, runner lifecycle | runner SP submits, then the assigned persona's valid decision | L7c refused; L8c created + routed, still pending; L13c warehouse row pending and undecided; L14 cleanup to 0 |
+     | 9 | **Deployed, portal server log, tool path** | the row-8 refusals | **each logs `via: tool`, `reason: not_in_set`, `received: 0b542439-4c28-4b16-9377-81fef5a0b1c2` (the runner SP's UUID). That proves the header reached the tool over /mcp. If it logs `absent`, the control is BROKEN-CLOSED: every deployed negative test still passes while the control does nothing. STOP and report. A passing negative suite is not success.** |
+     | 10 | Deployed, manual | owner decides on `/operator/decide` | accepted; recorded by persona; the owner's sign-in is in the action log |
+     | 11 | Deployed, manual | owner approves an agent draft | accepted; one pending request created |
+
+   * **The deployed tool path has no human positive control.** No person can call `portal_submit_review_decision` over /mcp from the runner. The logged refusal reason (row 9) stands in for one. A person deciding is shown on the deployed portal only through `/operator/decide` (row 10), which shares check 0 with the tool. The same statement is in the security-section draft (`submission/DRAFT_security_section_fix_c.md`), so it does not live only in this plan.
+   * Mutation checks (2026-11-09): replacing the portal check with a no-op fails 13 tests; making it case-sensitive fails 8; always-allow in the agent fails 7; a no-op on the lifecycle refusal path fails 4.
 3. **Decide-by-request_id view**, a separate commit after (c) is green.
    * Needed because the browser demo (2026-11-09, `eval/results/demo/`) showed an approved agent-drafted request on no operator page checked, while its row existed and was pending.
    * **Acceptance test:** an approved `agent-draft:` request appears on the view. This shows the request is reachable on the new view. It does NOT discriminate prefix from cap: a by-request_id view bypasses the cohort listing, where both candidate causes act.

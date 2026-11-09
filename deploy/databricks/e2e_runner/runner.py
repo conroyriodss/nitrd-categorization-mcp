@@ -26,11 +26,13 @@ Jobs run one at a time, started from the browser:
                     Read-only: write tools only get inputs that must fail,
                     and the review-table row counts must not change.
   /api/start/lifecycle  tests/test_portal_lifecycle.py with
-                    NITRD_E2E_TRANSPORT=http: submit -> pending -> decision
-                    -> history on the deployed portal for the 3 demo projects
-                    (approved / rejected / deferred), plus the error paths
-                    that must write nothing. Writes sandbox rows, checks them
-                    on the warehouse, then deletes them by request_id.
+                    NITRD_E2E_TRANSPORT=http: submit -> pending on the
+                    deployed portal for each demo project. Since fix (c),
+                    this app's SP is not a listed approver, so the assigned
+                    persona's decision must be REFUSED. The request stays
+                    pending with only created + routed, checked on the
+                    warehouse. The decision path runs offline only. Writes
+                    sandbox rows, then deletes them by request_id.
   /api/start/contract  tests/test_smoke_contract.py with
                     NITRD_E2E_TRANSPORT=http, read-only: error paths, limit
                     truncation and empty results (outputs), probability bands

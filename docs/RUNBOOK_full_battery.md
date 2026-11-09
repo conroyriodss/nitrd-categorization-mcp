@@ -151,6 +151,26 @@ Expected `/api/status` after done:
 Invalid if: any label has `failed` entries, `rows_left` nonzero, or
 `passed: false`.
 
+**Since fix (c) (runner at or after the fix (c) 3/3 commit):** the runner SP
+is not a listed approver, so lifecycle runs the REFUSAL path. Per label:
+* checks L1-L6 (preview and its fixture routing, submit, idempotency, queue);
+* L7c: the assigned persona's valid decision is refused with the uniform
+  approver text;
+* L8c: only created + routed, and the request is still pending;
+* L13c: on the warehouse, the row is pending and undecided, with only created
+  + routed events;
+* L14: cleanup.
+That is 14 checks per label (the offline refusal test runs 10, without the live L1 routing check, L13c and L14). A label showing L9-L12 (a recorded decision)
+means the SP decided, and the run is INVALID.
+
+A passing lifecycle is NOT sufficient on its own: a control that never sees
+the header would refuse everything and pass too. After the run, the portal's
+server log must show an
+`{"event": "approver_refused", "via": "tool", "reason": "not_in_set", "received": "0b542439-4c28-4b16-9377-81fef5a0b1c2"}`
+line for each refused decision. Read it in the portal app's Logs tab or at
+`<portal-url>/logz`. If it shows `reason: absent`, the control is
+broken-closed: STOP, and do not count the run (docs/PLAN_fix_c.md).
+
 ### 5. Contract (read-only contracts + latency)
 
     GET /api/start/contract
