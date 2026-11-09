@@ -22,6 +22,28 @@ As of the cca45b8 redeploy (2026-11-09 02:01Z: portal deployment 01f1dbe172c9173
 * If the 2026-11-16 rollback to 95e5dea happens, they become current again.
 * While this window is open, nothing in the deliverables may cite them as describing the shipped build.
 
+## Adversarial counted result vs the shipped agent (settled 2026-11-09)
+
+The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-sol`, max_turns 16) measured `src/nitrd_agent/agent.py` at sha256 0c57cbe4 (git a4718e7). The shipped agent, deployed at d7bad89, has 7dbc92fa, which is c91e1bf, the allowlist gate fix. Fix (c) does not touch `agent.py` or `capture.py` (3169b750 throughout).
+
+* **`agent.py` diff, 0c57cbe4 -> 7dbc92fa.** Two hunks, both the tool-filter mechanism:
+  * The new `tool_filter(server)` builds an allowlist from `config.EXPOSED_TOOLS`.
+  * `Session.__aenter__` drops the denylist (`blocked_tool_names=NEVER_EXPOSED`, portal only) and applies `tool_filter(name)` to every server.
+  * Nothing in either hunk touches instructions or prompt assembly, max_turns or loop control, the model, the client, or capture.
+* **The rest of the agent's runtime, 021defd7 -> HEAD:**
+  * `config.py` adds `EXPOSED_TOOLS`, plus comments. `NEVER_EXPOSED` is kept as a scoring constant.
+  * `gate.py` changes its docstring only.
+  * `app.py` and `approvers.py` (fix (c)) are not used by `run_adv.py`, which imports `nitrd_agent.agent.Session`.
+  * `uv.lock`, `pyproject.toml` and the agent's `requirements.txt` are unchanged. The adversarial venv has openai-agents 0.24.0, openai 3.46.0 and mcp 2.3.0.
+* **Tool names offered:** `tests/test_agent_allowlist_identity.py` passed (5/5) on 2026-11-09 in the adversarial venv. It does not run in the dev env, which lacks `agents` and SKIPS it.
+  * Old gate (a4718e7, hash-checked 0c57cbe4) and new gate both offer the same 12 MCP tools, plus the draft tool in both.
+  * The 120 records of 6ab39b17 show the same 13 tools.
+* **Tool definitions offered:** checked separately, 2026-11-09, with an ad hoc script that was not committed.
+  * Method: the server trees of 021defd7 (via `git archive`; import paths confirmed to resolve to that tree, which has no fix (c) code) and of HEAD both listed their tools in-process. The 12 offered definitions (description, input and output schema, annotations) were compared by sha256.
+  * Result: all 12 are identical. The server changes since 021defd7 are confined to the portal's decision tool (never offered), `/whoami`, and the decision path.
+* **Conclusion:** the only behavioural difference is the filter mechanism. The resulting tool set, names and definitions, is identical, so the counted result transfers to the shipped build.
+  * What that does NOT cover: the served model behind `databricks-gpt-6-1-sol` is the same endpoint name, not a pinned weight. The result describes the model as measured on 2026-11-08, and the transport is stdio, not the deployed apps.
+
 ## Steps, in order
 
 1. **Measure identity: GET /whoami.** Committed 62e65ab (read-only, `src/reviewer_portal/routes.py`; runner probe in `deploy/databricks/e2e_runner/runner.py`).
