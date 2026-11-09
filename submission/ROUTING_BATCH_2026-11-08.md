@@ -137,7 +137,7 @@ From here on, each row is anchored by its quoted old text. Line numbers are kept
   * Of the 24 rows above, 22 quote old text, and every one of those quotes is present verbatim. The other two ("After (c) lands" and "After a view lands") are appends with no old text.
   * Deck 365-367 matches cell by cell; table cells are separate lines in the extract.
   * No row's text has changed or vanished **in that copy**.
-* **NOT checked against 11-06b.** No file named or dated 11-06b exists in the repo or the workspace, so no row has been confirmed against the live document. Until 11-06b is supplied and checked, every row is anchored to 474dcf55/bd5ba682 only. Rows whose quote is missing from 11-06b will be reported, not re-created.
+* ~~NOT checked against 11-06b.~~ Superseded 2026-11-09: 11-06b is now committed (`submission/README.md`), and every row has been checked against it. See "Amendment (2026-11-09): rows re-anchored to 11-06b" at the end.
 * ~~The figure check below suggests 11-06b differs from the committed copy. The reviewer quoted IDs (c224dd3f, 5704d50c, 778bd3ab, d74756ca, 41/41/41) that do not occur in the committed DOCX or deck.~~ Withdrawn 2026-11-09 (owner): c224dd3f and d74756ca are in this batch, which the reviewer also had, so they cannot show divergence. The proper test is in "Amendment (2026-11-09): does 11-06b diverge?" below.
 
 ### Terms: two approval events
@@ -332,3 +332,53 @@ Proposed for DOCX §4, Lessons learned. Placement is the owner's choice. Each in
 5. **report.json and the pre-registration get no edit.** A one-line reader note in this repo's validation map records that report.json carries the pre-registered set, and the deliverables add 0.82.
 
 I checked what each value is attached to, in both places, on 2026-11-09, from the files cited above. The Hanegraaf attributions of 0.72 and 0.82 are the owner's statement and the DOCX's. I have not read the paper itself.
+
+**Re-checked against 11-06b.**
+* The DOCX benchmark text is unchanged in 11-06b: the scope line, the three κ table rows and the Hanegraaf note (11-06 extract lines 234, 236, 244, 248, 252, 253 and 267) are all present verbatim.
+* The deck differs. The "now uses ... 0.82" sentences (11-06 extract lines 209 and 297) and face line 46 are not in 11-06b.
+* In 11-06b, 0.72 appears in the slide notes at 11-06b extract line 31 ("Hanegraaf's 0.72 appears in the paper but describes its own review screening; it is not the synthesis mean") and line 235 ("Hanegraaf's 0.72 describes its own review screening").
+* Reconciliation item 4 now applies to those two sentences: "... it is not the synthesis mean" becomes "... it is the pre-registered analog; the synthesis mean 0.82 is added beside it".
+
+## Amendment (2026-11-09): rows re-anchored to 11-06b
+
+11-06b is committed: `submission/NITRD_Evaluation_2026-11-06b.docx` (`2b70c7bc`) and `submission/NITRD_Hackathon_Presentation_2026-11-06b.pptx` (`c9745081`). The extracts were made with `scripts/extract_submission_text.py`, which first reproduced both committed 11-06 extracts byte for byte.
+
+**Divergence test repeated on 11-06b.** All five owner quotes are present in the 11-06b DOCX, against 3 of 5 in 474dcf55. So the test discriminates, and 11-06b is the version the reviewer read.
+* 11-06b cites 5704d50c (2 DOCX, 2 deck), 778bd3ab (3, 4), 315b5bc2 (2, 1) and 3d778528 (2, 1). It does not cite 6e0e5d36.
+* c224dd3f, d74756ca and 41/41 are not in 11-06b, so the reviewer took them from this batch, as the owner said.
+* **How far it diverges, by lines of the extract:**
+  * DOCX: 296 of 11-06b's 341 lines are also in 474dcf55; 30 are only in 11-06b, and 11 only in 474dcf55.
+  * Deck: 250 of 313 lines are shared; 35 are only in 11-06b, and 84 only in bd5ba682.
+  * Against the first committed revision (54fed8b), the DOCX shares 290 lines.
+  * So 11-06b is neither the committed copy nor an earlier committed revision. It is a separately edited branch: its slide 1 notes read "Revision 2026-11-06b; corrections B3, C1-C5, latency, failure table applied".
+
+**Re-anchoring.** I extracted 64 quoted fragments from the batch's table rows (the anchor and old-text columns) and checked each against 11-06 and 11-06b.
+* Most fragments not found in either are proposed new text, batch-internal wording (the Terms table), or quotes of repo files. They are not anchors.
+* **8 anchor rows quote old text that is present in 474dcf55/bd5ba682 but MISSING from 11-06b.** Nothing is re-created. What 11-06b says instead is given so each row can be retired or re-anchored.
+
+| Batch row (line) | Old text quoted (from 474dcf55/bd5ba682) | What 11-06b has instead | Status |
+| --- | --- | --- | --- |
+| Correction, DOCX 294 (L54) | "Every submit, route, and decision writes an audit event recording the persona acted-as and the signed-in workspace user." | DOCX line 297: "Review and routing events record the persona acted-as or system. Operator-page decision and retry logs additionally record the workspace identity in App logs only; that identity is not recorded in every review or routing event." | **Retire: the correction is already applied in 11-06b.** One residual is for the owner. "Not recorded in every" may understate: the event columns (`src/reviewer_portal/data.py:87`) have no identity column, only `actor_id` (the persona). I did not check the content of the `details` JSON. |
+| Correction, DOCX 300 (L55) | "audit events distinguish the persona acted-as from the signed-in workspace user" | DOCX line 303: "review and routing events carry persona or system identifiers; operator-page decision and retry logs additionally carry workspace identity in App logs only" | **Retire: already applied in 11-06b.** |
+| Correction, DOCX 289 (L70) | "...gate the only writing server on user confirmation — a per-server trust decision hosts already support." | DOCX line 292: "...and gate the writing server on user confirmation." The "per-server trust decision" clause is gone. | **Re-anchor to the 11-06b sentence.** The correction still applies: 11-06b does not say that the gate is client-side, or that the portal did not check who records a review decision. |
+| Correction, deck 19 (L71) and Item 1 fix (L173) | "An MCP Service-"Write" prototype: shortlist, classify, and refresh — with the human in the loop." | Not in 11-06b. The slide 1 notes now open "Revision 2026-11-06b; ..." followed by the headline scope; the face still reads "An MCP Service-"Write" prototype with human review". | **Retire both rows: the sentence is gone.** The face line carries no "refresh" and no claim about where approval is enforced. |
+| Item 1, DOCX evidence map (L179) | "NIH portfolio screening, transparent PCA suggestions and SME-reviewed refresh (§4)" | DOCX line 21: "NIH portfolio screening, transparent PCA suggestions and SME review of refresh candidates (§4)". Line 27 adds "rebuilding and validating the refreshed fingerprint remain proposed". | **Retire: already rescoped in 11-06b,** in different words with the same effect. |
+| Item 1, deck slide 3 notes (L180) | "Emphasize three tasks: shortlist (Task 1), PCA suggestions (Task 2), and fingerprint refresh (Task 3)." | Deck line 61: "Emphasize three tasks: shortlist (Task 1), PCA suggestions (Task 2), and review of refresh candidates (Task 3)." | **Retire: already rescoped in 11-06b.** |
+| Item 2, DOCX §1 deployed-path verification (L196) | "[Verified] Parity run 6e0e5d36 (2026-11-06): 71/71 cases ..." | DOCX line 46: "[Verified] Parity run 5704d50c (2026-11-03) ... [Verified] End-to-end run 778bd3ab ... [Team-reported] Smoke run 315b5bc2 ... [Team-reported] Full-lifecycle run 3d778528 ..." | **Re-anchor to 11-06b line 46.** The citations are older still: 5704d50c and 778bd3ab are "history only" in the validation map. The proposed text stays PENDING the post-(c) battery. |
+
+The other anchor rows were all found verbatim in 11-06b, after normalising quotes, dashes and whitespace.
+
+**Item 2 sweep repeated on 11-06b.** I ran the same keyword set (unmeasured, not measured, [Planned], scripted, fixed chain, tool selection, adversarial, injection, autonomous, not tested, remain proposed, approval bypass, agent-level). It hit 23 DOCX and 26 deck lines. Of these, 36 are identical to an 11-06 line already covered by the first sweep. The other 13 are new or changed lines, read by meaning:
+
+| 11-06b line | Text | Disposition |
+| --- | --- | --- |
+| Deck slide 9 notes, line 241 | "Not measured: agent tool selection, injection resistance, reviewer time, incumbent-screen savings or assisted-review outcomes." | **New row.** Proposed: "Measured narrowly: agent tool selection (the functional suite reached the ceiling on two models and does not discriminate) and injection resistance (one payload family, one model, no write tool offered; approval bypass not tested). Not measured: reviewer time, incumbent-screen savings or assisted-review outcomes." |
+| DOCX line 285 | "[Verified] Observed parity-suite latency: p50 644.7 ms and p95 2909.2 ms in the 71-case scripted HTTP suite (run 5704d50c)." | **New row: superseded citation.** 5704d50c is "history only"; the 95e5dea battery recorded p50 558.7 / p95 1523.7 ms (d2ddab69), which is itself inside the stale-claims window. PENDING the post-(c) battery. |
+| Deck slide 6 notes, line 173 | "[Verified] Historical parity run 5704d50c records p50 644.7 ms and p95 2909.2 ms ..." | It is labelled "Historical", so it is not misleading as it stands. It is linked to the DOCX line 285 row so that both update together. |
+| Deck slide 3 notes, line 61 | "... Existing HTTP evidence uses a fixed tool chain; autonomous tool selection is unmeasured." | **Covered.** The existing deck slide 3 row's anchor sentence is present verbatim in this line. |
+| DOCX §3 line 303 | "These are deterministic execution constraints, not authenticated user authorization or demonstrated prompt-injection resistance." | Checked and left. It is true as stated: the constraints are not injection resistance. |
+| DOCX line 5, deck line 16 | evidence-tier definitions including [Planned] | Checked and left: definitions, not claims. |
+| DOCX line 27, deck line 28 | "rebuilding and validating the refreshed fingerprint remain proposed" | Checked and left. This is the rescoping item 1b asked for. |
+| Deck slide 6 notes, line 172; slide 9 notes, lines 235, 236 and 240 | reviewer time unmeasured; benchmark scope; contextual studies not measured outcomes; forecast addendum [Planned] | Checked and left: not about agent evaluation. Line 235 is handled under benchmark reconciliation. |
+
+Tally: 64 quoted fragments checked; 8 anchor rows missing from 11-06b (6 retire: L54, L55, L71, L173, L179, L180; 2 re-anchor: L70, L196); 2 new rows from the sweep (deck slide 9 notes line 241; DOCX latency line 285); no deleted block re-created.
