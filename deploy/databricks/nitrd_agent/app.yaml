@@ -40,3 +40,9 @@ env:
   # only as a supervised one-shot (void run c1ab24d7, eval/agent/README.md).
   - name: NITRD_AGENT_AES_ON_START
     value: "0"
+  # Fix (c): the people who may Approve a draft (nitrd_agent.approvers),
+  # comma-separated, matched against x-forwarded-email after strip().lower().
+  # Unset or empty refuses every approval (fails closed). Configured separately
+  # from the portal's list (deploy/databricks/reviewer_portal/app.yaml).
+  - name: NITRD_APPROVERS
+    value: conroyri@nih.gov

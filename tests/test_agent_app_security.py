@@ -80,14 +80,16 @@ def test_cross_site_post_refused(client, monkeypatch, path, headers):
     assert r.status_code == 403
 
 
-def test_same_origin_approve_reaches_the_gate(client):
-    # Same-origin: passes the check and reaches the draft store.
-    # The id is unknown, so the page says "Not approved".
+def test_same_origin_approve_reaches_the_gate(client, monkeypatch):
+    # Same-origin and a listed approver: passes both checks and reaches the
+    # draft store. The id is unknown, so the page says "Not approved".
+    monkeypatch.setenv("NITRD_APPROVERS", "a@b.gov")
     r = client.post(
         "/drafts/nope/approve", headers={"origin": SAME, "x-forwarded-email": "a@b.gov"}
     )
     assert r.status_code == 200
     assert "Not approved" in r.text
+    assert "not authorised" not in r.text  # refused by the store, not the list
 
 
 def test_same_origin_by_referer_and_forwarded_host(client):

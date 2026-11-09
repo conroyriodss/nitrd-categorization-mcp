@@ -12,7 +12,9 @@ for this commit, suite and model is already recorded.
 The app's service principal calls the three MCP apps (CAN_USE) and the model
 endpoint. The approver's identity is shown on the page from the platform's
 X-Forwarded-Email header and kept in memory only; it is not written to the
-sandbox tables (no PII there).
+sandbox tables (no PII there). Approve accepts only an email in this app's
+NITRD_APPROVERS (nitrd_agent.approvers, fix (c)); anything else, including a
+service principal's application id, is refused before the draft is claimed.
 
 Every state-changing route is POST and passes a same-origin check
 (`_cross_site`): a browser request whose Origin (or, failing that, Referer)
@@ -49,7 +51,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse
 from starlette.routing import Route
 
-from nitrd_agent import capture, config, gate
+from nitrd_agent import approvers, capture, config, gate
 from nitrd_agent.agent import Session, disable_sdk_tracing
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -237,9 +239,11 @@ async def drafts(request: Request) -> HTMLResponse:
 async def approve(request: Request) -> HTMLResponse:
     if _cross_site(request):
         return _refuse_cross_site()
-    who = request.headers.get("x-forwarded-email")
-    if not who:
-        return _page("Not approved", "<p>Approval needs a signed-in person.</p>")
+    # Fix (c): only a listed approver (nitrd_agent.approvers), checked before
+    # the draft is claimed, so a refusal leaves the draft awaiting approval.
+    who = request.headers.get(approvers.HEADER)
+    if not approvers.check(who, via="agent_approve"):
+        return _page("Not approved", f"<p>{escape(approvers.REFUSAL)}</p>")
     try:
         draft = DRAFTS.claim(request.path_params["draft_id"])
     except (KeyError, ValueError) as exc:
