@@ -30,3 +30,10 @@ env:
     value: https://mcp-nih-grants-outputs-7474654188777746.aws.databricksapps.com/mcp
   - name: PORTAL_CLASSIFIER_URL
     value: https://mcp-nitrd-classifier-7474654188777746.aws.databricksapps.com/mcp
+  # Fix (c): the people who may decide (reviewer_portal.approvers), comma-separated,
+  # matched against x-forwarded-email after strip().lower(). Unset or empty refuses
+  # every decision (fails closed). A service principal's x-forwarded-email is its
+  # application id, so no SP can be listed by accident. The agent app has its own
+  # separately configured list (deploy/databricks/nitrd_agent/app.yaml).
+  - name: NITRD_APPROVERS
+    value: conroyri@nih.gov

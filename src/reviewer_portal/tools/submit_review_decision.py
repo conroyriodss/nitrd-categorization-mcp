@@ -12,7 +12,10 @@ NITRD). Both are required for override and must be omitted otherwise.
 
 This tool is a thin wrapper: every rule is checked in
 reviewer_portal.decisions.submit_decision, which the review page calls too.
-Do not add checks here; add them there.
+Do not add checks here; add them there. The only thing it adds is the
+caller's x-forwarded-email (reviewer_portal.approvers.forwarded_email), which
+it passes in for check 0. Over stdio or in-process there is no HTTP request,
+so the header is absent and the decision is refused.
 """
 
 from typing import Annotated
@@ -21,7 +24,7 @@ from uuid import UUID
 from fastmcp import FastMCP
 from pydantic import Field
 
-from reviewer_portal import decisions
+from reviewer_portal import approvers, decisions
 from reviewer_portal.decisions import (
     RATIONALE_MAX,
     RATIONALE_MIN,
@@ -91,6 +94,8 @@ def register(mcp: FastMCP) -> None:
         a demonstration, not RCDC coding.
         """
         return await decisions.submit_decision(
+            approver_email=approvers.forwarded_email(),
+            via="tool",
             request_id=request_id,
             reviewer_id=reviewer_id,
             decision=decision,

@@ -22,12 +22,13 @@ import pytest
 from fastmcp import Client
 from fastmcp.exceptions import ToolError
 
-from reviewer_portal import decisions, pages, routing
+from reviewer_portal import approvers, decisions, pages, routing
 from reviewer_portal.app import mcp as portal_mcp
 from reviewer_portal.classifier_client import PARENT
 from reviewer_portal.tools import submit_review_decision as tool_module
 from shared.urls import reporter_url
 from tests import test_portal_submission as item4
+from tests.conftest import TEST_APPROVER
 from tests.test_portal_selector import LABELS
 from tests.test_portal_submission import (
     Classifier,
@@ -68,6 +69,10 @@ def back(**view) -> dict[str, str]:
 
 
 async def decide(request_id, reviewer_id=REP, view=None, headers=None, **form):
+    """POST /operator/decide as the default listed approver (conftest) unless
+    headers are given."""
+    if headers is None:
+        headers = {approvers.HEADER: TEST_APPROVER}
     body = {"request_id": str(request_id), "reviewer_id": reviewer_id}
     body |= back(**(view if view is not None else {"persona": reviewer_id}))
     body |= form
@@ -270,7 +275,10 @@ OVERRIDES = {
 
 
 @pytest.mark.parametrize("choice", list(OVERRIDES))
-async def test_each_decision_type_end_to_end(cohort, portal, choice, caplog):
+async def test_each_decision_type_end_to_end(
+    cohort, portal, choice, caplog, monkeypatch
+):
+    monkeypatch.setenv(approvers.APPROVERS_ENV, "judge@example.gov")
     appl = members()[0][0]
     rid = cohort[appl]
     view = {"persona": REP, "tier": "ic_rep"}

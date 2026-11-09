@@ -49,6 +49,7 @@ from starlette.responses import (
 )
 
 from reviewer_portal import (
+    approvers,
     cohort,
     data,
     decisions,
@@ -1267,6 +1268,8 @@ async def decide(request: Request) -> Response:
     try:
         request_id = _request_id(form.get("request_id"))
         result = await decisions.submit_decision(
+            approver_email=request.headers.get(approvers.HEADER),
+            via="operator_decide",
             request_id=request_id,
             reviewer_id=form.get("reviewer_id") or "",
             decision=form.get("decision"),

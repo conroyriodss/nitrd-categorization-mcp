@@ -14,6 +14,12 @@ MCP clients, but does not enforce them.
 Checks, in order; each failure is a ToolError naming the problem, raised
 before any write:
 
+0. the caller is an approver: approver_email (x-forwarded-email, passed in
+   by each caller from its own request) is in NITRD_APPROVERS
+   (reviewer_portal.approvers; fix (c)). This runs before anything is read,
+   and its refusal text is uniform: it names no identity and no reason.
+   It is orthogonal to check 6. The persona says whose queue the request
+   is in; the approver check says a listed person is acting.
 1. reviewer_id is an active demo persona
 2. decision is one of approved, rejected, deferred, override
 3. rationale is 10-2000 characters after trimming (all four decisions)
@@ -37,7 +43,7 @@ from uuid import UUID
 
 from pydantic import Field
 
-from reviewer_portal import data
+from reviewer_portal import approvers, data
 from reviewer_portal.models import (
     ClassificationStatus,
     Decision,
@@ -157,6 +163,8 @@ def check_decidable(request: ReviewRequestRecord, reviewer_id: str) -> None:
 
 async def submit_decision(
     *,
+    approver_email: str | None,
+    via: str,
     request_id: UUID,
     reviewer_id: str,
     decision: Decision | str | None,
@@ -164,7 +172,12 @@ async def submit_decision(
     corrected_parent_label: bool | None = None,
     corrected_pcas: list[str] | None = None,
 ) -> SubmitDecisionResult:
-    """Check every rule (module docstring, 1-8), write, read back."""
+    """Check every rule (module docstring, 0-8), write, read back.
+
+    approver_email and via are required keywords with no default, so no
+    caller can skip check 0 by leaving them out.
+    """
+    approvers.require_approver(approver_email, via=via)
     data.require_persona(reviewer_id)
     choice = check_decision(decision)
     text = check_rationale(rationale)

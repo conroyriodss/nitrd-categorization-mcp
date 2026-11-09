@@ -20,6 +20,7 @@ from nih_grants_outputs.app import mcp as outputs_mcp
 from nitrd_classifier import data as classifier_data
 from nitrd_classifier.app import mcp as classifier_mcp
 from nitrd_classifier.config import settings as classifier_settings
+from reviewer_portal import approvers as portal_approvers
 from reviewer_portal.app import mcp as portal_mcp
 from shared import sql
 from tests import live_guard
@@ -32,6 +33,22 @@ SCORER_VENDORED = all(
 needs_scorer = pytest.mark.skipif(
     not SCORER_VENDORED, reason="nitrd_intensity v0.1.0 files not vendored"
 )
+
+# Fix (c): in-process tool calls have no HTTP request, so the portal refuses
+# them as `absent`. That is correct in production, but most tests exercise
+# the decision rules after check 0. So by default every test runs as one
+# listed approver, and the tests of the approver check itself
+# (tests/test_approvers_portal.py) override both values. This is a test
+# fixture, not a production allow: nothing in src/ reads it.
+TEST_APPROVER = "approver@example.test"
+REAL_FORWARDED_EMAIL = portal_approvers.forwarded_email
+
+
+@pytest.fixture(autouse=True)
+def default_approver(monkeypatch):
+    monkeypatch.setenv(portal_approvers.APPROVERS_ENV, TEST_APPROVER)
+    monkeypatch.setattr(portal_approvers, "forwarded_email", lambda: TEST_APPROVER)
+    return TEST_APPROVER
 
 
 @pytest.fixture(scope="session", autouse=True)
