@@ -1,0 +1,27 @@
+{
+ "what": "Every approver_refused line in the reviewer portal's log for deployment 01f1dc4ff3c61144bb1da6d2aad008db (created 2026-11-09T15:12:17Z, commit d7bad89), as of the owner's read after the 21:47Z parity re-run. Each line is attributed to a runner run whose window contains it. This closes the 'lifecycle log lines owed' item for run 2f0a3f65 and accounts for every refusal line, not only the expected ones.",
+ "how_obtained": "The owner searched approver_refused in the Apps console, mcp-nitrd-reviewer-portal, Logs tab, on 2026-11-09 after run d08b246f finished (21:51:36Z), and pasted all results verbatim. The console showed times in EST; time_utc is that time + 5 h. The deployment column showed '...ad008db' on every line. Genie Code cannot read app logs (Apps reject its PAT: 401 on the runner, 'OAuth Token not supported for current auth type pat' from apps logs). App logs rotate, so this file is the durable copy.",
+ "expected_by_source": "Runs since the portal deployment that call portal_submit_review_decision on the deployed portal (users.conroyri.nitrd_hackathon_v1_e2e_runs, started_at >= 2026-11-09T15:00Z, read by Genie Code): lifecycle 3174122a (4 decisions), parity 7f3b2f82 (1 probe), lifecycle 2f0a3f65 (4), parity 47501246 (1). smoke d6243323, contract b5de1708, auth b6941165 and e2e 0dbd05d2 / d08b246f do not call the decision tool on the deployed portal. Expected total 10.",
+ "log_lines_verbatim": [
+  {"console_time": "Nov 9, 2026, 10:27:50 AM EST", "time_utc": "2026-11-09T15:27:50Z", "run": "lifecycle 3174122a (15:27:26.673Z-15:29:00.319Z)", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 10:28:13 AM EST", "time_utc": "2026-11-09T15:28:13Z", "run": "lifecycle 3174122a", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 10:28:31 AM EST", "time_utc": "2026-11-09T15:28:31Z", "run": "lifecycle 3174122a", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 10:28:50 AM EST", "time_utc": "2026-11-09T15:28:50Z", "run": "lifecycle 3174122a", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 03:43:52 PM EST", "time_utc": "2026-11-09T20:43:52Z", "run": "parity 7f3b2f82 (20:43:12.912Z-20:45:18.775Z)", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 03:49:44 PM EST", "time_utc": "2026-11-09T20:49:44Z", "run": "lifecycle 2f0a3f65 (20:49:29.049Z-20:50:48.492Z)", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 03:50:01 PM EST", "time_utc": "2026-11-09T20:50:01Z", "run": "lifecycle 2f0a3f65", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 03:50:19 PM EST", "time_utc": "2026-11-09T20:50:19Z", "run": "lifecycle 2f0a3f65", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 03:50:38 PM EST", "time_utc": "2026-11-09T20:50:38Z", "run": "lifecycle 2f0a3f65", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"},
+  {"console_time": "Nov 9, 2026, 04:48:07 PM EST", "time_utc": "2026-11-09T21:48:07Z", "run": "parity 47501246 (21:47:30.590Z-21:49:19.650Z); the run's own stderr has 'Error calling tool portal_submit_review_decision' at 21:48:07", "line": "{\"event\": \"approver_refused\", \"reason\": \"not_in_set\", \"received\": \"0b542439-4c28-4b16-9377-81fef5a0b1c2\", \"via\": \"tool\"}"}
+ ],
+ "accounting": {
+  "lines_found": 10,
+  "lines_expected": 10,
+  "by_run": {"3174122a": 4, "7f3b2f82": 1, "2f0a3f65": 4, "47501246": 1},
+  "unaccounted": 0,
+  "all_lines": "reason not_in_set, received 0b542439-4c28-4b16-9377-81fef5a0b1c2 (the runner SP), via tool. No absent, no set_empty, no other received value.",
+  "crosscheck_row9": "The four 3174122a times (15:27:50Z, 15:28:13Z, 15:28:31Z, 15:28:50Z) equal the four committed in auth/20261109_row9_approver_refused_3174122a.json.",
+  "limit": "This is the search result the owner pasted; completeness of the console search is owner-attested. The runner SP id is kept verbatim: it is the measured value (as in row 9)."
+ },
+ "in_process_side_note": "Parity 47501246's own captured log (runs/20261109T2147Z_parity_47501246/report.log) holds one approver_refused line with reason absent and received null. That is the runner's in-process portal, which since 6056f37 runs as a real caller with no HTTP request; it is not in the deployed portal's log and is not counted above."
+}

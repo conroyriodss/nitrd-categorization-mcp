@@ -120,6 +120,10 @@
    "bytes": 2980,
    "sha256": "385f423827ae6f233c5a54a3882bb2d38de52a5978ed94211f64beda7ac4723f"
   },
+  "auth/20261109_approver_refused_portal_log_all.json": {
+   "bytes": 5322,
+   "sha256": "1842506d7144977c6491191be56461f5f6d8ef276d7a5e8d315abb24cb72392e"
+  },
   "auth/20261109_header_integrity_whoami.json": {
    "bytes": 3280,
    "sha256": "5e53e84d14a30453285b91e05ae40ceae894edcca51d003eac2be5ab63039fbf"
@@ -404,6 +408,22 @@
    "bytes": 8822,
    "sha256": "f673d62dd4be91f908a37af9ee6b482d394ce9aefde7dcc1234e7cb907b54d33"
   },
+  "runs/20261109T2147Z_parity_47501246/report.log": {
+   "bytes": 12475,
+   "sha256": "dbfe7cff0c0496047ddbcb7ff81d305de54df57e7b6085e6d15d90457a445464"
+  },
+  "runs/20261109T2147Z_parity_47501246/run.json": {
+   "bytes": 3126,
+   "sha256": "ac674a16496fb3c17215a7c129c4bb3c6cfc1713044a3e71b963474e1e5f6525"
+  },
+  "runs/20261109T2150Z_e2e_d08b246f/report.log": {
+   "bytes": 24454,
+   "sha256": "13d147723d7ca16e967da0f341197f4d9344789beaec64f81bcb6ebf76863d97"
+  },
+  "runs/20261109T2150Z_e2e_d08b246f/run.json": {
+   "bytes": 7725,
+   "sha256": "06cd3d92b5ad61f5db0be5f5d12d122edb3f763752086a1559b5c5bab8ba9654"
+  },
   "step_g/2026-11-02T2058Z_g5_write_mode/g5_wm.log": {
    "bytes": 81508,
    "sha256": "93416b996b1bd6812e7901ec724c3bed970e36ca64b4ac84428e6a6acfa68f7c"
@@ -469,7 +489,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T21:19:05Z",
+ "generated_utc": "2026-11-09T21:58:02Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",

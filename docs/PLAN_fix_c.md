@@ -22,6 +22,34 @@ As of the cca45b8 redeploy (2026-11-09 02:01Z: portal deployment 01f1dbe172c9173
 * If the 2026-11-16 rollback to 95e5dea happens, they become current again.
 * While this window is open, nothing in the deliverables may cite them as describing the shipped build.
 
+**CLOSED 2026-11-09 (Genie Code, on the owner's results).** Three conditions, all met:
+* parity re-run 47501246: passed, 71/71 identical, 0 failures, rows 0/0/0;
+* e2e re-run d08b246f: passed, 12 tests, three live chains with steps 1-10 ok (10506013 included), the fake run under its own label, rows 0/0/0;
+* lifecycle refusal lines read: all 10 approver_refused lines since the portal deployment are accounted for (4 for 3174122a, 1 for 7f3b2f82, 4 for 2f0a3f65, 1 for 47501246), none unaccounted (`eval/results/auth/20261109_approver_refused_portal_log_all.json`).
+
+Supersession: the claim the post-(c) record replaces is "describes the shipped build". The old records stay on disk as history at 95e5dea, and current again if the 2026-11-16 rollback happens.
+
+| kind | stale (95e5dea, 2026-11-06) | superseded by (post-(c), 2026-11-09) |
+| --- | --- | --- |
+| smoke | 053b101d | d6243323 |
+| parity | d2ddab69 | 47501246 (7f3b2f82 stays recorded FAILED: the test fixture defect) |
+| e2e | e1969ce8 | d08b246f (0dbd05d2 passed but carries the summary defect) |
+| lifecycle | d74756ca | 2f0a3f65 |
+| contract | ee2b5080 | b5de1708 |
+| auth | 69cbcac7 | b6941165 |
+
+Server commits behind the post-(c) records (annotation, after the fact). The runner cannot read the markers (declined CAN_READ), so `summary.commits.servers.*.commit` is null in every record; the values below are the deployment ids it recorded plus the commits read separately.
+
+| app | deployment | commit | source |
+| --- | --- | --- | --- |
+| reviewer portal | 01f1dc4ff3c61144bb1da6d2aad008db | d7bad89 | `DEPLOY_COMMIT.py`, read by the owner |
+| agent | 01f1dc50977f119a92a979db937f58a1 | d7bad89 | `DEPLOY_COMMIT.py`, read by the owner (not called by these runs) |
+| outputs | 01f1da210f4a11caa9445fa060354dca | 95e5dea | no marker; frozen since the 2026-11-06 deployment |
+| classifier | 01f1da210f791e38ba4e82977ba781ff | 95e5dea | no marker; frozen since the 2026-11-06 deployment |
+| runner | 01f1dc50302d1e2da2ee8af36a182772, then 01f1dc84085a1aecb157990680a86c6d | d7bad89 for d6243323 through b6941165; 6056f37 for 47501246 and d08b246f | `summary.commits.runner` in each record |
+
+Still owner-routed: the deliverable re-citations (L54 re-anchor, L196, latency line 285). The window being closed permits them; it does not make them.
+
 ## Adversarial counted result vs the shipped agent (settled 2026-11-09)
 
 The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-sol`, max_turns 16) measured `src/nitrd_agent/agent.py` at sha256 0c57cbe4 (git a4718e7). The shipped agent, deployed at d7bad89, has 7dbc92fa, which is c91e1bf, the allowlist gate fix. Fix (c) does not touch `agent.py` or `capture.py` (3169b750 throughout).
@@ -140,11 +168,11 @@ Run ids are read back from `users.conroyri.nitrd_hackathon_v1_e2e_runs`. Every r
 | smoke | d6243323 | passed: 8/8 checks; tool counts 6/3/5; portal byte-identical (562 vs 562 bytes) |
 | parity | 7f3b2f82 | FAILED, 70/71 identical (see below) |
 | e2e | 0dbd05d2 | passed: the three live chains are all `ok` in the run log; summary defect below |
-| lifecycle | 2f0a3f65 | passed: 4 labels at 14/14, with L7c, L8c, L13c and L14 on all four; the portal log lines are still owed |
+| lifecycle | 2f0a3f65 | passed: 4 labels at 14/14, with L7c, L8c, L13c and L14 on all four; its 4 portal log lines read 2026-11-09 (auth/20261109_approver_refused_portal_log_all.json) |
 | contract | b5de1708 | passed: 90/90 checks (classifier 41, cohort 18, outputs 16, portal 15) |
 | auth | b6941165 | passed: both header sources reach all three apps |
 
-The stale-claims window stays OPEN until parity and e2e re-run green and the owner has read the lifecycle refusal lines.
+The stale-claims window stayed open until parity and e2e re-ran green and the owner read the lifecycle refusal lines. It CLOSED on 2026-11-09 (see the top of this file): parity 47501246 passed 71/71, e2e d08b246f passed, and all 10 portal refusal lines are accounted for.
 
 Runner redeployed for the parity and label fixes (owner-approved, 2026-11-09). Runner only, at 6056f37: Git folder checkout, `DEPLOY_COMMIT.py` = 6056f3767da5d07c8c4c8614be3e9938d31cd642, app.yaml and requirements.txt byte-identical to the committed files. Deployment 01f1dc84085a1aecb157990680a86c6d (21:25:05Z) is SUCCEEDED, RUNNING. `src/` and `deploy/` are unchanged from d7bad89 (empty diff), so the in-process side matches the portal deployed at d7bad89. The portal, agent, outputs and classifier apps are untouched.
 
