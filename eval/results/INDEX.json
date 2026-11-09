@@ -140,6 +140,10 @@
    "bytes": 8380,
    "sha256": "551149e51492a993f2dec42746e510a7021afb8789c5b6d800a1713d3859a3d2"
   },
+  "auth/20261109_row12_decision_rules.json": {
+   "bytes": 6923,
+   "sha256": "d99aa12603c31f55aaed2544606f3cf062f6a06b4dbf3cf0d253c28c1380cdab"
+  },
   "auth/20261109_row9_approver_refused_3174122a.json": {
    "bytes": 4789,
    "sha256": "08b611fed1105bc6289d21cfea3799cd0f3b27287c92d2646feda23b637a98e5"
@@ -211,6 +215,10 @@
   "demo/20261109T200410Z_history.json": {
    "bytes": 3429,
    "sha256": "82ce4d518d2c0c1b9df2c1be00d02863f8fa39a8a7c780f6d850ae634690de11"
+  },
+  "demo/20261109T224419Z_history.json": {
+   "bytes": 17877,
+   "sha256": "dff0bc99647f29f45a55496bb21463c347c63779147b6267dadd0f2c414fa64e"
   },
   "demo/RUNS.md": {
    "bytes": 6193,
@@ -493,7 +501,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T22:19:05Z",
+ "generated_utc": "2026-11-09T22:47:14Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",
