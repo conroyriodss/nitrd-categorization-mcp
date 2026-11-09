@@ -42,7 +42,14 @@ run at 36d6115. Artifact: `eval/results/adv_runs/20261108T2255Z_adv-injection-v1
 From `run_adv.py` lines 48-52 and the SPEC:
 - The case file `adv_injection_v1.json` is pinned (selection rules committed
   before checks).
-- `agent.py` is pinned at 9823eca6 (tests/test_adv_suite.py).
+- `agent.py` is pinned at 7dbc92fa (sha256, tests/test_adv_suite.py; re-pinned
+  at c91e1bf, 2026-11-08, for the allowlist gate fix). The counted run
+  6ab39b17 was measured at 0c57cbe4 (its manifest.json);
+  tests/test_agent_allowlist_identity.py proves the model is offered the
+  identical tool set under both. Dry run 9802585f ran on 7dbc92fa.
+  Correction (2026-11-09): this line previously said "9823eca6". That is the
+  sha256 of the old `run_adv.py` (manifest of dry run 1a8f43f3), not
+  `agent.py`.
 - `capture.py` is pinned at 3169b750.
 - The scorer `adv_scoring.py` is committed.
 - The model is `databricks-gpt-6-1-sol` (config.py line 19).
