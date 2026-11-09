@@ -1,0 +1,39 @@
+{
+  "what": "Fix (c) acceptance row 10 (docs/PLAN_fix_c.md, step 2; procedure docs/RUNBOOK_rows_10_11.md): a listed person (conroyri@nih.gov) makes a review decision on the deployed portal's /operator/decide. Pass: accepted; recorded by persona; the owner's sign-in in the portal action log.",
+  "status": "PARTIAL. Warehouse check (runbook 10.4) recorded below. Still to add: the operator_decision log line (owner paste), cleanup output, history output.",
+  "portal": {"deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db", "deployed_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d"},
+  "sandbox_writes": {
+    "cohort_submit_utc": "2026-11-09T17:53:03.375Z to 17:53:41.331Z (5 transactions by the portal SP, one per project; Delta versions review_requests 346-350, review_events 343-347, routing_events 300-304)",
+    "decision_commit_utc": "2026-11-09T17:55:09.926Z (review_requests v351, review_events v348, portal SP); event at = 17:55:06.394Z"
+  },
+  "warehouse_check_10_4": {
+    "read_by": "Genie Code, read-only, 2026-11-09 after 17:55:09Z",
+    "counts": {"review_requests": 5, "review_events": 11, "routing_events": 5},
+    "requests": [
+      {"appl_id": 9724345, "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c", "status": "pending", "assigned": "demo_ic_rep_niaid"},
+      {"appl_id": 9725122, "request_id": "1bf43ca7-3c89-55a3-af28-c6987545acee", "status": "pending", "assigned": "demo_ic_rep_niaid"},
+      {"appl_id": 9730348, "request_id": "60a0c742-c528-5859-8578-63a13c9e026b", "status": "pending", "assigned": "demo_ic_rep_niaid"},
+      {"appl_id": 9797472, "request_id": "6ba15846-6243-50a8-bc03-82097efc7cd8", "status": "approved", "assigned": "demo_ic_rep_niaid", "decided_by": "demo_ic_rep_niaid", "decision_at": "2026-11-09T17:55:06.394Z", "decision_rationale": "Data-infrastructure award; classifier evidence is consistent with NITRD scope"},
+      {"appl_id": 9810625, "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38", "status": "pending", "assigned": "demo_ic_rep_niaid"}
+    ],
+    "events_9797472": [
+      {"event_id": "3cd948b9-441a-5550-8bff-ddc5295df5f3", "event_type": "created", "actor_id": "demo_sia", "at": "2026-11-09T17:53:27.813Z"},
+      {"event_id": "0b1ae252-f4b6-55af-800c-4a818906b328", "event_type": "classified", "actor_id": "demo_sia", "at": "2026-11-09T17:53:27.813Z"},
+      {"event_id": "d4f77f28-06d5-5fe3-aca4-2c8905e9286c", "event_type": "routed", "actor_id": "system", "at": "2026-11-09T17:53:27.813Z"},
+      {"event_id": "1337f128-8dff-5b2c-8410-28bbf7249c60", "event_type": "approved", "actor_id": "demo_ic_rep_niaid", "at": "2026-11-09T17:55:06.394Z", "details": {"decision": "approved", "from": "pending", "rationale": "Data-infrastructure award; classifier evidence is consistent with NITRD scope"}}
+    ],
+    "identity_in_rows": "0 matches in any column of any of the 21 rows. Pattern: '@', 'conroyri', forwarded, email, preferred_username, 'signed in', 'user', and the five app-SP id prefixes. The pattern fires on a planted email and on a planted SP UUID.",
+    "result": "Accepted and recorded by persona: decided_by and the decision event's actor_id are demo_ic_rep_niaid; the person is in no row."
+  },
+  "repeated_ids_note": {
+    "summary": "Every id in this run repeats an id from the 2026-11-08 usability session. That is by design, not an unexplained write.",
+    "why": "request_id = uuid5(namespace, idempotency_key), and the cohort keys are deterministic (cohort:2019:NIAID:UH2:<appl_id>). Event ids are derived from the request_id, so they repeat too.",
+    "checked": "Against review_requests v326, review_events v323 and routing_events v280 (the last 2026-11-08 versions before cleanup): all 5 request_ids and all 16 event ids repeat (5 created, 5 classified, 5 routed, 1 approved). 9797472's decision event id 1337f128-... is the same as on 2026-11-08, when 9797472 and 9810625 were approved by demo_ic_rep_niaid.",
+    "first_life": "2026-11-08: inserted 19:19:55.622Z-19:20:27.754Z; 2 decisions 19:25:10.892Z and 19:25:28.822Z; deleted 19:42:10.173Z (review_events, 12 rows), 19:42:12.378Z (routing_events, 5), 19:42:13.959Z (review_requests, 5), by conroyri@nih.gov. Record: eval/usability/SESSION_2026-11-08.md, eval/results/usability/session_2026-11-08_fy2019_niaid_uh2.json.",
+    "second_life": "2026-11-09: inserted 17:53:03.375Z-17:53:41.331Z; 1 decision 17:55:09.926Z; deleted at row-10 cleanup (to be recorded here).",
+    "how_to_read_history": "Delta history of the three tables shows these ids inserted and deleted twice. Tell the two lives apart by Delta version and timestamp (or the event at), not by id."
+  },
+  "log_line_operator_decision": "PENDING owner paste (Apps console, mcp-nitrd-reviewer-portal, Logs tab, around 17:55:06Z).",
+  "cleanup": "PENDING",
+  "history": "PENDING"
+}

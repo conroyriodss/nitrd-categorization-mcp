@@ -66,6 +66,11 @@ NOTES = {
         "(not retrievable by the runner) and transcribed verbatim; app logs rotate. Pairs with "
         "runs/20261109T1527Z_lifecycle_3174122a/. The runner SP id is kept verbatim: it is the measured value."
     ),
+    "auth/20261109_row10_operator_decide.json": (
+        "Fix (c) row 10. The warehouse check was read by Genie Code (read-only); the action-log line, cleanup and "
+        "history are added as they land. The request and event ids repeat the 2026-11-08 usability session's "
+        "by design (deterministic cohort keys); see repeated_ids_note."
+    ),
     "adv_bridge/": (
         "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool "
         "definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed "

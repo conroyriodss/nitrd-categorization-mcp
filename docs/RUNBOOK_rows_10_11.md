@@ -55,6 +55,8 @@ If the cohort keys are unchanged, the request_ids are the ones recorded on 2026-
 
 They are confirmed in step 10.4 before anything is cleaned up.
 
+Repeated ids are expected. Event ids derive from the request_id, so every request id and event id of this cohort repeats the 2026-11-08 session's. Delta history therefore shows the same ids inserted and deleted twice: first on 2026-11-08 (inserted 19:19:55-19:20:27Z, deleted 19:42:10-19:42:13Z), then by row 10. Tell the two apart by Delta version and timestamp, not by id. Details: `eval/results/auth/20261109_row10_operator_decide.json`, `repeated_ids_note`.
+
 ### 10.0 Precheck
 
     python eval/demo/verify_browser_approval.py precheck

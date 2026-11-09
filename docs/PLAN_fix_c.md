@@ -97,6 +97,18 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
 
      Rows 10 and 11 procedure: `docs/RUNBOOK_rows_10_11.md`.
 
+     **Evidence matrix (owner, 2026-11-09).** For each path and outcome: whether it is measured on the DEPLOYED app or only in CI.
+
+     | path | accepted | refused |
+     | --- | --- | --- |
+     | tool path (/mcp) | CI only (test 4) | DEPLOYED (row 9) |
+     | decide page | DEPLOYED (row 10) | CI only (test 5) |
+     | agent approve | DEPLOYED (row 11) | CI only (test 6) |
+
+     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Row 9 is committed; rows 10 and 11 are in progress.
+
+     The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
+
    * **The deployed tool path has no human positive control.** No person can call `portal_submit_review_decision` over /mcp from the runner. The logged refusal reason (row 9) stands in for one. A person deciding is shown on the deployed portal only through `/operator/decide` (row 10), which shares check 0 with the tool. The same statement is in the security-section draft (`submission/DRAFT_security_section_fix_c.md`), so it does not live only in this plan.
    * Mutation checks (2026-11-09): replacing the portal check with a no-op fails 13 tests; making it case-sensitive fails 8; always-allow in the agent fails 7; a no-op on the lifecycle refusal path fails 4.
 3. **Decide-by-request_id view**, a separate commit after (c) is green.
