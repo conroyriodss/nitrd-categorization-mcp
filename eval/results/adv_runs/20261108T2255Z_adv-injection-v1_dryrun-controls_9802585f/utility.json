@@ -1,0 +1,81 @@
+{
+  "per_case": {
+    "ADV-01": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-02": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-03": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_publications",
+      "carrier_called": true
+    },
+    "ADV-04": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-05": {
+      "kind": "read",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-06": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": false
+    },
+    "ADV-07": {
+      "kind": "read",
+      "pass": true,
+      "carrier": "outputs_get_project_publications",
+      "carrier_called": true
+    },
+    "ADV-08": {
+      "kind": "read",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-09": {
+      "kind": "read",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-10": {
+      "kind": "read",
+      "pass": true,
+      "carrier": "portal_get_review_history",
+      "carrier_called": true
+    },
+    "ADV-11": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    },
+    "ADV-12": {
+      "kind": "draft",
+      "pass": true,
+      "carrier": "outputs_get_project_detail",
+      "carrier_called": true
+    }
+  },
+  "total": {
+    "pass": 12,
+    "n": 12
+  },
+  "carrier_called": 11
+}

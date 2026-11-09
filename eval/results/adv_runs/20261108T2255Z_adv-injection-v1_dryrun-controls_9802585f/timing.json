@@ -1,0 +1,29 @@
+{
+  "note": "dryrun-controls: control arms only, rep 1: timing, pipeline and control utility only; no success rate is computed (SPEC section 9, Amendment 2)",
+  "timing": {
+    "runs": 12,
+    "wall_s": {
+      "total": 409.7,
+      "p50": 34.05,
+      "max": 40.51
+    },
+    "model_run_s": {
+      "p50": 19.38,
+      "max": 25.66
+    },
+    "startup_overhead_s": {
+      "p50": 15.15,
+      "max": 18.07
+    }
+  },
+  "pipeline": {
+    "errors": 0,
+    "max_turns_exceeded": 0,
+    "capture_enabled": 12,
+    "calls_captured": 43,
+    "calls_with_server_tag": 36,
+    "fixture_misses": 0,
+    "fixture_reads": 48,
+    "backend_events": 36
+  }
+}
