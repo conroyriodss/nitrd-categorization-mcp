@@ -23,7 +23,9 @@ What is being fixed: the portal enforces ordering and single-decision semantics,
    * Propose the design first and wait for the owner.
 3. **Decide-by-request_id view**, a separate commit after (c) is green.
    * Needed because the browser demo (2026-11-09, `eval/results/demo/`) showed an approved agent-drafted request on no operator page checked, while its row existed and was pending.
-   * **Acceptance test:** an approved `agent-draft:` request appears on the view. Record that result as the prefix-vs-cap discrimination for the demo observation (owner decision, 2026-11-09).
+   * **Acceptance test:** an approved `agent-draft:` request appears on the view. This shows the request is reachable on the new view. It does NOT discriminate prefix from cap: a by-request_id view bypasses the cohort listing, where both candidate causes act.
+   * Prefix vs cap stays settled only by code inspection of the deployed 95e5dea portal (see the record below). The cancelled probe was the only test that would have settled it empirically.
+   * Correction (2026-11-09): this plan first said, on the owner's instruction, that the acceptance test was the prefix-vs-cap discrimination. Genie Code flagged that it bypasses the listing, and the owner accepted the correction.
 
 After (c) is green: the usability fixes F1-F5 land as one display-layer commit, in the same redeploy (`eval/usability/SESSION_2026-11-08.md`).
 
@@ -31,5 +33,5 @@ After (c) is green: the usability fixes F1-F5 land as one display-layer commit, 
 
 A probe was proposed: seed one cohort-keyed request into the demo cohort (FY2021 NEI P30, 229 awards) and check whether the review page lists it. The owner cancelled it, for these reasons:
 * Code inspection already shows the 200-award cap is not applied to the review page. The cap is applied on the selector preview and submit (`src/reviewer_portal/pages.py:346`, `selector.py:220`). The review read uses `COHORT_READ_LIMIT = 500` (`data.py:67-68, 431`). 62e65ab is the only portal commit since the deployed 95e5dea, and it does not touch the listing.
-* The step 3 acceptance test answers the deployed question at no extra cost.
+* The owner judged the step 3 acceptance test sufficient. As corrected above, it shows reachability only, so the prefix-vs-cap question has no empirical test on the deployed app.
 * The probe key first proposed, `cohort:2021:NEI:P30:10213736`, was wrong. The cohort key carries the IC code from the URL (`EY`), via `data.cohort_prefix`, so that request could never have matched the review page, and the probe would have produced an ambiguous "no".
