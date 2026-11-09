@@ -95,6 +95,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | 10 MEASURED 2026-11-09 | | | **Pass, as a non-regression test.** The owner had already decided through this page on 2026-11-08 at 95e5dea, before any check. The listed owner's approval of 9797472 was accepted. It is recorded as `demo_ic_rep_niaid` (decided_by, actor_id). The action log has `operator_session.user` = the owner, and there is no `approver_refused` line. 0 identity matches in 21 rows. Cleaned up to 0/0/0, with history. Deterministic ids repeat the 2026-11-08 session's; this is an observation, see SECURITY.md. Evidence: `eval/results/auth/20261109_row10_operator_decide.json`. |
      | 10 | Deployed, manual | owner decides on `/operator/decide` | accepted; recorded by persona; the owner's sign-in is in the action log |
      | 11 | Deployed, manual | owner approves an agent draft | accepted; one pending request created |
+     | 11 MEASURED 2026-11-09 | | | **Pass, counted with a disclosed gap (owner decision).** Draft 68845306 was accepted. One pending request was created: eab10ab8, created + routed, no decision, the approver in no column, written by the portal SP. **predict did not run, so this is NOT pre-registered.** The request_id matches uuid5(REQUEST_NAMESPACE, `agent-draft:<draft_id>`), checked after the fact; the draft_id was reported before the click (owner-attested). Separate finding: the approval UI shows draft args and tool names but not tool results, so the approver cannot check grounding. Evidence: `eval/results/auth/20261109_row11_agent_approve.json`. |
 
      Rows 10 and 11 procedure: `docs/RUNBOOK_rows_10_11.md`.
 
@@ -106,7 +107,7 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | decide page | DEPLOYED (row 10) | CI only (test 5) |
      | agent approve | DEPLOYED (row 11) | CI only (test 6) |
 
-     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9 and 10 are committed; row 11 is in progress.
+     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9, 10 and 11 are committed.
 
      The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
 

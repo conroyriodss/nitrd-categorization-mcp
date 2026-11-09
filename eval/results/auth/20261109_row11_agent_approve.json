@@ -1,0 +1,56 @@
+{
+  "what": "Fix (c) acceptance row 11 (docs/PLAN_fix_c.md, step 2; procedure docs/RUNBOOK_rows_10_11.md): a listed person (conroyri@nih.gov) authorises an agent draft on the deployed agent's approve route. Pass: accepted; one pending request created.",
+  "status": "PASS, counted with a disclosed gap (owner decision, 2026-11-09): predict did not run before the click, so the request_id was NOT pre-registered.",
+  "owner_reasons_for_counting": [
+    "The acceptance criterion is 'accepted; one pending request created', and it is met.",
+    "Pre-registration belongs to the browser-demo protocol, not to row 11.",
+    "The demo re-run for the before/after pair will carry pre-registration properly."
+  ],
+  "apps": {
+    "agent": {"app": "mcp-nitrd-agent", "deployment_id": "01f1dc50977f119a92a979db937f58a1", "deployed_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d", "model": "databricks-gpt-6-1-sol (endpoint name, not a pinned weight)"},
+    "portal": {"app": "mcp-nitrd-reviewer-portal", "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db", "deployed_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d"}
+  },
+  "page_observations_owner": {
+    "before_click": "Drafts page: 'Signed in as conroyri@nih.gov.' Draft 68845306 awaiting_approval. Approve form action drafts/6884530677db44aaa487a246d8453422/approve. The owner pasted this page into the conversation before clicking.",
+    "after_click": "Draft 68845306: approved; request_id eab10ab8-bbfe-5334-84bd-6bfdaba198ad. No refusal page."
+  },
+  "draft_id": "6884530677db44aaa487a246d8453422",
+  "draft_args_verbatim": {
+    "appl_id": 10213736,
+    "reviewer_id": "demo_sia",
+    "task1_suggestion": {"suggestion": "nitrd", "probability": 0.99967, "model_id": "nitrd-parent-v2-ba10594d9581"},
+    "evidence": {
+      "summary": "Suggest NITRD for subject-matter expert review. Application 10213736 (FY2021), Advanced Computing/Computational Core at Stanford University, supports computer storage, high-performance computing, system administration, high-speed network access, and programming services for computational modeling and analysis in vision research. These computing infrastructure and software activities support the parent suggestion. The parent classifier returned NITRD with calibrated probability 0.99967 (decision threshold 0.3893682055460409). The public award record already includes the NITRD spending category. This is a review suggestion, not an official classification.",
+      "key_terms": ["computational", "computing", "software", "computer", "algorithms", "performance computing"]
+    }
+  },
+  "warehouse_check": {
+    "read_by": "Genie Code, read-only SQL, 2026-11-09 after 18:59:00Z",
+    "counts": {"review_requests": 1, "review_events": 1, "routing_events": 1},
+    "request": {"request_id": "eab10ab8-bbfe-5334-84bd-6bfdaba198ad", "idempotency_key": "agent-draft:6884530677db44aaa487a246d8453422", "status": "pending", "requested_by": "demo_sia", "assigned_reviewer_id": "demo_sia", "decided_by": null, "created_at": "2026-11-09T18:58:56.006Z"},
+    "events": [
+      {"table": "review_events", "event_type": "created", "actor_id": "demo_sia", "event_id": "1981e750-4684-51b3-b552-f89e4928cf9f", "at": "2026-11-09T18:58:56.006Z"},
+      {"table": "routing_events", "event_type": "routed", "actor_id": "system", "event_id": "a5e13b3d-aad9-502e-a46d-fd650a68ee8a", "at": "2026-11-09T18:58:56.006Z"}
+    ],
+    "identity_in_rows": "0. No '@' and no 'conroyri' in the event details or in any column of the request row.",
+    "writer": "One Delta transaction at 18:59:00.485Z by the portal SP (06f65816-...), review_requests v357. No other writer since the row-10 cleanup.",
+    "no_decision": "No review decision was recorded: draft authorisation is not a decision."
+  },
+  "request_id_derivation_check": {
+    "result": "MATCH. uuid5(REQUEST_NAMESPACE, 'agent-draft:6884530677db44aaa487a246d8453422') = eab10ab8-bbfe-5334-84bd-6bfdaba198ad. REQUEST_NAMESPACE = uuid5(NAMESPACE_URL, 'https://github.com/conroyriodss/nitrd-categorization-mcp/review') = 4f7284d6-b1f7-5248-abbd-386475a94b0b (src/reviewer_portal/data.py:61; unchanged in deployed d7bad89). Recomputed with the Python standard library on 2026-11-09.",
+    "chain": [
+      "The draft_id was visible on the Drafts page and reported before the click. The owner pasted the page into the conversation; this is owner-attested, not a committed artifact.",
+      "The derivation from draft_id to request_id is deterministic and committed in code.",
+      "Therefore the request_id was determined before the approval."
+    ],
+    "limits": "predict did not run. This is weaker than a timestamped pre-registration: no committed file records the expected request_id before the click, and the before-click evidence rests on the owner's report. This run is NOT pre-registered and must not be described as such."
+  },
+  "evidence_claim_check": {
+    "claim": "The public award record already includes the NITRD spending category.",
+    "true": "YES. In the snapshot (users.conroyri.nitrd_hackathon_v1_exporter_projects), 10213736 (FY2021, P30EY026877) has nih_spending_cats 'Bioengineering;Data Science;Eye Disease and Disorders of Vision;Networking and Information Technology R&D (NITRD);Neurosciences'. That includes the RCDC parent category (RePORTER id 329), stored by name. FY2021 is a build year, so this is not a reserved-year label read.",
+    "grounded": "AVAILABLE in a tool result, but the call is not confirmed for this run. outputs_get_project_detail returns spending_categories and is_nitrd (src/nih_grants_outputs/tools/get_project_detail.py; identical at the deployed 95e5dea and d7bad89). For 10213736 those would be the list above and is_nitrd true, so the claim is supported IF that tool was called with 10213736. The tool-call list for this /ask run was shown on the /ask page but was not captured. The only committed record of the same prompt (c224dd3f, eval/results/demo/20261109T004251Z_browser_approval_c224dd3f.json) called outputs_get_project_detail first, and flagged the same sentence as 'source not checked'. Checked in code: classifier_classify_parent takes an appl_id and returns suggestion, probability, cohort, top_features and model info, with no category field. portal_get_review_history returns sandbox requests only, and the sandbox held none at the time (0/0/0 after the row-10 cleanup). Its prior-year evidence (PriorYear.is_nitrd) is not confirmed to be in this run's result.",
+    "what_the_gate_shows": "Separately from the claim's truth: the Drafts page shows the draft's arguments only, and the /ask page shows tool names and arguments, not tool results. The approver cannot check from the approval UI whether a sentence in the evidence summary is grounded. The gate checks who authorises, not what is authorised."
+  },
+  "cleanup": "PENDING (owner or Genie Code): eval/demo/verify_browser_approval.py cleanup --request-id eab10ab8-bbfe-5334-84bd-6bfdaba198ad --confirm",
+  "history": "PENDING: verify_browser_approval.py history --since 2026-11-09T18:10:00Z"
+}

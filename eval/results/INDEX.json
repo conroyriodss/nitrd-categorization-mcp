@@ -128,6 +128,10 @@
    "bytes": 10119,
    "sha256": "b3dda432baec50ec8ff3b0cf52a5743c031194de48cc06a71fb198b950842a7d"
   },
+  "auth/20261109_row11_agent_approve.json": {
+   "bytes": 7046,
+   "sha256": "3e51d9937f8d3e1be6ece0d56399214f594bb6d9b50c8c9ba32f98aa3c3e6ca2"
+  },
   "auth/20261109_row9_approver_refused_3174122a.json": {
    "bytes": 4789,
    "sha256": "08b611fed1105bc6289d21cfea3799cd0f3b27287c92d2646feda23b637a98e5"
@@ -413,13 +417,14 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T18:10:39Z",
+ "generated_utc": "2026-11-09T19:48:02Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",
   "adv_runs/": "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are control arms only and compute no success rate. In the counted run, report.json is the pinned rule's output and exposure.json is a post-hoc observation (see eval/agent/README.md, adversarial suite).",
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/": "VOID. Ran against reviewer-portal 4629b33 before portal parity was re-established, and ran unsupervised (started on app boot by NITRD_AGENT_AES_ON_START=1). Its 50/50 is not a result; see eval/agent/README.md.",
   "auth/20261109_row10_operator_decide.json": "Fix (c) row 10, a non-regression test (pass). The action-log line was read by the owner from the Apps Logs tab and transcribed verbatim; the warehouse check, cleanup and history were run by Genie Code. The request and event ids repeat the 2026-11-08 usability session's by design; see repeated_ids_note and event_id_observation. History file: demo/20261109T180808Z_history.json.",
+  "auth/20261109_row11_agent_approve.json": "Fix (c) row 11, pass with a disclosed gap: predict did not run, so the request_id is NOT pre-registered (derivation checked after the fact). Draft args and page states are owner-attested. Includes the true-vs-grounded check of the draft's 'already includes the NITRD spending category' sentence.",
   "auth/20261109_row9_approver_refused_3174122a.json": "Fix (c) row 9. The four portal-log lines were read by the owner from the Apps console Logs tab (not retrievable by the runner) and transcribed verbatim; app logs rotate. Pairs with runs/20261109T1527Z_lifecycle_3174122a/. The runner SP id is kept verbatim: it is the measured value.",
   "explain/": "Written by eval/explain/explain_weak_awards.py (2026-11-08). Explainability for demo awards 10388671 and 10445135. Parent-classifier output from the frozen classifier code, run in process (identical to 95e5dea). Its probabilities equal the deployed run e1969ce8 to 6 dp. task1-fingerprint-v1 term contributions are computed from the committed uac-nitrd model (48b8c50, SHA-256 checked). Document and deck evidence only; no portal change.",
   "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted.",

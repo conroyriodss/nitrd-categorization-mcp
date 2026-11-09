@@ -72,6 +72,11 @@ NOTES = {
         "request and event ids repeat the 2026-11-08 usability session's by design; see repeated_ids_note and "
         "event_id_observation. History file: demo/20261109T180808Z_history.json."
     ),
+    "auth/20261109_row11_agent_approve.json": (
+        "Fix (c) row 11, pass with a disclosed gap: predict did not run, so the request_id is NOT pre-registered "
+        "(derivation checked after the fact). Draft args and page states are owner-attested. Includes the "
+        "true-vs-grounded check of the draft's 'already includes the NITRD spending category' sentence."
+    ),
     "adv_bridge/": (
         "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool "
         "definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed "
