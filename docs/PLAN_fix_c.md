@@ -13,6 +13,13 @@ What is being fixed: the portal enforces ordering and single-decision semantics,
 * Declined: a CAN_READ grant for runner SP 0b542439. If the runner cannot read the commit markers, record the error.
 * Rollback deadline: end of Monday 2026-11-16. If (c) is not green by then, revert to 95e5dea and document the defect.
 
+## Stale-claims window (opened 2026-11-09 by the cca45b8 redeploy)
+
+As of the cca45b8 redeploy (2026-11-09 02:01Z: portal deployment 01f1dbe172c91731bb6df95bca9d8e52, runner 01f1dbe172cc15ea9219c77693d3f7b7), the deployed portal and runner no longer match the builds behind runs d2ddab69, e1969ce8, d74756ca and ee2b5080, or behind the earlier smoke and auth runs. The outputs and classifier apps are unchanged (95e5dea).
+* Those claims are stale until the post-(c) battery supersedes them.
+* If the 2026-11-16 rollback to 95e5dea happens, they become current again.
+* While this window is open, nothing in the deliverables may cite them as describing the shipped build.
+
 ## Steps, in order
 
 1. **Measure identity: GET /whoami.** Committed 62e65ab (read-only, `src/reviewer_portal/routes.py`; runner probe in `deploy/databricks/e2e_runner/runner.py`).
