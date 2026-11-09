@@ -1,0 +1,221 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-09T21:00:24.055177",
+ "git_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+ "kind": "auth",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "b6941165-1690-4999-9c71-c40b95f4c564",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id b6941165-1690-4999-9c71-c40b95f4c564",
+ "started_at": "2026-11-09T21:00:22.097892",
+ "summary": {
+  "candidates": {
+   "config.authenticate()": {
+    "all_ok": true,
+    "apps": {
+     "mcp-nih-grants-outputs": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "f2916e46-6673-4dfc-966c-4aad4af5f935"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "37264834-6f31-4700-bc0a-85c27b57d3e8"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-classifier": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "45aa3a3f-4643-4e87-913c-2f9ccf23f487"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "200b9df1-6c6d-46b1-8603-492d4618b313"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-reviewer-portal": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"reviewer-portal\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "05822418-4018-48d5-86b5-8807075dc1d3"
+       },
+       "status": 200
+      },
+      "GET /whoami": {
+       "body": "{\"service\":\"reviewer-portal\",\"headers\":{\"x-forwarded-email\":{\"present\":true,\"value\":\"<service-principal-id>\"},\"x-forwarded-user\":{\"present\":true,\"value\":\"72442556496727@7474654188777746\"},\"x-forwarded-preferred-username\":{\"present\":true,\"value\":\"app-2vrjmx mcp-nitrd-e2e-runner\"}}}",
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "461fc975-2710-4d33-b69f-be021db33f5e"
+       },
+       "status": 200
+      }
+     }
+    },
+    "claims": {
+     "aud": [
+      "7474654188777746"
+     ],
+     "client_id": "<service-principal-id>",
+     "exp": 1794261622,
+     "expires_in_s": 3598,
+     "iat": 1794258022,
+     "iss": "https://<workspace-host>/oidc",
+     "jwt": true,
+     "scope": "all-apis",
+     "sub": "<service-principal-id>"
+    }
+   },
+   "config.oauth_token()": {
+    "all_ok": true,
+    "apps": {
+     "mcp-nih-grants-outputs": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "facc5028-9764-420c-a41d-078d2fc98c31"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "6f895d8d-cfc8-4bfc-9a6a-0b96c6c7126d"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-classifier": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "37e87aff-6928-4ad9-838c-b2bc794261c8"
+       },
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "0c2e3529-c55f-4fb4-9019-78252a0cf452"
+       },
+       "status": 200
+      }
+     },
+     "mcp-nitrd-reviewer-portal": {
+      "GET /health": {
+       "body": "{\"status\":\"healthy\",\"service\":\"reviewer-portal\"}",
+       "headers": {
+        "content-type": "application/json",
+        "x-request-id": "2867787b-d1f5-4ed0-80e8-6f89bf17019c"
+       },
+       "status": 200
+      },
+      "GET /whoami": {
+       "body": "{\"service\":\"reviewer-portal\",\"headers\":{\"x-forwarded-email\":{\"present\":true,\"value\":\"<service-principal-id>\"},\"x-forwarded-user\":{\"present\":true,\"value\":\"72442556496727@7474654188777746\"},\"x-forwarded-preferred-username\":{\"present\":true,\"value\":\"app-2vrjmx mcp-nitrd-e2e-runner\"}}}",
+       "status": 200
+      },
+      "POST /mcp initialize": {
+       "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t",
+       "headers": {
+        "content-type": "text/event-stream",
+        "x-request-id": "4a3c129c-0f27-4b6e-a211-a022105fb656"
+       },
+       "status": 200
+      }
+     }
+    },
+    "claims": {
+     "aud": [
+      "7474654188777746"
+     ],
+     "client_id": "<service-principal-id>",
+     "exp": 1794261622,
+     "expires_in_s": 3598,
+     "iat": 1794258022,
+     "iss": "https://<workspace-host>/oidc",
+     "jwt": true,
+     "scope": "all-apis",
+     "sub": "<service-principal-id>"
+    }
+   }
+  },
+  "commits": {
+   "runner": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+   "servers": {
+    "nih_grants_outputs": {
+     "app": "mcp-nih-grants-outputs",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f4a11caa9445fa060354dca",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs"
+    },
+    "nitrd_classifier": {
+     "app": "mcp-nitrd-classifier",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f791e38ba4e82977ba781ff",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier"
+    },
+    "reviewer_portal": {
+     "app": "mcp-nitrd-reviewer-portal",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-09T15:12:17Z",
+     "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal"
+    }
+   }
+  },
+  "identity": {
+   "auth_type": "oauth-m2m",
+   "env_set": {
+    "DATABRICKS_APP_NAME": true,
+    "DATABRICKS_CLIENT_ID": true,
+    "DATABRICKS_CLIENT_SECRET": true,
+    "DATABRICKS_HOST": true,
+    "DATABRICKS_TOKEN": false
+   },
+   "host": "https://<workspace-host>",
+   "workspace_api_identity": "<service-principal-id>"
+  }
+ }
+}

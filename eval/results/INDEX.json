@@ -356,6 +356,54 @@
    "bytes": 2751,
    "sha256": "4ee8a93cde62b9eb1e65eb62f72efb9f60e950f8d9be375029236bdabfb6604e"
   },
+  "runs/20261109T2041Z_smoke_d6243323/report.log": {
+   "bytes": 987,
+   "sha256": "19d0c3e550586ffeaa6a4593ef460df9d1cd5c8c4fc41b6b8ccae045dac7a2c8"
+  },
+  "runs/20261109T2041Z_smoke_d6243323/run.json": {
+   "bytes": 3919,
+   "sha256": "69e852432a52518e5b54e97729fdac7bc0c855bcb3aac95e09318487357e6ab7"
+  },
+  "runs/20261109T2043Z_parity_7f3b2f82/report.log": {
+   "bytes": 19854,
+   "sha256": "5d612ac431dd7c47cfba92db7528dd7a0e8932112d37b98acd2076f7223452b8"
+  },
+  "runs/20261109T2043Z_parity_7f3b2f82/run.json": {
+   "bytes": 10328,
+   "sha256": "21ea31957a0f63b28531fa82e0d89874d281963e1a8a9ac35c1ec11234183a98"
+  },
+  "runs/20261109T2046Z_e2e_0dbd05d2/report.log": {
+   "bytes": 21551,
+   "sha256": "05854042436a81193d387d8a2f1063c07ec3b7f4376b08a0ae21ef98b67bc36e"
+  },
+  "runs/20261109T2046Z_e2e_0dbd05d2/run.json": {
+   "bytes": 6463,
+   "sha256": "ac3985b34faa44d93e4ea705e89b96e41ede34b5e0fb3c88b2c8f1717fd69b22"
+  },
+  "runs/20261109T2049Z_lifecycle_2f0a3f65/report.log": {
+   "bytes": 4567,
+   "sha256": "d7776de82bc1c83ab677ac5e8325d76273be40e51d649ff668703d8e8f95c21d"
+  },
+  "runs/20261109T2049Z_lifecycle_2f0a3f65/run.json": {
+   "bytes": 2751,
+   "sha256": "9e4886d9ac3599f6105aca429e2c1869208a876344a11056174fc20f29d496fc"
+  },
+  "runs/20261109T2059Z_contract_b5de1708/report.log": {
+   "bytes": 8213,
+   "sha256": "21d052bc407ee558a957d4f50ade979c691a26c57b38edc611f3bf9f4663dac7"
+  },
+  "runs/20261109T2059Z_contract_b5de1708/run.json": {
+   "bytes": 4618,
+   "sha256": "8e9f04467e04df2294c24c78c1a6f573bf5df31e9d5b61a73c8ed5b92ea139f0"
+  },
+  "runs/20261109T2100Z_auth_b6941165/report.log": {
+   "bytes": 5411,
+   "sha256": "2550ea4a967b17b0ecd1ec47e4ba153e3aa8526585f013926740b4a86f71f93e"
+  },
+  "runs/20261109T2100Z_auth_b6941165/run.json": {
+   "bytes": 8822,
+   "sha256": "f673d62dd4be91f908a37af9ee6b482d394ce9aefde7dcc1234e7cb907b54d33"
+  },
   "step_g/2026-11-02T2058Z_g5_write_mode/g5_wm.log": {
    "bytes": 81508,
    "sha256": "93416b996b1bd6812e7901ec724c3bed970e36ca64b4ac84428e6a6acfa68f7c"
@@ -421,7 +469,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T20:16:33Z",
+ "generated_utc": "2026-11-09T21:10:04Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",
@@ -457,6 +505,22 @@
   },
   "runs/20261106T2048Z_auth_69cbcac7/run.json": {
    "<service-principal-id>": 5,
+   "<workspace-host>": 3
+  },
+  "runs/20261109T2043Z_parity_7f3b2f82/report.log": {
+   "<service-principal-id>": 7,
+   "<workspace-host>": 3
+  },
+  "runs/20261109T2043Z_parity_7f3b2f82/run.json": {
+   "<service-principal-id>": 7,
+   "<workspace-host>": 3
+  },
+  "runs/20261109T2100Z_auth_b6941165/report.log": {
+   "<service-principal-id>": 7,
+   "<workspace-host>": 3
+  },
+  "runs/20261109T2100Z_auth_b6941165/run.json": {
+   "<service-principal-id>": 7,
    "<workspace-host>": 3
   },
   "step_g/2026-11-02T2058Z_g5_write_mode/manifest.json": {

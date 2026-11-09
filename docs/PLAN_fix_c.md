@@ -127,3 +127,36 @@ A probe was proposed: seed one cohort-keyed request into the demo cohort (FY2021
 * Code inspection already shows the 200-award cap is not applied to the review page. The cap is applied on the selector preview and submit (`src/reviewer_portal/pages.py:346`, `selector.py:220`). The review read uses `COHORT_READ_LIMIT = 500` (`data.py:67-68, 431`). 62e65ab is the only portal commit since the deployed 95e5dea, and it does not touch the listing.
 * The owner judged the step 3 acceptance test sufficient. As corrected above, it shows reachability only, so the prefix-vs-cap question has no empirical test on the deployed app.
 * The probe key first proposed, `cohort:2021:NEI:P30:10213736`, was wrong. The cohort key carries the IC code from the URL (`EY`), via `data.cohort_prefix`, so that request could never have matched the review page, and the probe would have produced an ambiguous "no".
+
+## Record: post-(c) battery, 2026-11-09 (owner ran from the browser, runner at d7bad89)
+
+Run ids are read back from `users.conroyri.nitrd_hackathon_v1_e2e_runs`. Every run ended with `rows_left` 0/0/0.
+
+| Kind | run_id | Result |
+| --- | --- | --- |
+| smoke | d6243323 | passed: 8/8 checks; tool counts 6/3/5; portal byte-identical (562 vs 562 bytes) |
+| parity | 7f3b2f82 | FAILED, 70/71 identical (see below) |
+| e2e | 0dbd05d2 | passed: the three live chains are all `ok` in the run log; summary defect below |
+| lifecycle | 2f0a3f65 | passed: 4 labels at 14/14, with L7c, L8c, L13c and L14 on all four; the portal log lines are still owed |
+| contract | b5de1708 | passed: 90/90 checks (classifier 41, cohort 18, outputs 16, portal 15) |
+| auth | b6941165 | passed: both header sources reach all three apps |
+
+The stale-claims window stays OPEN until parity passes and the lifecycle refusal lines are read.
+
+* **Parity 7f3b2f82, one case differs.** The case is `portal_submit_review_decision` on the all-zero request_id. Both sides returned an error, as expected, and table counts were the same before and after. The two sides answered as different identities:
+  * The deployed portal refused the runner SP with the uniform refusal.
+  * The in-process side ran under the autouse test fixture `tests/conftest.py::default_approver` (added in bf5228c). That fixture makes every in-process call a listed approver, so the call passed check 0 and failed on "No review request".
+  * This is a defect in the test, not a divergence between the servers, and 7f3b2f82 stays a FAIL as recorded.
+  * This was the first parity run since bf5228c, so no earlier parity run could have shown the defect.
+  * Proposed fix (owner decides; it needs a runner redeploy, and the owner is told first): in `tests/test_parity.py`, run the in-process side with the real `forwarded_email`. In-process that returns None, which is refused as `absent` with the same uniform text, so the case is expected to be byte-identical and to show that the deployed portal refuses the runner. The case then no longer reaches the missing-request check on either side.
+* **e2e summary defect: one label is overwritten by a fake run (all e2e records since 7fa7ee4c, 2026-11-04).**
+  * `runner.py:494-501` builds `summary` from the `NITRD_E2E_REPORT` file, keyed by label.
+  * The in-process harness test `test_harness_read_only_never_calls_the_write_steps` writes the same label, `appl 10506013 ...`, after the live chain does. Its fake run has find_projects total=1 and p=0.93.
+  * So the recorded summary shows steps 9/9b/10 as `skipped` for 10506013, while the run log shows the live chain `ok` with strict checks passing.
+  * `passed` and `exit_code` come from pytest and are unaffected. The defect under-reports; it does not over-claim.
+  * Affected records: 0dbd05d2, ffeeadd1, e132f420, e1969ce8, f4d4fff2, d7ecbdea, 7fa7ee4c. 778bd3ab (2026-11-03, cited in 11-06b) and 25c7320c are clean.
+  * For 10506013, read the run log, not the summary. Not fixed yet.
+* **Local collection error (bounded).** One local `pytest tests/` run on the rebuilt dev environment (`/tmp/nitrd-dev`, cluster 1109-185934-ptqm3ck9-v2n) ended as `1 skipped, 1 error in 7.97s`. The output was not captured.
+  * A collection error means the tests did not run. The green re-run straight afterwards (762/23/2) says nothing about what that first run missed.
+  * Bound (owner, from GitHub Actions): 97 CI runs, exactly two failures. Both were E501 lint on 2026-11-08 (b62895b, 6e4a339), both fixed by e533c55, and none was a collection error. So the error is local to the environment rebuilt on the new cluster.
+  * If it recurs, capture the full output BEFORE re-running.

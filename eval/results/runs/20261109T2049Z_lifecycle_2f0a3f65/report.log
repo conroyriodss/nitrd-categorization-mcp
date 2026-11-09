@@ -1,0 +1,78 @@
+
+Portal lifecycle | appl 10506013 | approved | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7c a valid decision by a non-approver caller is refused (fix (c))
+  [pass] L8c the refused decision left only created + routed
+  [pass] L8c the request is still pending in the assigned queue
+  [pass] L13c warehouse request row is still pending, undecided
+  [pass] L13c warehouse holds only created + routed events
+  [pass] L14 cleanup left no rows for the request
+.
+Portal lifecycle | appl 10388671 | rejected | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7c a valid decision by a non-approver caller is refused (fix (c))
+  [pass] L8c the refused decision left only created + routed
+  [pass] L8c the request is still pending in the assigned queue
+  [pass] L13c warehouse request row is still pending, undecided
+  [pass] L13c warehouse holds only created + routed events
+  [pass] L14 cleanup left no rows for the request
+.
+Portal lifecycle | appl 10445135 | deferred | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7c a valid decision by a non-approver caller is refused (fix (c))
+  [pass] L8c the refused decision left only created + routed
+  [pass] L8c the request is still pending in the assigned queue
+  [pass] L13c warehouse request row is still pending, undecided
+  [pass] L13c warehouse holds only created + routed events
+  [pass] L14 cleanup left no rows for the request
+.
+Portal lifecycle | appl 10075931 | override | transport=http
+  [pass] L1 assignment preview answers
+  [pass] L1 preview routes as the fixture expects
+  [pass] L2 request not pending before submit
+  [pass] L3 submit creates a pending sandbox request for the previewed reviewer
+  [pass] L4 same key + payload returns the same request, created=false
+  [pass] L5 same key + different payload is an error
+  [pass] L6 request is in the assigned reviewer's pending queue
+  [pass] L6 request is not in another persona's queue
+  [pass] L7c a valid decision by a non-approver caller is refused (fix (c))
+  [pass] L8c the refused decision left only created + routed
+  [pass] L8c the request is still pending in the assigned queue
+  [pass] L13c warehouse request row is still pending, undecided
+  [pass] L13c warehouse holds only created + routed events
+  [pass] L14 cleanup left no rows for the request
+.
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10506013]
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10388671]
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10445135]
+PASSED tests/test_portal_lifecycle.py::test_lifecycle_live[10075931]
+4 passed, 10 deselected, 1 warning in 74.84s (0:01:14)

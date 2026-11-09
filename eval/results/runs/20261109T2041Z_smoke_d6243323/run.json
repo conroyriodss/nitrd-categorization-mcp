@@ -1,0 +1,114 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-09T20:41:12.862118",
+ "git_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+ "kind": "smoke",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "d6243323-8e08-4336-88e8-320d08e43a26",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id d6243323-8e08-4336-88e8-320d08e43a26",
+ "started_at": "2026-11-09T20:41:06.209262",
+ "summary": {
+  "checks": [
+   {
+    "check": "mcp-nih-grants-outputs /health",
+    "detail": "200 {\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}",
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-classifier /health",
+    "detail": "200 {\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}",
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-reviewer-portal /health",
+    "detail": "200 {\"status\":\"healthy\",\"service\":\"reviewer-portal\"}",
+    "ok": true
+   },
+   {
+    "check": "mcp-nih-grants-outputs tools/list",
+    "detail": [
+     "outputs_find_cohort",
+     "outputs_find_projects",
+     "outputs_get_project_datacite",
+     "outputs_get_project_detail",
+     "outputs_get_project_publications",
+     "outputs_score_project_intensity"
+    ],
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-classifier tools/list",
+    "detail": [
+     "classifier_classify_parent",
+     "classifier_classify_subcategory",
+     "classifier_explain"
+    ],
+    "ok": true
+   },
+   {
+    "check": "mcp-nitrd-reviewer-portal tools/list",
+    "detail": [
+     "portal_get_review_history",
+     "portal_get_reviewer_assignment",
+     "portal_list_pending_reviews",
+     "portal_submit_review_decision",
+     "portal_submit_review_request"
+    ],
+    "ok": true
+   },
+   {
+    "check": "portal routes 10388671 to demo_po_ninr_01",
+    "detail": "demo_po_ninr_01",
+    "ok": true
+   },
+   {
+    "check": "deployed portal response byte-identical to in-process call",
+    "detail": "562 vs 562 bytes",
+    "ok": true
+   }
+  ],
+  "commits": {
+   "runner": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+   "servers": {
+    "nih_grants_outputs": {
+     "app": "mcp-nih-grants-outputs",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f4a11caa9445fa060354dca",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs"
+    },
+    "nitrd_classifier": {
+     "app": "mcp-nitrd-classifier",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f791e38ba4e82977ba781ff",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier"
+    },
+    "reviewer_portal": {
+     "app": "mcp-nitrd-reviewer-portal",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-09T15:12:17Z",
+     "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal"
+    }
+   }
+  }
+ }
+}

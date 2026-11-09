@@ -1,0 +1,75 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-09T20:50:48.492194",
+ "git_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+ "kind": "lifecycle",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "2f0a3f65-190e-46b1-be16-8551501c7dbe",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id 2f0a3f65-190e-46b1-be16-8551501c7dbe",
+ "started_at": "2026-11-09T20:49:29.049530",
+ "summary": {
+  "appl 10075931 (override)": {
+   "checks": 14,
+   "failed": [],
+   "passed": 14
+  },
+  "appl 10388671 (rejected)": {
+   "checks": 14,
+   "failed": [],
+   "passed": 14
+  },
+  "appl 10445135 (deferred)": {
+   "checks": 14,
+   "failed": [],
+   "passed": 14
+  },
+  "appl 10506013 (approved)": {
+   "checks": 14,
+   "failed": [],
+   "passed": 14
+  },
+  "commits": {
+   "runner": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+   "servers": {
+    "nih_grants_outputs": {
+     "app": "mcp-nih-grants-outputs",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f4a11caa9445fa060354dca",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs"
+    },
+    "nitrd_classifier": {
+     "app": "mcp-nitrd-classifier",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f791e38ba4e82977ba781ff",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier"
+    },
+    "reviewer_portal": {
+     "app": "mcp-nitrd-reviewer-portal",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-09T15:12:17Z",
+     "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal"
+    }
+   }
+  }
+ }
+}

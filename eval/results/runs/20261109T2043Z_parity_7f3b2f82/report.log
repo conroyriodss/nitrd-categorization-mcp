@@ -1,0 +1,184 @@
+
+Parity | transport=http | 71 cases
+  [pass] outputs_find_projects({"category": "Networking and Information Technology R&D (NITRD)", "fy": 2022, "limit": 5 -> ok/ok 3718B 1949/820ms
+  [pass] outputs_find_projects({"category": "Not A Category", "fy": 2022}) -> error/error 218B 2161/739ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB"}) -> ok/ok 38870B 1148/541ms
+  [pass] outputs_find_cohort({"fy": 2021, "ic": "NIBIB"}) -> ok/ok 7371B 699/461ms
+  [pass] outputs_find_cohort({"fy": 2021}) -> ok/ok 189773B 907/559ms
+  [pass] outputs_find_cohort({"activity": "R35", "fy": 2021, "ic": "NIBIB"}) -> ok/ok 1988B 729/351ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2022, "ic": "NIBIB"}) -> error/error 177B 17/2ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB", "limit": 51}) -> error/error 159B 16/2ms
+  [pass] outputs_find_cohort({"activity": "U01", "fy": 2021, "ic": "NIBIB", "limit": 201}) -> error/error 154B 15/2ms
+  [pass] outputs_get_project_detail({"appl_id": 1}) -> error/error 160B 758/525ms
+  [pass] outputs_get_project_publications({"core_project_num": "Z99ZZ999999"}) -> error/error 211B 2764/1097ms
+  [pass] outputs_get_project_datacite({"core_project_num": "Z99ZZ999999"}) -> ok/ok 855B 769/909ms
+  [pass] outputs_score_project_intensity({"core_project_num": "Z99ZZ999999"}) -> error/error 211B 958/814ms
+  [pass] classifier_classify_parent({"appl_id": 1}) -> error/error 160B 1153/333ms
+  [pass] classifier_classify_subcategory({"appl_id": 1}) -> error/error 160B 376/383ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "bogus"}) -> error/error 274B 14/3ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 1}) -> error/error 154B 486/318ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "nobody"}) -> error/error 371B 28/4ms
+  [pass] portal_get_review_history({"appl_id": 1}) -> ok/ok 629B 1005/1054ms
+  [FAIL] portal_submit_review_decision({"decision": "approved", "rationale": "parity probe: request does not exist", "r -> error/error 126B 28/421ms
+         @49: remote ...b'{"is_error": true, "structured": null, "text": ["Decision refused: your sign-in is not authorised to decide i' | local ...b'{"is_error": true, "structured": null, "text": ["No review request 00000000-0000-0000-0000-000000000000. Hint'
+  [pass] portal_submit_review_request({"appl_id": 10388671, "evidence": {}, "reviewer_id": "nobody"}) -> error/error 535B 29/4ms
+  [pass] portal_submit_review_request({"appl_id": 1, "evidence": {}, "reviewer_id": "demo_sia"}) -> error/error 271B 27/3ms
+  [pass] outputs_get_project_detail({"appl_id": 10506013}) -> ok/ok 10158B 2356/432ms
+  [pass] classifier_classify_parent({"appl_id": 10506013}) -> ok/ok 3063B 1027/1865ms
+  [pass] classifier_classify_subcategory({"appl_id": 10506013}) -> ok/ok 2393B 466/446ms
+  [pass] classifier_explain({"appl_id": 10506013, "task": "parent"}) -> ok/ok 6361B 464/454ms
+  [pass] classifier_explain({"appl_id": 10506013, "task": "subcategory"}) -> ok/ok 3431B 475/483ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10506013}) -> ok/ok 1198B 925/444ms
+  [pass] portal_get_review_history({"appl_id": 10506013}) -> ok/ok 643B 784/616ms
+  [pass] outputs_get_project_detail({"appl_id": 10388671}) -> ok/ok 9702B 921/426ms
+  [pass] classifier_classify_parent({"appl_id": 10388671}) -> ok/ok 2983B 955/492ms
+  [pass] classifier_classify_subcategory({"appl_id": 10388671}) -> ok/ok 2157B 449/484ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "parent"}) -> ok/ok 6231B 440/582ms
+  [pass] classifier_explain({"appl_id": 10388671, "task": "subcategory"}) -> ok/ok 3151B 528/649ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10388671}) -> ok/ok 1190B 595/409ms
+  [pass] portal_get_review_history({"appl_id": 10388671}) -> ok/ok 643B 873/639ms
+  [pass] outputs_get_project_detail({"appl_id": 10445135}) -> ok/ok 10078B 1030/510ms
+  [pass] classifier_classify_parent({"appl_id": 10445135}) -> ok/ok 2983B 875/434ms
+  [pass] classifier_classify_subcategory({"appl_id": 10445135}) -> ok/ok 2128B 457/419ms
+  [pass] classifier_explain({"appl_id": 10445135, "task": "parent"}) -> ok/ok 6293B 485/467ms
+  [pass] classifier_explain({"appl_id": 10445135, "task": "subcategory"}) -> ok/ok 3114B 592/389ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10445135}) -> ok/ok 1226B 793/424ms
+  [pass] portal_get_review_history({"appl_id": 10445135}) -> ok/ok 643B 781/664ms
+  [pass] outputs_get_project_detail({"appl_id": 10304125}) -> ok/ok 8431B 936/458ms
+  [pass] classifier_classify_parent({"appl_id": 10304125}) -> ok/ok 3017B 831/461ms
+  [pass] classifier_classify_subcategory({"appl_id": 10304125}) -> ok/ok 2001B 466/438ms
+  [pass] classifier_explain({"appl_id": 10304125, "task": "parent"}) -> ok/ok 6405B 461/474ms
+  [pass] classifier_explain({"appl_id": 10304125, "task": "subcategory"}) -> ok/ok 2943B 485/427ms
+  [pass] portal_get_reviewer_assignment({"appl_id": 10304125}) -> ok/ok 1242B 781/486ms
+  [pass] portal_get_review_history({"appl_id": 10304125}) -> ok/ok 643B 842/661ms
+  [pass] outputs_get_project_publications({"core_project_num": "U24AI171008"}) -> ok/ok 54736B 4325/1700ms
+  [pass] outputs_get_project_datacite({"core_project_num": "U24AI171008"}) -> ok/ok 855B 708/634ms
+  [pass] outputs_score_project_intensity({"core_project_num": "U24AI171008"}) -> ok/ok 11861B 2108/1369ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01NR013912"}) -> ok/ok 84655B 2463/1557ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01NR013912"}) -> ok/ok 855B 652/608ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01NR013912"}) -> ok/ok 12739B 2067/1427ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01CA258987"}) -> ok/ok 65080B 2630/1350ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01CA258987"}) -> ok/ok 855B 634/670ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01CA258987"}) -> ok/ok 12233B 2031/1459ms
+  [pass] outputs_get_project_publications({"core_project_num": "R01GM125981"}) -> ok/ok 1159B 1191/742ms
+  [pass] outputs_get_project_datacite({"core_project_num": "R01GM125981"}) -> ok/ok 855B 714/684ms
+  [pass] outputs_score_project_intensity({"core_project_num": "R01GM125981"}) -> ok/ok 5408B 1015/796ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_niaid_01"}) -> ok/ok 459B 509/364ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_ninr_01"}) -> ok/ok 457B 404/331ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_nci_01"}) -> ok/ok 455B 537/298ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_po_nhlbi_01"}) -> error/error 275B 27/2ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nci"}) -> ok/ok 457B 392/288ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nigms"}) -> ok/ok 461B 433/323ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_niaid"}) -> ok/ok 461B 430/321ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_ic_rep_nimh"}) -> ok/ok 459B 446/311ms
+  [pass] portal_list_pending_reviews({"reviewer_id": "demo_sia"}) -> ok/ok 443B 413/514ms
+  review table counts before={'users.conroyri.nitrd_hackathon_v1_review_requests': 0, 'users.conroyri.nitrd_hackathon_v1_review_events': 0, 'users.conroyri.nitrd_hackathon_v1_routing_events': 0} after={'users.conroyri.nitrd_hackathon_v1_review_requests': 0, 'users.conroyri.nitrd_hackathon_v1_review_events': 0, 'users.conroyri.nitrd_hackathon_v1_routing_events': 0}
+F
+=================================== FAILURES ===================================
+______________________ test_every_tool_matches_in_process ______________________
+
+live_sql = None
+real_parent_model = PosixPath('/app/python/source_code/src/nitrd_classifier/resources/parent_model.joblib')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f1076ce3910>
+
+    async def test_every_tool_matches_in_process(live_sql, real_parent_model, capsys):
+        if TRANSPORT == "memory":
+            pytest.skip("memory transport is the in-process server; nothing to compare")
+        before = _review_counts()
+        async with three_clients() as remote:
+            local = {name: Client(server) for name, server in SERVERS.items()}
+            for client in local.values():
+                await client.__aenter__()
+            try:
+                rows = await compare(remote, local, CASES)
+            finally:
+                for client in local.values():
+                    await client.__aexit__(None, None, None)
+        after = _review_counts()
+        with capsys.disabled():
+            print("\n" + _report(rows))
+            print(f"  review table counts before={before} after={after}")
+        assert after == before, "a parity probe wrote to the review tables"
+        bad = [r.case for r in rows if not (r.identical and r.expected_ok)]
+>       assert not bad, f"{len(bad)} of {len(rows)} cases differ or miss expectation: {bad}"
+E       AssertionError: 1 of 71 cases differ or miss expectation: ['portal_submit_review_decision({"decision": "approved", "rationale": "parity probe: request does not exist", "request_id": "00000000-0000-0000-0000-000000000000", "reviewer_id": "demo_sia"})']
+E       assert not ['portal_submit_review_decision({"decision": "approved", "rationale": "parity probe: request does not exist", "request_id": "00000000-0000-0000-0000-000000000000", "reviewer_id": "demo_sia"})']
+
+tests/test_parity.py:328: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_projects'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_cohort'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_cohort'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_find_cohort'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_get_project_detail'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_get_project_publications'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'outputs_score_project_intensity'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'classifier_classify_parent'
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'classifier_classify_subcategory'
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'classifier_explain': {'error_count': 1, 'error_types': ['enum']}
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'portal_get_reviewer_assignment'
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'portal_list_pending_reviews': {'error_count': 1, 'error_types': ['string_pattern_mismatch']}
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'portal_submit_review_decision'
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'portal_submit_review_request': {'error_count': 2, 'error_types': ['missing', 'string_pattern_mismatch']}
+WARNING  fastmcp.server.server:server.py:1471 Invalid arguments for tool 'portal_submit_review_request': {'error_count': 1, 'error_types': ['missing']}
+ERROR    fastmcp.server.server:server.py:1480 Error calling tool 'portal_list_pending_reviews'
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32
+  /app/python/source_code/.venv/lib/python3.11/site-packages/opentelemetry/util/_importlib_metadata.py:32: DeprecationWarning: SelectableGroups dict interface is deprecated. Use select.
+    return EntryPoints(ep for group_eps in eps.values() for ep in group_eps)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_parity.py::test_every_tool_matches_in_process - AssertionEr...
+1 failed, 4 deselected, 1 warning in 120.43s (0:02:00)
+
+--- stderr ---
+[11/09/26 20:43:33] Error calling tool 'outputs_find_projects'                  
+[11/09/26 20:43:38] Error calling tool 'outputs_find_cohort'                    
+                    Error calling tool 'outputs_find_cohort'                    
+                    Error calling tool 'outputs_find_cohort'                    
+[11/09/26 20:43:40] Error calling tool 'outputs_get_project_detail'             
+[11/09/26 20:43:44] Error calling tool 'outputs_get_project_publications'       
+[11/09/26 20:43:47] Error calling tool 'outputs_score_project_intensity'        
+[11/09/26 20:43:49] Error calling tool 'classifier_classify_parent'             
+                    Error calling tool 'classifier_classify_subcategory'        
+[11/09/26 20:43:49] WARNING  Invalid arguments for tool           server.py:1471
+                             'classifier_explain':                              
+                             {'error_count': 1, 'error_types':                  
+                             ['enum']}                                          
+[11/09/26 20:43:50] Error calling tool 'portal_get_reviewer_assignment'         
+[11/09/26 20:43:50] WARNING  Invalid arguments for tool           server.py:1471
+                             'portal_list_pending_reviews':                     
+                             {'error_count': 1, 'error_types':                  
+                             ['string_pattern_mismatch']}                       
+[11/09/26 20:43:53] Error calling tool 'portal_submit_review_decision'          
+[11/09/26 20:43:53] WARNING  Invalid arguments for tool           server.py:1471
+                             'portal_submit_review_request':                    
+                             {'error_count': 2, 'error_types':                  
+                             ['missing',                                        
+                             'string_pattern_mismatch']}                        
+                    WARNING  Invalid arguments for tool           server.py:1471
+                             'portal_submit_review_request':                    
+                             {'error_count': 1, 'error_types':                  
+                             ['missing']}                                       
+[11/09/26 20:45:05] Error calling tool 'portal_list_pending_reviews'            
+
+
+--- auth diagnostics ---
+identity: {"auth_type": "oauth-m2m", "host": "https://<workspace-host>", "env_set": {"DATABRICKS_HOST": true, "DATABRICKS_CLIENT_ID": true, "DATABRICKS_CLIENT_SECRET": true, "DATABRICKS_TOKEN": false, "DATABRICKS_APP_NAME": true}, "workspace_api_identity": "<service-principal-id>"}
+[config.authenticate()] claims: {"jwt": true, "iss": "https://<workspace-host>/oidc", "aud": ["7474654188777746"], "sub": "<service-principal-id>", "scope": "all-apis", "client_id": "<service-principal-id>", "exp": 1794260717, "iat": 1794257117, "expires_in_s": 3599}
+  mcp-nih-grants-outputs GET /health: {"status": 200, "headers": {"content-type": "application/json", "x-request-id": "ad5cf869-f92d-48fd-8491-0d26813bbdf8"}, "body": "{\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}"}
+  mcp-nih-grants-outputs POST /mcp initialize: {"status": 200, "headers": {"content-type": "text/event-stream", "x-request-id": "b3825d22-35e5-4f16-aa6d-54e925858d32"}, "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t"}
+  mcp-nitrd-classifier GET /health: {"status": 200, "headers": {"content-type": "application/json", "x-request-id": "d1bb1ab5-b4fa-4979-9530-cd7cebc4969d"}, "body": "{\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}"}
+  mcp-nitrd-classifier POST /mcp initialize: {"status": 200, "headers": {"content-type": "text/event-stream", "x-request-id": "ab3abb15-5965-448d-a040-17c9b274f2fe"}, "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t"}
+  mcp-nitrd-reviewer-portal GET /health: {"status": 200, "headers": {"content-type": "application/json", "x-request-id": "957548cb-a33f-461d-8521-17fa0c81301b"}, "body": "{\"status\":\"healthy\",\"service\":\"reviewer-portal\"}"}
+  mcp-nitrd-reviewer-portal POST /mcp initialize: {"status": 200, "headers": {"content-type": "text/event-stream", "x-request-id": "f2ce80a1-ba2c-42e7-ad3b-658405d71caa"}, "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t"}
+  mcp-nitrd-reviewer-portal GET /whoami: {"status": 200, "body": "{\"service\":\"reviewer-portal\",\"headers\":{\"x-forwarded-email\":{\"present\":true,\"value\":\"<service-principal-id>\"},\"x-forwarded-user\":{\"present\":true,\"value\":\"72442556496727@7474654188777746\"},\"x-forwarded-preferred-username\":{\"present\":true,\"value\":\"app-2vrjmx mcp-nitrd-e2e-runner\"}}}"}
+[config.oauth_token()] claims: {"jwt": true, "iss": "https://<workspace-host>/oidc", "aud": ["7474654188777746"], "sub": "<service-principal-id>", "scope": "all-apis", "client_id": "<service-principal-id>", "exp": 1794260717, "iat": 1794257117, "expires_in_s": 3598}
+  mcp-nih-grants-outputs GET /health: {"status": 200, "headers": {"content-type": "application/json", "x-request-id": "c5fb5d47-7969-4907-8eb4-577f0e66c3e5"}, "body": "{\"status\":\"healthy\",\"service\":\"nih-grants-outputs\"}"}
+  mcp-nih-grants-outputs POST /mcp initialize: {"status": 200, "headers": {"content-type": "text/event-stream", "x-request-id": "80a8e568-c25e-4205-a4bd-159e73e905f9"}, "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t"}
+  mcp-nitrd-classifier GET /health: {"status": 200, "headers": {"content-type": "application/json", "x-request-id": "184b30e6-7074-4816-aeaf-705ded48f6a0"}, "body": "{\"status\":\"healthy\",\"service\":\"nitrd-classifier\"}"}
+  mcp-nitrd-classifier POST /mcp initialize: {"status": 200, "headers": {"content-type": "text/event-stream", "x-request-id": "6956012b-9b8b-484b-b029-71d3e6d74bc5"}, "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t"}
+  mcp-nitrd-reviewer-portal GET /health: {"status": 200, "headers": {"content-type": "application/json", "x-request-id": "052e6476-144d-409b-aad8-cf77ba5e0767"}, "body": "{\"status\":\"healthy\",\"service\":\"reviewer-portal\"}"}
+  mcp-nitrd-reviewer-portal POST /mcp initialize: {"status": 200, "headers": {"content-type": "text/event-stream", "x-request-id": "fef7afec-5a28-4d24-9a28-d0549c35ebbc"}, "body": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-06-18\",\"capabilities\":{\"logging\":{},\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":false,\"listChanged\":true},\"t"}
+  mcp-nitrd-reviewer-portal GET /whoami: {"status": 200, "body": "{\"service\":\"reviewer-portal\",\"headers\":{\"x-forwarded-email\":{\"present\":true,\"value\":\"<service-principal-id>\"},\"x-forwarded-user\":{\"present\":true,\"value\":\"72442556496727@7474654188777746\"},\"x-forwarded-preferred-username\":{\"present\":true,\"value\":\"app-2vrjmx mcp-nitrd-e2e-runner\"}}}"}

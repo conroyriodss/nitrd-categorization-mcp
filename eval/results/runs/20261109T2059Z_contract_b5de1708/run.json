@@ -1,0 +1,165 @@
+{
+ "exit_code": 0,
+ "finished_at": "2026-11-09T20:59:54.744486",
+ "git_commit": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+ "kind": "contract",
+ "passed": true,
+ "rows_left": {
+  "review_events": 0,
+  "review_requests": 0,
+  "routing_events": 0
+ },
+ "run_id": "b5de1708-40a9-41b9-a4d2-b90af3ac96d1",
+ "source": "users.conroyri.nitrd_hackathon_v1_e2e_runs (Databricks), run_id b5de1708-40a9-41b9-a4d2-b90af3ac96d1",
+ "started_at": "2026-11-09T20:59:01.656311",
+ "summary": {
+  "app_started_at": {
+   "nih_grants_outputs": "2026-11-06T20:32:47Z",
+   "nitrd_classifier": "2026-11-06T20:32:43Z",
+   "reviewer_portal": "2026-11-09T15:13:39Z"
+  },
+  "classifier": {
+   "checks": 41,
+   "failed": [],
+   "passed": 41
+  },
+  "cohort": {
+   "checks": 18,
+   "failed": [],
+   "passed": 18
+  },
+  "commits": {
+   "runner": "d7bad89b9c70c4bbcc4e43326a272ba065e07e2d",
+   "servers": {
+    "nih_grants_outputs": {
+     "app": "mcp-nih-grants-outputs",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f4a11caa9445fa060354dca",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nih-grants-outputs"
+    },
+    "nitrd_classifier": {
+     "app": "mcp-nitrd-classifier",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-06T20:31:35Z",
+     "deployment_id": "01f1da210f791e38ba4e82977ba781ff",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-classifier"
+    },
+    "reviewer_portal": {
+     "app": "mcp-nitrd-reviewer-portal",
+     "commit": null,
+     "commit_error": [
+      "DEPLOY_COMMIT: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT) doesn't exist.",
+      "DEPLOY_COMMIT.py: ResourceDoesNotExist: Path (/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal/DEPLOY_COMMIT.py) doesn't exist."
+     ],
+     "create_time": "2026-11-09T15:12:17Z",
+     "deployment_id": "01f1dc4ff3c61144bb1da6d2aad008db",
+     "source_code_path": "/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal"
+    }
+   }
+  },
+  "first_call_by_app": {
+   "nih_grants_outputs": {
+    "first_call_ms": 650.9,
+    "first_call_tool": "outputs_get_project_detail",
+    "later_calls_p50_ms": 462.7
+   },
+   "nitrd_classifier": {
+    "first_call_ms": 792.0,
+    "first_call_tool": "classifier_classify_parent",
+    "later_calls_p50_ms": 458.9
+   },
+   "reviewer_portal": {
+    "first_call_ms": 837.5,
+    "first_call_tool": "portal_list_pending_reviews",
+    "later_calls_p50_ms": 437.1
+   }
+  },
+  "latency_ms_by_tool": {
+   "classifier_classify_parent": {
+    "max_ms": 792.0,
+    "n": 4,
+    "p50_ms": 458.9,
+    "p95_ms": 792.0
+   },
+   "classifier_classify_subcategory": {
+    "max_ms": 468.9,
+    "n": 4,
+    "p50_ms": 430.3,
+    "p95_ms": 468.9
+   },
+   "classifier_explain": {
+    "max_ms": 566.3,
+    "n": 9,
+    "p50_ms": 464.0,
+    "p95_ms": 566.3
+   },
+   "outputs_find_cohort": {
+    "max_ms": 822.7,
+    "n": 15,
+    "p50_ms": 14.7,
+    "p95_ms": 822.7
+   },
+   "outputs_find_projects": {
+    "max_ms": 1157.8,
+    "n": 7,
+    "p50_ms": 673.4,
+    "p95_ms": 1157.8
+   },
+   "outputs_get_project_datacite": {
+    "max_ms": 1058.6,
+    "n": 1,
+    "p50_ms": 1058.6,
+    "p95_ms": 1058.6
+   },
+   "outputs_get_project_detail": {
+    "max_ms": 650.9,
+    "n": 1,
+    "p50_ms": 650.9,
+    "p95_ms": 650.9
+   },
+   "outputs_get_project_publications": {
+    "max_ms": 842.5,
+    "n": 1,
+    "p50_ms": 842.5,
+    "p95_ms": 842.5
+   },
+   "outputs_score_project_intensity": {
+    "max_ms": 842.5,
+    "n": 1,
+    "p50_ms": 842.5,
+    "p95_ms": 842.5
+   },
+   "portal_get_reviewer_assignment": {
+    "max_ms": 550.9,
+    "n": 3,
+    "p50_ms": 513.2,
+    "p95_ms": 550.9
+   },
+   "portal_list_pending_reviews": {
+    "max_ms": 837.5,
+    "n": 11,
+    "p50_ms": 437.1,
+    "p95_ms": 837.5
+   }
+  },
+  "outputs": {
+   "checks": 16,
+   "failed": [],
+   "passed": 16
+  },
+  "portal": {
+   "checks": 15,
+   "failed": [],
+   "passed": 15
+  }
+ }
+}
