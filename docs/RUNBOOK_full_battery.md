@@ -199,6 +199,8 @@ Invalid if: `passed: false` (no candidate header reaches all three apps).
 This is diagnostic, not a pass/fail test of the suite — but if it fails,
 every other run will fail too.
 
+**Reading `summary.commits.servers` (every run kind):** since the cca45b8 redeploy (2026-11-09), the runner reports `ResourceDoesNotExist` for every server's DEPLOY_COMMIT marker. The portal's marker DOES exist (`DEPLOY_COMMIT.py`, containing cca45b8). The error is the declined CAN_READ grant for runner SP 0b542439, shown as a not-found message (smoke 7acde97d, auth 4e1c1af4).
+
 ## After the battery
 
 Per the PRE_SUBMISSION_CHECKLIST section 2:

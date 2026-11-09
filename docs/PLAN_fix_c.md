@@ -11,6 +11,7 @@ What is being fixed: the portal enforces ordering and single-decision semantics,
 * Tell the owner before each redeploy.
 * Every run artifact records the runner commit and the server commits (`summary.commits`). The post-(c) battery runs entirely on the new runner.
 * Declined: a CAN_READ grant for runner SP 0b542439. If the runner cannot read the commit markers, record the error.
+  * Recorded 2026-11-09 (smoke 7acde97d, auth 4e1c1af4): the runner reports `ResourceDoesNotExist` for every server DEPLOY_COMMIT marker. The portal's marker DOES exist and contains cca45b8. The error is the declined grant, shown as a not-found message.
 * Rollback deadline: end of Monday 2026-11-16. If (c) is not green by then, revert to 95e5dea and document the defect.
 
 ## Stale-claims window (opened 2026-11-09 by the cca45b8 redeploy)
@@ -25,6 +26,11 @@ As of the cca45b8 redeploy (2026-11-09 02:01Z: portal deployment 01f1dbe172c9173
 1. **Measure identity: GET /whoami.** Committed 62e65ab (read-only, `src/reviewer_portal/routes.py`; runner probe in `deploy/databricks/e2e_runner/runner.py`).
    * Redeploy portal and runner. The owner runs the runner auth suite, and the runner SP's /whoami response is reported verbatim.
    * Write no identity check until that measurement is in.
+   * Measured 2026-11-09, portal at cca45b8. Raw `/whoami` bodies:
+     * Runner SP (auth run 4e1c1af4): `{"service":"reviewer-portal","headers":{"x-forwarded-email":{"present":true,"value":"0b542439-4c28-4b16-9377-81fef5a0b1c2"},"x-forwarded-user":{"present":true,"value":"72442556496727@7474654188777746"},"x-forwarded-preferred-username":{"present":true,"value":"app-2vrjmx mcp-nitrd-e2e-runner"}}}`
+     * Owner in the browser: `{"service":"reviewer-portal","headers":{"x-forwarded-email":{"present":true,"value":"conroyri@nih.gov"},"x-forwarded-user":{"present":true,"value":"78305781156038@7474654188777746"},"x-forwarded-preferred-username":{"present":true,"value":"conroyri@nih.gov"}}}`
+     * For the SP, `x-forwarded-email` holds its application id, and `x-forwarded-user` is email-shaped (`<id>@<workspace id>`) for both callers. So a pattern match on `@` cannot tell an SP from a person.
+   * Header integrity: NOT yet measured. Does the proxy overwrite or pass through client-supplied `x-forwarded-*` headers? This gates step 2.
 2. **Enforcement, built on what step 1 measured.**
    * No "email-shaped" check. Resolve the identity through the workspace API or an explicit approver set.
    * Propose the design first and wait for the owner.
