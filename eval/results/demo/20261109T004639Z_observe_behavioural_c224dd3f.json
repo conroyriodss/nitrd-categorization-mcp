@@ -1,0 +1,23 @@
+{
+  "what": "Observation, not a pass/fail test: does an agent-draft request appear anywhere a human could act on it?",
+  "question_kind": "behavioural",
+  "question": "Does the agent's own output (an agent-drafted, human-approved request) reach a human on the operator pages?",
+  "observed_at_utc": "2026-11-09T00:46:39.499367+00:00",
+  "request_id": "c224dd3f-074b-5637-b224-73739200b8ef",
+  "request_row_present": true,
+  "request_row": {
+    "request_id": "c224dd3f-074b-5637-b224-73739200b8ef",
+    "idempotency_key": "agent-draft:0fbeaf7925094f0c835ee6ab661dc40c",
+    "status": "pending",
+    "appl_id": "10213736",
+    "fy": "2021"
+  },
+  "where": "/operator/select?fy=2021&ic=EY&activity=P30",
+  "appears": "no",
+  "notes": "RUN 2 (pre-registered). Owner pasted the five pages in reverse order (5, 4, 3, 2, 1); the visit order is not established. Recorded here in protocol order. Owner saw 'Cohort preview: FY2021 NEI (EY) P30 / 229 records', Activity 'P30 (229 records)', the exact query with bound parameters :fy=2021, :ic=EY, :activity=P30, :limit=20, and 'First 20 of 229, by appl_id' (10168538 to 10197134; 10213736 is not in the first 20). The page lists awards, not review requests. Button 'Submit for Classification', then 'Cohort exceeds 200 projects; narrow by activity code.'",
+  "sandbox_counts_now": {
+    "review_requests": 1,
+    "review_events": 1,
+    "routing_events": 1
+  }
+}

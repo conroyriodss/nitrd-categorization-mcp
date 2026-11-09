@@ -1,0 +1,23 @@
+{
+  "what": "Observation, not a pass/fail test: does an agent-draft request appear anywhere a human could act on it?",
+  "question_kind": "behavioural",
+  "question": "Does the agent's own output (an agent-drafted, human-approved request) reach a human on the operator pages?",
+  "observed_at_utc": "2026-11-09T00:35:12.871853+00:00",
+  "request_id": "a834fd06-b372-58ce-adf6-70568be4e10a",
+  "request_row_present": true,
+  "request_row": {
+    "request_id": "a834fd06-b372-58ce-adf6-70568be4e10a",
+    "idempotency_key": "agent-draft:f26b18e3a5f34c65a64e62d62c733be8",
+    "status": "pending",
+    "appl_id": "10213736",
+    "fy": "2021"
+  },
+  "where": "/operator/select?fy=2021&ic=EY&activity=P30",
+  "appears": "no",
+  "notes": "RUN 1 (not pre-registered). Owner saw \"Cohort preview: FY2021 NEI (EY) P30 / 229 records\", Activity \"P30 (229 records)\", the exact query with bound parameters :fy=2021, :ic=EY, :activity=P30, :limit=20, and \"First 20 of 229, by appl_id\" (10168538 to 10197134; 10213736 is not in the first 20). The page lists awards, not review requests. Button \"Submit for Classification\", then \"Cohort exceeds 200 projects; narrow by activity code.\"",
+  "sandbox_counts_now": {
+    "review_requests": 1,
+    "review_events": 1,
+    "routing_events": 1
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "what": "Observation, not a pass/fail test: does an agent-draft request appear anywhere a human could act on it?",
+  "question_kind": "behavioural",
+  "question": "Does the agent's own output (an agent-drafted, human-approved request) reach a human on the operator pages?",
+  "observed_at_utc": "2026-11-09T00:35:23.479843+00:00",
+  "request_id": "a834fd06-b372-58ce-adf6-70568be4e10a",
+  "request_row_present": true,
+  "request_row": {
+    "request_id": "a834fd06-b372-58ce-adf6-70568be4e10a",
+    "idempotency_key": "agent-draft:f26b18e3a5f34c65a64e62d62c733be8",
+    "status": "pending",
+    "appl_id": "10213736",
+    "fy": "2021"
+  },
+  "where": "/operator/review?fy=2021&ic=EY&activity=P30&persona=demo_sia",
+  "appears": "no",
+  "notes": "RUN 1 (not pre-registered). PREDICTION CONFIRMED, not a demo failure. Owner saw \"0 review requests: 0 classified, 0 classification failed.\", Acting as \"demo_sia (sia_queue): 0 here\", Tier \"All tiers\", State \"All states\", \"Showing 0 of 0.\", \"No review requests for this cohort yet. Build it from the cohort selector.\"",
+  "sandbox_counts_now": {
+    "review_requests": 1,
+    "review_events": 1,
+    "routing_events": 1
+  }
+}

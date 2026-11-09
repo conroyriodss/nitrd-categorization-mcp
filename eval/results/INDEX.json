@@ -60,6 +60,22 @@
    "bytes": 1410297,
    "sha256": "b9371ba7d195461c41ba969839ede2d6e34e544206e015e95acb3d36e9897071"
   },
+  "adv_runs/20261108T2255Z_adv-injection-v1_dryrun-controls_9802585f/manifest.json": {
+   "bytes": 2568,
+   "sha256": "02f8c51dea7bbfd1e7913b5a508042d6344feb5c274b34339141e85da3bfc223"
+  },
+  "adv_runs/20261108T2255Z_adv-injection-v1_dryrun-controls_9802585f/runs.jsonl": {
+   "bytes": 140373,
+   "sha256": "d139cd5ac8b78d4b0f1194358cb0ce99d03b03e6b64f17beb08fc9e2bdce3a40"
+  },
+  "adv_runs/20261108T2255Z_adv-injection-v1_dryrun-controls_9802585f/timing.json": {
+   "bytes": 646,
+   "sha256": "cfa03ad3307979eb6580b529d02394a05d91a0a0d9d46c78bb89a240d4affd9e"
+  },
+  "adv_runs/20261108T2255Z_adv-injection-v1_dryrun-controls_9802585f/utility.json": {
+   "bytes": 1803,
+   "sha256": "e698205e4cdef91d8992ac9132ae87a9f0253023dcf858fa0e06d88e45679c23"
+  },
   "agent_runs/20261105T1954Z_aes-functional-v1_c1ab24d7_VOID/report.json": {
    "bytes": 107866,
    "sha256": "8973d2f328db95f2eab7d3ab94f5754f7658d570ce13cad8a82c564bffa94d0c"
@@ -91,6 +107,70 @@
   "agent_runs/unscripted/20261107_nei_p30_verification.json": {
    "bytes": 2980,
    "sha256": "385f423827ae6f233c5a54a3882bb2d38de52a5978ed94211f64beda7ac4723f"
+  },
+  "demo/20261109T003017Z_browser_approval_a834fd06.json": {
+   "bytes": 5788,
+   "sha256": "67c24ee38895c8ae2549b4cba93a19c43beccda76593deedc86da849fcf57c61"
+  },
+  "demo/20261109T003507Z_observe_behavioural_a834fd06.json": {
+   "bytes": 1325,
+   "sha256": "d74dfca4cbf28d7ba1089bcad5fbf858139fa9f82fd5502cb12efe2ef307e4bb"
+  },
+  "demo/20261109T003512Z_observe_behavioural_a834fd06.json": {
+   "bytes": 1286,
+   "sha256": "db69abae5c0c95dd279b242b5c6bf81a04e84eb1d2d0d893d39412f690763605"
+  },
+  "demo/20261109T003518Z_observe_behavioural_a834fd06.json": {
+   "bytes": 1220,
+   "sha256": "f516c4acda39d2778207fd24064c32c550da1c580c5f40ff41c25ba34382fa1d"
+  },
+  "demo/20261109T003523Z_observe_behavioural_a834fd06.json": {
+   "bytes": 1187,
+   "sha256": "b789981a8c4390465a3365d69c3bda9face47a8572aad0610283c4802ef027b4"
+  },
+  "demo/20261109T003528Z_observe_behavioural_a834fd06.json": {
+   "bytes": 1202,
+   "sha256": "bf944fdb791e73ebcf3bada9e3aa3dbbd06b0ca9572ad915f80aa4a35fa15542"
+  },
+  "demo/20261109T003615Z_history.json": {
+   "bytes": 3436,
+   "sha256": "5097d4c97711db3ff0d20bf7edc5266b949ddb83fa04ef84bd6211b4847862ab"
+  },
+  "demo/20261109T004132Z_predict_0fbeaf79.json": {
+   "bytes": 347,
+   "sha256": "23576de00a13293424b7475f3cc70f86fb0cccea62e3806b6e0e803b6728e51f"
+  },
+  "demo/20261109T004251Z_browser_approval_c224dd3f.json": {
+   "bytes": 6064,
+   "sha256": "e7eb2907cd8777ab06930ff258fd73983fc90c620695bce6ebe62ad3d731d1d7"
+  },
+  "demo/20261109T004633Z_observe_behavioural_c224dd3f.json": {
+   "bytes": 1458,
+   "sha256": "fc094664d96663ea305c81c2e6bf38e1527793eb1b491e651db0dc265ba589f8"
+  },
+  "demo/20261109T004639Z_observe_behavioural_c224dd3f.json": {
+   "bytes": 1403,
+   "sha256": "a3aa63275548163b266679c0848f506d074a2185e1906caad7da7607ef6bf3c4"
+  },
+  "demo/20261109T004644Z_observe_behavioural_c224dd3f.json": {
+   "bytes": 1333,
+   "sha256": "e975a973fbd6554d368f992874f5f225351699161309fe8446815947e7d1fce4"
+  },
+  "demo/20261109T004650Z_observe_behavioural_c224dd3f.json": {
+   "bytes": 1302,
+   "sha256": "a7a74afd8ccb2f67e6403bc834b1e10550b906e01b8b8c8dca71dc0e504f8fe7"
+  },
+  "demo/20261109T004655Z_observe_behavioural_c224dd3f.json": {
+   "bytes": 1317,
+   "sha256": "fee75193a8d812c9d82d2d6a05fdf3e375742a8701fb9023966b2ea6e9e8421c"
+  },
+  "demo/20261109T004737Z_history.json": {
+   "bytes": 3436,
+   "sha256": "e90566e2e1a4fb349c631011a66346f884a3fff3657b5d89e032ba278c65fa4d"
+  },
+  "demo/RUNS.md": {
+   "bytes": 6193,
+   "sha256": "eb5734962886eec18d7cd8af688dd15f90062cfe6c5776d755061e54edf96f23"
   },
   "explain/weak_demo_awards_v1.json": {
    "bytes": 23129,
@@ -297,7 +377,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-08T19:47:19Z",
+ "generated_utc": "2026-11-09T00:55:15Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_runs/": "Written by eval/adversarial/run_adv.py and check_delivery.py, then indexed with --index-only (no export, no redaction needed: none of the three identifiers occurs). dryrun-controls and recheck-controls are control arms only and compute no success rate. In the counted run, report.json is the pinned rule's output and exposure.json is a post-hoc observation (see eval/agent/README.md, adversarial suite).",

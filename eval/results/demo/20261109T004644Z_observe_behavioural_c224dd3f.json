@@ -1,0 +1,23 @@
+{
+  "what": "Observation, not a pass/fail test: does an agent-draft request appear anywhere a human could act on it?",
+  "question_kind": "behavioural",
+  "question": "Does the agent's own output (an agent-drafted, human-approved request) reach a human on the operator pages?",
+  "observed_at_utc": "2026-11-09T00:46:44.878565+00:00",
+  "request_id": "c224dd3f-074b-5637-b224-73739200b8ef",
+  "request_row_present": true,
+  "request_row": {
+    "request_id": "c224dd3f-074b-5637-b224-73739200b8ef",
+    "idempotency_key": "agent-draft:0fbeaf7925094f0c835ee6ab661dc40c",
+    "status": "pending",
+    "appl_id": "10213736",
+    "fy": "2021"
+  },
+  "where": "/operator/review?fy=2021&ic=EY&activity=P30",
+  "appears": "no",
+  "notes": "RUN 2 (pre-registered). PREDICTION CONFIRMED, not a demo failure. Owner pasted the five pages in reverse order (5, 4, 3, 2, 1); the visit order is not established. Recorded here in protocol order. Owner saw 'Review: FY2021 NEI (EY) P30', '0 review requests: 0 classified, 0 classification failed.', Routing table empty, Acting as 'All personas (read-only)', Tier 'All tiers', State 'All states', 'Showing 0 of 0.', 'No review requests for this cohort yet. Build it from the cohort selector.'",
+  "sandbox_counts_now": {
+    "review_requests": 1,
+    "review_events": 1,
+    "routing_events": 1
+  }
+}
