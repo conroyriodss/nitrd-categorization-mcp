@@ -109,6 +109,8 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
 
      A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9, 10 and 11 are committed.
 
+     **Coverage cost (2026-11-09).** Beyond the matrix: on the tool path, every automated deployed call of `portal_submit_review_decision` now ends at check 0. The decision rules behind check 0 have moved to CI, and their warehouse persistence is no longer exercised automatically anywhere. See "Coverage moved to CI" below.
+
      The CI-only cells cannot be measured deployed. No person can call the decision tool over /mcp from the runner. A deployed refusal on the decide page or the approve route would need a second signed-in human identity that is not in NITRD_APPROVERS. We do not add a non-listed identity to obtain one: it is not worth the risk of leaving the approver set wrong in the shipped build.
 
    * **The deployed tool path has no human positive control.** No person can call `portal_submit_review_decision` over /mcp from the runner. The logged refusal reason (row 9) stands in for one. A person deciding is shown on the deployed portal only through `/operator/decide` (row 10), which shares check 0 with the tool. The same statement is in the security-section draft (`submission/DRAFT_security_section_fix_c.md`), so it does not live only in this plan.
@@ -148,15 +150,52 @@ The stale-claims window stays OPEN until parity passes and the lifecycle refusal
   * The in-process side ran under the autouse test fixture `tests/conftest.py::default_approver` (added in bf5228c). That fixture makes every in-process call a listed approver, so the call passed check 0 and failed on "No review request".
   * This is a defect in the test, not a divergence between the servers, and 7f3b2f82 stays a FAIL as recorded.
   * This was the first parity run since bf5228c, so no earlier parity run could have shown the defect.
-  * Proposed fix (owner decides; it needs a runner redeploy, and the owner is told first): in `tests/test_parity.py`, run the in-process side with the real `forwarded_email`. In-process that returns None, which is refused as `absent` with the same uniform text, so the case is expected to be byte-identical and to show that the deployed portal refuses the runner. The case then no longer reaches the missing-request check on either side.
+  * Fix (approved by the owner 2026-11-09, applied in `tests/test_parity.py`, not yet deployed): the in-process side runs with the real `forwarded_email`, not the test approver. In-process that returns None, so the call is refused as `absent`.
+    * The two outputs match because the refusal message is uniform by design: the reason (`absent` or `not_in_set`) and the received value go to the server log only.
+    * Checked in-process before deploy: the case now answers 126 bytes, starting `{"is_error": true, "structured": null, "text": ["Decision refused: your sign-in is not authorised to decide in`. 7f3b2f82 recorded the deployed side at the same 126 bytes with the same opening, though not the full deployed bytes. Byte identity is shown only by the re-run.
+    * The coverage change this makes is recorded in the next section.
 * **e2e summary defect: one label is overwritten by a fake run (all e2e records since 7fa7ee4c, 2026-11-04).**
   * `runner.py:494-501` builds `summary` from the `NITRD_E2E_REPORT` file, keyed by label.
   * The in-process harness test `test_harness_read_only_never_calls_the_write_steps` writes the same label, `appl 10506013 ...`, after the live chain does. Its fake run has find_projects total=1 and p=0.93.
   * So the recorded summary shows steps 9/9b/10 as `skipped` for 10506013, while the run log shows the live chain `ok` with strict checks passing.
   * `passed` and `exit_code` come from pytest and are unaffected. The defect under-reports; it does not over-claim.
   * Affected records: 0dbd05d2, ffeeadd1, e132f420, e1969ce8, f4d4fff2, d7ecbdea, 7fa7ee4c. 778bd3ab (2026-11-03, cited in 11-06b) and 25c7320c are clean.
-  * For 10506013, read the run log, not the summary. Not fixed yet.
+  * For 10506013, read the run log, not the summary.
+  * Fix (owner, 2026-11-09, not yet deployed): harness runs on fake servers get the label prefix `in-process fake | ` (`FAKE_LABEL_PREFIX` in `_fake_run`). A new test checks that a live entry survives a later fake run; it fails with the prefix removed (checked).
+  * The 7 historical records stay as recorded. They are annotated here, and the three exported ones also in their INDEX notes (f4d4fff2, e1969ce8, 0dbd05d2). 7fa7ee4c, d7ecbdea, e132f420 and ffeeadd1 exist only in the runs table, which is not edited. For all seven, the run log is authoritative over the summary.
 * **Local collection error (bounded).** One local `pytest tests/` run on the rebuilt dev environment (`/tmp/nitrd-dev`, cluster 1109-185934-ptqm3ck9-v2n) ended as `1 skipped, 1 error in 7.97s`. The output was not captured.
   * A collection error means the tests did not run. The green re-run straight afterwards (762/23/2) says nothing about what that first run missed.
   * Bound (owner, from GitHub Actions): 97 CI runs, exactly two failures. Both were E501 lint on 2026-11-08 (b62895b, 6e4a339), both fixed by e533c55, and none was a collection error. So the error is local to the environment rebuilt on the new cluster.
   * If it recurs, capture the full output BEFORE re-running.
+
+## Coverage moved to CI (fix (c), recorded 2026-11-09)
+
+Hardening the control cost deployed coverage. This is recorded at two levels.
+
+**(a) The parity decision probe.**
+* Before fix (c), both sides of the `portal_submit_review_decision` probe on the all-zero request_id reached the not-found check. The case compared that rule, deployed vs in-process.
+* Now the deployed side stops at check 0, because the runner SP is not a listed approver. After the parity fix, the in-process side stops there too.
+* The case now compares only the uniform refusal. The not-found rule has no deployed comparison; it is covered in CI only.
+
+**(b) The general form.**
+* The runner SP can never pass check 0. So every automated deployed exercise of `portal_submit_review_decision` now ends at the approver gate: lifecycle L7c/L8c/L13c and the parity probe.
+* Before the fix, deployed lifecycle L7-L13 reached the rules behind check 0. The last such run was d74756ca (2026-11-06, portal 95e5dea): 4 labels, no failures.
+
+| Rule behind check 0 | Deployed (before the fix: lifecycle L-check, d74756ca) | Now |
+| --- | --- | --- |
+| decision by a non-assigned persona refused | L7 | CI only (`test_lifecycle_offline`, FakeSql) |
+| rationale too short refused | L7 | CI only |
+| override corrections biconditional (3 rules) | L7 | CI only |
+| assigned decision recorded (status, decided_by, rationale, event) | L9 | CI only |
+| second decision refused (decisions are final; the pending-state check) | L10 | CI only |
+| decided request leaves the pending queue | L11 | CI only |
+| history order; the override event carries the corrections | L12 | CI only |
+| decision and corrections persisted on the warehouse | L13 | **not exercised automatically anywhere**: CI uses FakeSql, and deployed is refused at check 0 |
+
+The only post-fix deployed pass through these rules is manual: row 10, one `approved` decision on `/operator/decide`, recorded under the assigned persona. It is checked on the warehouse, then cleaned up (`eval/results/auth/20261109_row10_operator_decide.json`).
+
+No deployed run after the fix covers an override, a refused rule behind check 0, or a second decision.
+
+We do not restore coverage by listing the runner SP. That would give the automated identity the ability fix (c) removed.
+
+Deliverables sentence (proposed, not approved): `submission/DRAFT_security_section_fix_c.md`.

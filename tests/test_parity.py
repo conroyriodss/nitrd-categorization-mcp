@@ -33,6 +33,7 @@ from fastmcp import Client
 from nitrd_classifier import data as classifier_data
 from nitrd_classifier.config import Settings as ClassifierSettings
 from nitrd_classifier.config import settings as classifier_settings
+from reviewer_portal import approvers as portal_approvers
 from shared.tables import (
     NITRD_CATEGORY,
     REVIEW_EVENTS,
@@ -306,9 +307,24 @@ def _review_counts() -> dict[str, int]:
     }
 
 
-async def test_every_tool_matches_in_process(live_sql, real_parent_model, capsys):
+async def test_every_tool_matches_in_process(
+    live_sql, real_parent_model, capsys, monkeypatch
+):
     if TRANSPORT == "memory":
         pytest.skip("memory transport is the in-process server; nothing to compare")
+    # Both sides run as their real caller, with no test approver. The autouse
+    # conftest fixture would make the in-process side a listed approver while
+    # the deployed side is the runner SP. Then the decision probe reached the
+    # not-found check on one side and was refused on the other (parity run
+    # 7f3b2f82). Without the fixture both sides are refused by check 0: the
+    # deployed side as not_in_set, the in-process side as absent (no HTTP
+    # request). Their outputs match because the refusal message is uniform by
+    # design; the reason and the received value go to the server log only.
+    # Coverage changed with it: this case no longer reaches the not-found
+    # check on either side (docs/PLAN_fix_c.md, "Coverage moved to CI").
+    from tests.conftest import REAL_FORWARDED_EMAIL
+
+    monkeypatch.setattr(portal_approvers, "forwarded_email", REAL_FORWARDED_EMAIL)
     before = _review_counts()
     async with three_clients() as remote:
         local = {name: Client(server) for name, server in SERVERS.items()}

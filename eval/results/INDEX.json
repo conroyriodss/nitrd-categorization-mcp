@@ -469,7 +469,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T21:10:04Z",
+ "generated_utc": "2026-11-09T21:19:05Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",
@@ -480,7 +480,10 @@
   "auth/20261109_row9_approver_refused_3174122a.json": "Fix (c) row 9. The four portal-log lines were read by the owner from the Apps console Logs tab (not retrievable by the runner) and transcribed verbatim; app logs rotate. Pairs with runs/20261109T1527Z_lifecycle_3174122a/. The runner SP id is kept verbatim: it is the measured value.",
   "explain/": "Written by eval/explain/explain_weak_awards.py (2026-11-08). Explainability for demo awards 10388671 and 10445135. Parent-classifier output from the frozen classifier code, run in process (identical to 95e5dea). Its probabilities equal the deployed run e1969ce8 to 6 dp. task1-fingerprint-v1 term contributions are computed from the committed uac-nitrd model (48b8c50, SHA-256 checked). Document and deck evidence only; no portal change.",
   "runs/20261106T1747Z_auth_249358ff/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted.",
-  "runs/20261106T2048Z_auth_69cbcac7/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
+  "runs/20261106T1755Z_e2e_f4d4fff2/": "Summary defect, left as recorded: the run.json summary entry for appl 10506013 was overwritten by the in-process harness test, which used the same label. It shows steps 9/9b/10 as skipped. The run log (report.log) is authoritative over the summary; passed and exit_code are unaffected. Fixed by FAKE_LABEL_PREFIX in tests/test_smoke_e2e.py; see docs/PLAN_fix_c.md.",
+  "runs/20261106T2038Z_e2e_e1969ce8/": "Summary defect, left as recorded: the run.json summary entry for appl 10506013 was overwritten by the in-process harness test, which used the same label. It shows steps 9/9b/10 as skipped. The run log (report.log) is authoritative over the summary; passed and exit_code are unaffected. Fixed by FAKE_LABEL_PREFIX in tests/test_smoke_e2e.py; see docs/PLAN_fix_c.md.",
+  "runs/20261106T2048Z_auth_69cbcac7/": "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted.",
+  "runs/20261109T2046Z_e2e_0dbd05d2/": "Summary defect, left as recorded: the run.json summary entry for appl 10506013 was overwritten by the in-process harness test, which used the same label. It shows steps 9/9b/10 as skipped. The run log (report.log) is authoritative over the summary; passed and exit_code are unaffected. Fixed by FAKE_LABEL_PREFIX in tests/test_smoke_e2e.py; see docs/PLAN_fix_c.md."
  },
  "redactions": {
   "runs/20261103T1354Z_smoke_a9204bb7/report.log": {

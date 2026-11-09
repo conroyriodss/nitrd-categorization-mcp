@@ -14,6 +14,8 @@ Since commit d7bad89, the deployed portal refuses decisions from identities not 
 
 [Proposed addition, beside the MODIFY limitation; not approved: "Audit event ids are deterministic for idempotency, so two human decisions on the same award made on different days can share one event id; the table tells them apart only by timestamp and rationale, and who acted is recorded only in the portal's application log."]
 
+[Proposed addition, coverage cost; not approved: "Hardening the control cost deployed test coverage of the decision tool. The automated runner is not, and must not be, a listed approver. So since the fix every automated deployed call of the decision tool stops at the approver check. The rules behind that check have moved to the offline test suite: the assigned-reviewer match, the minimum rationale, the override corrections rules, recording the decision, and refusing a second decision. Whether a decision and its corrections are stored correctly in the warehouse is no longer tested automatically at all. The only deployed pass through these rules since the fix is one manual approval on the review page." Source: docs/PLAN_fix_c.md, "Coverage moved to CI".]
+
 ## Sources
 
 * `eval/results/auth/20261109_header_integrity_whoami.json`: the /whoami bodies and the spoof test.

@@ -98,6 +98,19 @@ NOTES = {
         "run.json holds decoded OAuth token claims (no token). Their aud claim is the numeric workspace ID. "
         "It is not a credential and is already public in DEMO.md and the Databricks App URLs, so it is not redacted."
     ),
+    **{
+        f"runs/{d}/": (
+            "Summary defect, left as recorded: the run.json summary entry for appl 10506013 was overwritten by "
+            "the in-process harness test, which used the same label. It shows steps 9/9b/10 as skipped. The "
+            "run log (report.log) is authoritative over the summary; passed and exit_code are unaffected. "
+            "Fixed by FAKE_LABEL_PREFIX in tests/test_smoke_e2e.py; see docs/PLAN_fix_c.md."
+        )
+        for d in (
+            "20261106T1755Z_e2e_f4d4fff2",
+            "20261106T2038Z_e2e_e1969ce8",
+            "20261109T2046Z_e2e_0dbd05d2",
+        )
+    },
 }
 
 SECRET_PATTERNS = {

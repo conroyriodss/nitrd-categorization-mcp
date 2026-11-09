@@ -890,6 +890,14 @@ def _fake_servers(
     }
 
 
+# Harness runs on fake servers get their own label. The report file
+# (NITRD_E2E_REPORT) is keyed by label, and these tests run in the same pytest
+# process as the live chain. Under the live chain's label, a fake run would
+# overwrite the live run's summary: it did for 10506013 in every e2e record
+# from 7fa7ee4c to 0dbd05d2 (docs/PLAN_fix_c.md).
+FAKE_LABEL_PREFIX = "in-process fake | "
+
+
 async def _fake_run(
     project: dict,
     calls: list[str],
@@ -901,7 +909,27 @@ async def _fake_run(
             name: await stack.enter_async_context(Client(server))
             for name, server in _fake_servers(project, calls, fail_submit).items()
         }
-        return await run_scenario(clients, project, cleanup=cleanup)
+        run = await run_scenario(clients, project, cleanup=cleanup)
+    run.label = FAKE_LABEL_PREFIX + run.label
+    return run
+
+
+async def test_fake_run_cannot_overwrite_the_live_summary(monkeypatch, tmp_path):
+    """The live chain's report entry survives a harness run that follows it."""
+    report = tmp_path / "e2e_report.json"
+    monkeypatch.setenv("NITRD_E2E_REPORT", str(report))
+    monkeypatch.delenv("PORTAL_LIVE_WRITE_TESTS", raising=False)
+    project = DEMO_PROJECTS[0]
+    x, core = project["appl_id"], project["core_project_num"]
+    live_label = f"appl {x} {core} ({project['administering_ic']})"
+    report.write_text(json.dumps({live_label: {"marker": "live"}}))
+    run = await _fake_run(project, [])
+    for name in PERSIST_CHECKS:
+        run.skip_check(name, READ_ONLY_REASON)
+    run.finish(_NoCapture())
+    written = json.loads(report.read_text())
+    assert written[live_label] == {"marker": "live"}
+    assert run.label == FAKE_LABEL_PREFIX + live_label and run.label in written
 
 
 async def test_request_id_is_registered_before_the_write(monkeypatch):
