@@ -189,7 +189,11 @@ uv run nih-grants-outputs
 uv run nitrd-classifier
 uv run reviewer-portal
 # equivalently: uv run python main.py <nih-grants-outputs|nitrd-classifier|reviewer-portal>
+# uv run python main.py with no name lists the three and exits
 ```
+
+This entry differs from the GSA template's layout (three servers, not one);
+each difference and the reason is in [CONFORMANCE.md](CONFORMANCE.md).
 
 Data-backed tools need Databricks access: set `DATABRICKS_WAREHOUSE_ID` and
 standard Databricks SDK authentication (for example `DATABRICKS_HOST` with a

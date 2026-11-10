@@ -76,7 +76,8 @@ uv run python main.py reviewer-portal
 
 By default each starts in **stdio** mode and waits silently for a client on
 stdin/stdout; it prints no URL. Press `Ctrl-C` to stop. `main.py` without a
-server name exits with a usage message.
+server name (the template's `uv run python main.py`) lists the three servers
+and how to start each, then exits.
 
 To serve over HTTP instead (as on Databricks Apps), set the per-server
 transport variable:
