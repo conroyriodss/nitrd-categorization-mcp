@@ -141,8 +141,8 @@
    "sha256": "551149e51492a993f2dec42746e510a7021afb8789c5b6d800a1713d3859a3d2"
   },
   "auth/20261109_row12_decision_rules.json": {
-   "bytes": 9056,
-   "sha256": "6bf28d3cb98913ac5d29a2fb34106b4c45fc9847c30fb997657d81e70b6df982"
+   "bytes": 9515,
+   "sha256": "35649cd8047027ef8006dde4269ed72249e9f5fec6f60e475e4ba605a1148e40"
   },
   "auth/20261109_row9_approver_refused_3174122a.json": {
    "bytes": 4789,
@@ -501,7 +501,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-09T22:52:39Z",
+ "generated_utc": "2026-11-10T13:39:44Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",

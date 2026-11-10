@@ -1,0 +1,773 @@
+{
+ "spec": "submission/apply/routing_spec_11-06b.json",
+ "documents": [
+  {
+   "source": "submission/NITRD_Evaluation_2026-11-06b.docx",
+   "source_sha256": "2b70c7bcff69a578139d58d7f4e2132ff2a78359fa221b330495e15a34815332",
+   "dry_run_copy": "/tmp/routing_apply/NITRD_Evaluation_2026-11-06b.DRYRUN.docx",
+   "dry_run_sha256": "b70cb57d4726597c292649b955553a970b9a9670d4ab649d357e109bd13ce0e3",
+   "parts_changed": [
+    "word/document.xml"
+   ],
+   "other_parts_byte_identical": true,
+   "extract_lines_before": 338,
+   "extract_lines_after": 346,
+   "rows": [
+    {
+     "id": "D01",
+     "batch_ref": "L29",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Agent tool selection is not measured",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "TABLE CELL: text edited in place; check the cell in Office"
+     ]
+    },
+    {
+     "id": "D02",
+     "batch_ref": "L194 (item 2)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "These tools express goals—bounded cohort discovery, explainable classification a",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D03",
+     "batch_ref": "L196 (re-anchored L367)",
+     "op": "replace",
+     "routing": "HELD + DRAFT",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Deployed-path verification. [Verified] Parity run 5704d50c (2026-11-03): 71/71 c",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "DRAFT: the batch gives no text for this row ('PENDING the post-(c) battery'); wording is Genie Code's for review",
+      "§4 sanity-warning table (DOCX lines 313-320) still cites run 778bd3ab; d08b246f carries the same four warnings, so the owner may re-cite that table too (no row yet)",
+      "'(§3)' points at the security section, where the fix (c) paragraphs would go; placement of those is not decided",
+      "FORMATTING: anchor spans 236 runs with differing formatting; the changed text takes the dominant run's (inline bold/italic/links inside it are lost)"
+     ]
+    },
+    {
+     "id": "D04",
+     "batch_ref": "L376 (DOCX 285)",
+     "op": "replace",
+     "routing": "HELD",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "[Verified] Observed parity-suite latency: p50 644.7 ms and p95 2909.2 ms in the ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "linked to deck row P14 (slide 6 notes) so both update together",
+      "FORMATTING: anchor spans 2 runs with differing formatting; the changed text takes the dominant run's (inline bold/italic/links inside it are lost)"
+     ]
+    },
+    {
+     "id": "D05a",
+     "batch_ref": "L30 + item 1 + item 5",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Not measured here: latency/throughput/concurrency/cost per review beyond the par",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "composed: L30 removes the clause; item 1 says approval bypass STAYS on the list, so it is kept and the other two are removed"
+     ]
+    },
+    {
+     "id": "D05b",
+     "batch_ref": "L30",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Not measured here: latency/throughput/concurrency/cost per review beyond the par",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D05c",
+     "batch_ref": "L30 superseded by item 1 (L172)",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Not measured here: latency/throughput/concurrency/cost per review beyond the par",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "CROSS-REFERENCE: agreed text says 'see §4', but in 11-06b the adversarial paragraph is in §3 (Security considerations); owner to decide"
+     ]
+    },
+    {
+     "id": "D06a",
+     "batch_ref": "L70 re-anchored (L363) + terms (L157)",
+     "op": "insert_after",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Separation by side effect. Read, inference, and write live in three servers, so ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "terms: 'drive a request to approved' -> 'have the portal record an `approved` decision' (backticks dropped in the document)"
+     ]
+    },
+    {
+     "id": "D06b",
+     "batch_ref": "L73 (after (c) lands)",
+     "op": "insert_after",
+     "routing": "AGREED template, filled",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Separation by side effect. Read, inference, and write live in three servers, so ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "WORDING: the template says 'service-principal identities', but fix (c) refuses any identity not on the approver list (a person not on it is refused too). Accurate form: 'Since commit d7bad89, the portal records a review decision only from a person on its approver list; it refused every decision the runner's service principal submitted (run 3174122a).'",
+      "OVERLAP: the approved security-section draft (DRAFT_security_section_fix_c.md) says this at length; owner chooses one or both"
+     ]
+    },
+    {
+     "id": "D06c",
+     "batch_ref": "L123 + terms (L155)",
+     "op": "insert_after",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Separation by side effect. Read, inference, and write live in three servers, so ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "CONDITIONAL on the combined portal change: if it ships, the 'After a view lands' sentence (row D13) follows this one"
+     ]
+    },
+    {
+     "id": "D07",
+     "batch_ref": "L88",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Reserved-year guard. Cohort and operator surfaces refuse FY2022–2026 before SQL ",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D08",
+     "batch_ref": "L32",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Production design, not implemented or tested here. Authenticated end-user author",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D09",
+     "batch_ref": "L31 + item 5 (L220)",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Untrusted text. Award abstracts and publication metadata can carry injection att",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "composed: item 5's body sentence inserted after the Wilson clause, so the pinned-rule clause becomes its own sentence",
+      "monospace on adv-injection-v1 not applied",
+      "FORMATTING: anchor spans 57 runs with differing formatting; the changed text takes the dominant run's (inline bold/italic/links inside it are lost)"
+     ]
+    },
+    {
+     "id": "D10a",
+     "batch_ref": "L89",
+     "op": "delete",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Implemented in this prototype. Reviewer-tier checks operate over chosen, unauthe",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D10b",
+     "batch_ref": "L89",
+     "op": "insert_after",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Implemented in this prototype. Reviewer-tier checks operate over chosen, unauthe",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D11",
+     "batch_ref": "L33 + item 5 (L221) + bridge (L250)",
+     "op": "replace",
+     "routing": "AGREED (bridge: owner accepted conclusion (a))",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Adversarial evaluation [Planned]. Server and agent need separate tests. The plan",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "composed: 'citations unchanged' kept the two citations verbatim; item 5 moved the approval-bypass condition next to the number, so the later 'Approval bypass through the human gate and other payload families are not measured' became 'Other payload families are not measured' to avoid saying it twice"
+     ]
+    },
+    {
+     "id": "D12",
+     "batch_ref": "L250 (bridge)",
+     "op": "append_paragraph",
+     "routing": "AGREED (owner accepted conclusion (a)); placement owner's",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Adversarial evaluation [Verified, narrow]. Server and agent need separate tests.",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D13",
+     "batch_ref": "L126 (after a view lands)",
+     "op": "none",
+     "routing": "PENDING",
+     "status": "NOT APPLIED: pending the combined portal change (decide-by-request_id view); filled only if it ships green by 2026-11-14",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "D14",
+     "batch_ref": "L258-268 (lessons learned)",
+     "op": "append_paragraph",
+     "routing": "PROPOSED; placement owner's",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Evaluation integrity without environment access. Public commits and the hash-and",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "PARTLY MANUAL: inserted as plain paragraphs with the anchor paragraph's style; the italic lead sentence, the bold item heads and list numbering must be set by hand",
+      "PLACEMENT: 11-06b has no separate 'Lessons learned' subsection; placed after 'Evaluation integrity without environment access', before 'Recommendations for production'"
+     ]
+    },
+    {
+     "id": "D15a",
+     "batch_ref": "L34",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Recommendations for production. Complete agent-level tool-selection and injectio",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "D15b",
+     "batch_ref": "L125 + terms (L159)",
+     "op": "insert_after",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Recommendations for production. Extend agent-level evaluation beyond one model a",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "CONDITIONAL on the combined portal change: if the view ships, this recommendation is replaced by the D13 sentence",
+      "line numbers cited are at 95e5dea; re-check if the portal changes"
+     ]
+    },
+    {
+     "id": "D16a",
+     "batch_ref": "L329 (benchmark reconciliation 2)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Benchmark scope. The cited screening/classification summaries span κ 0.56–0.82: ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "composed: L329 text replaces the first sentence; the 11-06b disclaimer sentences that follow are kept"
+     ]
+    },
+    {
+     "id": "D16b",
+     "batch_ref": "L330 (reconciliation 3)",
+     "op": "replace",
+     "routing": "PROPOSED + DRAFT",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "0.82 (SD 0.11; n=12 studies)",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "DRAFT wording: the batch gives intent only ('the Hanegraaf table row shows both statistics')",
+      "TABLE CELL: text edited in place; check the cell in Office"
+     ]
+    },
+    {
+     "id": "D16c",
+     "batch_ref": "L330",
+     "op": "replace",
+     "routing": "PROPOSED + DRAFT",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Hanegraaf et al. 2024, BMJ Open 14:e076912. Synthesis result; distinct from the ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "DRAFT wording",
+      "anchor stops after the citation so the citation's hyperlink is not touched",
+      "TABLE CELL: text edited in place; check the cell in Office",
+      "HYPERLINK in paragraph: check the link survives"
+     ]
+    },
+    {
+     "id": "D16d",
+     "batch_ref": "L330",
+     "op": "replace",
+     "routing": "PROPOSED + DRAFT",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "word/document.xml",
+       "paragraph_text_start": "Hanegraaf interpretation. The paper does report 0.72 for its own abstract and fu",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "the batch says to drop 'is not used' from the line 267 note; in 11-06b the Hanegraaf note is line 268 and says 'The latter is used above', which carries the same implication"
+     ]
+    },
+    {
+     "id": "D16e",
+     "batch_ref": "L330",
+     "op": "none",
+     "routing": "PROPOSED",
+     "status": "NOT APPLIED: NOT PROGRAMMATIC: the Neves label range footnote needs a new footnote (word/footnotes.xml and a reference run)",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "D17",
+     "batch_ref": "Terms (L149)",
+     "op": "none",
+     "routing": "ACCEPTED terms; placement owner's",
+     "status": "NOT APPLIED: no placement anchor: definitions of 'draft authorisation' and 'review decision' (glossary or deck slide 4 notes)",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "D18",
+     "batch_ref": "DRAFT_security_section_fix_c.md",
+     "op": "none",
+     "routing": "paragraphs 1-3 and two additions APPROVED; after-the-fix paragraph and MODIFY addition not approved",
+     "status": "NOT APPLIED: no placement anchor: the security-section paragraphs are not placed in the DOCX yet; overlaps D06a/D06b",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "R-L54",
+     "batch_ref": "L54",
+     "op": "retire",
+     "routing": "RETIRE (L361)",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "R-L55",
+     "batch_ref": "L55",
+     "op": "retire",
+     "routing": "RETIRE (L362)",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "R-L70",
+     "batch_ref": "L70 old anchor",
+     "op": "retire",
+     "routing": "RE-ANCHORED (L363) as D06a",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "R-L179",
+     "batch_ref": "L179",
+     "op": "retire",
+     "routing": "RETIRE (L365)",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "R-L196",
+     "batch_ref": "L196 old anchor",
+     "op": "retire",
+     "routing": "RE-ANCHORED (L367) as D03",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    }
+   ]
+  },
+  {
+   "source": "submission/NITRD_Hackathon_Presentation_2026-11-06b.pptx",
+   "source_sha256": "c974508168cbc19987f9c4260ec4e0f2e0b3738a7c39cf9931069b14e6d01fcb",
+   "dry_run_copy": "/tmp/routing_apply/NITRD_Hackathon_Presentation_2026-11-06b.DRYRUN.pptx",
+   "dry_run_sha256": "66b1c9f6cd259b20451bfcf37d55a2e68233d07efc0d812d2f6641027abecb6f",
+   "parts_changed": [
+    "ppt/notesSlides/notesSlide11.xml",
+    "ppt/notesSlides/notesSlide2.xml",
+    "ppt/notesSlides/notesSlide3.xml",
+    "ppt/notesSlides/notesSlide4.xml",
+    "ppt/notesSlides/notesSlide5.xml",
+    "ppt/notesSlides/notesSlide6.xml",
+    "ppt/notesSlides/notesSlide9.xml",
+    "ppt/slides/slide10.xml",
+    "ppt/slides/slide11.xml",
+    "ppt/slides/slide9.xml"
+   ],
+   "other_parts_byte_identical": true,
+   "extract_lines_before": 313,
+   "extract_lines_after": 313,
+   "rows": [
+    {
+     "id": "P01",
+     "batch_ref": "L40 + item 5 (L223)",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/slides/slide9.xml",
+       "paragraph_text_start": "Not measured: agent tool selection, injection resistance, reviewer time or incum",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "SLIDE FACE: the text roughly triples in length; check it fits its box"
+     ]
+    },
+    {
+     "id": "P02",
+     "batch_ref": "L375 (new row, slide 9 notes)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide9.xml",
+       "paragraph_text_start": "Not measured: agent tool selection, injection resistance, reviewer time, incumbe",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "P03",
+     "batch_ref": "L41 (slide 10, retained wording)",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "ANCHOR MISSING: not applied",
+     "hits": [],
+     "flags": [
+      "expected missing: 11-06b slide 10 has no such line"
+     ]
+    },
+    {
+     "id": "P04",
+     "batch_ref": "L72 + terms",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/slides/slide10.xml",
+       "paragraph_text_start": "The reusable pattern is human-reviewed writing paired with evidence judges can i",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "EVALUATION-TIME wording: since d7bad89 the server also checks who records a review decision; like the slide 1 clause, revisit now that fix (c) is green"
+     ]
+    },
+    {
+     "id": "P05",
+     "batch_ref": "L42",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/slides/slide11.xml",
+       "paragraph_text_start": "Tool-selection and adversarial suite in Harness 11-12",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "TABLE CELL: text edited in place; check the cell in Office"
+     ]
+    },
+    {
+     "id": "P06",
+     "batch_ref": "L42",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/slides/slide11.xml",
+       "paragraph_text_start": "Not measured",
+       "normalised": false
+      },
+      {
+       "part": "ppt/slides/slide11.xml",
+       "paragraph_text_start": "Not measured",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "nth=1: the first 'Not measured' cell on slide 11 is the Agent behavior row; the second (Failure recovery) is unchanged. Check in the diff",
+      "TABLE CELL: text edited in place; check the cell in Office"
+     ]
+    },
+    {
+     "id": "P07",
+     "batch_ref": "L43 + item 5 (L224) + L124 + terms (L156)",
+     "op": "replace",
+     "routing": "AGREED (L124 PROPOSED)",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide11.xml",
+       "paragraph_text_start": "The immediate demonstration priority is an auditable operator walkthrough and an",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "composed: item 5 insertion after the Wilson clause; the L124 observation appended after the agent sentences"
+     ]
+    },
+    {
+     "id": "P08",
+     "batch_ref": "L44 (slide 11 pilot to production)",
+     "op": "replace",
+     "routing": "AGREED",
+     "status": "ANCHOR MISSING: not applied",
+     "hits": [],
+     "flags": [
+      "expected missing: 11-06b slide 11 face line is 'Measure reviewer time and assisted-review outcomes against the incumbent workflow.'"
+     ]
+    },
+    {
+     "id": "P09",
+     "batch_ref": "L90 (deck 125 and 174 -> 11-06b slides 4 and 5 notes)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide4.xml",
+       "paragraph_text_start": "The reserved-year guard covers outputs_find_cohort, operator pages and analysis_",
+       "normalised": false
+      },
+      {
+       "part": "ppt/notesSlides/notesSlide5.xml",
+       "paragraph_text_start": "The reserved-year guard covers outputs_find_cohort, operator pages and analysis_",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "P10",
+     "batch_ref": "L195 (item 2)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide3.xml",
+       "paragraph_text_start": "Emphasize three tasks: shortlist (Task 1), PCA suggestions (Task 2), and review ",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "P11",
+     "batch_ref": "L197 (item 2)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide4.xml",
+       "paragraph_text_start": "The evaluation document includes the verbatim Task2Suggestion model and validato",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "P12",
+     "batch_ref": "L340 (reconciliation 4, 11-06b line 31)",
+     "op": "replace",
+     "routing": "PROPOSED",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide2.xml",
+       "paragraph_text_start": "Benchmark scope: Mateen’s title/abstract screening kappa 0.56, Neves’ first-roun",
+       "normalised": false
+      }
+     ],
+     "flags": []
+    },
+    {
+     "id": "P13",
+     "batch_ref": "L340 (reconciliation 4, 11-06b line 235)",
+     "op": "replace",
+     "routing": "PROPOSED + DRAFT",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide9.xml",
+       "paragraph_text_start": "The chart compares distinct estimands. Blind Tier 2 model-versus-listing κ 0.42 ",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "DRAFT wording: the batch gives the replacement for line 31's clause and says it applies to this sentence too"
+     ]
+    },
+    {
+     "id": "P14",
+     "batch_ref": "L377 (slide 6 notes, linked to D04)",
+     "op": "replace",
+     "routing": "HELD + DRAFT",
+     "status": "APPLIED IN DRY RUN",
+     "hits": [
+      {
+       "part": "ppt/notesSlides/notesSlide6.xml",
+       "paragraph_text_start": "[Verified] Historical parity run 5704d50c records p50 644.7 ms and p95 2909.2 ms",
+       "normalised": false
+      }
+     ],
+     "flags": [
+      "the same notes still cite 778bd3ab and link the 5704d50c and 778bd3ab run.json files (11-06b lines 178-179); no row re-cites those"
+     ]
+    },
+    {
+     "id": "R-L71",
+     "batch_ref": "L71 and L173",
+     "op": "retire",
+     "routing": "RETIRE (L364)",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    },
+    {
+     "id": "R-L180",
+     "batch_ref": "L180",
+     "op": "retire",
+     "routing": "RETIRE (L366)",
+     "status": "RETIRED: anchor absent, as expected",
+     "hits": [],
+     "flags": []
+    }
+   ]
+  }
+ ]
+}

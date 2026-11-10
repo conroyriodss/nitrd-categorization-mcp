@@ -19,7 +19,8 @@
    "portal_log": "aacf0448-aff7-5486-b6c8-c8577f4d851f",
    "warehouse": "aacf0448-aff7-5486-b6c8-c8577f4d851f (the override row in review_events VERSION AS OF 381, read after cleanup by Delta time travel; that version holds 5 created, 5 classified, 1 override)",
    "positive_control": "uuid5(6ba15846-6243-50a8-bc03-82097efc7cd8, 'decision') = 1337f128-8dff-5b2c-8410-28bbf7249c60, row 10's logged event_id",
-   "result": "MATCH: the computed, logged and stored values are identical"
+   "result": "MATCH: the computed, logged and stored values are identical",
+   "consistency_check_on_row_10": "Row 10 observed that a decision's event_id is deterministic, uuid5(request_id, kind), so two decisions on the same award on different days share one id (eval/results/auth/20261109_row10_operator_decide.json; SECURITY.md beside the MODIFY limit). Row 12a confirms that derivation on a second request and a second kind of decision (override). Re-computed 2026-11-09 on a fresh cluster: aacf0448-aff7-5486-b6c8-c8577f4d851f."
   },
   "result": "PASS"
  },

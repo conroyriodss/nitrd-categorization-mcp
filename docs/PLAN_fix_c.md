@@ -133,10 +133,10 @@ The counted adversarial run 6ab39b17 (repo 021defd7, stdio, `databricks-gpt-6-1-
      | path | accepted | refused |
      | --- | --- | --- |
      | tool path (/mcp) | CI only (test 4) | DEPLOYED (row 9) |
-     | decide page | DEPLOYED (row 10) | CI only (test 5) |
+     | decide page | DEPLOYED (rows 10, 12a) | DEPLOYED for the finality and persona rules (rows 12b, 12c); the approver refusal itself is CI only (test 5) |
      | agent approve | DEPLOYED (row 11) | CI only (test 6) |
 
-     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9, 10 and 11 are committed.
+     A DEPLOYED cell counts once its evidence is committed under `eval/results/auth/`. Rows 9, 10, 11 and 12 are committed. Updated 2026-11-10: the decide-page cells had not been updated for row 12. Rows 12b and 12c are refusals by later checks (finality, persona), made by a listed person; a check-0 refusal on the decide page still needs a non-listed signed-in human, which we do not add (below).
 
      **Check 0 runs before any read: timing corroboration (2026-11-09).** This is corroboration, not a performance claim. Until now the ordering rested on code inspection and on `tests/test_approvers_portal.py::test_check_0_runs_first_and_has_no_default`, which asserts that `require_approver` is the first statement. The parity probe's timing corroborates it by a different route, the running system's behaviour:
      * **Primary: the within-run control, 7f3b2f82.** The same probe went to the same d7bad89 source in the same run. The deployed side was refused at check 0 in 28 ms. The in-process side passed check 0 as the test approver and reached the not-found check in 421 ms. The run spans no commits or days, and transport bias runs against the result: pre-fix, the in-process side is always the faster one.
