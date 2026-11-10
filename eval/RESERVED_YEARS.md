@@ -61,6 +61,15 @@ surfaces that call it (`outputs_find_cohort`, the portal operator pages).
 * It is opt-in per tool. A new tool that takes a year reaches SQL unguarded:
   `tests/test_gate_fail_closed.py::test_reserved_year_guard_covers_unclassified_new_tool`
   (xfail, strict, kept in place, reason "declined, not deferred").
+* Another instance of the opt-in shape, found 2026-11-10 (known edge E-FY,
+  `docs/PLAN_combined_portal_change.md`): the agent draft path and the
+  portal's request and decision tools take an `appl_id` and never call the
+  guard, so a request for an FY2022/FY2023 record can be created. The portal's
+  one-request view does call it and refuses such a request, but the MCP
+  decision tool does not, so the request is invisible on the portal pages yet
+  decidable through the tool by a listed approver. The view's refusal is a UI
+  control, not enforcement. Production recommendation: refuse a reserved FY on
+  the draft side (still per tool, so it closes the path, not the class).
 
 ## No technical enforcement of the blinding exists
 
