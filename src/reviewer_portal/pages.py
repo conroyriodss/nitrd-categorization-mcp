@@ -986,10 +986,14 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
         )
         terms = toward + against
     continuing = str(prior.continuing).lower()
+    # F4 (SESSION_2026-11-08): prior-year history above the term rationale;
+    # the participant named it the most useful signal on the card.
     parts.append(
+        '<div class="prior-history">'
+        f'<p class="core-kind" data-continuing="{continuing}">{core_kind}</p>'
+        f"{year_table}</div>"
         '<details class="rationale" open><summary>Rationale</summary>'
-        f'{terms}<p class="core-kind" data-continuing="{continuing}">'
-        f"{core_kind}</p>{year_table}</details>{guide.card_help()}</section>"
+        f"{terms}</details>{guide.card_help()}</section>"
     )
     return "".join(parts)
 

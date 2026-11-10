@@ -187,6 +187,23 @@ async def test_not_nitrd_and_new_core_cards(cohort):
     assert "New core: no records for this core in FY2015-FY2020." in new
 
 
+async def test_prior_year_history_sits_above_the_rationale(cohort):
+    # F4: on both card types the history block precedes the term rationale
+    # and is no longer inside it.
+    page = (await review()).text
+    yes = next(a for a, _c, _f in members() if nitrd(a))
+    no = next(a for a, _c, _f in members() if not nitrd(a))
+    for appl in (yes, no):
+        c = card(page, cohort[appl])
+        hist, why = c.index('class="prior-history"'), c.index('class="rationale"')
+        assert hist < why
+        assert c.index('class="core-kind"') < why
+        rationale = c[why : c.index("</details>", why)]
+        assert "core-kind" not in rationale and "prior-years" not in rationale
+    c = card(page, cohort[yes])
+    assert c.index('class="prior-years"') < c.index('class="rationale"')
+
+
 async def test_persona_view_enables_controls_only_for_assignee(cohort):
     mine = await review(persona=REP)
     assert len(cards(mine.text)) == 41 and mine.text.count('class="decide"') == 41
