@@ -41,9 +41,17 @@ The skipped parts run only in the adversarial venv (openai-agents 0.24.0, openai
 * Status: NEVER EXECUTED, before or after the edit (owner, 2026-11-10; no committed record shows a run). The offline test `test_persona_view_enables_controls_only_for_assignee` covers the same rule on the fake harness (41 links, no form) and has run; the live assertion has not.
 * To close: run it once, as the last step of the deploy sitting (Wednesday 2026-11-11, moved from Thursday 2026-11-12) (it writes 41 sandbox rows and cleans up; owner's go needed), and record the run here. Until then it counts as not run.
 
+## L-T4. Action taken and not remembered: commit 354345f attributed to an unknown writer (2026-11-10)
+
+* On 2026-11-10 Genie Code edited `docs/PLAN_combined_portal_change.md` through two `editAsset` calls in the same exchange: the first was rejected (stale-file race), the second succeeded and wrote the view stop rule. A `git add` and `git commit` call followed, producing commit `354345f`.
+* Later in the same conversation, Genie Code reported the commit as originating from an unknown session ("Please confirm which before I push it"). This is false: the commit was its own, from its own tool calls, visible in the conversation history. The state was available to read (`git log`, `git show`) and was not checked.
+* Failure mode: an action taken by the agent within the same exchange was not recognised as its own. This is a new class alongside the did-not-run instances (L-T1 through L-T3): a claim about state derived from recall rather than from reading.
+* Mitigation (already a standing practice; now recorded as covering this case): verify every claim about state by reading it (`git log`, `git status`, `git show`, `grep`), never by recalling what was done. The standing commit-hygiene rule (verify files on disk before every commit; verify remote after every push) already requires this; the gap was that the rule was not applied to recognising one's own prior actions.
+* Standing rule, reinforced: no step in the Wednesday sitting proceeds on recall of what was done, including the agent's own. Every pre-flight and every step is verified by reading state.
+
 ## Pattern
 
-This is the fifth recorded instance of a test reported, or relied on, without having run. The earlier one on this same test is the 2026-11-09 correction in `docs/PLAN_fix_c.md`. Rule: a skip counts as not run, and "CI green" never stands for the four skipped items above. Open: no committed record shows any of the four run after 2026-11-09; re-running them in a rebuilt adversarial venv before the deliverables close is the owner's call.
+This is the sixth recorded instance of a claim about state that was wrong. The earlier one on this same test is the 2026-11-09 correction in `docs/PLAN_fix_c.md`. Rule: a skip counts as not run, and "CI green" never stands for the four skipped items above. Open: no committed record shows any of the four run after 2026-11-09; re-running them in a rebuilt adversarial venv before the deliverables close is the owner's call.
 
 ## Sentence for the evaluation document (testing methodology). APPROVED by the owner 2026-11-10, with the addition on recorded runs.
 
