@@ -167,6 +167,9 @@ async def test_nitrd_card_shows_call_pcas_rationale_prior_year(cohort):
     assert "matched scope terms: learning" in c
     assert "Toward NITRD: neural (abstract, +1.20)" in c
     assert "Against: clinic (abstract, -0.80)" in c
+    # F3: NITRD card unchanged (card help mentions both words, so match classes)
+    assert 'class="toward outweighed"' not in c
+    assert "against-not-computed" not in c
     assert 'data-continuing="true"' in c and "<td>FY2020</td>" in c
 
 
@@ -175,7 +178,10 @@ async def test_not_nitrd_and_new_core_cards(cohort):
     no = card(page, cohort[next(a for a, _c, _f in members() if not nitrd(a))])
     assert 'data-suggestion="not_nitrd"' in no and "data-pca=" not in no
     assert "Top PCAs" not in no
-    assert "Toward NITRD: tf (title, +0.10)" in no  # parent top_features
+    # F3: parent top_features are positive-only; the card must say so.
+    assert "Pointed toward NITRD but were outweighed: tf (title, +0.10)" in no
+    assert "Toward NITRD:" not in no and "Against:" not in no
+    assert "Terms against NITRD: not computed." in no
     new = card(page, cohort[members()[35][0]])  # cores 35 and 36 are new
     assert 'data-continuing="false"' in new
     assert "New core: no records for this core in FY2015-FY2020." in new

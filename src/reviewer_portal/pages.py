@@ -959,14 +959,32 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
         else ""
     )
     # Term weights: classifier_explain for NITRD calls, the parent call's
-    # top_features otherwise (cohort.evidence_from_results).
+    # top_features otherwise (cohort.evidence_from_results). top_features
+    # holds positive contributions only, so on any other card "Against" was
+    # never computed and must not read as "none" (F3, SESSION_2026-11-08).
     explained = ev.explain.toward or ev.explain.against
-    terms = (
-        f'<p class="toward">Toward NITRD: {_terms(ev.explain.toward)}</p>'
-        f'<p class="against">Against: {_terms(ev.explain.against)}</p>'
-        if explained
-        else '<p class="muted no-terms">No term weights stored.</p>'
-    )
+    if ev.parent.suggestion == "nitrd":
+        terms = (
+            f'<p class="toward">Toward NITRD: {_terms(ev.explain.toward)}</p>'
+            f'<p class="against">Against: {_terms(ev.explain.against)}</p>'
+            if explained
+            else '<p class="muted no-terms">No term weights stored.</p>'
+        )
+    else:
+        toward = (
+            '<p class="toward outweighed">Pointed toward NITRD but were '
+            f"outweighed: {_terms(ev.explain.toward)}</p>"
+            if ev.explain.toward
+            else '<p class="muted no-terms">No term weights stored.</p>'
+        )
+        against = (
+            f'<p class="against">Against: {_terms(ev.explain.against)}</p>'
+            if ev.explain.against
+            else '<p class="muted against-not-computed">Terms against NITRD: '
+            "not computed. Only NITRD suggestions get a full term "
+            "explanation.</p>"
+        )
+        terms = toward + against
     continuing = str(prior.continuing).lower()
     parts.append(
         '<details class="rationale" open><summary>Rationale</summary>'
