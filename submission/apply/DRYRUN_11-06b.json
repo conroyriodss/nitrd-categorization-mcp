@@ -5,13 +5,13 @@
    "source": "submission/NITRD_Evaluation_2026-11-06b.docx",
    "source_sha256": "2b70c7bcff69a578139d58d7f4e2132ff2a78359fa221b330495e15a34815332",
    "dry_run_copy": "/tmp/routing_apply/NITRD_Evaluation_2026-11-06b.DRYRUN.docx",
-   "dry_run_sha256": "b70cb57d4726597c292649b955553a970b9a9670d4ab649d357e109bd13ce0e3",
+   "dry_run_sha256": "cc80b368876937528fcd70bc9d64db53344ab6c1dff02130ffdaefdfdc313344",
    "parts_changed": [
     "word/document.xml"
    ],
    "other_parts_byte_identical": true,
    "extract_lines_before": 338,
-   "extract_lines_after": 346,
+   "extract_lines_after": 339,
    "rows": [
     {
      "id": "D01",
@@ -48,9 +48,9 @@
     {
      "id": "D03",
      "batch_ref": "L196 (re-anchored L367)",
-     "op": "replace",
-     "routing": "HELD + DRAFT",
-     "status": "APPLIED IN DRY RUN",
+     "op": "manual",
+     "routing": "HELD + DRAFT; MANUAL (owner 2026-11-10: inline bold [Verified] tier labels)",
+     "status": "MANUAL: hand-edit list (anchor verified present)",
      "hits": [
       {
        "part": "word/document.xml",
@@ -129,7 +129,7 @@
       }
      ],
      "flags": [
-      "CROSS-REFERENCE: agreed text says 'see §4', but in 11-06b the adversarial paragraph is in §3 (Security considerations); owner to decide"
+      "CORRECTED (owner 2026-11-10): batch said 'see §4'; in 11-06b the adversarial paragraph is in §3 (Security considerations)"
      ]
     },
     {
@@ -163,7 +163,7 @@
       }
      ],
      "flags": [
-      "WORDING: the template says 'service-principal identities', but fix (c) refuses any identity not on the approver list (a person not on it is refused too). Accurate form: 'Since commit d7bad89, the portal records a review decision only from a person on its approver list; it refused every decision the runner's service principal submitted (run 3174122a).'",
+      "CORRECTED (owner 2026-11-10): the batch template said 'refuses decisions from service-principal identities'; the control refuses any identity not on the approver list, and service principals are the measured instance, not the scope",
       "OVERLAP: the approved security-section draft (DRAFT_security_section_fix_c.md) says this at length; owner chooses one or both"
      ]
     },
@@ -217,9 +217,9 @@
     {
      "id": "D09",
      "batch_ref": "L31 + item 5 (L220)",
-     "op": "replace",
-     "routing": "AGREED",
-     "status": "APPLIED IN DRY RUN",
+     "op": "manual",
+     "routing": "AGREED; MANUAL (owner 2026-11-10: inline bold [Verified] tier label)",
+     "status": "MANUAL: hand-edit list (anchor verified present)",
      "hits": [
       {
        "part": "word/document.xml",
@@ -307,9 +307,9 @@
     {
      "id": "D14",
      "batch_ref": "L258-268 (lessons learned)",
-     "op": "append_paragraph",
-     "routing": "PROPOSED; placement owner's",
-     "status": "APPLIED IN DRY RUN",
+     "op": "manual",
+     "routing": "PROPOSED; placement owner's; MANUAL (owner 2026-11-10: italic, bold, numbering)",
+     "status": "MANUAL: hand-edit list (anchor verified present)",
      "hits": [
       {
        "part": "word/document.xml",
@@ -432,7 +432,7 @@
      "batch_ref": "L330",
      "op": "none",
      "routing": "PROPOSED",
-     "status": "NOT APPLIED: NOT PROGRAMMATIC: the Neves label range footnote needs a new footnote (word/footnotes.xml and a reference run)",
+     "status": "NOT APPLIED: MANUAL (owner 2026-11-10), hand-edit list: the Neves label range footnote needs a new footnote (word/footnotes.xml and a reference run)",
      "hits": [],
      "flags": []
     },
@@ -505,7 +505,7 @@
    "source": "submission/NITRD_Hackathon_Presentation_2026-11-06b.pptx",
    "source_sha256": "c974508168cbc19987f9c4260ec4e0f2e0b3738a7c39cf9931069b14e6d01fcb",
    "dry_run_copy": "/tmp/routing_apply/NITRD_Hackathon_Presentation_2026-11-06b.DRYRUN.pptx",
-   "dry_run_sha256": "66b1c9f6cd259b20451bfcf37d55a2e68233d07efc0d812d2f6641027abecb6f",
+   "dry_run_sha256": "f903f6b9ab323376b4ef26f7e4d1e9c39517ad0d66931b8b9acf8691086a010a",
    "parts_changed": [
     "ppt/notesSlides/notesSlide11.xml",
     "ppt/notesSlides/notesSlide2.xml",
@@ -536,7 +536,7 @@
       }
      ],
      "flags": [
-      "SLIDE FACE: the text roughly triples in length; check it fits its box"
+      "SHORTENED (owner 2026-11-10): headline only, 116 characters vs 100 before; P02 carries the full statement in the slide 9 notes. Box is 9.33 x 0.26 in, 12.75 pt, noAutofit: check it stays on one line"
      ]
     },
     {
@@ -557,9 +557,9 @@
     {
      "id": "P03",
      "batch_ref": "L41 (slide 10, retained wording)",
-     "op": "replace",
-     "routing": "AGREED",
-     "status": "ANCHOR MISSING: not applied",
+     "op": "retire",
+     "routing": "AGREED; RETIRED (owner 2026-11-10): 11-06b slide 10 makes no agent claim in any words. Face and notes searched for tool selection, injection, harness, not measured, unmeasured: the only hit is 'Reviewer time and assisted quality remain unmeasured' (a different claim, unchanged)",
+     "status": "RETIRED: anchor absent, as expected",
      "hits": [],
      "flags": [
       "expected missing: 11-06b slide 10 has no such line"
@@ -642,9 +642,9 @@
     {
      "id": "P08",
      "batch_ref": "L44 (slide 11 pilot to production)",
-     "op": "replace",
-     "routing": "AGREED",
-     "status": "ANCHOR MISSING: not applied",
+     "op": "retire",
+     "routing": "AGREED; RETIRED (owner 2026-11-10): no same-meaning sentence on 11-06b slide 11. The nearest is the Agent behavior table cell 'Tool-selection and adversarial suite in Harness 11-12', which P05 already replaces. P08's leakage, approval-bypass and Harness 11-12 content is not in P05's new text: owner may fold it into P05",
+     "status": "RETIRED: anchor absent, as expected",
      "hits": [],
      "flags": [
       "expected missing: 11-06b slide 11 face line is 'Measure reviewer time and assisted-review outcomes against the incumbent workflow.'"

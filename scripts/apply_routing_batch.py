@@ -30,6 +30,9 @@ Ops:
 * retire           no edit; the anchor must be ABSENT (the row is already applied
                    or its text is gone); present means the retirement is wrong
 * none             no edit; reported only (pending, held, no placement)
+* manual           no edit; routed to the hand-edit list. The anchor must be present
+                   the expected number of times, so the list's "before" text is
+                   checked against the document
 
 Usage:
   python scripts/apply_routing_batch.py \\
@@ -62,17 +65,41 @@ NOTES_TYPE = (
 )
 
 FLAVOUR = {
-    "docx": {"p": "w:p", "t": "w:t", "r": "w:r", "rpr": "w:rPr", "ppr": "w:pPr", "tc": "w:tc"},
-    "pptx": {"p": "a:p", "t": "a:t", "r": "a:r", "rpr": "a:rPr", "ppr": "a:pPr", "tc": "a:tc"},
+    "docx": {
+        "p": "w:p",
+        "t": "w:t",
+        "r": "w:r",
+        "rpr": "w:rPr",
+        "ppr": "w:pPr",
+        "tc": "w:tc",
+    },
+    "pptx": {
+        "p": "a:p",
+        "t": "a:t",
+        "r": "a:r",
+        "rpr": "a:rPr",
+        "ppr": "a:pPr",
+        "tc": "a:tc",
+    },
 }
 
 # Length-preserving: every key and value is one character, so offsets carry over.
 NORM = str.maketrans(
     {
-        "\u2018": "'", "\u2019": "'", "\u201a": "'", "\u2032": "'",
-        "\u201c": '"', "\u201d": '"', "\u201e": '"', "\u2033": '"',
-        "\u2013": "-", "\u2014": "-", "\u2212": "-",
-        "\u00a0": " ", "\u2009": " ", "\u202f": " ",
+        "\u2018": "'",
+        "\u2019": "'",
+        "\u201a": "'",
+        "\u2032": "'",
+        "\u201c": '"',
+        "\u201d": '"',
+        "\u201e": '"',
+        "\u2033": '"',
+        "\u2013": "-",
+        "\u2014": "-",
+        "\u2212": "-",
+        "\u00a0": " ",
+        "\u2009": " ",
+        "\u202f": " ",
     }
 )
 
@@ -112,10 +139,17 @@ def _tag_re(tag: str) -> re.Pattern:
 
 
 def leaf_paragraphs(xml: str, f: dict) -> list[Para]:
-    """Paragraphs that contain no nested paragraph (text boxes are skipped as outers)."""
+    """Paragraphs that contain no nested paragraph.
+
+    Text boxes are skipped as outers.
+    """
     stack: list[tuple[int, list]] = []
     out: list[Para] = []
-    tc_opens = [m.start() for m in _tag_re(f["tc"]).finditer(xml) if not m.group(1) and not m.group(2).endswith("/")]
+    tc_opens = [
+        m.start()
+        for m in _tag_re(f["tc"]).finditer(xml)
+        if not m.group(1) and not m.group(2).endswith("/")
+    ]
     tc_closes = [m.start() for m in _tag_re(f["tc"]).finditer(xml) if m.group(1)]
     for m in _tag_re(f["p"]).finditer(xml):
         closing, attrs = m.group(1), m.group(2)
@@ -131,7 +165,9 @@ def leaf_paragraphs(xml: str, f: dict) -> list[Para]:
         if nested:
             continue
         body = xml[start:end]
-        in_table = sum(1 for o in tc_opens if o < start) > sum(1 for c in tc_closes if c < start)
+        in_table = sum(1 for o in tc_opens if o < start) > sum(
+            1 for c in tc_closes if c < start
+        )
         out.append(Para(start, end, _texts(body, start, f), in_table, body))
     out.sort(key=lambda p: p.start)
     return out
@@ -150,7 +186,15 @@ def _texts(body: str, offset: int, f: dict) -> list[Text]:
         if rs >= 0:
             mm = rpr_re.search(body, rs, m.start())
             rp = mm.group(0) if mm else ""
-        out.append(Text(offset + m.start(), offset + m.end(), html.unescape(m.group(2)), offset + rs if rs >= 0 else -1, rp))
+        out.append(
+            Text(
+                offset + m.start(),
+                offset + m.end(),
+                html.unescape(m.group(2)),
+                offset + rs if rs >= 0 else -1,
+                rp,
+            )
+        )
     return out
 
 
@@ -165,7 +209,11 @@ def slide_parts(z: zipfile.ZipFile, slide: int, notes: bool) -> str:
     for r in ET.fromstring(z.read(rels)).iter(REL + "Relationship"):
         if r.get("Type") == NOTES_TYPE:
             t = r.get("Target")
-            return t.lstrip("/") if t.startswith("/") else posixpath.normpath(posixpath.join("ppt/slides", t))
+            return (
+                t.lstrip("/")
+                if t.startswith("/")
+                else posixpath.normpath(posixpath.join("ppt/slides", t))
+            )
     raise KeyError(f"slide {slide} has no notes part")
 
 
@@ -199,7 +247,9 @@ def find(anchor: str, paras_by_part: dict[str, list[Para]], whole: bool) -> list
                 if whole:
                     if txt.strip() == a.strip():
                         lead = len(txt) - len(txt.lstrip())
-                        hits.append(Hit(part, p, lead, lead + len(a.strip()), normalised))
+                        hits.append(
+                            Hit(part, p, lead, lead + len(a.strip()), normalised)
+                        )
                     continue
                 i = txt.find(a)
                 while i >= 0:
@@ -211,15 +261,23 @@ def find(anchor: str, paras_by_part: dict[str, list[Para]], whole: bool) -> list
 
 
 def elsewhere(z: zipfile.ZipFile, anchor: str, searched: set[str]) -> list[str]:
-    """Other XML parts (comments, charts, footnotes, other slides) whose text holds the anchor."""
+    """Other XML parts whose text holds the anchor.
+
+    Comments, charts, footnotes and other slides.
+    """
     a = norm(anchor)
     out = []
     for n in z.namelist():
         if n in searched or not n.endswith(".xml") or "/_rels/" in n:
             continue
-        if not re.match(r"(word/(comments|footnotes|endnotes|header\d*|footer\d*|charts/.*)|ppt/(charts|diagrams)/.*)\.xml$", n):
+        if not re.match(
+            r"(word/(comments|footnotes|endnotes|header\d*|footer\d*|charts/.*)|ppt/(charts|diagrams)/.*)\.xml$",
+            n,
+        ):
             continue
-        text = html.unescape(re.sub(r"<[^>]+>", "", z.read(n).decode("utf-8", "replace")))
+        text = html.unescape(
+            re.sub(r"<[^>]+>", "", z.read(n).decode("utf-8", "replace"))
+        )
         if a in norm(text):
             out.append(n)
     return out
@@ -233,7 +291,11 @@ def flags_for(h: Hit, kind: str) -> list[str]:
         fl.append("TABLE CELL: text edited in place; check the cell in Office")
     spanned = _spanned(p, h.s, h.e)
     if len({t.rpr for t in spanned}) > 1:
-        fl.append(f"FORMATTING: anchor spans {len(spanned)} runs with differing formatting; the changed text takes the dominant run's (inline bold/italic/links inside it are lost)")
+        fl.append(
+            f"FORMATTING: anchor spans {len(spanned)} runs with differing "
+            "formatting; the changed text takes the dominant run's "
+            "(inline bold/italic/links inside it are lost)"
+        )
     if kind == "docx":
         if re.search(r"<w:hyperlink\b", p.xml):
             fl.append("HYPERLINK in paragraph: check the link survives")
@@ -242,7 +304,10 @@ def flags_for(h: Hit, kind: str) -> list[str]:
         if re.search(r"<w:(ins|del)\b", p.xml):
             fl.append("TRACKED CHANGE in paragraph: not handled")
         if re.search(r"<w:(commentRangeStart|commentReference)\b", p.xml):
-            fl.append("COMMENT anchored in paragraph: the comment is not edited; check its range")
+            fl.append(
+                "COMMENT anchored in paragraph: the comment is not edited; "
+                "check its range"
+            )
     elif any("hlinkClick" in t.rpr for t in spanned):
         fl.append("HYPERLINK on a spanned run: check the link survives")
     return fl
@@ -294,7 +359,13 @@ def text_edits(h: Hit, repl: str, kind: str) -> list[tuple[int, int, str]]:
             return []
         for a, b, t in spans:
             if a < s <= b or (s == 0 and a == 0):
-                return [(t.start, t.end, t_elem(kind, t.text[: s - a] + mid + t.text[s - a :]))]
+                return [
+                    (
+                        t.start,
+                        t.end,
+                        t_elem(kind, t.text[: s - a] + mid + t.text[s - a :]),
+                    )
+                ]
         raise ValueError("insertion point not in any run")
     touched = [(a, b, t) for a, b, t in spans if b > s and a < e]
     dom = max(touched, key=lambda x: min(x[1], e) - max(x[0], s))[2]
@@ -302,7 +373,13 @@ def text_edits(h: Hit, repl: str, kind: str) -> list[tuple[int, int, str]]:
     for a, b, t in touched:
         keep_pre = t.text[: max(0, s - a)]
         keep_post = t.text[e - a :] if e < b else ""
-        edits.append((t.start, t.end, t_elem(kind, keep_pre + (mid if t is dom else "") + keep_post)))
+        edits.append(
+            (
+                t.start,
+                t.end,
+                t_elem(kind, keep_pre + (mid if t is dom else "") + keep_post),
+            )
+        )
     return edits
 
 
@@ -338,7 +415,9 @@ class Result:
     flags: list[str] = field(default_factory=list)
 
 
-def run_document(src: Path, kind: str, rows: list[dict]) -> tuple[dict[str, bytes], list[Result]]:
+def run_document(
+    src: Path, kind: str, rows: list[dict]
+) -> tuple[dict[str, bytes], list[Result]]:
     z = zipfile.ZipFile(src)
     f = FLAVOUR[kind]
     # Rows are applied in spec order, each to the text as the previous rows left it,
@@ -364,14 +443,26 @@ def run_document(src: Path, kind: str, rows: list[dict]) -> tuple[dict[str, byte
         by_part = {p: paras(p) for p in parts_for(row, z, kind)}
         hits = find(row["anchor"], by_part, row.get("whole", False))
         res.hits = [
-            {"part": h.part, "paragraph_text_start": h.para.text[:80], "normalised": h.normalised}
+            {
+                "part": h.part,
+                "paragraph_text_start": h.para.text[:80],
+                "normalised": h.normalised,
+            }
             for h in hits
         ]
         other = elsewhere(z, row["anchor"], set(by_part))
         if other:
-            res.flags.append("ANCHOR TEXT ALSO IN " + ", ".join(other) + " (not edited by this script)")
+            res.flags.append(
+                "ANCHOR TEXT ALSO IN "
+                + ", ".join(other)
+                + " (not edited by this script)"
+            )
         if op == "retire":
-            res.status = "RETIRED: anchor absent, as expected" if not hits else "RETIREMENT WRONG: anchor still present"
+            res.status = (
+                "RETIRED: anchor absent, as expected"
+                if not hits
+                else "RETIREMENT WRONG: anchor still present"
+            )
             continue
         expect = row.get("expect", 1)
         if not hits:
@@ -384,6 +475,11 @@ def run_document(src: Path, kind: str, rows: list[dict]) -> tuple[dict[str, byte
             hits = [hits[row["nth"] - 1]]
         elif len(hits) != expect:
             res.status = f"ANCHOR COUNT {len(hits)} != expected {expect}: not applied"
+            continue
+        if op == "manual":
+            for h in hits:
+                res.flags.extend(fl for fl in flags_for(h, kind) if fl not in res.flags)
+            res.status = "MANUAL: hand-edit list (anchor verified present)"
             continue
         edits: dict[str, list] = {}
         for h in hits:
@@ -403,7 +499,9 @@ def run_document(src: Path, kind: str, rows: list[dict]) -> tuple[dict[str, byte
         for part, ed in edits.items():
             xml[part] = apply_edits(xml[part], ed)
             changed_parts.add(part)
-        res.status = "APPLIED IN DRY RUN" + (" (normalised match)" if any(h.normalised for h in hits) else "")
+        res.status = "APPLIED IN DRY RUN" + (
+            " (normalised match)" if any(h.normalised for h in hits) else ""
+        )
 
     out: dict[str, bytes] = {}
     for part in sorted(changed_parts):
@@ -422,7 +520,9 @@ def write_package(src: Path, dst: Path, changed: dict[str, bytes]) -> None:
 
 
 def _extractor():
-    spec = importlib.util.spec_from_file_location("extract_submission_text", REPO / "scripts" / "extract_submission_text.py")
+    spec = importlib.util.spec_from_file_location(
+        "extract_submission_text", REPO / "scripts" / "extract_submission_text.py"
+    )
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
@@ -433,10 +533,22 @@ def sha256(p: Path) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--spec", required=True, type=Path)
-    ap.add_argument("--out", required=True, type=Path, help="directory for the edited copies; must be outside the repo")
-    ap.add_argument("--report", required=True, type=Path, help="path stem for <stem>.diff, <stem>.json and <stem>.md")
+    ap.add_argument(
+        "--out",
+        required=True,
+        type=Path,
+        help="directory for the edited copies; must be outside the repo",
+    )
+    ap.add_argument(
+        "--report",
+        required=True,
+        type=Path,
+        help="path stem for <stem>.diff, <stem>.json and <stem>.md",
+    )
     a = ap.parse_args(argv)
 
     out_dir = a.out.resolve()
@@ -453,7 +565,9 @@ def main(argv: list[str] | None = None) -> int:
         kind = "docx" if src.suffix == ".docx" else "pptx"
         before_sha = sha256(src)
         if doc.get("sha256_prefix") and not before_sha.startswith(doc["sha256_prefix"]):
-            raise SystemExit(f"{src}: sha256 {before_sha[:8]} != spec {doc['sha256_prefix']}")
+            raise SystemExit(
+                f"{src}: sha256 {before_sha[:8]} != spec {doc['sha256_prefix']}"
+            )
         changed, results = run_document(src, kind, doc["rows"])
         dst = out_dir / src.name.replace("." + kind, ".DRYRUN." + kind)
         write_package(src, dst, changed)
@@ -461,14 +575,20 @@ def main(argv: list[str] | None = None) -> int:
         before, after = lines_fn(src), lines_fn(dst)
         diff_chunks.extend(
             difflib.unified_diff(
-                [l + "\n" for l in before], [l + "\n" for l in after],
-                fromfile=f"{doc['source']} (committed)", tofile=f"{dst.name} (dry run)", n=0,
+                [line + "\n" for line in before],
+                [line + "\n" for line in after],
+                fromfile=f"{doc['source']} (committed)",
+                tofile=f"{dst.name} (dry run)",
+                n=0,
             )
         )
         if sha256(src) != before_sha:
             raise SystemExit(f"{src} changed during the dry run")
         unchanged = [n for n in zipfile.ZipFile(src).namelist() if n not in changed]
-        same = all(zipfile.ZipFile(src).read(n) == zipfile.ZipFile(dst).read(n) for n in unchanged)
+        same = all(
+            zipfile.ZipFile(src).read(n) == zipfile.ZipFile(dst).read(n)
+            for n in unchanged
+        )
         report["documents"].append(
             {
                 "source": doc["source"],
@@ -480,8 +600,15 @@ def main(argv: list[str] | None = None) -> int:
                 "extract_lines_before": len(before),
                 "extract_lines_after": len(after),
                 "rows": [
-                    {"id": r.row["id"], "batch_ref": r.row.get("batch_ref", ""), "op": r.row["op"],
-                     "routing": r.row.get("routing", ""), "status": r.status, "hits": r.hits, "flags": r.flags}
+                    {
+                        "id": r.row["id"],
+                        "batch_ref": r.row.get("batch_ref", ""),
+                        "op": r.row["op"],
+                        "routing": r.row.get("routing", ""),
+                        "status": r.status,
+                        "hits": r.hits,
+                        "flags": r.flags,
+                    }
                     for r in results
                 ],
             }
@@ -490,26 +617,52 @@ def main(argv: list[str] | None = None) -> int:
     stem = a.report
     stem.parent.mkdir(parents=True, exist_ok=True)
     Path(str(stem) + ".diff").write_text("".join(diff_chunks), encoding="utf-8")
-    Path(str(stem) + ".json").write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    Path(str(stem) + ".json").write_text(
+        json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     Path(str(stem) + ".md").write_text(render_md(report), encoding="utf-8")
-    bad = [r for d in report["documents"] for r in d["rows"] if not r["status"].startswith(("APPLIED", "RETIRED", "NOT APPLIED"))]
-    print(f"{sum(len(d['rows']) for d in report['documents'])} rows; {len(bad)} need attention")
+    bad = [
+        r
+        for d in report["documents"]
+        for r in d["rows"]
+        if not r["status"].startswith(("APPLIED", "RETIRED", "NOT APPLIED", "MANUAL"))
+    ]
+    print(
+        f"{sum(len(d['rows']) for d in report['documents'])} rows; "
+        f"{len(bad)} need attention"
+    )
     return 0
 
 
 def render_md(report: dict) -> str:
-    out = ["# Routing batch dry run against 11-06b", "",
-           "Generated by `scripts/apply_routing_batch.py`. NOTHING IS APPLIED: the edited copies are outside the repo.",
-           "The before/after extract diff is the `.diff` file beside this one.", ""]
+    out = [
+        "# Routing batch dry run against 11-06b",
+        "",
+        "Generated by `scripts/apply_routing_batch.py`. NOTHING IS APPLIED: "
+        "the edited copies are outside the repo.",
+        "The before/after extract diff is the `.diff` file beside this one.",
+        "",
+    ]
     for d in report["documents"]:
-        out += [f"## {d['source']}", "",
-                f"* source sha256 `{d['source_sha256'][:12]}`; dry-run copy sha256 `{d['dry_run_sha256'][:12]}`",
-                f"* parts changed: {', '.join(d['parts_changed']) or 'none'}; every other part byte-identical: {d['other_parts_byte_identical']}",
-                f"* extract lines {d['extract_lines_before']} -> {d['extract_lines_after']}", "",
-                "| Row | Batch ref | Op | Routing | Status | Flags |", "| --- | --- | --- | --- | --- | --- |"]
+        out += [
+            f"## {d['source']}",
+            "",
+            f"* source sha256 `{d['source_sha256'][:12]}`; "
+            f"dry-run copy sha256 `{d['dry_run_sha256'][:12]}`",
+            f"* parts changed: {', '.join(d['parts_changed']) or 'none'}; "
+            f"every other part byte-identical: {d['other_parts_byte_identical']}",
+            f"* extract lines {d['extract_lines_before']} -> "
+            f"{d['extract_lines_after']}",
+            "",
+            "| Row | Batch ref | Op | Routing | Status | Flags |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
         for r in d["rows"]:
             fl = "; ".join(r["flags"]).replace("|", "/") or ""
-            out.append(f"| {r['id']} | {r['batch_ref']} | {r['op']} | {r['routing']} | {r['status']} | {fl} |")
+            out.append(
+                f"| {r['id']} | {r['batch_ref']} | {r['op']} | "
+                f"{r['routing']} | {r['status']} | {fl} |"
+            )
         out.append("")
     return "\n".join(out) + "\n"
 
