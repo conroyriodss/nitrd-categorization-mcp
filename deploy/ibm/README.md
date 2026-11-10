@@ -1,5 +1,12 @@
 # IBM watsonx Orchestrate — Deployment Kits
 
+> **Inherited from the GSA template, not adapted for this suite.** These kits
+> and everything under `deploy/ibm/` describe the template's single
+> `example_server` package. They have not been adapted, run or tested for the
+> three NITRD servers; this suite is deployed only on Databricks Apps
+> ([`../databricks/`](../databricks/README.md)). "Your MCP server" below means
+> the template's server. See [CONFORMANCE.md](../../CONFORMANCE.md).
+
 Three self-contained kits get your MCP server into **watsonx Orchestrate**,
 ordered from lowest to highest infrastructure overhead. Pick one.
 

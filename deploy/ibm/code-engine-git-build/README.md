@@ -1,5 +1,10 @@
 # IBM Code Engine — Build-from-Git Deployment
 
+> **Inherited from the GSA template, not adapted for this suite.** Not run or
+> tested here; the root `Dockerfile` it builds selects one server with
+> `SERVER_MODULE` and has no recorded build for this entry. See
+> [`../README.md`](../README.md).
+
 Deploy your MCP server to **IBM Cloud Code Engine** by **building directly from a
 public Git repo**: Code Engine clones the repo, builds its `Dockerfile`
 **server-side**, pushes the resulting image to **your IBM Container Registry

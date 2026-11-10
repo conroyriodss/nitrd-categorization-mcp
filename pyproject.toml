@@ -46,8 +46,8 @@ packages = [
 
 [dependency-groups]
 # Dev + eval-only deps. Install with `uv sync --group dev`.
-# The Phoenix evaluation harness (see eval/) is not scaffolded in this template
-# on purpose — add these when you build it per the mcp-eval skill.
+# (The template's note that no eval harness is scaffolded no longer applies:
+# this entry's evaluation is under eval/, see eval/README.md.)
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",

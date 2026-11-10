@@ -262,26 +262,22 @@ it.
 - Reviewer time savings, human agreement, and end-to-end agent performance are
   not claimed.
 
-## Partner reference materials
+## Project documentation (`docs/`)
 
-The [`docs/`](docs/) directory contains educational reference materials that
-IBM and Databricks may contribute for hackathon participants. Vendor-contributed
-materials do not represent the views, positions, or policies of GSA or the
-United States Government.
-
-GSA does not endorse any commercial product, service, or enterprise referenced
-in these materials. Reference to a commercial product, service, or enterprise
-does not constitute or imply endorsement, recommendation, or favoring by GSA or
-the United States Government. These materials are provided for educational
-purposes only. See [`docs/README.md`](docs/README.md) for the complete notice and
-contribution guidance.
+The [`docs/`](docs/) directory holds this entry's own plans, runbooks, decision
+log, testing limitations and analysis notes; [`docs/README.md`](docs/README.md)
+indexes them. It contains no vendor-contributed material. (In the GSA template,
+`docs/` is for IBM and Databricks partner reference materials; this entry
+repurposed it, see [CONFORMANCE.md](CONFORMANCE.md).) References to Databricks
+products describe where the prototype runs and are not endorsements by NIH,
+GSA or the United States Government.
 
 ## License and attribution
 
 [MIT](LICENSE). Built from the
 [GSA MCP Hackathon template](https://github.com/GSA-TTS/mcp-hackathon-template);
-see [SECURITY.md](SECURITY.md) for the template's vulnerability disclosure
-policy. Solo entry, developed with LLM assistance; the submitter is responsible
+see [SECURITY.md](SECURITY.md) for this suite's security scope and the GSA
+vulnerability disclosure policy. Solo entry, developed with LLM assistance; the submitter is responsible
 for the implementation, verification, and reported results. This prototype
 does not represent an official NIH classification decision or agency
 endorsement.

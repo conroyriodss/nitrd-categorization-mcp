@@ -1,5 +1,9 @@
 # watsonx Orchestrate — Local MCP Toolkit (stdio)
 
+> **Inherited from the GSA template, not adapted for this suite** (it still
+> ships `example_server`, which this repository does not contain). Not run or
+> tested here; see [`../README.md`](../README.md).
+
 Register your MCP server as a **local MCP toolkit**: you ship the server *code*
 to watsonx Orchestrate, which installs it (via a `requirements.txt`) and runs it
 **over stdio inside the Orchestrate runtime**. There is **no HTTP endpoint, no

@@ -1,29 +1,35 @@
-# Deploying Your MCP Server
+# Deploying the suite
 
-Local development runs your server over **stdio** (how Claude Desktop / Claude
-Code launch it). To share it with an agent platform, deploy it to a host that
-serves it over **streamable-HTTP**, then register it.
+This suite is deployed on **Databricks Apps** only: each of the three MCP
+servers (plus the demo agent and the e2e runner) is its own App, from
+[`databricks/`](databricks/README.md). That is the only kit adapted, run and
+tested for this entry.
 
-This template ships deployment kits for two targets:
+The GSA template ships kits for two targets. The IBM kits below are inherited
+from the template **unchanged**: they were written for the template's single
+`src/example_server/` package and have not been adapted, run or tested for
+this suite (the local toolkit, for example, still ships `example_server`). They
+are kept for parity with the template; see [CONFORMANCE.md](../CONFORMANCE.md).
+
+Local development runs each server over **stdio**; on a host it serves
+**streamable-HTTP**. Template targets:
 
 | Target | Kits | Transport | When to use |
 |---|---|---|---|
 | **IBM watsonx Orchestrate** | [`ibm/`](ibm/) — 3 kits | stdio (local) **or** streamable-HTTP (Code Engine) | You're evaluating/agent-building in watsonx Orchestrate |
 | **Databricks** | [`databricks/`](databricks/) | streamable-HTTP (Databricks Apps) | You're deploying alongside a Databricks workspace |
 
-## The server code doesn't change
+## Transport selection (all three servers)
 
-Every kit runs the **same** server in `src/example_server/`. The entry point
-`app.py` auto-selects its transport:
+Each server's `app.py` (`src/<server>/app.py`) auto-selects its transport:
 
 - a platform port (`DATABRICKS_APP_PORT` or `PORT`) → **HTTP** on that port;
-- `MCP_TRANSPORT=streamable-http` → HTTP on `MCP_HOST:MCP_PORT`;
+- the server's prefixed transport variable set to `streamable-http`
+  (`OUTPUTS_MCP_TRANSPORT`, `CLASSIFIER_MCP_TRANSPORT`, `PORTAL_MCP_TRANSPORT`)
+  → HTTP on its configured host and port;
 - otherwise → **stdio**.
 
-So IBM Code Engine and Databricks Apps both "just work" — they inject a port and
-the server serves HTTP with `/mcp` + `/health`.
-
-## IBM (three options, lowest → highest overhead)
+## IBM (inherited from the template; not adapted for this suite)
 
 See [`ibm/README.md`](ibm/README.md) for the full chooser. In short:
 
@@ -42,11 +48,12 @@ See [`databricks/README.md`](databricks/README.md). Deploy as a Databricks App:
 the kit syncs your repo to the workspace and runs `databricks apps deploy`. The
 app is gated by workspace auth, so clients present a bearer token.
 
-## cloud.gov (bonus)
+## cloud.gov (not used)
 
-Not a full kit, but the repo root includes a `manifest.yaml` for cloud.gov
-(Cloud Foundry). Deploy with `cf push` after `cf login`/`cf target`. See the
-comments in `manifest.yaml`.
+The template keeps one `manifest.yaml` at the repo root. Here there is one per
+server, `databricks/<server>/manifest.yaml`, kept for parity with the template
+and not used or tested (from the repo root,
+`cf push -f deploy/databricks/<server>/manifest.yaml`; see the comments in each).
 
 ---
 

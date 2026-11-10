@@ -1,5 +1,9 @@
 # IBM Cloud Deployment (Prebuilt Image) + watsonx Orchestrate
 
+> **Inherited from the GSA template, not adapted for this suite.** No image of
+> this suite has been built or published; not run or tested here. See
+> [`../README.md`](../README.md).
+
 Deploy your MCP server to **IBM Cloud Code Engine** using a **prebuilt public
 container image** (e.g., from [GitHub Container Registry / GHCR](https://ghcr.io)
 or Docker Hub), then register it as a tool in **watsonx Orchestrate**.
