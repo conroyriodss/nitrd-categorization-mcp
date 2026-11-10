@@ -214,14 +214,26 @@ async def test_prior_year_history_sits_above_the_rationale(cohort):
 
 async def test_persona_view_enables_controls_only_for_assignee(cohort):
     mine = await review(persona=REP)
-    assert len(cards(mine.text)) == 41 and mine.text.count('class="decide"') == 41
+    # F5: the cohort page renders no decision form, only a link per pending
+    # card to its one-card view (the only page with the form).
+    assert len(cards(mine.text)) == 41 and 'class="decide"' not in mine.text
+    links = re.findall(r'class="decide-link" href="([^"]+)"', mine.text)
+    assert len(links) == 41
+    for appl, rid in cohort.items():
+        want = f"{pages.REQUEST_PATH}/{rid}?persona={REP}"
+        assert want in links, appl
+    resolved = await client_call("GET", html.unescape(links[0]))
+    assert resolved.status_code == 200
+    assert resolved.text.count('class="decide"') == 1
     other = await review(persona="demo_sia")
-    assert 'id="no-cards"' in other.text and 'class="decide"' not in other.text
+    assert 'id="no-cards"' in other.text and "decide-link" not in other.text
 
 
 async def test_override_form_twelve_codes_suggested_not_ticked(cohort):
     appl = next(a for a, _c, _f in members() if nitrd(a))
-    c = card((await review(persona=REP)).text, cohort[appl])
+    rid = cohort[appl]
+    page = await client_call("GET", pages.request_url(rid, persona=REP))
+    c = card(page.text, rid)
     codes = re.findall(r'name="corrected_pcas" value="(\w+)"', c)
     assert tuple(codes) == TWELVE == decisions.PCA_CODES
     assert re.findall(r'value="(\w+)"> \w+ <span class="suggested">', c) == [
@@ -272,6 +284,12 @@ async def test_outputs_text_is_escaped(cohort, apps):
 
 async def test_page_script_carries_the_ui_guards(cohort):
     """The browser-side checks (only a convenience: the server decides)."""
+    # The form now lives on the one-card view; the review page keeps the
+    # script for its retry buttons. Check both.
+    rid = next(iter(cohort.values()))
+    view_page = (await client_call("GET", pages.request_url(rid, persona=REP))).text
+    assert 'class="decide"' in view_page
+    assert "form.decide" in view_page.rsplit("<script>", 1)[1]
     page = (await review(persona=REP)).text
     script = page.rsplit("<script>", 1)[1]
     for guard in (
@@ -548,7 +566,7 @@ async def test_retry_success_then_decide(broken, portal, apps):
     assert stored["classification_status"] == "ok"
     assert stored["classification_attempts"] == 2
     c = card((await client_call("GET", r.headers["location"])).text, rid)
-    assert 'data-classification="ok"' in c and 'class="decide"' in c
+    assert 'data-classification="ok"' in c and 'class="decide-link"' in c
     assert (await decide(rid, decision="deferred", rationale=WHY)).status_code == 303
     c = card((await review()).text, rid)
     trail = ["created", "routed", "classification_failed", "classified", "deferred"]

@@ -752,7 +752,9 @@ async def test_live_fy2021_nibib_u01_submit_writes_exactly_41(live_sql):
             )  # fmt: skip
         assert review.status_code == 200, _main_text(review.text)
         assert review.text.count('<article class="card"') == N
-        assert review.text.count('class="decide"') == classified
+        # F5: the cohort page links each classified pending card to its view
+        assert 'class="decide"' not in review.text
+        assert review.text.count('class="decide-link"') == classified
         assert review.text.count('class="retry"') == failed
         assert 'id="identity-unavailable"' not in review.text
     finally:

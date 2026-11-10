@@ -1197,6 +1197,18 @@ def _decision(r: ReviewRequestRecord, view: View) -> str:
             f'<a class="act-as" href="{esc(as_assignee)}">Act as {esc(assignee)}</a>'
             " to decide.</p></section>"
         )
+    if not isinstance(view, RequestView):
+        # F5 (SESSION_2026-11-08): a decision posted from a page with many
+        # forms discarded the unsaved input in the others. The cohort page
+        # therefore renders no decision form; each pending card links to its
+        # one-card view, which holds the only form.
+        link = request_url(r.request_id, persona=assignee)
+        return (
+            '<section class="decision" data-decision="link"><p>'
+            f'<a class="decide-link" href="{esc(link)}">Decide on this '
+            f"request's own page (as {esc(assignee)})</a>. One decision form "
+            "per page, so nothing typed elsewhere is lost.</p></section>"
+        )
     form = _decision_form(r, view)
     return f'<section class="decision" data-decision="form">{form}</section>'
 
