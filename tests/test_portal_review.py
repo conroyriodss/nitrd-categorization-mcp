@@ -165,6 +165,15 @@ async def test_nitrd_card_shows_call_pcas_rationale_prior_year(cohort):
     assert "band <code>high</code>" in c and "threshold 0.389" in c
     assert re.findall(r'<li data-pca="(\w+)"', c) == ["AI", "LSDMA"]  # top 2
     assert "matched scope terms: learning" in c
+    # F1: rank and matched terms; no raw PCA score anywhere in the PCA list
+    start = c.index('<ul class="pcas-suggested">')
+    pcas = c[start : c.index("</ul>", start)]
+    assert re.findall(r'data-pca="(\w+)" data-rank="(\d)"', pcas) == [
+        ("AI", "1"),
+        ("LSDMA", "2"),
+    ]
+    assert "<strong>AI</strong> rank 1; matched scope terms:" in pcas
+    assert not re.search(r"score\s*-?\d", pcas)
     assert "Toward NITRD: neural (abstract, +1.20)" in c
     assert "Against: clinic (abstract, -0.80)" in c
     # F3: NITRD card unchanged (card help mentions both words, so match classes)

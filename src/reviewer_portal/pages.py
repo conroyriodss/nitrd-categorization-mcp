@@ -929,14 +929,16 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
     parts.append(guide.why_review(p.suggestion, p.probability, band, top_codes))
     if p.suggestion == "nitrd":
         # As stored: the evidence already holds the top cohort.TOP_PCAS (2);
-        # the page does not re-cut it.
+        # the page does not re-cut it. F1 (SESSION_2026-11-08): the raw score
+        # is an unscaled sum of term matches, so the card shows the rank and
+        # the matched terms only. The score stays in the stored evidence.
         top = ev.subcategory.top_pcas
         if top:
             items = "".join(
-                f'<li data-pca="{esc(m.pca)}"><strong>{esc(m.pca)}</strong> '
-                f"score {m.score:.2f}; matched scope terms: "
+                f'<li data-pca="{esc(m.pca)}" data-rank="{rank}">'
+                f"<strong>{esc(m.pca)}</strong> rank {rank}; matched scope terms: "
                 f"{esc(', '.join(m.matched_terms) or 'none')}</li>"
-                for m in top
+                for rank, m in enumerate(top, start=1)
             )
             parts.append(f'<p>Top PCAs:</p><ul class="pcas-suggested">{items}</ul>')
         else:
