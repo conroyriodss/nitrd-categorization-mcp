@@ -45,7 +45,9 @@ State read on 2026-11-10 (Genie Code):
 * App `mcp-nitrd-reviewer-portal`: compute ACTIVE, app RUNNING, active deployment `01f1dc4ff3c61144bb1da6d2aad008db` SUCCEEDED, source `/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal`.
 * That folder: git HEAD `d7bad89b9c70c4bbcc4e43326a272ba065e07e2d`; sparse checkout of `deploy/databricks/reviewer_portal`, `src/reviewer_portal`, `src/shared`; root `app.yaml` and `requirements.txt` byte-identical to the committed files; `DEPLOY_COMMIT.py` = d7bad89. The only untracked files are those three.
 
-Design rule for the forward deploy: deploy the new build from a NEW Git folder (proposed `/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal-next`, built by README Option B). The d7bad89 folder is not touched, so rollback needs no git operation: it is one redeploy from a folder already verified.
+Design rule for the forward deploy (APPROVED by the owner 2026-11-10): deploy the new build from a NEW Git folder, `/Workspace/Users/conroyri@nih.gov/apps/mcp-nitrd-reviewer-portal-next`, built by README Option B, with its DEPLOY_COMMIT marker in that new folder. The d7bad89 folder is not touched and stays verified, so rollback needs no git operation: it is one redeploy from known-good source.
+
+Expected provenance change: from the forward deploy on, `active_deployment.source_code_path` (and so the source path recorded with each run's deployment) is the `-next` folder, not `apps/mcp-nitrd-reviewer-portal`. That is expected and is not a discrepancy. After a rollback it returns to `apps/mcp-nitrd-reviewer-portal`.
 
 Rollback commands (README sections 7 and 8):
 1. `databricks apps get mcp-nitrd-reviewer-portal --output JSON`. Expect compute_status ACTIVE and no pending_deployment. If STARTING or STOPPING, wait; if STOPPED, `databricks apps start mcp-nitrd-reviewer-portal --timeout 20m`.
@@ -55,10 +57,11 @@ Rollback commands (README sections 7 and 8):
 5. Full battery on the rolled-back portal, same session: smoke, parity, e2e, lifecycle, contract, auth, and the portal log read for the lifecycle refusals (`not_in_set`, the runner SP). Whether manual rows 10-12 are repeated on the rolled-back deployment (same source, new deployment) is the owner's decision at the time.
 6. Record: deployment id, times, run ids, in `docs/PLAN_fix_c.md` and the evidence index. The 2026-11-09 records describe the same source; the rollback battery re-establishes that they describe the running deployment.
 
-How long:
+How long (measured records, owner 2026-11-10):
 * The redeploy: the 2026-11-09 portal deployment took 82 s (created 15:12:17Z, updated 15:13:39Z). Allow 5 minutes with the checks in steps 1, 2 and 4.
-* The battery: an ESTIMATE of 1.5-2 hours including the log read. It has not been timed as one contiguous block.
-* So a rollback is about 2 hours of one session, and it needs the owner (browser runs and log read). That is why a deploy is only started when the battery can follow in the same session.
+* Battery compute: parity 47501246 ran 21:47:30-21:49:19Z (1 min 49 s), e2e d08b246f 21:50:19-21:51:36Z (1 min 17 s), lifecycle 3174122a 15:27:26-15:29:00Z (1 min 34 s). Six runs are about ten minutes of compute.
+* The rest is people time: the owner starting each run in the browser, the portal log read, export, indexing and the plan update. The owner's working figure for a deploy plus battery session, including that, is a half-day.
+* So a rollback, or the Thursday gate, is a half-day of one session with the owner present. That is why a deploy is only started when the battery can follow in the same session.
 
 ## Effect on the documents
 
@@ -78,17 +81,18 @@ Genie Code build and verification time, plus owner time, in hours.
 | e view + F5 | 4-5 |
 | Full local test run, mutation check | 1 |
 | Owner review of the diffs | 1 |
-| Redeploy portal and verify the deployment | 0.5 |
-| Battery (6 runs) and portal log read | 1.5-2 |
+| Redeploy portal and verify the deployment | 0.1 |
+| Battery: about 10 min compute, plus runs, log read and export (half-day session with the next two rows) | 1-1.5 |
 | Row 10 via the view; browser demo after-half with its runbook | 1.5 |
 | Evidence export, INDEX, plan updates, window closure | 1.5-2 |
-| **Total** | **15-19** |
+| **Total** | **14-18** |
 
 Elapsed: 3 working days if the owner is available for review, redeploy, battery and the browser at each gate.
 
 **Gates:**
 * Wed 2026-11-11, end of day: a-d built and CI green; (e) in progress; diffs with the owner.
-* Thu 2026-11-12, DEPLOY GATE: the owner reviews what is green and gives, or withholds, the go. With the go: deploy the green prefix (a-d, or a-e), then the battery in the same session. Without it: nothing is deployed and the cost is build time only.
+* Thu 2026-11-12, DEPLOY GATE (a half-day session): the owner reviews what is green and gives, or withholds, the go. With the go: deploy the green prefix (a-d, or a-e), then the battery in the same session. Without it: nothing is deployed and the cost is build time only.
+* Document apply: HELD until after the gate (owner, 2026-11-10). Six routing rows (D03, D04, P14, D06c, D13, D15b) and hand-edit H1 depend on what ships. The diff review is finished now; the dry run is re-run and applied once, when we know what shipped.
 * Fri 2026-11-13: row 10 (via the view if (e) shipped) and, if (e) shipped, the browser demo; evidence committed; window closed.
 * Sat 2026-11-14: buffer only; end of day is the hard cutoff for a deployed build (rollback above).
 
