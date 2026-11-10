@@ -22,7 +22,7 @@ Build order (each a separate commit, CI green before the next starts):
 
 | Step | Content | Tests (CI) |
 | --- | --- | --- |
-| a F3 | On a not-NITRD card, "Toward NITRD" is relabelled as the terms that would support a NITRD call and were outweighed; "Against: none" is deleted and replaced by a statement that against-terms are not computed for negative suggestions. Correctness defect, visible in any demo screenshot; cheapest. | not-NITRD card has the relabel and no "Against: none"; NITRD card unchanged |
+| a F3 | On a not-NITRD card, "Toward NITRD" is relabelled as the terms that would support a NITRD call and were outweighed; "Against: none" is deleted and replaced by a statement that against-terms are not computed for negative suggestions. Correctness defect, visible in any demo screenshot; cheapest. BUILT `fc6dfd5`. Known cosmetic edge, not built (owner 2026-11-10): an abstain card takes the same branch, so if it ever stored terms they would read "outweighed"; no observed card has been an abstain, and abstains store no terms, so it would show "No term weights stored." plus the not-computed line. | not-NITRD card has the relabel and no "Against: none"; NITRD card unchanged |
 | b F4 | Prior-year history moved above the rationale. Reorder only. | section order on both card types |
 | c F1 | Raw PCA number dropped; rank and matched terms shown. | no raw PCA score in the HTML; rank order kept |
 | d F2 | Function words hidden from displayed terms, with a count of hidden terms; term rationale shown only in the near-threshold bands (stored `band`). The function-word list is a display constant and is disclosed. | hidden count correct on a known card (9725122 / 9730348 fixtures); rationale absent outside the near-threshold bands |
