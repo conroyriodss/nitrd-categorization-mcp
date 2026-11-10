@@ -86,7 +86,7 @@ Order is fixed; each step starts only when the previous one is recorded. Times f
 
 | # | Step | Who | Time | Recorded where |
 | --- | --- | --- | --- | --- |
-| 0 | Owner's go. Confirm `git ls-remote` main = the commit to deploy (`64e7f8a` or later doc-only commits); CI green on it; owner told before the redeploy | owner + Genie Code | 10 min | this plan |
+| 0 | Owner's go. Confirm `git ls-remote` main = the commit to deploy (at least `1a877e3`, the polish round, which changed portal code; later commits through `ce4208c` touch only `main.py`, tests and documentation); CI green on it; owner told before the redeploy | owner + Genie Code | 10 min | this plan |
 | 1 | Build the `-next` Git folder (README Option B) at that commit, write DEPLOY_COMMIT; check the d7bad89 folder is untouched (rollback step 2 checks) | Genie Code | 15 min | this plan |
 | 2 | Deploy the portal from `-next`; expect a new deployment id, SUCCEEDED, `source_code_path` = `-next`, RUNNING; `/whoami` in the browser | Genie Code + owner | 5 min | this plan |
 | 3 | Battery: smoke, parity, e2e, lifecycle, contract, auth (`docs/RUNBOOK_full_battery.md`); portal log read for the lifecycle refusals (`not_in_set`, runner SP) | owner starts runs; Genie Code reads | about 10 min compute, 1-1.5 h total | eval/results, INDEX |
