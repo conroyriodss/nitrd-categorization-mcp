@@ -462,6 +462,7 @@ async def select_page(request: Request) -> Response:
         + _selector_form(fy, code, activity, ic_items, activity_items, cached)
         + notice
         + preview
+        + request_lookup_form()
     )
     return with_session(request, layout("Cohort selector", body))
 
@@ -700,6 +701,9 @@ async def submit(request: Request) -> Response:
 
 DECIDE_PATH = "/operator/decide"
 RETRY_PATH = "/operator/retry"
+# GET /operator/request/{request_id}: one card for one request, any source
+# (cohort or agent-draft:). GET /operator/request?request_id=: the lookup box.
+REQUEST_PATH = "/operator/request"
 STATES = (
     "pending",
     "approved",
@@ -740,6 +744,52 @@ class View:
         return f"{REVIEW_PATH}?{urlencode(self.params())}" + (
             f"#{anchor}" if anchor else ""
         )
+
+
+@dataclass(frozen=True)
+class RequestView:
+    """The one-request view (GET /operator/request/{request_id}).
+
+    Duck-types View for the card: sel (None when the request has no cohort,
+    e.g. an agent-draft: request), persona, params() and url(). A POST from
+    this view returns to it (back_request_id).
+    """
+
+    request_id: UUID
+    sel: Selection | None = None
+    persona: str | None = None
+
+    def params(self) -> dict[str, str]:
+        return {"persona": self.persona} if self.persona else {}
+
+    def url(self, anchor: str | None = None) -> str:
+        q = urlencode(self.params())
+        return (
+            f"{REQUEST_PATH}/{self.request_id}"
+            + (f"?{q}" if q else "")
+            + (f"#{anchor}" if anchor else "")
+        )
+
+
+def request_url(request_id: UUID | str, persona: str | None = None) -> str:
+    return RequestView(UUID(str(request_id)), persona=persona).url()
+
+
+def cohort_of(r: ReviewRequestRecord) -> Selection | None:
+    """The cohort an operator-path request belongs to, from its key
+    (data.cohort_key); None for any other request (agent-draft:, auto:)."""
+    key = r.idempotency_key
+    if not key.startswith(data.COHORT_KEY_PREFIX):
+        return None
+    parts = key[len(data.COHORT_KEY_PREFIX) :].split(":")
+    if len(parts) != 4:
+        return None
+    try:
+        return selector.validate_selection(
+            parts[0], parts[1], parts[2], selector.BUILD_NEW
+        )
+    except Refusal:
+        return None
 
 
 def active_personas() -> list[routing.Persona]:
@@ -792,18 +842,27 @@ def shown(view: View, r: ReviewRequestRecord) -> bool:
     )
 
 
-def _back_fields(view: View) -> str:
+def _back_fields(view: View | RequestView) -> str:
+    params = dict(view.params())
+    if isinstance(view, RequestView):
+        params = {"request_id": str(view.request_id)} | params
     return "".join(
         f'<input type="hidden" name="back_{k}" value="{esc(v)}">'
-        for k, v in view.params().items()
+        for k, v in params.items()
     )
 
 
-def _back_view(form: Mapping[str, Any]) -> View | None:
+def _back_view(form: Mapping[str, Any]) -> View | RequestView | None:
     """Where a POST returns to: its back_* fields, validated like a GET."""
     try:
+        if form.get("back_request_id"):
+            ids = [p.reviewer_id for p in active_personas()]
+            return RequestView(
+                request_id=UUID(str(form.get("back_request_id"))),
+                persona=_choice(form.get("back_persona"), ids, "persona_unknown"),
+            )
         return parse_view({k: form.get(f"back_{k}") for k in VIEW_KEYS})
-    except Refusal:
+    except (Refusal, ValueError):
         return None
 
 
@@ -1178,12 +1237,17 @@ def _card(
     pis = "; ".join(p.get("pi_names") or []) or "unavailable"
     a = r.assignment
     state = card_state(r)
+    sel = view.sel
+    cohort_part = (
+        f"IC: {esc(sel.ic)} ({esc(sel.ic_code)}) | Activity: {esc(sel.activity)} | "
+        if sel is not None
+        else ""
+    )
     return (
         f'<article class="card" id="{card_id(r)}" data-state="{state}" '
         f'data-appl="{r.appl_id}" data-assignee="{esc(a.reviewer_id)}">'
         f"<h3>{r.appl_id} {esc(core)}: {esc(title)}</h3>"
-        f'<p class="ident">PI: {esc(pis)} | IC: {esc(view.sel.ic)} '
-        f"({esc(view.sel.ic_code)}) | Activity: {esc(view.sel.activity)} | "
+        f'<p class="ident">PI: {esc(pis)} | {cohort_part}'
         f'FY{r.fy} | <a class="reporter" href="{esc(reporter_url(r.appl_id))}" '
         'rel="noopener">RePORTER</a></p>'
         + guide.sample_note(r.fy, core)
@@ -1288,6 +1352,98 @@ async def review_page(request: Request) -> Response:
         + f'<p><a href="{SELECT_PATH}">Back to the cohort selector</a></p>'
     )
     return with_session(request, layout(f"Review {sel.label()}", body))
+
+
+def _request_not_found(request: Request, raw: Any) -> Response:
+    body = (
+        "<h1>Review request not found</h1>"
+        f'<p class="error" id="not-found">No review request {esc(selector.clip(raw))}.'
+        "</p><p>Nothing was read or written.</p>"
+        f'<p><a href="{SELECT_PATH}">Back to the cohort selector</a></p>'
+    )
+    return with_session(request, layout("Review request not found", body, status=404))
+
+
+def request_lookup_form() -> str:
+    return (
+        f'<form method="get" action="{REQUEST_PATH}" id="request-lookup">'
+        '<p><label for="lookup-request-id">Open one review request by id '
+        "(for example one an agent draft created)</label> "
+        '<input id="lookup-request-id" name="request_id" size="38" required> '
+        '<button type="submit">Open</button></p></form>'
+    )
+
+
+async def request_lookup(request: Request) -> Response:
+    """GET /operator/request?request_id=...: the lookup box; 303 to the view."""
+    raw = request.query_params.get("request_id")
+    try:
+        rid = UUID(str(raw).strip())
+    except ValueError:
+        return _request_not_found(request, raw)
+    return with_session(request, RedirectResponse(request_url(rid), status_code=303))
+
+
+async def request_page(request: Request) -> Response:
+    """GET /operator/request/{request_id}: one card for one request.
+
+    Read by id with data.request_by_id, the read the decision path uses, so
+    any request a decision could be recorded on can be shown, whatever its key
+    (cohort or agent-draft:). Unknown or malformed id: 404. Reserved FY:
+    refused before anything of the record is rendered.
+    """
+    raw = request.path_params.get("request_id")
+    q = request.query_params
+    inputs = {"request_id": raw, "persona": q.get("persona")}
+    try:
+        rid = UUID(str(raw))
+    except ValueError:
+        return _request_not_found(request, raw)
+    try:
+        ids = [p.reviewer_id for p in active_personas()]
+        persona = _choice(q.get("persona"), ids, "persona_unknown")
+    except Refusal as refusal:
+        return refused(request, refusal, inputs)
+    try:
+        r = await data.request_by_id(rid)
+    except Exception as exc:  # noqa: BLE001 - ToolError or anything else
+        message = str(exc) if isinstance(exc, ToolError) else f"{type(exc).__name__}"
+        return not_started(request, "Review request unavailable", message, 500)
+    if r is None:
+        return _request_not_found(request, raw)
+    try:
+        selector.parse_fy(r.fy)
+    except Refusal as refusal:
+        return refused(request, refusal, inputs)
+    sel = cohort_of(r)
+    view = RequestView(request_id=rid, sel=sel, persona=persona)
+    try:
+        _records, all_events = await data.history(r.appl_id)
+    except Exception as exc:  # noqa: BLE001 - ToolError or anything else
+        message = str(exc) if isinstance(exc, ToolError) else f"{type(exc).__name__}"
+        return not_started(request, "Review request unavailable", message, 500)
+    events = [e for e in all_events if e.request_id == rid]
+    project, identity_note = None, ""
+    if sel is not None:
+        projects, identity_note = await _identities(sel, selector.HARD_CAP)
+        project = projects.get(r.appl_id)
+    source = (
+        f'<p id="request-source" data-source="cohort">From the cohort '
+        f'<a href="{esc(View(sel=sel).url(card_id(r)))}">{esc(sel.label())}</a>.</p>'
+        if sel is not None
+        else '<p id="request-source" data-source="other">Not from an operator '
+        f"cohort (key <code>{esc(r.idempotency_key.split(':')[0])}:</code>): "
+        "title and PI are not looked up.</p>"
+    )
+    body = (
+        f"<h1>Review request {esc(str(rid))}</h1>"
+        + source
+        + identity_note
+        + _card(r, view, project, events)
+        + request_lookup_form()
+        + f'<p><a href="{SELECT_PATH}">Back to the cohort selector</a></p>'
+    )
+    return with_session(request, layout(f"Review request {rid}", body))
 
 
 def log_action(request: Request, event: str, **fields: Any) -> None:
@@ -1415,3 +1571,5 @@ def register(mcp: FastMCP) -> None:
     mcp.custom_route(REVIEW_PATH, methods=["GET"])(review_page)
     mcp.custom_route(DECIDE_PATH, methods=["POST"])(decide)
     mcp.custom_route(RETRY_PATH, methods=["POST"])(retry)
+    mcp.custom_route(REQUEST_PATH, methods=["GET"])(request_lookup)
+    mcp.custom_route(REQUEST_PATH + "/{request_id}", methods=["GET"])(request_page)
