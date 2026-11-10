@@ -952,6 +952,33 @@ def rationale_terms(ev: Any) -> str:
     return lines
 
 
+def pca_list(top: list[Any]) -> str:
+    """The proposed-PCA list on a NITRD card.
+
+    As stored: the evidence already holds the top cohort.TOP_PCAS (2); the
+    page does not re-cut it. F1 (SESSION_2026-11-08): the raw score is an
+    unscaled sum of term matches, so the card shows the rank and the matched
+    terms only. The score stays in the stored evidence.
+
+    The matched terms are deliberately NOT filtered for function words (owner
+    decision 2026-11-10; F2 applies to the term-weight rationale only):
+    * F1 removed the raw score, so the matched terms are now the only account
+      of the PCA rank; a filtered list would no longer explain it.
+    * Generic matches ("providing", "approaches", "while") are a signal about
+      the scope vocabulary's quality that the reviewer should see. Hiding
+      them would make a weak match look substantive.
+    * Function-word suppression in the classifier rationale removes noise
+      from a model's reasoning; here it would conceal a real weakness.
+    """
+    items = "".join(
+        f'<li data-pca="{esc(m.pca)}" data-rank="{rank}">'
+        f"<strong>{esc(m.pca)}</strong> rank {rank}; matched scope terms: "
+        f"{esc(', '.join(m.matched_terms) or 'none')}</li>"
+        for rank, m in enumerate(top, start=1)
+    )
+    return f'<p>Top PCAs:</p><ul class="pcas-suggested">{items}</ul>'
+
+
 def _classification(r: ReviewRequestRecord, view: View) -> str:
     if r.classification_status == ClassificationStatus.FAILED:
         actor = view.persona or settings.operator_persona
@@ -994,19 +1021,9 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
     )
     parts.append(guide.why_review(p.suggestion, p.probability, band, top_codes))
     if p.suggestion == "nitrd":
-        # As stored: the evidence already holds the top cohort.TOP_PCAS (2);
-        # the page does not re-cut it. F1 (SESSION_2026-11-08): the raw score
-        # is an unscaled sum of term matches, so the card shows the rank and
-        # the matched terms only. The score stays in the stored evidence.
         top = ev.subcategory.top_pcas
         if top:
-            items = "".join(
-                f'<li data-pca="{esc(m.pca)}" data-rank="{rank}">'
-                f"<strong>{esc(m.pca)}</strong> rank {rank}; matched scope terms: "
-                f"{esc(', '.join(m.matched_terms) or 'none')}</li>"
-                for rank, m in enumerate(top, start=1)
-            )
-            parts.append(f'<p>Top PCAs:</p><ul class="pcas-suggested">{items}</ul>')
+            parts.append(pca_list(top))
         else:
             parts.append('<p class="muted">No PCA matched the scope terms.</p>')
     prior = ev.prior_year

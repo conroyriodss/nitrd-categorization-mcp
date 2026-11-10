@@ -37,6 +37,10 @@ The skipped parts run only in the adversarial venv (openai-agents 0.24.0, openai
 
 This is the fifth recorded instance of a test reported, or relied on, without having run. The earlier one on this same test is the 2026-11-09 correction in `docs/PLAN_fix_c.md`. Rule: a skip counts as not run, and "CI green" never stands for the four skipped items above. Open: no committed record shows any of the four run after 2026-11-09; re-running them in a rebuilt adversarial venv before the deliverables close is the owner's call.
 
-## Draft sentence for the evaluation document (testing methodology). NOT APPROVED.
+## Sentence for the evaluation document (testing methodology). APPROVED by the owner 2026-11-10, with the addition on recorded runs.
 
-> Continuous integration runs the unit and contract suite on every push, but four agent tests need the agent SDK, which the CI environment does not install, so they skip there. One of them is the test showing that the shipped agent is offered exactly the tool set measured in the counted adversarial run. They run only in a separately built evaluation environment; the identity test was last run there on 2026-11-09, when it passed.
+> Continuous integration runs the unit and contract suite on every push, but four agent tests need the agent SDK, which the CI environment does not install, so they skip there. One of them is the test showing that the shipped agent is offered exactly the tool set measured in the counted adversarial run. They run only in a separately built evaluation environment. Only that identity test has a recorded run there (2026-11-09, when its test file passed 5 of 5); the other three have no recorded run at all.
+
+Owner's reason for the addition: partial disclosure of a disclosure problem is worse than none.
+
+CI log check: the owner is reading the pytest summary of CI run `42843332063` (on `fc6dfd5`). If it reports 23 skipped, the inference in L-T1 closes; record the result here.

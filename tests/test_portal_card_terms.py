@@ -136,6 +136,21 @@ def test_hidden_count_on_the_real_session_cards(appl_id, side, hidden):
     assert pages._shown(weights)[1] == hidden
 
 
+def test_pca_matched_terms_are_not_filtered():
+    # Owner decision 2026-11-10: the matched terms are the only account of the
+    # PCA rank, and generic matches are a signal about the scope vocabulary.
+    from reviewer_portal.models import PcaEvidence
+
+    top = [
+        PcaEvidence(pca="EHCS", score=3.0, matched_terms=["while", "providing"]),
+        PcaEvidence(pca="AI", score=1.0, matched_terms=["approaches", "of"]),
+    ]
+    html = pages.pca_list(top)
+    assert "matched scope terms: while, providing</li>" in html
+    assert "matched scope terms: approaches, of</li>" in html
+    assert "hidden" not in html
+
+
 def test_card_help_discloses_the_rule_and_the_list():
     help_html = guide.card_help()
     assert "hidden and counted" in help_html
