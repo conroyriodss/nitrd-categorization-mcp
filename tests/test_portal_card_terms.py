@@ -110,8 +110,24 @@ def test_terms_gated_outside_near_threshold(p, suggestion, band):
     ev = evidence(p, suggestion, [f("neural", 1.2), f("clinic", -0.8)])
     out = pages.rationale_terms(ev)
     assert f'class="muted terms-gated" data-band="{band}"' in out
+    assert f"this call is in the <code>{band}</code> band.</p>" in out
     assert "neural" not in out and "clinic" not in out
     assert 'class="toward' not in out and 'class="against' not in out
+
+
+@pytest.mark.parametrize(
+    "features, line",
+    [
+        ([f("neural", 1.2), f("of", 0.5)], "1 function-word term hidden;"),
+        (
+            [f("neural", 1.2), f("of", 0.5), f("the", 0.4), f("clinic at", -0.3)],
+            "3 function-word terms hidden;",
+        ),
+    ],
+)
+def test_hidden_count_line_is_pluralised(features, line):
+    out = pages.rationale_terms(evidence(0.5, "nitrd", features))
+    assert line in out and "term(s)" not in out
 
 
 # Hand-counted from the session record: (appl_id, list, hidden).

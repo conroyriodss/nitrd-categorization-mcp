@@ -28,6 +28,12 @@ Two kinds of mutation:
 | e view | | variant: `back_request_id` dropped from the rendered form | `test_portal_request_view::test_rendered_form_returns_to_the_view` | 1 failed, 102 passed |
 | e F5 | review page renders no decision form; decide-links | revert `64e7f8a` | `test_portal_review::test_persona_view_enables_controls_only_for_assignee`, `test_portal_review::test_retry_success_then_decide` | 2 failed, 62 passed, 1 skipped |
 | e F5 | | variant: forms back on the review page (`if False:` on the F5 branch) | same two tests | 2 failed, 101 passed, 1 skipped |
+| polish | "Pending: decided by" -> "To be decided by" | variant: old wording restored | `test_portal_review::test_default_view_is_read_only_with_every_card` | 1 failed, 66 passed (2 files) |
+| polish | hidden-count line pluralised | variant: old "term(s)" restored | `test_portal_card_terms::test_hidden_count_line_is_pluralised` (both cases) | 2 failed, 65 passed (2 files) |
+| polish | | variant: always "terms" | `test_hidden_count_line_is_pluralised` (the 1-term case) | 1 failed, 66 passed (2 files) |
+| polish | gated sentence: "this call is in the `<band>` band." | variant: old "this call is `<band>`." restored | `test_terms_gated_outside_near_threshold` (both cases) | 2 failed, 65 passed (2 files) |
+
+Polish rows: 2026-11-10, against the working tree before its commit, files `test_portal_review.py` and `test_portal_card_terms.py`.
 
 Every mutation was caught. The 1 skip in the 4-file runs is the live-write test (L-T3 in `docs/TESTING_LIMITATIONS.md`), so no row above is evidence for it.
 
@@ -37,6 +43,6 @@ Every mutation was caught. The 1 skip in the 4-file runs is the live-write test 
 * Not re-run: the F1 variant "score appended after the terms" (only "score beside the rank" was re-run today).
 * View revert: 13 failed, as in the `eccd736` message (an earlier run, before `test_rendered_form_returns_to_the_view` existed, was 12 of 13).
 
-**Observation.** Both F5 runs took about 6.5 minutes where the other 4-file runs took about 8 seconds. Not investigated; it does not change a result. Raw results: `/tmp/mut_results.json` (not committed; the table is the record).
+**F5 timing, answered (2026-11-10).** Both slow F5 runs were the pre-F5 code (41 forms) under the post-F5 tests. Neither side renders slowly: the review page for the 41-card persona view rendered in a median 0.007 s pre-F5 (277,663 bytes, 41 forms) and 0.010 s post-F5 (181,108 bytes, 41 links), 5 renders each, fake harness. The time was pytest's failure explanation: `test_persona_view_enables_controls_only_for_assignee` took 129.6 s in its call phase by default and 0.01 s with `--assert=plain`. Pytest's introspection of a failing `'class="decide"' not in mine.text` on a 278 KB page is what is slow. So F5 made nothing faster or slower in a way worth reporting; the timing is a test-harness artifact, not a product property. (A count-based assertion would fail fast; not changed, outside this round.) The harness does not measure the deployed page; the battery does. Raw results: `/tmp/mut_results.json` (not committed; the table is the record).
 
 **Practice note (owner, 2026-11-10).** Before running any tool that rewrites files in place (for example `ruff format`), copy the before state first (to `/tmp`, or commit), so a whitespace-only claim can be shown by a diff and does not need indirect evidence. Origin: 2026-11-10, `ruff format` rewrote `tests/test_portal_request_view.py` before commit `eccd736`. The before state was not kept; the evidence that the change was layout only was indirect (one change identified, mutation results unchanged on the formatted file).

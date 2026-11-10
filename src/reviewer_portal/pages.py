@@ -977,7 +977,8 @@ def rationale_terms(ev: Any) -> str:
         return (
             f'<p class="muted terms-gated" data-band="{esc(band)}">Term weights '
             f"are shown only for near-threshold calls ({guide.NEAR_LOW} to "
-            f"{guide.NEAR_HIGH}); this call is <code>{esc(band)}</code>.</p>"
+            f"{guide.NEAR_HIGH}); this call is in the <code>{esc(band)}</code> "
+            "band.</p>"
         )
     toward, against = ev.explain.toward, ev.explain.against
     toward_txt, hid_t = _shown(toward)
@@ -1006,7 +1007,8 @@ def rationale_terms(ev: Any) -> str:
     if hidden:
         lines += (
             f'<p class="muted hidden-terms" data-hidden="{hidden}">{hidden} '
-            "function-word term(s) hidden; see How to read this card.</p>"
+            f"function-word {'term' if hidden == 1 else 'terms'} hidden; see How "
+            "to read this card.</p>"
         )
     return lines
 
@@ -1193,7 +1195,8 @@ def _decision(r: ReviewRequestRecord, view: View) -> str:
         as_assignee = replace(view, persona=assignee).url(card_id(r))
         return (
             '<section class="decision" data-decision="read-only"><p class="muted">'
-            f"Pending: decided by {esc(assignee)}. "
+            # Not "Pending: decided by": that read as a decision already made.
+            f"To be decided by {esc(assignee)}. "
             f'<a class="act-as" href="{esc(as_assignee)}">Act as {esc(assignee)}</a>'
             " to decide.</p></section>"
         )

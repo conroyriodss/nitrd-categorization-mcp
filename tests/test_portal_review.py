@@ -145,6 +145,10 @@ async def test_default_view_is_read_only_with_every_card(cohort, portal):
     assert len(cards(r.text)) == 41 and 'data-shown="41"' in r.text
     assert 'class="decide"' not in r.text  # no persona: no decision controls
     assert r.text.count('class="act-as"') == 41
+    # A pending card must not read as decided (the old "Pending: decided by").
+    assert r.text.count("To be decided by demo_ic_rep_nibib.") == 41
+    assert r.text.count("decided by") == 41  # every one is "To be decided by"
+    assert "Pending: decided by" not in r.text
     assert "<td>ic_rep</td><td>demo_ic_rep_nibib</td><td>41</td>" in r.text
     assert all(label in r.text for label in LABELS)
 
