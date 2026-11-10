@@ -1,16 +1,16 @@
 # Portal change series: F3, F4, F1, F2, then the decide-by-request_id view with F5
 
-Status 2026-11-10: BUILD approved by the owner. DEPLOY is gated: no redeploy until the owner gives a separate go on Thursday 2026-11-12. Build status: see the table (all five steps built 2026-11-10; nothing deployed).
+Status 2026-11-10: BUILD approved by the owner. DEPLOY is gated: no redeploy until the owner gives a separate go at the deploy sitting, MOVED to Wednesday 2026-11-11 (owner 2026-11-10; was Thursday 2026-11-12, now document time). Build status: see the table (all five steps built 2026-11-10; nothing deployed).
 
 **Owner rules (2026-11-10).**
 * Ordered sequence, not one indivisible change. The display fixes (`eval/usability/SESSION_2026-11-08.md`) and the view (`docs/PLAN_fix_c.md`, step 3) are built in the order below, each its own commit with CI green.
-* At the Thursday gate, deploy whatever is green. One redeploy and one battery cost the same whatever rides on them.
-* If (e), the view, is not green by Thursday, deploy a-d only. The view then stays disclosed exactly as it is now (rows D06c, D13, D15b of the routing spec stand). This is the planned outcome for that case, not a failure: the Saturday cutoff is not all-or-nothing.
+* At the deploy gate (Wednesday 2026-11-11), deploy whatever is green. One redeploy and one battery cost the same whatever rides on them.
+* If (e), the view, is not green by the gate, deploy a-d only. The view then stays disclosed exactly as it is now (rows D06c, D13, D15b of the routing spec stand). This is the planned outcome for that case, not a failure: the Saturday cutoff is not all-or-nothing.
 * F5 is done via the view (owner, 2026-11-10): the review page links each request to its one-card view.
 * Deploy only when the battery can follow immediately in the same session. Never deploy and leave the stale-claims window open overnight.
 
 **Cutoff and the cost of abandoning.**
-* BEFORE deployment, abandoning costs only build time. That is the cheap exit, and it stays open until the Thursday deploy gate: if the owner does not give the go, nothing is deployed and the shipped build stays d7bad89, with its 2026-11-09 records current.
+* BEFORE deployment, abandoning costs only build time. That is the cheap exit, and it stays open until the Wednesday 2026-11-11 deploy gate: if the owner does not give the go, nothing is deployed and the shipped build stays d7bad89, with its 2026-11-09 records current.
 * AFTER deployment, abandoning means rolling the portal back to d7bad89 AND re-running the full battery to re-establish the evidence (procedure below). It is not free and it is not instant.
 * HARD CUTOFF, end of Saturday 2026-11-14: if a deployed build does not have its battery green by then, roll back per the procedure below. The documents need 2026-11-15 to 11-19 clear.
 
@@ -46,7 +46,7 @@ Not in scope: compute against-terms or show the intercept (F3 production recomme
 ## Acceptance
 
 * CI green on every commit that is deployed, against the pinned toolchain (uv.lock: ruff 0.16.10).
-* Redeploy the portal only, after the owner's go on Thursday, owner told first. DEPLOY_COMMIT marker in the new portal folder.
+* Redeploy the portal only, after the owner's go at the Wednesday 2026-11-11 sitting, owner told first. DEPLOY_COMMIT marker in the new portal folder.
 * Battery on the new portal, in the same session: smoke, parity, e2e, lifecycle, contract, auth, and the portal log read for the lifecycle refusals. Parity is unaffected by HTML changes but is re-run because the build changed.
 * Manual: row 10 again (the listed owner decides one cohort request; accepted, recorded by persona, action-log line), through the view if (e) shipped. Rows 12b and 12c are not repeated unless the decide handler changes beyond the return target; the owner decides.
 * If (e) shipped: browser demo, after-half (pre-registered in a committed runbook before the click): authorise one agent draft; its request_id is recorded before the click; the request appears pending on the view. This is the step 3 acceptance test. It shows reachability only; prefix vs cap stays settled by code inspection.
@@ -74,9 +74,11 @@ How long (measured records, owner 2026-11-10):
 * The redeploy: the 2026-11-09 portal deployment took 82 s (created 15:12:17Z, updated 15:13:39Z). Allow 5 minutes with the checks in steps 1, 2 and 4.
 * Battery compute: parity 47501246 ran 21:47:30-21:49:19Z (1 min 49 s), e2e d08b246f 21:50:19-21:51:36Z (1 min 17 s), lifecycle 3174122a 15:27:26-15:29:00Z (1 min 34 s). Six runs are about ten minutes of compute.
 * The rest is people time: the owner starting each run in the browser, the portal log read, export, indexing and the plan update. The owner's working figure for a deploy plus battery session, including that, is a half-day.
-* So a rollback, or the Thursday gate, is a half-day of one session with the owner present. That is why a deploy is only started when the battery can follow in the same session.
+* So a rollback, or the deploy gate, is a half-day of one session with the owner present. That is why a deploy is only started when the battery can follow in the same session.
 
-## Thursday session 2026-11-12 (one sitting, owner present)
+## Deploy sitting Wednesday 2026-11-11 (one sitting, owner present; moved from Thursday 2026-11-12 by the owner on 2026-11-10)
+
+Readiness checked 2026-11-10 by Genie Code: nothing left to build. Everything to deploy is pushed (remote main read back after each push). What Genie Code cannot check: CI on GitHub for the deploy commit (no GitHub access from here; the owner reads it at step 0) and the owner's calendar. Fallback if either fails on Wednesday morning: the sitting runs Thursday 2026-11-12 as previously planned, and the document day moves to Friday.
 
 Order is fixed; each step starts only when the previous one is recorded. Times from the measured records above.
 
@@ -91,7 +93,7 @@ Order is fixed; each step starts only when the previous one is recorded. Times f
 | 6 | Cleanup per the runbooks (sandbox counts 0/0/0); evidence export, INDEX, plan update; stale-claims window closed | Genie Code + owner | 1.5-2 h | INDEX, this plan |
 | 7 | LAST, only after steps 0-6 are green and recorded (owner 2026-11-10): run the L-T3 live-write test once against the sandbox (writes 41 rows, cleans up; sandbox counts 0/0/0 after), record the run and close L-T3 as "run once, passed" (or record the failure). Worth the time: the did-not-run pattern has five recorded instances. DROP it if the sitting runs long; L-T3 then stays open as labelled | Genie Code + owner | 20 min | docs/TESTING_LIMITATIONS.md |
 
-Stop rules: a failed deploy check (step 2) or a red battery item (step 3) stops the sitting before steps 4-5; decide there between fix-forward and rollback (procedure above; rollback is its own half-day). Steps 4-5 are not run on a portal whose battery is not green. Total about a full working day with the owner; if it overruns, Friday is the buffer, and the window may not be left open overnight with the battery red.
+Stop rules: a failed deploy check (step 2) or a red battery item (step 3) stops the sitting before steps 4-5; decide there between fix-forward and rollback (procedure above; rollback is its own half-day). Steps 4-5 are not run on a portal whose battery is not green. Total about 4.6-5.6 h with the owner (sum of the step times; the owner's estimate is about 5.5 h); if it overruns, Thursday 2026-11-12 is the buffer (document time moves to Friday), and the window may not be left open overnight with the battery red.
 
 ## Effect on the documents
 
@@ -120,11 +122,11 @@ Genie Code build and verification time, plus owner time, in hours.
 Elapsed: 3 working days if the owner is available for review, redeploy, battery and the browser at each gate.
 
 **Gates:**
-* Wed 2026-11-11, end of day: a-d built and CI green; (e) in progress; diffs with the owner.
-* Thu 2026-11-12, DEPLOY GATE: ON (owner 2026-11-10). a-e all built, a day early (pushed through `64e7f8a`). With the owner's go at the start of the session, everything below in ONE sitting (see "Thursday session").
+* Wed 2026-11-11, DEPLOY GATE: ON, moved here from Thursday (owner 2026-11-10). a-e and the polish round all built and pushed (through `1a877e3`). With the owner's go at the start of the session, everything in ONE sitting of about 5.5 h (see "Deploy sitting Wednesday 2026-11-11").
+* Thu 2026-11-12: document time (evidence export, INDEX, plan, deliverable text; document apply of the routing spec once what shipped is known). Also the fallback day for the sitting (see above).
 * Without the go: nothing is deployed and the cost is build time only.
 * Document apply: HELD until after the gate (owner, 2026-11-10). Six routing rows (D03, D04, P14, D06c, D13, D15b) and hand-edit H1 depend on what ships. The diff review is finished now; the dry run is re-run and applied once, when we know what shipped.
-* Fri 2026-11-13: buffer for evidence export and indexing if Thursday overruns. Row 10 and the browser demo moved into the Thursday sitting.
+* Fri 2026-11-13: buffer if the sitting or the document day overruns. Row 10 and the browser demo are in the deploy sitting.
 * Sat 2026-11-14: buffer only; end of day is the hard cutoff for a deployed build (rollback above).
 
 **Main risk:** compute. On 2026-11-10, repeated executeCode timeouts cost more than an hour and destroyed the dev environment. Every gate assumes a working cluster.

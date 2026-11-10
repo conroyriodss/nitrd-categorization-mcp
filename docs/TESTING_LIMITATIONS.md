@@ -39,7 +39,7 @@ The skipped parts run only in the adversarial venv (openai-agents 0.24.0, openai
 * Edited 2026-11-10 by Genie Code, in commit `64e7f8a` (Portal (e2), F5).
 * What the edited assertion claims: on the live review page for FY2021 NIBIB U01 as `demo_ic_rep_nibib`, there is no decision form (`class="decide"` absent), and the number of `class="decide-link"` links equals the number of records classified ok in that run. Before the edit it claimed the number of `class="decide"` forms equals that count.
 * Status: NEVER EXECUTED, before or after the edit (owner, 2026-11-10; no committed record shows a run). The offline test `test_persona_view_enables_controls_only_for_assignee` covers the same rule on the fake harness (41 links, no form) and has run; the live assertion has not.
-* To close: run it once in the Thursday 2026-11-12 session (it writes 41 sandbox rows and cleans up; owner's go needed), and record the run here. Until then it counts as not run.
+* To close: run it once, as the last step of the deploy sitting (Wednesday 2026-11-11, moved from Thursday 2026-11-12) (it writes 41 sandbox rows and cleans up; owner's go needed), and record the run here. Until then it counts as not run.
 
 ## Pattern
 

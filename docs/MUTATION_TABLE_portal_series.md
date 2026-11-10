@@ -1,4 +1,4 @@
-# Mutation table: portal change series a-e (review artifact for the 2026-11-12 deploy gate)
+# Mutation table: portal change series a-e (review artifact for the 2026-11-11 deploy gate)
 
 All rows re-run fresh on 2026-11-10 by Genie Code, in `/tmp` copies made with `git archive`, `PYTHONPATH=<copy>/src`, never in the workspace. Interpreter: `/tmp/nitrd-dev` (uv.lock install).
 

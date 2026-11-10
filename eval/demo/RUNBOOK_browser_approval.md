@@ -238,7 +238,7 @@ reason that is not the one under test. Before changing the award, check its
 FY in `users.conroyri.nitrd_hackathon_v1_exporter_projects` and record it
 here. 10213736 is FY2021 (read from that table on 2026-11-10).
 
-## After-half via the view (Thursday 2026-11-12 session, if (e) is deployed)
+## After-half via the view (deploy sitting, Wednesday 2026-11-11, moved from Thursday 2026-11-12; if (e) is deployed)
 
 Pre-registered: this section is committed before the click.
 
