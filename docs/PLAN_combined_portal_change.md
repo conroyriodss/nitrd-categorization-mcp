@@ -78,6 +78,8 @@ How long (measured records, owner 2026-11-10):
 
 ## Deploy sitting Wednesday 2026-11-11 (one sitting, owner present; moved from Thursday 2026-11-12 by the owner on 2026-11-10)
 
+CONFIRMED by the owner, 2026-11-10. Order as in the table: owner's go; build the `-next` folder; deploy; battery; row 10 through the view; browser demo after-half; cleanup and evidence; L-T3 last if time allows. Stop rules stand: a failed deploy check or a red battery item halts before row 10, and fix-forward or rollback is decided there.
+
 Readiness checked 2026-11-10 by Genie Code: nothing left to build. Everything to deploy is pushed (remote main read back after each push). What Genie Code cannot check: CI on GitHub for the deploy commit (no GitHub access from here; the owner reads it at step 0) and the owner's calendar. Fallback if either fails on Wednesday morning: the sitting runs Thursday 2026-11-12 as previously planned, and the document day moves to Friday.
 
 Order is fixed; each step starts only when the previous one is recorded. Times from the measured records above.
@@ -123,7 +125,7 @@ Elapsed: 3 working days if the owner is available for review, redeploy, battery 
 
 **Gates:**
 * Wed 2026-11-11, DEPLOY GATE: ON, moved here from Thursday (owner 2026-11-10). a-e and the polish round all built and pushed (through `1a877e3`). With the owner's go at the start of the session, everything in ONE sitting of about 5.5 h (see "Deploy sitting Wednesday 2026-11-11").
-* Thu 2026-11-12: document time (evidence export, INDEX, plan, deliverable text; document apply of the routing spec once what shipped is known). Also the fallback day for the sitting (see above).
+* Thu 2026-11-12: document day (owner 2026-11-10). (1) The held routing-spec apply (`submission/apply/routing_spec_11-06b.json`): re-run the dry run against what shipped, then apply once. (2) The six rows that depend on what ships: D03, D04, P14, D06c, D13, D15b. (3) The hand-edit list, including H1. (4) The explainability slide for 10388671, queued since Sunday 2026-11-08. Also the fallback day for the sitting (see above).
 * Without the go: nothing is deployed and the cost is build time only.
 * Document apply: HELD until after the gate (owner, 2026-11-10). Six routing rows (D03, D04, P14, D06c, D13, D15b) and hand-edit H1 depend on what ships. The diff review is finished now; the dry run is re-run and applied once, when we know what shipped.
 * Fri 2026-11-13: buffer if the sitting or the document day overruns. Row 10 and the browser demo are in the deploy sitting.
