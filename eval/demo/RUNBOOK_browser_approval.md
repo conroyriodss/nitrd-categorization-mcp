@@ -226,3 +226,36 @@ From the code:
 10213736, FY2021, NEI (EY), P30. (owner; the seed script line 41 confirms
 APPL_ID = 10213736; the verify script's docstring confirms the prompt uses
 10213736.)
+
+**FY constraint (owner, 2026-11-10): the demo award MUST be FY2015-FY2021.**
+The portal's one-request view (`/operator/request/{request_id}`) refuses a
+reserved fiscal year (FY2022-FY2026, `shared.guardrail`). The draft path has
+no year bound: the agent can draft, and the portal tool will create, a request
+for an FY2022 or FY2023 ExPORTER record (checked 2026-11-10; see
+`docs/PLAN_combined_portal_change.md`, known edge E-FY). Such a request is
+created pending but the view refuses it, so the after-half would fail for a
+reason that is not the one under test. Before changing the award, check its
+FY in `users.conroyri.nitrd_hackathon_v1_exporter_projects` and record it
+here. 10213736 is FY2021 (read from that table on 2026-11-10).
+
+## After-half via the view (Thursday 2026-11-12 session, if (e) is deployed)
+
+Pre-registered: this section is committed before the click.
+
+1. Steps 1-3 as above (precheck, /ask, capture the draft id). The award is
+   the demo award above (FY2015-FY2021 only).
+2. Before the click, record the expected request_id: uuid5(REQUEST_NAMESPACE,
+   `agent-draft:<draft_id>`) (step 4, predict, prints it).
+3. Step 5, click Approve.
+4. Open `/operator/request/<request_id>` in the same browser. Expected: HTTP
+   200; one card, `data-state="pending"`; `data-source="other"` with the key
+   kind `agent-draft:`; assignee as predicted. Read-only without a persona.
+5. Record the page (save or paste) with the time; then steps 6, 6b, 7, 7b, 8.
+
+This shows reachability only (the step 3 acceptance test). Prefix vs cap stays
+settled by code inspection.
+
+Stop conditions for the after-half: a 404 means the request_id prediction or
+the write is wrong; a `reserved_year` refusal means the award choice broke
+the FY constraint above. Report either; do not retry with another award in
+the same session without the owner.

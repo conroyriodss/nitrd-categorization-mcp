@@ -33,6 +33,14 @@ The skipped parts run only in the adversarial venv (openai-agents 0.24.0, openai
 | 1 | `test_portal_tools.py:351` | live sandbox writes not enabled |
 
 
+## L-T3. Edited but never executed: the live-write submission assertion (2026-11-10)
+
+* Test: `tests/test_portal_submission.py::test_live_fy2021_nibib_u01_submit_writes_exactly_41` (skipped unless `PORTAL_LIVE_WRITE_TESTS=1` and a warehouse are set; one of the two live-write skips in L-T2).
+* Edited 2026-11-10 by Genie Code, in commit `64e7f8a` (Portal (e2), F5).
+* What the edited assertion claims: on the live review page for FY2021 NIBIB U01 as `demo_ic_rep_nibib`, there is no decision form (`class="decide"` absent), and the number of `class="decide-link"` links equals the number of records classified ok in that run. Before the edit it claimed the number of `class="decide"` forms equals that count.
+* Status: NEVER EXECUTED, before or after the edit (owner, 2026-11-10; no committed record shows a run). The offline test `test_persona_view_enables_controls_only_for_assignee` covers the same rule on the fake harness (41 links, no form) and has run; the live assertion has not.
+* To close: run it once in the Thursday 2026-11-12 session (it writes 41 sandbox rows and cleans up; owner's go needed), and record the run here. Until then it counts as not run.
+
 ## Pattern
 
 This is the fifth recorded instance of a test reported, or relied on, without having run. The earlier one on this same test is the 2026-11-09 correction in `docs/PLAN_fix_c.md`. Rule: a skip counts as not run, and "CI green" never stands for the four skipped items above. Open: no committed record shows any of the four run after 2026-11-09; re-running them in a rebuilt adversarial venv before the deliverables close is the owner's call.
