@@ -886,6 +886,72 @@ def _terms(weights: list[Any]) -> str:
     )
 
 
+def is_function_term(term: str) -> bool:
+    """F2: the term starts or ends with a function word (guide.FUNCTION_WORDS)."""
+    words = term.lower().split()
+    return bool(words) and (
+        words[0] in guide.FUNCTION_WORDS or words[-1] in guide.FUNCTION_WORDS
+    )
+
+
+def _shown(weights: list[Any]) -> tuple[str, int]:
+    """(rendered kept terms, number hidden as function-word terms)."""
+    kept = [w for w in weights if not is_function_term(w.term)]
+    hidden = len(weights) - len(kept)
+    if weights and not kept:
+        return f"all {hidden} hidden as function-word terms", hidden
+    return _terms(kept), hidden
+
+
+def rationale_terms(ev: Any) -> str:
+    """The term-weight lines of the card's Rationale.
+
+    Term weights: classifier_explain for NITRD calls, the parent call's
+    top_features otherwise (cohort.evidence_from_results). top_features holds
+    positive contributions only, so on any other card "Against" was never
+    computed and must not read as "none" (F3). Terms are shown only in the
+    near-threshold bands, and function-word terms are hidden with a count
+    (F2). All from SESSION_2026-11-08; display only.
+    """
+    band = str(getattr(ev.parent.band, "value", ev.parent.band))
+    if band not in guide.TERM_BANDS:
+        return (
+            f'<p class="muted terms-gated" data-band="{esc(band)}">Term weights '
+            f"are shown only for near-threshold calls ({guide.NEAR_LOW} to "
+            f"{guide.NEAR_HIGH}); this call is <code>{esc(band)}</code>.</p>"
+        )
+    toward, against = ev.explain.toward, ev.explain.against
+    toward_txt, hid_t = _shown(toward)
+    against_txt, hid_a = _shown(against)
+    if ev.parent.suggestion == "nitrd":
+        lines = (
+            f'<p class="toward">Toward NITRD: {toward_txt}</p>'
+            f'<p class="against">Against: {against_txt}</p>'
+            if toward or against
+            else '<p class="muted no-terms">No term weights stored.</p>'
+        )
+    else:
+        lines = (
+            '<p class="toward outweighed">Pointed toward NITRD but were '
+            f"outweighed: {toward_txt}</p>"
+            if toward
+            else '<p class="muted no-terms">No term weights stored.</p>'
+        ) + (
+            f'<p class="against">Against: {against_txt}</p>'
+            if against
+            else '<p class="muted against-not-computed">Terms against NITRD: '
+            "not computed. Only NITRD suggestions get a full term "
+            "explanation.</p>"
+        )
+    hidden = hid_t + hid_a
+    if hidden:
+        lines += (
+            f'<p class="muted hidden-terms" data-hidden="{hidden}">{hidden} '
+            "function-word term(s) hidden; see How to read this card.</p>"
+        )
+    return lines
+
+
 def _classification(r: ReviewRequestRecord, view: View) -> str:
     if r.classification_status == ClassificationStatus.FAILED:
         actor = view.persona or settings.operator_persona
@@ -960,33 +1026,7 @@ def _classification(r: ReviewRequestRecord, view: View) -> str:
         if prior.years
         else ""
     )
-    # Term weights: classifier_explain for NITRD calls, the parent call's
-    # top_features otherwise (cohort.evidence_from_results). top_features
-    # holds positive contributions only, so on any other card "Against" was
-    # never computed and must not read as "none" (F3, SESSION_2026-11-08).
-    explained = ev.explain.toward or ev.explain.against
-    if ev.parent.suggestion == "nitrd":
-        terms = (
-            f'<p class="toward">Toward NITRD: {_terms(ev.explain.toward)}</p>'
-            f'<p class="against">Against: {_terms(ev.explain.against)}</p>'
-            if explained
-            else '<p class="muted no-terms">No term weights stored.</p>'
-        )
-    else:
-        toward = (
-            '<p class="toward outweighed">Pointed toward NITRD but were '
-            f"outweighed: {_terms(ev.explain.toward)}</p>"
-            if ev.explain.toward
-            else '<p class="muted no-terms">No term weights stored.</p>'
-        )
-        against = (
-            f'<p class="against">Against: {_terms(ev.explain.against)}</p>'
-            if ev.explain.against
-            else '<p class="muted against-not-computed">Terms against NITRD: '
-            "not computed. Only NITRD suggestions get a full term "
-            "explanation.</p>"
-        )
-        terms = toward + against
+    terms = rationale_terms(ev)
     continuing = str(prior.continuing).lower()
     # F4 (SESSION_2026-11-08): prior-year history above the term rationale;
     # the participant named it the most useful signal on the card.

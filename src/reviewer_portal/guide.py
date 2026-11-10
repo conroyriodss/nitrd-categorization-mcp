@@ -38,6 +38,18 @@ ARM_A = (
     "on FY2021 labels)"
 )
 NEAR_LOW, NEAR_HIGH = 0.1, 0.7  # cohort.CLEAR_NEGATIVE, cohort.HIGH (test-pinned)
+#: F2 (SESSION_2026-11-08): bands whose cards show term weights.
+TERM_BANDS = ("positive_near_threshold", "negative_near_threshold")
+#: F2 display constant, disclosed in the card help: a term that starts or ends
+#: with one of these words is hidden from the card and counted. The terms are
+#: real model contributions; hiding them is a presentation choice.
+FUNCTION_WORDS = frozenset(
+    (
+        "a an the and or but nor of in on at to for from by with into onto "
+        "through over under about as than that this these those which while "
+        "is are was were be been being it its we our their there"
+    ).split()
+)
 SELECT_PATH = "/operator/select"
 TASK3_DIR = Path(__file__).resolve().parent / "resources" / "task3"
 TASK3_TOP = 25
@@ -224,7 +236,12 @@ def card_help() -> str:
         "<li><strong>Toward / Against</strong>: the terms that moved the "
         "probability most. On a not-NITRD card only the terms that pointed "
         "toward NITRD and were outweighed are stored; terms against NITRD "
-        "are not computed there, so their absence means nothing.</li>"
+        "are not computed there, so their absence means nothing. Terms are "
+        "shown only for near-threshold calls ("
+        f"{NEAR_LOW} to {NEAR_HIGH}). A term that starts or ends with a "
+        "function word is hidden and counted; these are real model "
+        "contributions, hidden for readability. Function words: "
+        f"{esc(', '.join(sorted(FUNCTION_WORDS)))}.</li>"
         "<li><strong>Continuing / New core</strong>: whether RCDC has earlier "
         "records for this core. The model is weaker on new cores (FY2019 "
         "validation half: PR-AUC 0.862 overall, 0.720 on new cores).</li></ul>"
