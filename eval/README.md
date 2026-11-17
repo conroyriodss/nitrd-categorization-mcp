@@ -7,9 +7,9 @@ evaluations.
 
 The evidence consists of an automated pytest suite (offline and live modes),
 an offline evaluation of the parent classifier on a held-out validation half,
-four analysis reports, and a live run of all ten steps of the end-to-end
-sequence on three demo projects. **No agent-level evaluation runs have been
-executed.** How each output would be fully validated, and what is still
+four analysis reports, a live run of all ten steps of the end-to-end
+sequence on three demo projects, and agent-level suites on tool selection
+and prompt injection. **Agent-level results** (see [`agent/README.md`](agent/README.md)): functional suite `aes-functional-v1` at ceiling on two models (50/50, Wilson 95% [0.929, 1.000]); injection suite `adv-injection-v1` (120 runs, one model, one payload family): 0/50 exposed attack runs succeeded, Wilson [0, 0.071]; flagging inconsistent at 10/60 by manual read. The suites measure tool calls and identifiers, not answer quality; no write tool was offered in the injection suite; the human-approval step used the harness except where rows 10-12 record a real person. How each output would be fully validated, and what is still
 missing, is in [`EVALUATION_FRAMEWORK.md`](EVALUATION_FRAMEWORK.md); a
 45-project blinded judging exercise is specified in
 [`GROUND_TRUTH_VALIDATION_PROTOCOL.md`](GROUND_TRUTH_VALIDATION_PROTOCOL.md)

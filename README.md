@@ -39,8 +39,7 @@ An implementation, a scripted end-to-end test, an agent evaluation, and a human-
 
 ## Submission map: three public repositories
 
-This repository is the primary submission. Everything a reviewer needs to check the claims is in
-these three public repositories; nothing requires access to the Databricks workspace.
+This repository is the primary submission. The three public repositories below contain the code, the exported run evidence, the sealed evaluation workflow, and the witness records. A reviewer can check commit ordering, hash integrity, the read guard, the pre-registration chain, and the FY2024 scoring from the repositories alone. **What is not in the repositories:** the per-record validation predictions, the fingerprint seed files, the held-out answer keys (published only as SHA-256 hashes), and the live Databricks Apps (behind workspace OAuth). Those require either workspace access or trust in the published hashes and exported records.
 
 | Repository | Role | Start with |
 | --- | --- | --- |
@@ -68,8 +67,7 @@ in public commits, as a chain of hashes:
    witnessed, before the key is opened.
 4. The key published after scoring must hash to step 1.
 
-Steps 1-2 and the predictions are committed. The pre-registration freeze and its witness record are
-pending (target 2026-11-07). The status table is in the
+Steps 1-3 are committed. The pre-registration freeze and its witness record were completed on 2026-11-04 (`uac-nitrd` commit `8409dc3`). Step 4 (opening the key and scoring) was done on 2026-11-04 for FY2024 Tier 2 (witness record 0005); FY2026 Tier 1 remains sealed. **What a reader can check today:** steps 1-3 and the FY2024 scoring are in public commits; the sealed key's SHA-256 matches the pre-scoring hashes in `uac-witness`. **What a reader cannot check from the repositories:** the sealed volume itself (the answer keys) is not published; a reader must take on trust that the published hash matches an unpublished file. The per-record validation predictions and the fingerprint seed files are also unpublished (see `eval/EVALUATION_FRAMEWORK.md`). The full status table is in the
 [uac-nitrd README](https://github.com/conroyriodss/uac-nitrd#verifying-the-blind-evaluation-from-the-repositories-alone).
 
 ## Submission status
@@ -86,7 +84,7 @@ restating it. Updated 2026-11-03.
 | Software tests | Offline: 476 passed, 19 skipped, 1 xfailed (2026-11-03). Open work before the Apps freeze: [docs/PRE_SUBMISSION_CHECKLIST.md](docs/PRE_SUBMISSION_CHECKLIST.md). Live write mode, last recorded run: 472 tests, 0 failures, 1 skipped (2026-11-02, [junit](eval/results/step_g/2026-11-02T2058Z_g5_write_mode/)). GitHub Actions CI passes on `main`. | Skips are live-mode, opt-in sandbox-write and optional parity tests. Test results are separate from model and agent performance. |
 | End-to-end sequence (updated 2026-11-09) | All 10 steps pass on three demo projects in-process and over HTTP against the deployed Apps on the shipped build ([run record](eval/results/runs/20261109T2150Z_e2e_d08b246f/); portal `d7bad89`, outputs and classifier `95e5dea`, runner `6056f37`). Earlier, with all five apps at `95e5dea`: [e1969ce8](eval/results/runs/20261106T2038Z_e2e_e1969ce8/) | Scripted tool calls, not an agent choosing tools. |
 | Databricks Apps deployment (updated 2026-11-09) | Three MCP Apps, the e2e runner App and the agent App deployed and running, at three commits: reviewer portal and agent `d7bad89` (fix (c), the approver check), e2e runner `6056f37` (test-only changes on top of `d7bad89`), outputs and classifier `95e5dea` (unchanged since 2026-11-06) | All 14 tools answer byte-identically to in-process code over HTTP, 71/71 cases, on this build ([run record](eval/results/runs/20261109T2147Z_parity_47501246/), [tool utilization](eval/results/tool_utilization.md), both from run `47501246`). Earlier, with all five apps at `95e5dea`: [d2ddab69](eval/results/runs/20261106T2041Z_parity_d2ddab69/). The runner ([`deploy/databricks/e2e_runner/`](deploy/databricks/e2e_runner/)) uses its own service principal. |
-| Agent-level tool selection and task completion | Not measured | No agent-level runs. The tool descriptions are written for LLM tool selection ([ARCHITECTURE.md](ARCHITECTURE.md#tools-as-goals)), but whether an agent picks the right tools has not been measured. |
+| Agent-level tool selection and task completion | Measured, with boundaries | Functional suite `aes-functional-v1`: 50/50 on each of two models, Wilson 95% [0.929, 1.000]; both reach the ceiling, so the suite does not discriminate. Injection suite `adv-injection-v1` (120 runs, one model, one payload family): 0/50 exposed attack runs succeeded, Wilson [0, 0.071]; flagging inconsistent (10/60 by manual read, 0/60 by the scorer's regex). No write tool was offered in the injection suite, so approval bypass was not tested. The suites measure tool calls and identifiers, not answer quality. The human-approval step used the harness standing in for a person, except rows 10-12 ([`eval/results/auth/`](eval/results/auth/)) which record a real one. See [`eval/agent/README.md`](eval/agent/README.md) and [`eval/adversarial/SPEC_adv-injection-v1.md`](eval/adversarial/SPEC_adv-injection-v1.md). |
 | Ground-truth validation (45 projects) | Sample drawn, judging not started | Pre-specified protocol: [eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md](eval/GROUND_TRUTH_VALIDATION_PROTOCOL.md). One reviewer, blinded to model outputs and RCDC labels. |
 
 ## Problem and mission value

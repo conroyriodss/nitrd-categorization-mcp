@@ -63,17 +63,11 @@ servers run as whoever's Databricks credentials are in the environment. Callers
 reach a deployed App through workspace OAuth; the App does not see or act with
 the caller's own data permissions.
 
-**Reviewer identity (who the tool says is acting).** There is **no end-user
-authentication**. `reviewer_id` is an ordinary tool parameter. It must match
-the persona ID pattern and the allow-list of nine **fictional** personas in
-[`src/reviewer_portal/resources/personas.json`](src/reviewer_portal/resources/personas.json)
-(`demo_po_*`, `demo_ic_rep_*`, `demo_sia`). That checks roster membership
-only. Any caller who can reach the portal can submit or decide as any persona.
-Persona IDs do not correspond to or authenticate real people.
+**Reviewer identity (who the tool says is acting).** `reviewer_id` is an ordinary tool parameter — there is no per-persona authentication. It must match the persona ID pattern and the allow-list of nine **fictional** personas in [`src/reviewer_portal/resources/personas.json`](src/reviewer_portal/resources/personas.json) (`demo_po_*`, `demo_ic_rep_*`, `demo_sia`). That checks roster membership only; persona IDs do not correspond to or authenticate real people.
 
-Before any non-demonstration use, reviewer actions would need authenticated
-identities, per-action authorization, and an audit trail bound to the
-authenticated principal, not to a parameter.
+**Approver check (fix (c), deployed at `d7bad89`).** Every review decision passes through `approvers.require_approver` (`src/reviewer_portal/approvers.py`) before anything else is read or written. This check reads `x-forwarded-email` — set by the Databricks Apps proxy from the caller's authenticated workspace identity — and compares it (case-insensitive, after strip) against `NITRD_APPROVERS`. If the set is empty or the header is absent or the caller is not listed, the decision is refused with a uniform message; the reason and the received value are logged server-side only. A service principal's `x-forwarded-email` is its application-id UUID, so no SP is in the set unless explicitly listed. Evidence: deployed SP refusal logged as `not_in_set` in lifecycle run `3174122a` (`eval/results/auth/20261109_row9_approver_refused_3174122a.json`); a listed person's decision accepted in rows 10-11 (`eval/results/auth/20261109_row10_operator_decide.json`, `20261109_row11_agent_approve.json`); header integrity confirmed (`eval/results/auth/20261109_header_integrity_whoami.json`).
+
+**What the approver check does not cover.** The check gates decisions, not submissions. Any caller who can reach the portal can still submit a review request (create a pending row) as any persona — the `reviewer_id` on a submission is not authenticated. The agent's own service principal can create pending requests through the tool path (row 11 records this). The check also does not bind the `reviewer_id` to the authenticated caller: a listed person can decide under any persona. Per-persona authentication, per-action authorization tied to the authenticated principal, and a tamper-evident audit trail would all be needed before any non-demonstration use.
 
 ## Three trust boundaries
 
