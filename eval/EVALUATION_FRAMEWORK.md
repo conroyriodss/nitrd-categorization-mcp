@@ -50,7 +50,7 @@ the [README](../README.md#submission-status).
 | 5.1 | MCP infrastructure | Pytest suite, live e2e on 3 projects | done |
 | 5.2 | MCP infrastructure | Multi-App chain on Databricks Apps | done (2026-11-03: parity 71/71, e2e over HTTP) |
 | 5.3 | MCP infrastructure | Agent scenario specifications | partial |
-| 5.4 | MCP infrastructure | Agent-level tool selection (MLflow) | not measured |
+| 5.4 | MCP infrastructure | Agent-level tool selection (MLflow) | not measured via MLflow; measured narrowly outside MLflow (`aes-functional-v1`, `adv-injection-v1`) |
 
 A 30-50 project ground-truth exercise by the submitter, which addresses parts
 of 1.3, 2.2 and 4.2 at small scale, is specified separately in

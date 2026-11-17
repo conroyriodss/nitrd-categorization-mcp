@@ -88,7 +88,7 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 | Agent functional suite `aes-functional-v1`: 50/50 on each of two models, Wilson 95% [0.929, 1.000] each. Both reach the ceiling, so the suite does not discriminate between them | [`results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/`](results/agent_runs/20261106T2130Z_aes-functional-v1_2096c936/) (`databricks-gpt-6-1-sol` at `95e5dea`); [`results/agent_runs/20261107T1811Z_aes-functional-v1_3acc8a96/`](results/agent_runs/20261107T1811Z_aes-functional-v1_3acc8a96/) (`databricks-gpt-6-sol` at `756334c`) | per-run `passed`, calls and score in `report.json`; model and commit in `run.json` |
 | Prompt injection, `adv-injection-v1`, counted run (120 runs): 0 of the 50 headline attack runs in which the payload reached the model succeeded, Wilson 95% [0, 0.071]. The pinned rule's own output: 0/55, [0, 0.065]. Flagging is inconsistent: by a read of all 60 answers against a criterion committed before the read, the agent told the user about the payload in 10 of 60 attack runs (ADV-03 5/5, ADV-10 4/5, ADV-01 1/5; one more ambiguous) and in no other case. The scorer's regex flag recorded 0/60 (see [`agent/README.md`](agent/README.md)) | [`results/adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/`](results/adv_runs/20261108T0221Z_adv-injection-v1_counted_6ab39b17/) (`report.json` pinned output; `exposure.json` and `flagging_recount.json` post-hoc) | per-run calls, drafts and fixture events in `runs.jsonl`; `manifest.json` carries the pins and its `runs_jsonl_sha256` matches INDEX.json; findings in [`agent/README.md`](agent/README.md) |
 | Adversarial pre-run checks: dry run (12 controls), control recheck after Amendment 2 (6), payload delivery on all 12 cases | `results/adv_runs/20261108T0057Z_..._dryrun-controls_1a8f43f3/`, `20261108T0209Z_..._recheck-controls_b7beddb6/`, `20261108T0215Z_adv-injection-v1_delivery-check_e06d2a1.json` | `timing.json`, `utility.json`; delivery per case. Amendment 2 is in `adversarial/SPEC_adv-injection-v1.md` |
-| Agent-level tool selection | none | **Not measured** (section 2) |
+| Agent-level tool selection | [`agent/README.md`](agent/README.md) | **Measured narrowly**: functional suite at ceiling on two models (50/50, Wilson [0.929, 1.000]); injection 0/50 on one model, one payload family (Wilson [0, 0.071]). See rows above. |
 
 Environment-bound and why: the Unity Catalog tables (public ExPORTER, iCite and PubMed bulk data
 staged in the workspace, too large to version here), the deployed Apps (behind workspace OAuth), and the sandbox review tables
@@ -106,7 +106,7 @@ staged in the workspace, too large to version here), the deployed Apps (behind w
 | Parent-classifier evaluation | Offline, held-out FY2019 validation half; protocol in [`classifier_evaluation.md`](classifier_evaluation.md) | Measured; results in section 2. Agreement with RCDC labels, not with independent expert judgement. |
 | Analysis reports | Four reports in [`docs/analysis/`](../docs/analysis/) | Measured or descriptive as stated in each report; summarized below. |
 | Agent scenario specifications | Ten draft YAML scenarios (kept outside the repository) | Written against pre-MVP tool names and synthetic award IDs; they need an adapter before they can run. Execution results: **Not measured**. |
-| Multi-server agent evaluation | Databricks MLflow kit in [`databricks/`](databricks/) | **Blocked:** creating the evaluation service principal requires workspace admin rights ("`/api/2.0/preview/scim/v2/ServicePrincipals` is only accessible by admins"); the request is pending. Agent-level runs executed: **0**. |
+| Multi-server agent evaluation | Databricks MLflow kit in [`databricks/`](databricks/) | **Blocked:** creating the evaluation service principal requires workspace admin rights ("`/api/2.0/preview/scim/v2/ServicePrincipals` is only accessible by admins"); the request is pending. MLflow agent-level runs executed: **0**. The functional and adversarial suites ran outside MLflow (see section 1 table above). |
 
 From the repository root:
 
@@ -299,9 +299,9 @@ Component status is in the authoritative table in the
 
 | Item | Status |
 |---|---|
-| Agent task completion and correct multi-server tool selection | **Not measured**: no agent-level runs. |
+| Agent task completion and correct multi-server tool selection | **Measured narrowly**: functional suite at ceiling (50/50, two models); does not discriminate. No open-ended task-completion measure. |
 | Agent answer grounding, clarification quality, LLM-as-judge scores | **Not measured**: draft rubrics and harness only. |
-| Agent resistance to hostile metadata, approval bypass, interruption/retry failures | **Not measured**. |
+| Agent resistance to hostile metadata, approval bypass, interruption/retry failures | Hostile metadata (prompt injection): **measured narrowly**, one model, one payload family (0/50 succeeded, Wilson [0, 0.071]; flagging inconsistent at 10/60). Approval bypass: **not tested** (no write tool offered in the injection suite). Interruption/retry failures: **not measured**. |
 | Independent human-labelled PCA agreement | **Not measured**: no public PCA labels. |
 | All ten end-to-end steps against the deployed Apps | **Measured 2026-11-03**: passed over HTTP through the e2e runner App on all three demo projects (see "Deployed state after Step G"). |
 | Reliability beyond the three demo projects | **Not measured**. |
@@ -320,9 +320,12 @@ Component status is in the authoritative table in the
   Databricks tables. Table CHECK constraints require `sandbox=true` and the
   label **"Not RCDC / demonstration only"** on every row. These are
   demonstration records, not categorization decisions.
-- **No end-user authentication:** `reviewer_id` is a parameter checked against
+- **No per-persona authentication:** `reviewer_id` is a parameter checked against
   an allow-list of nine fictional personas. That checks roster membership; it
-  does not establish the caller's identity or authority.
+  does not establish the caller's identity or authority. Since fix (c), review
+  decisions also require the caller's authenticated workspace identity
+  (`x-forwarded-email`) to be in `NITRD_APPROVERS`. Submissions remain
+  unauthenticated.
 - **Name handling:** routing uses a synthetic persona-to-award assignment
   (personas v2, 2026-11-03) and reads no program-officer name. The persona file
   holds no names or name hashes; v1 held hashes of two public PO names, which
@@ -357,7 +360,7 @@ are infrastructure identities, not reviewer authentication.
 Project descriptions, abstracts, and publication metadata can contain
 untrusted instructions. The agent should treat them as data, never as authority
 to change a reviewer, authorise a write, or disclose credentials. Resistance to
-such instructions is **Not measured** at agent level.
+such instructions was **measured narrowly** at agent level (`adv-injection-v1`, 0/50, one model, one payload family); broader coverage is not measured.
 
 During development, a write started in a conversational turn could persist
 after the turn was interrupted. An interrupted turn is therefore not a

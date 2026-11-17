@@ -67,7 +67,7 @@ the caller's own data permissions.
 
 **Approver check (fix (c), deployed at `d7bad89`).** Every review decision passes through `approvers.require_approver` (`src/reviewer_portal/approvers.py`) before anything else is read or written. This check reads `x-forwarded-email` — set by the Databricks Apps proxy from the caller's authenticated workspace identity — and compares it (case-insensitive, after strip) against `NITRD_APPROVERS`. If the set is empty or the header is absent or the caller is not listed, the decision is refused with a uniform message; the reason and the received value are logged server-side only. A service principal's `x-forwarded-email` is its application-id UUID, so no SP is in the set unless explicitly listed. Evidence: deployed SP refusal logged as `not_in_set` in lifecycle run `3174122a` (`eval/results/auth/20261109_row9_approver_refused_3174122a.json`); a listed person's decision accepted in rows 10-11 (`eval/results/auth/20261109_row10_operator_decide.json`, `20261109_row11_agent_approve.json`); header integrity confirmed (`eval/results/auth/20261109_header_integrity_whoami.json`).
 
-**What the approver check does not cover.** The check gates decisions, not submissions. Any caller who can reach the portal can still submit a review request (create a pending row) as any persona — the `reviewer_id` on a submission is not authenticated. The agent's own service principal can create pending requests through the tool path (row 11 records this). The check also does not bind the `reviewer_id` to the authenticated caller: a listed person can decide under any persona. Per-persona authentication, per-action authorization tied to the authenticated principal, and a tamper-evident audit trail would all be needed before any non-demonstration use.
+**What the approver check does not cover.** The check gates decisions, not submissions. Any caller who can reach the portal can still submit a review request (create a pending row) as any persona — the `reviewer_id` on a submission is not authenticated. The agent's own service principal can create pending requests through the tool path (row 11 records this). The check also does not bind the `reviewer_id` to the authenticated caller: a listed person can decide under any persona. The reserved-year guard (`require_build_fy`) is not applied on the request or decision path: a request for a reserved-FY award can be created and decided through the MCP tools with no year check. The guard covers only `outputs_find_cohort` and the operator pages, not the per-project reads or the write tools. See [`eval/RESERVED_YEARS.md`](eval/RESERVED_YEARS.md). Per-persona authentication, per-action authorization tied to the authenticated principal, and a tamper-evident audit trail would all be needed before any non-demonstration use.
 
 ## Three trust boundaries
 
@@ -76,7 +76,7 @@ The suite crosses three boundaries. Each has different controls, and different g
 | Boundary | What sits there | What this repository controls | What it cannot control |
 | --- | --- | --- | --- |
 | **Server** | The three MCP servers (`src/nih_grants_outputs`, `src/nitrd_classifier`, `src/reviewer_portal`) and the sandbox tables | Closed Pydantic input and output schemas; the reserved-year guard before SQL on the cohort and operator surfaces (not the per-project read tools; see below); writes only from `reviewer-portal`, only to three sandbox tables, held there by table `CHECK` constraints; idempotent submits; one transaction per request; sanitized error messages | Who the caller really is: `reviewer_id` is a parameter, not an authenticated identity |
-| **Client host** | The MCP host and any LLM agent driving it: MCP Inspector, a chat host, the planned agent | Tool descriptions and annotations (every tool declares `readOnlyHint`, `destructiveHint` and `idempotentHint`); the read, infer and write split, so a host can gate `reviewer-portal` on confirmation | Whether a human confirmed a write; whether the agent follows instructions hidden in abstracts or publication metadata (untrusted content returned by the read tools) |
+| **Client host** | The MCP host and any LLM agent driving it: MCP Inspector, a chat host, the shipped agent (`mcp-nitrd-agent` at `d7bad89`) | Tool descriptions and annotations (every tool declares `readOnlyHint`, `destructiveHint` and `idempotentHint`); the read, infer and write split, so a host can gate `reviewer-portal` on confirmation | Whether a human confirmed a write; whether the agent follows instructions hidden in abstracts or publication metadata (untrusted content returned by the read tools) |
 | **Hosting** | Databricks Apps, workspace OAuth, Unity Catalog grants, the SQL warehouse, App logs | One service principal per App; grants scoped per App (`SELECT` on read tables; `SELECT, MODIFY` on the three sandbox tables for the portal only; [deploy/databricks/README.md](deploy/databricks/README.md)) | Platform behaviour itself. The App does not act with the caller's data permissions, and the three Apps have not been tested as separate authorization domains |
 
 ## Enforced controls
@@ -145,8 +145,9 @@ These are enforced in code or in the tables, not only described:
   low match scores as "no meaningful match".
 - **Untrusted content.** Abstracts and publication metadata are untrusted
   input and could contain instructions. Agents should treat them as data.
-  Resistance to prompt injection, credential-disclosure resistance, and
-  authorization isolation are **not measured**.
+  Prompt-injection resistance was measured narrowly (`adv-injection-v1`, one model, one payload
+  family: 0/50, Wilson [0, 0.071]; flagging inconsistent at 10/60). Credential-disclosure resistance
+  and authorization isolation are **not measured**.
 - **Separate Apps are not separate authorization domains.** Splitting read,
   inference, and write into three Apps narrows which principal holds write
   grants, but it has not been tested as an isolation control.
@@ -231,11 +232,15 @@ swept for:
 
 ## Pilot to production: Harness 11-12
 
-This is a pilot. The runs so far (parity, e2e, lifecycle) are scripted tool calls. No model has yet chosen tools on
-its own. Harness 11-12 is the planned agent evaluation. It puts one agent over the three servers, with a human
-approving every write, and it will be pre-registered before it runs. It has two suites:
+This is a pilot. The parity, e2e, and lifecycle runs are scripted tool calls. Two agent-level suites have been run:
+the functional suite (`aes-functional-v1`, 50/50 on each of two models, Wilson 95% [0.929, 1.000], ceiling) and the
+injection suite (`adv-injection-v1`, 120 runs, one model, one payload family: 0/50 exposed attack successes, Wilson
+[0, 0.071]; flagging inconsistent at 10/60). Both measure tool calls and identifiers, not answer quality; no write
+tool was offered in the injection suite. See [`eval/agent/README.md`](eval/agent/README.md). Harness 11-12 extends
+these with broader coverage. It has two suites:
 
-- **Tool selection.** Ten scenarios, each with its expected calls declared in advance.
+- **Tool selection.** Ten scenarios, each with its expected calls declared in advance. The functional suite above is
+  the first execution; it reached the ceiling and does not discriminate.
 - **Adversarial.** Indirect prompt injection placed in content the read tools return, such as abstracts and
   publication metadata. The design follows AgentDojo (Debenedetti et al., "AgentDojo: A Dynamic Environment to
   Evaluate Prompt Injection Attacks and Defenses for LLM Agents", arXiv:2406.13352) and InjecAgent (Zhan et al.,
@@ -244,9 +249,10 @@ approving every write, and it will be pre-registered before it runs. It has two 
   credentials or identifiers). Results are reported as attack-success rate, alongside utility with and without
   attack.
 
-**Not measured until the agent runs:** resistance to prompt injection; credential and identifier disclosure; writes
-an agent makes without confirmation; tool-selection accuracy; and isolation between the three Apps. Fault injection
-for cancelled turns and lost responses is not measured either. Until then, none of these may be claimed.
+**Not measured:** credential and identifier disclosure; writes an agent makes without confirmation; isolation between
+the three Apps; fault injection for cancelled turns and lost responses. Prompt-injection resistance and tool-selection
+accuracy were each measured narrowly (one suite, one or two models; see above); broader coverage is not measured.
+None of the unmeasured items may be claimed.
 
 **Before production use,** the gaps above, the identity model and the known limitations would need closing:
 

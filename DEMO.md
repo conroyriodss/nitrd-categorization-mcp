@@ -1,5 +1,13 @@
 # Demo: a human in the loop on three awards
 
+> **Access note (2026-11-17).** The deployed Apps are behind Databricks workspace OAuth and
+> the workspace's cloud access expires 2026-11-30 — before judging begins. A judge reading this
+> after that date cannot open the Apps. Everything the Apps produce is in the committed run
+> records: [`eval/results/runs/`](eval/results/runs/) (parity, e2e, lifecycle, smoke), the
+> claim-to-artifact map in [`eval/README.md`](eval/README.md#0-claim-to-artifact-map-verifiable-from-this-repository),
+> and the auth evidence in [`eval/results/auth/`](eval/results/auth/). The click-path below
+> documents what was demonstrated; the records document what was observed.
+
 This is the click-path for a live demonstration. It needs workspace access (the deployed Apps are
 behind Databricks OAuth). A judge without access can check the same steps in the recorded runs:
 [`eval/results/runs/`](eval/results/runs/) and the claim-to-artifact map in

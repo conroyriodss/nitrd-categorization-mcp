@@ -148,6 +148,11 @@ afterwards. See [SECURITY.md](SECURITY.md).
 
 ## 7. Connect from a hosted MCP client
 
+> **Access note (2026-11-17).** The deployed Apps below require workspace OAuth;
+> the workspace's cloud access expires 2026-11-30. After that date, use steps 2-6
+> above to run the servers locally. The committed run records in
+> [`eval/results/runs/`](eval/results/runs/) show what the deployed Apps produced.
+
 The three servers are also deployed as Databricks Apps in the hackathon
 workspace, serving streamable HTTP at `/mcp`:
 

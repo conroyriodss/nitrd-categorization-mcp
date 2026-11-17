@@ -73,7 +73,7 @@ Steps 1-3 are committed. The pre-registration freeze and its witness record were
 ## Submission status
 
 This is the authoritative status table; other files link here rather than
-restating it. Updated 2026-11-03.
+restating it. Updated 2026-11-17.
 
 | Component | Status | Scope of the claim |
 | --- | --- | --- |
@@ -221,9 +221,9 @@ this suite.
 
 See [eval/README.md](eval/README.md). In short: software tests, the
 parent-model evaluation, and agent-level evaluation answer different questions
-and are reported separately. No agent-level MLflow run has been completed; the
-repository includes the Databricks MLflow kit, blocked on a service principal
-that requires a workspace administrator.
+and are reported separately. No agent-level MLflow run has been completed (the kit is blocked on a service
+principal that requires a workspace administrator). Agent-level evaluation was
+done outside MLflow: see the status table above.
 
 ### Analysis and evidence
 

@@ -12,7 +12,7 @@
 
 > **Repository note (2026-10-28):** draft outline, kept as markdown reference. Slides 4 and 6 were corrected against [`eval/classifier_evaluation.md`](../eval/classifier_evaluation.md) and [`docs/analysis/scope_vs_learned.md`](analysis/scope_vs_learned.md): 0.862 is the all-records PR-AUC (continuing cores 0.908), FY2019 is split by core into separate threshold and validation halves, and the 59% abstract figure is its mean share of per-record absolute log-odds contribution (feature_ablation.md).
 
-> **Repository note (2026-10-29, commit `d54920b`):** the reviewer portal is implemented, so slides 9–10 can run live. The demo IDs, tool names, probabilities, PCA rankings and routing below were re-checked by calling the tools in-process against the warehouse with the shipped model. All ten steps pass for the three demo projects in [`tests/test_smoke_e2e.py`](../tests/test_smoke_e2e.py). The three Apps are deployed; the ten-step run over HTTP against the deployed Apps has not yet been recorded, so rehearse against the Apps before relying on them live. Slide 11 now reflects the evaluation framework and the ground-truth protocol.
+> **Repository note (2026-10-29, commit `d54920b`):** the reviewer portal is implemented, so slides 9–10 can run live. The demo IDs, tool names, probabilities, PCA rankings and routing below were re-checked by calling the tools in-process against the warehouse with the shipped model. All ten steps pass for the three demo projects in [`tests/test_smoke_e2e.py`](../tests/test_smoke_e2e.py). The three Apps are deployed; the ten-step run over HTTP against the deployed Apps was recorded on 2026-11-06 and again on 2026-11-09 (`eval/results/runs/`). Slide 11 now reflects the evaluation framework and the ground-truth protocol.
 
 ---
 
@@ -158,7 +158,7 @@
 **Timing: 7:30–8:30 (60 seconds)**
 
 - Measured: parent agreement with RCDC (slides 4–6); the ten-step chain passes on three demo projects; offline tests and CI pass.
-- Not yet run: the formal MLflow agent evaluation, awaiting a service principal from the workspace administrator; the ten-step run over HTTP against the deployed Apps.
+- Not yet run: the formal MLflow agent evaluation (awaiting a service principal). The ten-step run over HTTP against the deployed Apps was recorded 2026-11-09 (`eval/results/runs/20261109T2150Z_e2e_d08b246f/`).
 - Public ground-truth PCA labels are unavailable: **subcategory accuracy is not validated**. **EHCS, LSDMA, and EdW take 70% of first-place rankings** (a concentration finding).
 - Next validation is pre-specified: a **45-project blinded sample** (15 RCDC-NITRD, 15 not, 15 uncertain) is drawn for one-reviewer judging of parent and PCA.
 - An evaluation framework marks each output as done, partial, design-only, or blocked.

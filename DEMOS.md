@@ -1,5 +1,9 @@
 # Operator-page demos
 
+> **Access note (2026-11-17).** These scenarios require workspace access to the deployed Apps,
+> which expires 2026-11-30. After that date, see the committed run records in
+> [`eval/results/runs/`](eval/results/runs/) and [`eval/results/demo/RUNS.md`](eval/results/demo/RUNS.md).
+
 Four "Try this" scenarios for the reviewer portal's operator pages (`/operator/select`, `/operator/review`). Every
 demo year is FY2021 or earlier. The reserved-year guard (`src/shared/guardrail.py`) stays as it is: FY2022-FY2026
 are refused on these pages, and no demo needs that changed.

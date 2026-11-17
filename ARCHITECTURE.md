@@ -131,12 +131,17 @@ Design rules this follows:
 
 ## Known gaps
 
-* There is no end-user authentication: personas are chosen, not proven. The operator log records
-  the signed-in workspace user next to the persona acted as ([SECURITY.md](SECURITY.md)).
-* Agent-level evaluation (a model choosing tools unaided) has not been run; the runs above are
-  scripted calls. Harness 11-12 (tool selection plus AgentDojo / InjecAgent-style injection,
-  [SECURITY.md](SECURITY.md#pilot-to-production-harness-11-12)) is planned. Until it runs, injection
-  resistance, credential disclosure and agent tool-selection accuracy are not measured.
+* There is no per-persona authentication: personas are chosen, not proven. The operator log records
+  the signed-in workspace user next to the persona acted as ([SECURITY.md](SECURITY.md)). Since
+  fix (c) (`d7bad89`), review decisions require the caller's `x-forwarded-email` to be in
+  `NITRD_APPROVERS`; submissions remain unauthenticated.
+* Agent-level evaluation was measured narrowly. The functional suite (`aes-functional-v1`) reached
+  the ceiling on two models (50/50, Wilson 95% [0.929, 1.000]) and does not discriminate between
+  them. The injection suite (`adv-injection-v1`, one model, one payload family) found 0/50 exposed
+  attack successes, Wilson [0, 0.071]; flagging was inconsistent at 10/60. These suites measure
+  tool calls and identifiers, not answer quality; no write tool was offered in the injection suite.
+  See [`eval/agent/README.md`](eval/agent/README.md). Credential disclosure and authorization
+  isolation are not measured.
 * The App service principal holds `MODIFY` on the sandbox tables. "No delete" is a property of the
   tool surface, not of the grants, and the audit trail is not tamper-evident.
 
