@@ -34,7 +34,7 @@
      "id": "D02",
      "batch_ref": "L194 (item 2)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -171,7 +171,7 @@
      "id": "D06c",
      "batch_ref": "L123 + terms (L155)",
      "op": "insert_after",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -188,7 +188,7 @@
      "id": "D07",
      "batch_ref": "L88",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -237,7 +237,7 @@
      "id": "D10a",
      "batch_ref": "L89",
      "op": "delete",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -252,7 +252,7 @@
      "id": "D10b",
      "batch_ref": "L89",
      "op": "insert_after",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -308,7 +308,7 @@
      "id": "D14",
      "batch_ref": "L258-268 (lessons learned)",
      "op": "manual",
-     "routing": "PROPOSED; placement owner's; MANUAL (owner 2026-11-10: italic, bold, numbering)",
+     "routing": "AGREED; placement owner's; MANUAL (owner 2026-11-10: italic, bold, numbering)",
      "status": "MANUAL: hand-edit list (anchor verified present)",
      "hits": [
       {
@@ -341,7 +341,7 @@
      "id": "D15b",
      "batch_ref": "L125 + terms (L159)",
      "op": "insert_after",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -359,7 +359,7 @@
      "id": "D16a",
      "batch_ref": "L329 (benchmark reconciliation 2)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -376,7 +376,7 @@
      "id": "D16b",
      "batch_ref": "L330 (reconciliation 3)",
      "op": "replace",
-     "routing": "PROPOSED + DRAFT",
+     "routing": "AGREED + DRAFT",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -394,7 +394,7 @@
      "id": "D16c",
      "batch_ref": "L330",
      "op": "replace",
-     "routing": "PROPOSED + DRAFT",
+     "routing": "AGREED + DRAFT",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -414,7 +414,7 @@
      "id": "D16d",
      "batch_ref": "L330",
      "op": "replace",
-     "routing": "PROPOSED + DRAFT",
+     "routing": "AGREED + DRAFT",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -431,7 +431,7 @@
      "id": "D16e",
      "batch_ref": "L330",
      "op": "none",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "NOT APPLIED: MANUAL (owner 2026-11-10), hand-edit list: the Neves label range footnote needs a new footnote (word/footnotes.xml and a reference run)",
      "hits": [],
      "flags": []
@@ -543,7 +543,7 @@
      "id": "P02",
      "batch_ref": "L375 (new row, slide 9 notes)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -569,7 +569,7 @@
      "id": "P04",
      "batch_ref": "L72 + terms",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -626,7 +626,7 @@
      "id": "P07",
      "batch_ref": "L43 + item 5 (L224) + L124 + terms (L156)",
      "op": "replace",
-     "routing": "AGREED (L124 PROPOSED)",
+     "routing": "AGREED (L124 AGREED)",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -654,7 +654,7 @@
      "id": "P09",
      "batch_ref": "L90 (deck 125 and 174 -> 11-06b slides 4 and 5 notes)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -674,7 +674,7 @@
      "id": "P10",
      "batch_ref": "L195 (item 2)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -689,7 +689,7 @@
      "id": "P11",
      "batch_ref": "L197 (item 2)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -704,7 +704,7 @@
      "id": "P12",
      "batch_ref": "L340 (reconciliation 4, 11-06b line 31)",
      "op": "replace",
-     "routing": "PROPOSED",
+     "routing": "AGREED",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
@@ -719,7 +719,7 @@
      "id": "P13",
      "batch_ref": "L340 (reconciliation 4, 11-06b line 235)",
      "op": "replace",
-     "routing": "PROPOSED + DRAFT",
+     "routing": "AGREED + DRAFT",
      "status": "APPLIED IN DRY RUN",
      "hits": [
       {
