@@ -144,3 +144,12 @@ Elapsed: 3 working days if the owner is available for review, redeploy, battery 
 * Sat 2026-11-14: buffer only; end of day is the hard cutoff for a deployed build (rollback above).
 
 **Main risk:** compute. On 2026-11-10, repeated executeCode timeouts cost more than an hour and destroyed the dev environment. Every gate assumes a working cluster.
+
+## Postscript — deploy decision NO (owner 2026-11-17)
+
+The Wednesday 2026-11-11 deploy sitting did not happen. The Apps were later stopped externally on 2026-11-13. Owner decision 2026-11-17: **NO deploy** from the `-next` folders. The two `-next` folders built at `9b222be` were deleted without being deployed.
+
+This resolves every conditional document item:
+* D03, D04 and P14 keep the 2026-11-09 battery run ids on the shipped `d7bad89`/`6056f37`/`95e5dea` build.
+* D06c, D13 and D15b stay as the dry run has them: the reachability gap is disclosed, not fixed, because the decide-by-request_id view never shipped.
+* L-T3 stays open as "never executed"; it was to run last in the sitting that did not happen.
