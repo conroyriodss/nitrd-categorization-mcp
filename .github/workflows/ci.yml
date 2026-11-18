@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, ci-agent-sdk]
   pull_request:
     branches: [main]
 
@@ -23,11 +23,17 @@ jobs:
       - name: Install dependencies
         run: uv sync --extra classifier --group dev
 
+      - name: Install agent SDK (pins from deploy/databricks/nitrd_agent/requirements.txt)
+        run: uv pip install "openai-agents==0.24.0" "openai==3.46.0"
+
       - name: Lint
-        run: uv run ruff check .
+        run: uv run --no-sync ruff check .
 
       - name: Format check
-        run: uv run ruff format --check .
+        run: uv run --no-sync ruff format --check .
+
+      - name: Confirm agent SDK is importable
+        run: uv run --no-sync python -c "import agents, importlib.metadata as m; print('openai-agents', m.version('openai-agents'))"
 
       - name: Run tests
-        run: uv run pytest tests/ -v
+        run: uv run --no-sync pytest tests/ -v -rs
