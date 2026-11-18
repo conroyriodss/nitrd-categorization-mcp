@@ -84,5 +84,5 @@ The owner removed the two Word comments and uploaded the result as `/Workspace/U
   * A search of all of `/Workspace` (every user folder) and of `/Volumes` found no copy.
   * The repo held only the 11-06 draft, while 11-06b was the version being sent to reviewers.
 * On 2026-11-09 the owner uploaded both files to `/Volumes/users/conroyri/entry2_inputs/`, and they were copied here. The SHA-256s were checked equal after the copy.
-* The upload's origin on the owner's side: [owner to state, e.g. local disk or mail attachment].
+* The upload's origin on the owner's side: upload origin not recorded.
 * Embedded metadata: the DOCX `docProps/core.xml` gives modified 2026-11-05T19:04:57Z, with no author. The deck gives created and modified 2026-11-06T17:23:58Z, creator "Walnut Exporter". Both are reported as found; editors do not always update them.

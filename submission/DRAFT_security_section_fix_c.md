@@ -1,3 +1,5 @@
+> **Superseded: see submission/README.md.** History only; the 11-18 finals are current.
+
 # Draft: evaluation document, security section (fix (c))
 
 Status: DRAFT. Paragraphs 1-3 were approved by the owner on 2026-11-09; the general-form sentences in paragraph 3 are the owner's addition. Not yet in `submission/NITRD_Evaluation_2026-11-06.docx`. The after-the-fix paragraph had two bracketed halves: the refusal half and the listed-person half. Both were first filled after rows 9 and 10. On 2026-11-09, at the owner's direction, they were completed with rows 11 and 12, once all four acceptance rows (9, 10, 11, 12) had passed. The after-the-fix paragraph is filled but not yet approved. The two additions below, on who can exercise the decision path and on fail-fast corroboration, were approved as worded on 2026-11-09. The MODIFY-limitation addition is still proposed. The post-(c) battery is complete, and the stale-claims window in `docs/PLAN_fix_c.md` closed on 2026-11-09.

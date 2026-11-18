@@ -1,3 +1,5 @@
+> **Superseded: see submission/README.md.** History only: a point-in-time audit of 2026-11-17, before the 11-18 finals.
+
 # Submission readiness audit — 2026-11-17
 
 Entry 2, Service: Write track. Due Friday 2026-11-20 23:59 EST.

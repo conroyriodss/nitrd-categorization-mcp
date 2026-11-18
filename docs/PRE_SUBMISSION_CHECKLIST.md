@@ -1,3 +1,5 @@
+> **Historical (last updated 2026-11-03, before the Apps freeze). Superseded: see submission/README.md.** Kept as written; its open items are not the current state.
+
 # Pre-submission checklist
 
 What remains before the Apps freeze. The deployed state is recorded in the README

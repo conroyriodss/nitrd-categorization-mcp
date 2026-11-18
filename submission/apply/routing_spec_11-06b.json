@@ -1,4 +1,5 @@
 {
+  "superseded": "Superseded: see submission/README.md. History only: the 11-18 finals are current; this spec drove the 11-06b apply (4a9ccee).",
   "about": "Machine-readable form of submission/ROUTING_BATCH_2026-11-08.md, re-anchored to the committed 11-06b DOCX and PPTX, for scripts/apply_routing_batch.py (dry run). Each row composes the batch row with every later amendment that touches it (terms, item 1, item 5, re-anchoring); 'batch_ref' names them by batch line. 'new' text is the batch's text unless 'flags' says otherwise. Routing labels: AGREED = the batch row as agreed and not held; PROPOSED = in the batch, owner has not routed it; HELD = owner holds it; DRAFT = Genie Code wording, not batch text. Nothing in this file is approved for application by being here.",
   "documents": [
     {

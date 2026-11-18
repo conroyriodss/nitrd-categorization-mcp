@@ -62,6 +62,20 @@ awards are FY2022 rows that pre-date that rule and are used only with the per-pr
 three-award story runs through the five portal tools (Path A). The operator pages are shown
 separately on a small FY2021 cohort (Path C).
 
+**Who can decide (fix (c)).** A review decision is accepted only when the caller's
+`x-forwarded-email`, set by the Databricks Apps proxy from the signed-in identity, is on the
+portal's approver list (`NITRD_APPROVERS`; [`src/reviewer_portal/approvers.py`](src/reviewer_portal/approvers.py)).
+The persona (`reviewer_id`, "Acting as") is still a chosen argument; the approver check is what
+requires a listed person. So:
+
+* **Successful decisions are made by the listed human on the operator page** (`/operator/review`,
+  Path C). The successful decisions in the recorded demos since fix (c) were made this way (for
+  example `eval/results/auth/20261109_row10_operator_decide.json` and the video runs).
+* **Over stdio (local Inspector), every decision is refused:** there is no HTTP request, so no
+  `x-forwarded-email`, and the check refuses it as absent. Nothing is written.
+* **The e2e runner's decision checks are refusal tests:** the runner's service principal is not on
+  the list, so each decision it submits is refused, and the refusal is the expected result.
+
 Personas: any active persona can be chosen as the acting reviewer ("Acting as" on
 `/operator/review`, or the `reviewer_id` argument on the tools). There are nine active personas:
 `demo_sia`, `demo_po_niaid_01`, `demo_po_ninr_01`, `demo_po_nci_01`, and `demo_ic_rep_nci`,
@@ -126,9 +140,19 @@ same `request_id` with `created=false`. Note each `request_id`: cleanup needs th
 then `demo_ic_rep_nci`. Each shows its one pending request. With `demo_po_nci_01` the list is empty:
 the NCI request went to the IC representative, not the program officer.
 
-### A4. Decide (sandbox write)
+### A4. Decide: refusal demonstration (writes nothing)
 
-`portal_submit_review_decision`, acting as the assignee:
+Over stdio, `portal_submit_review_decision` refuses every call at the approver check (no
+`x-forwarded-email`), before any row is read. Running the calls below over stdio therefore
+demonstrates the refusal; none of them records a decision. Over Streamable HTTP, a call succeeds
+only if the caller's forwarded email is on the approver list. The successful-decision walk-through
+is Path C, by the listed human on the operator page.
+
+The three FY2022 requests from A2 cannot be decided on the operator page: the review page refuses
+reserved fiscal years (FY2022-FY2026) like the select page does. Leave them pending and remove them in
+A6. The decision rules (assignee only, override biconditional, finality) are shown on Path C.
+
+The calls, as refusal tests (the expected result for each is the approver refusal):
 
 | Award | Arguments |
 | --- | --- |
@@ -136,14 +160,20 @@ the NCI request went to the IC representative, not the program officer.
 | 10388671 | `{"request_id": "<id>", "reviewer_id": "demo_po_ninr_01", "decision": "override", "rationale": "NITRD is right but the PCAs miss the machine-learning aims; adding AI.", "corrected_parent_label": true, "corrected_pcas": ["AI", "LSDMA"]}` |
 | 10445135 | `{"request_id": "<id>", "reviewer_id": "demo_ic_rep_nci", "decision": "override", "rationale": "Model said not NITRD; the computational methods aims make this NITRD.", "corrected_parent_label": true, "corrected_pcas": ["AI", "LSDMA"]}` |
 
-Replace `<id>` with the `request_id` from A2. Two refusals worth showing, neither of which writes
-anything: a decision by someone other than the assignee (`reviewer_id: "demo_sia"` on the first
-request), and an override to NITRD with `"corrected_pcas": []`.
+Replace `<id>` with the `request_id` from A2. Over stdio, the approver check runs first, so the
+other rule refusals (a decision by someone other than the assignee; an override to NITRD with
+`"corrected_pcas": []`) are not reached here.
+
+### A4b. Decide (sandbox write): the listed human, on the operator page
+
+See Path C, steps 4-6. Signed in as a person on the approver list, choose the assignee in
+**Acting as** and submit the decision on the card.
 
 ### A5. History
 
-`portal_get_review_history` with `{"appl_id": 10506013}` (and the other two). It shows, in order:
-`created`, `routed` (tier and reason) and `decided`, with the persona, rationale and corrections.
+`portal_get_review_history` with `{"appl_id": 10506013}` (and the other two). For the A2 requests it
+shows `created` and `routed` (tier and reason) and no decision, because A4 was refused. For a
+decided Path C card it also shows the decision, with the persona, rationale and corrections.
 
 ### A6. Cleanup to 0/0/0
 
@@ -162,14 +192,21 @@ SELECT (SELECT count(*) FROM users.conroyri.nitrd_hackathon_v1_review_requests W
 
 Replace each `<idN>` with a `request_id` from A2.
 
-## Path B: the same lifecycle, run and cleaned up by the e2e runner (one click)
+## Path B: the lifecycle runner, submit to cleanup, with decisions as refusal tests (one click)
 
 `https://mcp-nitrd-e2e-runner-7474654188777746.aws.databricksapps.com/api/start/lifecycle` (signed
 in). It runs submit, route, pending, decide and history over HTTP against the deployed portal for
-10506013 (approved), 10388671 (rejected), 10445135 (deferred) and 10075931 (override, FY2021), plus
-the refusal paths that must write nothing. It then deletes exactly its own rows and records
-`rows_left` (expected 0/0/0). Poll `/api/status`. The record is exported into `eval/results/runs/`
-with `scripts/export_evidence.py`.
+10506013, 10388671, 10445135 and 10075931 (FY2021), plus the refusal paths that must write nothing.
+
+**Its decision checks are refusal tests.** The runner's service principal is not on the approver
+list, so each of its four decision attempts (approved, rejected, deferred, override) is refused at
+the approver check and writes nothing. The portal log records the refusal reason. Canonical run:
+3174122a (14/14 checks per decision type; `eval/results/runs/20261109T1527Z_lifecycle_3174122a/`, with
+the portal-log lines in `eval/results/auth/20261109_row9_approver_refused_3174122a.json`).
+Successful decisions by a listed person are on Path C.
+
+The runner then deletes exactly its own rows and records `rows_left` (expected 0/0/0). Poll
+`/api/status`. The record is exported into `eval/results/runs/` with `scripts/export_evidence.py`.
 
 ## Path C: the operator pages (human UI), FY2021 cohort
 
@@ -197,5 +234,6 @@ not, and the reviewer decides.
 7. Cleanup: as in A6. Get the `request_id`s from `portal_get_review_history` for each project in
    the cohort.
 
-If persona switching on the review page misbehaves, use Path A: every step there is the same
-portal logic, reached through the MCP tools.
+If persona switching on the review page misbehaves, Path A shows the same submit, routing and
+history logic through the MCP tools, but not a successful decision: over stdio every decision is
+refused at the approver check.

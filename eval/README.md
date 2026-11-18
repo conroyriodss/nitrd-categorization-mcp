@@ -69,8 +69,8 @@ the FY2019 held-out half, 35,090 records ([`classifier_evaluation.md`](classifie
 | Tool utilization: 14 tools exercised, cases and latency per tool, on the shipped build | [`results/tool_utilization.md`](results/tool_utilization.md) (+ `.json`) | derived from post-fix (c) parity run `47501246` ([`results/runs/20261109T2147Z_parity_47501246/`](results/runs/20261109T2147Z_parity_47501246/)): runner `6056f37`, portal `d7bad89`, outputs and classifier `95e5dea`, recorded as separate fields; parser checks its per-tool maxima against the run summary. The pre-fix per-tool figures stay in `d2ddab69`'s `report.log` |
 | Ten-step chain passes over HTTP on all three demo projects, at `95e5dea`; 4 WARN lines kept as review cases | [`results/runs/20261106T2038Z_e2e_e1969ce8/`](results/runs/20261106T2038Z_e2e_e1969ce8/) | step-by-step PASS/WARN lines, 0 rows left (history: `20261106T1755Z_e2e_f4d4fff2/` at `b6d521d` and `20261103T1358Z_e2e_778bd3ab/`, same WARN lines) |
 | Smoke failure on 2026-11-03 was a stale expected tool count (5 vs 6), fixed in `caaf641` | [`results/runs/20261103T1354Z_smoke_a9204bb7/`](results/runs/20261103T1354Z_smoke_a9204bb7/) | the single failing check; the post-fix green run is smoke `053b101d` at `95e5dea` (8/8, tool counts 6/3/5), in the battery row below |
-| Decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T2043Z_lifecycle_d74756ca/`](results/runs/20261106T2043Z_lifecycle_d74756ca/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
-| Post-fix (c) battery on the shipped build (2026-11-09): smoke `d6243323`, parity `47501246`, e2e `d08b246f`, lifecycle `2f0a3f65`, contract `b5de1708`, auth `b6941165`, each passed with 0/0/0 left (parity `7f3b2f82` and e2e `0dbd05d2` were superseded by the re-runs; see `docs/PLAN_fix_c.md`) | `results/runs/20261109T2041Z_smoke_d6243323/`, `20261109T2147Z_parity_47501246/`, `20261109T2150Z_e2e_d08b246f/`, `20261109T2049Z_lifecycle_2f0a3f65/`, `20261109T2059Z_contract_b5de1708/`, `20261109T2100Z_auth_b6941165/` | `git_commit` (the runner's commit), `passed` and `rows_left` in each `run.json` |
+| History only (before fix (c), at `95e5dea`): decision lifecycle on the deployed write path: approve, reject, defer and override (18/18/18/23 checks), override biconditional, decision finality (a second decision is refused), cleanup to 0/0/0 | [`results/runs/20261106T2043Z_lifecycle_d74756ca/`](results/runs/20261106T2043Z_lifecycle_d74756ca/) | `run.json` summary per decision type; `report.log` check lines L1-L10 ("L10 a second decision is an error (decisions are final)") |
+| Post-fix (c) battery on the shipped build (2026-11-09): smoke `d6243323`, parity `47501246`, e2e `d08b246f`, lifecycle `3174122a` (canonical; `2f0a3f65` is an additional re-run with the same result), contract `b5de1708`, auth `b6941165`, each passed with 0/0/0 left (parity `7f3b2f82` and e2e `0dbd05d2` were superseded by the re-runs; see `docs/PLAN_fix_c.md`). In both lifecycle runs each runner decision is a refusal test: the runner is not on the approver list, so all four decision types are refused (14/14 checks each) | `results/runs/20261109T2041Z_smoke_d6243323/`, `20261109T2147Z_parity_47501246/`, `20261109T2150Z_e2e_d08b246f/`, `20261109T1527Z_lifecycle_3174122a/` (portal-log refusal lines: `results/auth/20261109_row9_approver_refused_3174122a.json`), additional re-run `20261109T2049Z_lifecycle_2f0a3f65/`, `20261109T2059Z_contract_b5de1708/`, `20261109T2100Z_auth_b6941165/` | `git_commit` (the runner's commit), `passed` and `rows_left` in each `run.json` |
 | Frozen-commit battery, history only (before fix (c)): all five apps at `95e5dea`; smoke, parity 71/71, lifecycle, extended smoke, auth and e2e, each passed with 0/0/0 left | `results/runs/20261106T2038Z_smoke_053b101d/`, `20261106T2041Z_parity_d2ddab69/`, `20261106T2043Z_lifecycle_d74756ca/`, `20261106T2047Z_contract_ee2b5080/`, `20261106T2048Z_auth_69cbcac7/`, `20261106T2038Z_e2e_e1969ce8/` | `git_commit`, `passed` and `rows_left` in each `run.json` |
 | Battery at `b6d521d`, history only (four apps; agent at `f9c024b`): the same six kinds, each passed with 0/0/0 left | `results/runs/20261106T1739Z_smoke_ce935199/`, `20261106T1740Z_parity_6e0e5d36/`, `20261106T1743Z_lifecycle_a745730a/`, `20261106T1745Z_contract_51e36cc8/`, `20261106T1747Z_auth_249358ff/`, `20261106T1755Z_e2e_f4d4fff2/` | verifies `b6d521d` only; superseded by the `95e5dea` battery |
 | Deployed contract, 90 checks at `95e5dea`: FY2022-FY2026 each refused by the cohort tool (list mode tested at FY2022 only); counts checked against independent SQL (FY2021 NIBIB U01 = 41, NIBIB R35 = 0, list-mode counts, exact-SQL round-trip); limits, error naming, classifier bands, portal routing | [`results/runs/20261106T2047Z_contract_ee2b5080/`](results/runs/20261106T2047Z_contract_ee2b5080/) | one `[pass]` line per check in `report.log`; per-section counts and per-tool latency in `run.json` |
@@ -184,14 +184,14 @@ History: from 17:23Z to 20:31Z on 2026-11-06, four apps ran `b6d521d` (deploymen
 * `daa101d` and `ceb81c8` edited `src/shared/sql.py` (+215/-23 lines, including the SQL failure contract), `models.py` and `__init__.py`.
 * So the deployed classifier served older descriptions and older SQL error handling. The unified redeploy removes the difference.
 
-**Parity at the frozen commit.** Parity run `d2ddab69` (runner job, 2026-11-06 20:41Z) checks all five apps at `95e5dea` against in-process code at the same commit.
+**Parity at the frozen commit (history, before fix (c); the current citation is `47501246`, below).** Parity run `d2ddab69` (runner job, 2026-11-06 20:41Z) checks all five apps at `95e5dea` against in-process code at the same commit.
 * Result: 71 of 71 cases byte-identical, all 14 tools covered, 0 failures. Remote latency p50 558.7 ms, p95 1523.7 ms; the per-tool figures for this run are in its `report.log`.
 * **On the shipped build (post-fix (c)), parity `47501246`** (2026-11-09 21:47Z; portal `d7bad89`, outputs and classifier `95e5dea`, runner `6056f37`): 71 of 71 byte-identical, 0 failures, rows 0/0/0. Remote latency p50 530.0 ms, p95 1481.4 ms. The per-tool figures are in [`results/tool_utilization.md`](results/tool_utilization.md). One per-tool change is caused by the fix, not run-to-run spread: `portal_submit_review_decision` went from 437 ms to 42 ms, because the probe is now refused at the approver check before any read ([`results/auth/20261109_check0_timing_corroboration.json`](results/auth/20261109_check0_timing_corroboration.json)).
 * Against `6e0e5d36` (at `b6d521d`), no tool differs: with timestamps and latencies normalized, the report lines are identical.
 * `portal_submit_review_request` shows 27.0 ms (run-summary max; median 26.5 ms). That figure covers rejection-path cases only: both parity cases fail argument validation, because write-tool parity cases never reach SQL. It is not a write latency.
 * Record: [`results/runs/20261106T2041Z_parity_d2ddab69/`](results/runs/20261106T2041Z_parity_d2ddab69/). History: `6e0e5d36` at `b6d521d` (p50 647.3 ms, p95 2765.9 ms), [`results/runs/20261106T1740Z_parity_6e0e5d36/`](results/runs/20261106T1740Z_parity_6e0e5d36/).
 
-**Extended smoke (contract) at the frozen commit.** Run `ee2b5080` (runner, HTTP, 2026-11-06 20:47Z, `95e5dea`) ran 90 checks, all passed: outputs 16, cohort 18, classifier 41 and portal 15. It is read-only: one check confirms the review-table row counts are unchanged. Record: [`results/runs/20261106T2047Z_contract_ee2b5080/`](results/runs/20261106T2047Z_contract_ee2b5080/). History: `51e36cc8` at `b6d521d` (the same 90 checks).
+**Extended smoke (contract) at the frozen commit (history, before fix (c); the post-fix contract run is `b5de1708`).** Run `ee2b5080` (runner, HTTP, 2026-11-06 20:47Z, `95e5dea`) ran 90 checks, all passed: outputs 16, cohort 18, classifier 41 and portal 15. It is read-only: one check confirms the review-table row counts are unchanged. Record: [`results/runs/20261106T2047Z_contract_ee2b5080/`](results/runs/20261106T2047Z_contract_ee2b5080/). History: `51e36cc8` at `b6d521d` (the same 90 checks).
 * **The FY2022-FY2026 guard holds on the deployed cohort tool.** Each of FY2022, FY2023, FY2024, FY2025 and FY2026 is refused, with the error naming the year and the reason. List mode refuses too, but the run only tests FY2022 in list mode; FY2023-FY2026 are not tested there.
 * **Tool answers are checked against independent SQL, not against the tool itself.**
   * The FY2021 NIBIB U01 cohort is 41 by a separate SQL count, and the tool's total and returned counts equal it, untruncated.
@@ -205,7 +205,7 @@ History: from 17:23Z to 20:31Z on 2026-11-06, four apps ran `b6d521d` (deploymen
   * features are ordered by |contribution|, and the top features appear in `explain`;
   * `explain(subcategory)` equals `classify_subcategory`.
 
-Per-tool latency in the contract run (ms):
+Per-tool latency in the contract run `ee2b5080` at `95e5dea` (ms; history, before fix (c); for the shipped build see `results/tool_utilization.md`, from parity `47501246`):
 
 | Tool | n | p50 | p95 | max |
 |---|---:|---:|---:|---:|
@@ -223,7 +223,7 @@ Per-tool latency in the contract run (ms):
 
 Rows with n = 1 are single observations, not percentiles. Of the 18 cohort checks, 9 are refusals or limit rejections: FY2022-FY2026, list-mode FY2022, and three limit cases. That probably explains the low `outputs_find_cohort` p50 of 16 ms, but the record does not tie each of the 15 timed calls to a check.
 
-Cold start, first call versus later calls, per app (ms):
+Cold start, first call versus later calls, per app (ms; history: run `ee2b5080` at `95e5dea`):
 
 | App | First call (tool) | First call | Later calls p50 |
 |---|---|---:|---:|
@@ -237,7 +237,7 @@ The apps started at 20:32:43-20:32:52Z, about 14 minutes before this run, and sm
 * At that time the apps ran four different commits: portal `eb64604`, runner `0e6ae7c`, outputs `daa101d` and classifier `2c37f87`.
 * So it verifies the portal at `eb64604` only. It says nothing about the later portal deploy at `4629b33`, which changed `portal_get_reviewer_assignment` output ([`agent/README.md`](agent/README.md), void-run note).
 
-**End-to-end run at the frozen commit.** Run `e1969ce8` (runner, HTTP, 2026-11-06 20:38Z, `95e5dea`) ran the ten-step chain in write mode. History: `f4d4fff2` at `b6d521d`, the same results.
+**End-to-end run at the frozen commit (history, before fix (c); the post-fix e2e run is `d08b246f`).** Run `e1969ce8` (runner, HTTP, 2026-11-06 20:38Z, `95e5dea`) ran the ten-step chain in write mode. History: `f4d4fff2` at `b6d521d`, the same results.
 * It passed on all three demo projects, with 0 rows left in the review tables. A step-by-step write trace, taken from `f4d4fff2` at `b6d521d` and not regenerated, is in [`results/traces/`](results/traces/).
 * Its four WARN lines are the same as in `f4d4fff2` and the 2026-11-03 run `778bd3ab`, and are kept on purpose: they are the cases a human reviewer should see.
   * Two known-NITRD projects have parent probability below 0.7: NINR 0.58, and NCI 0.275, which the classifier suggests as not NITRD.
@@ -305,7 +305,8 @@ Component status is in the authoritative table in the
 | Independent human-labelled PCA agreement | **Not measured**: no public PCA labels. |
 | All ten end-to-end steps against the deployed Apps | **Measured 2026-11-03**: passed over HTTP through the e2e runner App on all three demo projects (see "Deployed state after Step G"). |
 | Reliability beyond the three demo projects | **Not measured**. |
-| Latency, throughput, concurrency, cost per review | **Not measured**. |
+| Parity-suite latency | **Measured, narrowly:** parity `47501246` on the shipped build, p50 530.0 ms, p95 1481.4 ms, for the fixed 71-case scripted suite in one run. Not an estimate of production latency. |
+| Throughput, concurrency, cost per review | **Not measured**. |
 | Reviewer time saved, correction burden, workload reduction | **Not measured**. |
 | Parent-model performance on years after FY2019 | **Not measured**. |
 
@@ -342,10 +343,13 @@ Component status is in the authoritative table in the
   * `pages.py:316` and `:859` on the portal and runner are the same `<select>` false positive,
     at moved lines.
   * `src/nitrd_agent/db.py:23` and `:26` interpolate env-derived table identifiers, which cannot
-    be bound parameters. They are fixed by validating every identifier at import, across the
-    whole module (not yet deployed).
-  * The same unvalidated construct exists in `src/shared/tables.py`, which all servers use. It
-    was not flagged; it is recorded and awaits an owner decision because it is deployed source.
+    be bound parameters. They are fixed by validating every identifier at import
+    (`src/shared/identifiers.py`).
+  * The same construct in `src/shared/tables.py`, which all servers use, is validated the same way.
+  * Correction (2026-11-18): this list was written before the 95e5dea deploy and said the fix was
+    "not yet deployed". It is deployed: `95e5dea` added the identifier validation to both
+    modules, and all five apps were deployed at `95e5dea` on 2026-11-06 (see "Deployed state" above).
+    The findings themselves remain, as expected, because the rule matches the f-string literally.
 
   The platform ruleset and our local semgrep run disagree in both directions, and neither is a
   superset of the other. So a scan without findings is not evidence of absence. Details are in

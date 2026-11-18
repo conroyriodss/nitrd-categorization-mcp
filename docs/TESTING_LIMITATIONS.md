@@ -49,6 +49,35 @@ The skipped parts run only in the adversarial venv (openai-agents 0.24.0, openai
 * Mitigation (already a standing practice; now recorded as covering this case): verify every claim about state by reading it (`git log`, `git status`, `git show`, `grep`), never by recalling what was done. The standing commit-hygiene rule (verify files on disk before every commit; verify remote after every push) already requires this; the gap was that the rule was not applied to recognising one's own prior actions.
 * Standing rule, reinforced: no step in the Wednesday sitting proceeds on recall of what was done, including the agent's own. Every pre-flight and every step is verified by reading state.
 
+## L-T5. The decision tool's description omits the approver and HTTP requirements (2026-11-18)
+
+The description an MCP client sees for `portal_submit_review_decision` (the function docstring in
+`src/reviewer_portal/tools/submit_review_decision.py`, recorded verbatim in
+`eval/results/tools_list/reviewer_portal.json`) states the assignee, pending, override and finality
+rules. It does not say that the caller must be on the approver list (`NITRD_APPROVERS`, checked on
+`x-forwarded-email`), or that the call must arrive over HTTP through the Apps proxy, so that every
+stdio or in-process call is refused. Those requirements appear only in the module docstring, which
+clients do not see. A client or agent reading the description cannot predict the refusal. Docs only;
+the code is unchanged.
+
+## L-T6. Agent approval errors are shown as "failed" even when the write outcome is unknown (2026-11-18)
+
+In `src/nitrd_agent/gate.py` (`approve`), any exception from the portal write sets the draft's
+status to `failed`, and the agent page shows "Approval failed". That includes the case
+`src/shared/sql.py` classifies as outcome UNKNOWN (transport failure after sending, or the deadline
+passing while the statement runs), in which the request may have been written. The label therefore
+can say "failed" for a write that succeeded. The correct check is to read the request back
+(`portal_get_review_history`) before retrying. No test covers this display path. Docs only; the code
+is unchanged.
+
+## L-T7. The SQL deadline is cooperative, not a hard wall-clock bound (2026-11-18)
+
+`NITRD_SQL_DEADLINE_S` (default 150 s) in `src/shared/sql.py` is checked between steps: it caps each
+server-side `wait_timeout`, and the loop compares `remaining()` before it polls again or fetches the
+next chunk. Nothing interrupts a call that is already blocking, such as a slow client call or chunk
+fetch, so a single call can run past the deadline. The 180 s client timeout is the outer bound, and
+the tests do not measure it against a live slow warehouse. Docs only; the code is unchanged.
+
 ## Pattern
 
 This is the sixth recorded instance of a claim about state that was wrong. The earlier one on this same test is the 2026-11-09 correction in `docs/PLAN_fix_c.md`. Rule: a skip counts as not run, and "CI green" never stands for the four skipped items above. Open: no committed record shows any of the four run after 2026-11-09; re-running them in a rebuilt adversarial venv before the deliverables close is the owner's call.

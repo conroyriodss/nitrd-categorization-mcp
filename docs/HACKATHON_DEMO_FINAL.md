@@ -1,3 +1,5 @@
+> **Historical outline. Superseded: see submission/README.md.** The submitted deck, evaluation PDF and video evidence are the 11-18 finals listed there.
+
 # HACKATHON DEMO FINAL
 ## NITRD Categorization MCP Suite
 

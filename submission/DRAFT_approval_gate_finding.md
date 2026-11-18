@@ -1,3 +1,5 @@
+> **Superseded: see submission/README.md.** History only; the 11-18 finals are current.
+
 # Draft: deliverables paragraph on what the approval gate does not check
 
 Status: DRAFT, not approved. Owner routes placement in the DOCX and deck. Keep it out of the fix (c) security paragraph: fix (c) is about who may pass the gate, and this is about what the gate does not check. Evidence: `eval/agent/FINDING_approval_ui_grounding.md`, `eval/results/auth/20261109_row11_agent_approve.json`.

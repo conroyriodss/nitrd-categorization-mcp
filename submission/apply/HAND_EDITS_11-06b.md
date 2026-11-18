@@ -1,3 +1,5 @@
+> **Superseded: see submission/README.md.** History only; H1-H6 are applied in the 11-18 finals.
+
 # Hand-edit list for 11-06b (owner applies in Word / PowerPoint)
 
 Routed MANUAL by the owner on 2026-11-10. These are not applied by `scripts/apply_routing_batch.py`; the dry run only checks that each "before" text is present exactly once (status `MANUAL: hand-edit list (anchor verified present)`). Line numbers are those of the committed extracts (`*.docx.txt`, `*.pptx.txt`). Each BEFORE/AFTER block is checked against the committed extract and the spec by the verification recorded at the end.
