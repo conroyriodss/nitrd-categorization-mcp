@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: test_agent_allowlist_identity reads src at a4718e7.
+          fetch-depth: 0
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v4
