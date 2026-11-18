@@ -220,9 +220,17 @@
    "bytes": 17877,
    "sha256": "dff0bc99647f29f45a55496bb21463c347c63779147b6267dadd0f2c414fa64e"
   },
+  "demo/20261117_video_take1.json": {
+   "bytes": 37567,
+   "sha256": "d6aa92b9c7f34a2f2ea90901a94acd3ad45bdabbe2ec2c9f278330464c2b8794"
+  },
+  "demo/20261118_video_v2.json": {
+   "bytes": 43689,
+   "sha256": "5591b123282dfa95f05d793ec2e56d1277cbffc68c0250a57b215ca66b931fa4"
+  },
   "demo/RUNS.md": {
-   "bytes": 6193,
-   "sha256": "eb5734962886eec18d7cd8af688dd15f90062cfe6c5776d755061e54edf96f23"
+   "bytes": 7561,
+   "sha256": "27fd62da46af3927ca307b95ef5ded0eb3cbdf00d2d709cb81f808b8df30c413"
   },
   "explain/weak_demo_awards_v1.json": {
    "bytes": 23129,
@@ -501,7 +509,7 @@
    "sha256": "8d5714a63fc318d5ad9585b0d1f2db034b08c8d66d9defa9d1ec765b9e032043"
   }
  },
- "generated_utc": "2026-11-10T13:39:44Z",
+ "generated_utc": "2026-11-18T20:16:27Z",
  "generator": "scripts/export_evidence.py",
  "notes": {
   "adv_bridge/": "Point-in-time comparison (2026-11-09), not an invariant and not a CI test: the 12 offered tool definitions at 021defd7 (counted adversarial run 6ab39b17) vs aed2590 (src identical to deployed d7bad89), all 12 sha256-identical. Script and method in the folder README. Indexed with --index-only; no export or redaction needed.",
