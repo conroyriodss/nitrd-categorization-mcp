@@ -36,4 +36,12 @@ jobs:
         run: uv run --no-sync python -c "import agents, importlib.metadata as m; print('openai-agents', m.version('openai-agents'))"
 
       - name: Run tests
-        run: uv run --no-sync pytest tests/ -v -rs
+        run: |
+          set -o pipefail
+          uv run --no-sync pytest tests/ -v -rfEs 2>&1 | tee pytest.log
+
+      - name: Publish pytest summary as annotations
+        if: always()
+        run: |
+          grep -E '^(FAILED|ERROR) ' pytest.log | head -20 | sed 's/^/::error::/' || true
+          tail -1 pytest.log | sed 's/^/::notice::pytest /'
