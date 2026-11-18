@@ -1,0 +1,619 @@
+{
+  "label": "video v2, the run shown in the submitted video",
+  "captured": "2026-11-18, before cleanup",
+  "build": "d7bad89",
+  "deployments": {
+    "mcp-nitrd-reviewer-portal": "01f1e29d89a4139795f1c08531a57739",
+    "mcp-nitrd-agent": "01f1e29d8f011a0fa662fc57c67cc0a0"
+  },
+  "cohort": "FY2019 NIAID UH2, 5 awards (9724345, 9725122, 9730348, 9797472, 9810625), submitted 15:05:12-15:06:02Z by demo_sia",
+  "overrides": [
+    {
+      "appl_id": 9810625,
+      "core": "UH2AI132931",
+      "pi": "HE, YONGQUN (contact); WU, GUANMING",
+      "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38",
+      "decided_by": "demo_ic_rep_niaid",
+      "decision_at": "2026-11-18 17:00:56.780",
+      "model_suggestion": "nitrd p=0.492246; PCAs LSDMA, EHCS",
+      "corrected_parent_label": true,
+      "corrected_pcas": [
+        "AI",
+        "LSDMA"
+      ],
+      "note": "The override shown in the video. Audit trail: classified, created (15:06:02Z), routed, override (17:00:56Z)."
+    },
+    {
+      "appl_id": 9724345,
+      "core": "UH2AI132342",
+      "pi": "QIAN, YU (contact)",
+      "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c",
+      "decided_by": "demo_ic_rep_niaid",
+      "decision_at": "2026-11-18 15:15:47.032",
+      "model_suggestion": "nitrd p=0.96416; PCAs LSDMA, EHCS",
+      "corrected_parent_label": true,
+      "corrected_pcas": [
+        "AI",
+        "LSDMA"
+      ],
+      "note": "Earlier override in the same session, same rationale. Recorded here because it is in the tables; whether it appears in the video is the owner's to state."
+    }
+  ],
+  "rationale_both": "Data and knowledge infrastructure: NITRD confirmed. Adding AI for ontology-based knowledge representation.",
+  "agent_drafts_10213736": {
+    "in_sandbox": "ONE request: f1e3249f..., key agent-draft:6a20783528e045358b0215904982a131, created 15:23:31.613Z by demo_sia, status pending (submitted via draft approval; no review decision).",
+    "draft_a7c0a245": "Key agent-draft:a7c0a2459f7742fb8bad36d26566fd22 is take 1's draft (request 3701f83b, 2026-11-17 22:00:52Z, deleted 22:36Z; see 20261117_video_take1.json). No row or Delta write for it exists in this run. If the agent page showed it as approved on 2026-11-18, that display comes from agent-side draft state, not from a new sandbox write."
+  },
+  "review_requests": [
+    {
+      "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c",
+      "idempotency_key": "cohort:2019:NIAID:UH2:9724345",
+      "payload_sha256": "839528ce12e951d3415487eabe9d4203a9caff2a96aa2f58e566375d588cc297",
+      "appl_id": 9724345,
+      "fy": 2019,
+      "task1_suggestion": "{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.96416,\"suggestion\":\"nitrd\"}",
+      "task2_suggestion": "{\"pcas\":[\"LSDMA\",\"EHCS\"],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}",
+      "evidence": "{\"intensity_overall\":null,\"key_terms\":[\"computational\",\"data\",\"software\",\"software\",\"computational methods\"],\"pmids\":[],\"summary\":\"Operator cohort FY2019 NIAID UH2. Classifier: nitrd (p=0.964, threshold 0.389, band high). Top PCAs: LSDMA, EHCS. NITRD in FY2018 (1 of 1 labelled prior years).\"}",
+      "requested_by": "demo_sia",
+      "assigned_reviewer_id": "demo_ic_rep_niaid",
+      "assigned_reviewer_role": "NIAID NITRD Representative (demo)",
+      "routing_tier": "ic_rep",
+      "routing_fallback_used": true,
+      "routing_rationale": "Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.",
+      "inherited_from_full_project_num": null,
+      "inherited_from_fy": null,
+      "routing_policy_version": "nitrd-routing-v2-2026-10-26",
+      "status": "override",
+      "created_at": "2026-11-18 15:05:12.057000",
+      "decided_by": "demo_ic_rep_niaid",
+      "decision_at": "2026-11-18 15:15:47.032000",
+      "decision_rationale": "Data and knowledge infrastructure: NITRD confirmed. Adding AI for ontology-based knowledge representation.",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only",
+      "corrected_parent_label": true,
+      "corrected_pcas": "[\"AI\",\"LSDMA\"]",
+      "classification_status": "ok",
+      "classification_evidence": "{\"appl_id\":9724345,\"explain\":{\"against\":[{\"contribution\":-0.142899,\"field\":\"phr\",\"term\":\"data and\"},{\"contribution\":-0.13918,\"field\":\"title\",\"term\":\"cytometry\"},{\"contribution\":-0.131554,\"field\":\"phr\",\"term\":\"through\"},{\"contribution\":-0.079388,\"field\":\"title\",\"term\":\"of\"},{\"contribution\":-0.06083,\"field\":\"phr\",\"term\":\"the\"}],\"toward\":[{\"contribution\":0.92243,\"field\":\"abstract\",\"term\":\"computational\"},{\"contribution\":0.826221,\"field\":\"title\",\"term\":\"data\"},{\"contribution\":0.679226,\"field\":\"abstract\",\"term\":\"software\"},{\"contribution\":0.418879,\"field\":\"phr\",\"term\":\"software\"},{\"contribution\":0.355011,\"field\":\"abstract\",\"term\":\"computational methods\"}]},\"fy\":2019,\"parent\":{\"band\":\"high\",\"cohort\":\"threshold_selection\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.96416,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":true,\"max_fy\":2018,\"years\":[{\"fy\":2018,\"is_nitrd\":true,\"records\":1}]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"data analysis\",\"data\",\"analysis\",\"provenance\",\"knowledge\"],\"pca\":\"LSDMA\",\"score\":19.33},{\"matched_terms\":[\"analytics\",\"data\",\"approaches\",\"methods\",\"software\",\"novel\"],\"pca\":\"EHCS\",\"score\":11.7314}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}}",
+      "classification_error": null,
+      "classified_at": "2026-11-18 15:05:12.057000",
+      "classification_attempts": 1
+    },
+    {
+      "request_id": "1bf43ca7-3c89-55a3-af28-c6987545acee",
+      "idempotency_key": "cohort:2019:NIAID:UH2:9725122",
+      "payload_sha256": "4593283b98fb7df8fc777fdb4ae81fe5e79c8abedf9fbae2503312bb6212c833",
+      "appl_id": 9725122,
+      "fy": 2019,
+      "task1_suggestion": "{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.000204,\"suggestion\":\"not_nitrd\"}",
+      "task2_suggestion": null,
+      "evidence": "{\"intensity_overall\":null,\"key_terms\":[\"data\",\"asthma\",\"cells at\",\"phenotype\",\"allergen\"],\"pmids\":[],\"summary\":\"Operator cohort FY2019 NIAID UH2. Classifier: not_nitrd (p=0.000, threshold 0.389, band clear_negative). Top PCAs: not requested (parent call not NITRD). No record of this core in FY2015-FY2018 (new).\"}",
+      "requested_by": "demo_sia",
+      "assigned_reviewer_id": "demo_ic_rep_niaid",
+      "assigned_reviewer_role": "NIAID NITRD Representative (demo)",
+      "routing_tier": "ic_rep",
+      "routing_fallback_used": true,
+      "routing_rationale": "Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.",
+      "inherited_from_full_project_num": null,
+      "inherited_from_fy": null,
+      "routing_policy_version": "nitrd-routing-v2-2026-10-26",
+      "status": "pending",
+      "created_at": "2026-11-18 15:05:26.503000",
+      "decided_by": null,
+      "decision_at": null,
+      "decision_rationale": null,
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only",
+      "corrected_parent_label": null,
+      "corrected_pcas": null,
+      "classification_status": "ok",
+      "classification_evidence": "{\"appl_id\":9725122,\"explain\":{\"against\":[],\"toward\":[{\"contribution\":0.170669,\"field\":\"abstract\",\"term\":\"data\"},{\"contribution\":0.109853,\"field\":\"phr\",\"term\":\"asthma\"},{\"contribution\":0.092378,\"field\":\"phr\",\"term\":\"cells at\"},{\"contribution\":0.08689,\"field\":\"title\",\"term\":\"phenotype\"},{\"contribution\":0.075399,\"field\":\"phr\",\"term\":\"allergen\"}]},\"fy\":2019,\"parent\":{\"band\":\"clear_negative\",\"cohort\":\"threshold_selection\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.000204,\"suggestion\":\"not_nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":false,\"max_fy\":2018,\"years\":[]},\"schema_version\":1,\"subcategory\":{\"status\":\"not_requested\",\"top_pcas\":[],\"vocabulary_id\":null}}",
+      "classification_error": null,
+      "classified_at": "2026-11-18 15:05:26.503000",
+      "classification_attempts": 1
+    },
+    {
+      "request_id": "60a0c742-c528-5859-8578-63a13c9e026b",
+      "idempotency_key": "cohort:2019:NIAID:UH2:9730348",
+      "payload_sha256": "2e1f6c8cde40ff58b7edc2d85a2ca6b7c34250d51cb4f8fb0ce0f8205beb384a",
+      "appl_id": 9730348,
+      "fy": 2019,
+      "task1_suggestion": "{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.98965,\"suggestion\":\"nitrd\"}",
+      "task2_suggestion": "{\"pcas\":[\"LSDMA\",\"EHCS\"],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}",
+      "evidence": "{\"intensity_overall\":null,\"key_terms\":[\"data\",\"computational\",\"visualization\",\"tools\",\"computational\"],\"pmids\":[],\"summary\":\"Operator cohort FY2019 NIAID UH2. Classifier: nitrd (p=0.990, threshold 0.389, band high). Top PCAs: LSDMA, EHCS. NITRD in FY2018 (1 of 1 labelled prior years).\"}",
+      "requested_by": "demo_sia",
+      "assigned_reviewer_id": "demo_ic_rep_niaid",
+      "assigned_reviewer_role": "NIAID NITRD Representative (demo)",
+      "routing_tier": "ic_rep",
+      "routing_fallback_used": true,
+      "routing_rationale": "Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.",
+      "inherited_from_full_project_num": null,
+      "inherited_from_fy": null,
+      "routing_policy_version": "nitrd-routing-v2-2026-10-26",
+      "status": "pending",
+      "created_at": "2026-11-18 15:05:42.065000",
+      "decided_by": null,
+      "decision_at": null,
+      "decision_rationale": null,
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only",
+      "corrected_parent_label": null,
+      "corrected_pcas": null,
+      "classification_status": "ok",
+      "classification_evidence": "{\"appl_id\":9730348,\"explain\":{\"against\":[{\"contribution\":-0.149764,\"field\":\"phr\",\"term\":\"data and\"},{\"contribution\":-0.08629,\"field\":\"abstract\",\"term\":\"samples\"},{\"contribution\":-0.069405,\"field\":\"title\",\"term\":\"in\"},{\"contribution\":-0.068839,\"field\":\"phr\",\"term\":\"flow cytometry\"},{\"contribution\":-0.064579,\"field\":\"title\",\"term\":\"exploration and\"}],\"toward\":[{\"contribution\":0.745239,\"field\":\"title\",\"term\":\"data\"},{\"contribution\":0.605694,\"field\":\"phr\",\"term\":\"computational\"},{\"contribution\":0.523655,\"field\":\"title\",\"term\":\"visualization\"},{\"contribution\":0.404911,\"field\":\"abstract\",\"term\":\"tools\"},{\"contribution\":0.404253,\"field\":\"abstract\",\"term\":\"computational\"}]},\"fy\":2019,\"parent\":{\"band\":\"high\",\"cohort\":\"validation\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.98965,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":true,\"max_fy\":2018,\"years\":[{\"fy\":2018,\"is_nitrd\":true,\"records\":1}]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"data analysis\",\"data\",\"analysis\",\"access\"],\"pca\":\"LSDMA\",\"score\":16.8451},{\"matched_terms\":[\"data\",\"methods\",\"approaches\",\"while\",\"novel\"],\"pca\":\"EHCS\",\"score\":9.9397}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}}",
+      "classification_error": null,
+      "classified_at": "2026-11-18 15:05:42.065000",
+      "classification_attempts": 1
+    },
+    {
+      "request_id": "6ba15846-6243-50a8-bc03-82097efc7cd8",
+      "idempotency_key": "cohort:2019:NIAID:UH2:9797472",
+      "payload_sha256": "d887b43a9dbb962132ab99d477ebe51ba7320ccd0ade1922165f188fdce0eda5",
+      "appl_id": 9797472,
+      "fy": 2019,
+      "task1_suggestion": "{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.931061,\"suggestion\":\"nitrd\"}",
+      "task2_suggestion": "{\"pcas\":[\"SPSQ\",\"LSDMA\"],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}",
+      "evidence": "{\"intensity_overall\":null,\"key_terms\":[\"data\",\"visualization\",\"data\",\"data\",\"informatics\"],\"pmids\":[],\"summary\":\"Operator cohort FY2019 NIAID UH2. Classifier: nitrd (p=0.931, threshold 0.389, band high). Top PCAs: SPSQ, LSDMA. No record of this core in FY2015-FY2018 (new).\"}",
+      "requested_by": "demo_sia",
+      "assigned_reviewer_id": "demo_ic_rep_niaid",
+      "assigned_reviewer_role": "NIAID NITRD Representative (demo)",
+      "routing_tier": "ic_rep",
+      "routing_fallback_used": true,
+      "routing_rationale": "Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.",
+      "inherited_from_full_project_num": null,
+      "inherited_from_fy": null,
+      "routing_policy_version": "nitrd-routing-v2-2026-10-26",
+      "status": "pending",
+      "created_at": "2026-11-18 15:05:52.043000",
+      "decided_by": null,
+      "decision_at": null,
+      "decision_rationale": null,
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only",
+      "corrected_parent_label": null,
+      "corrected_pcas": null,
+      "classification_status": "ok",
+      "classification_evidence": "{\"appl_id\":9797472,\"explain\":{\"against\":[{\"contribution\":-0.134806,\"field\":\"title\",\"term\":\"study\"},{\"contribution\":-0.100605,\"field\":\"title\",\"term\":\"structured\"},{\"contribution\":-0.07861,\"field\":\"phr\",\"term\":\"through\"},{\"contribution\":-0.075825,\"field\":\"phr\",\"term\":\"an interactive\"},{\"contribution\":-0.072144,\"field\":\"title\",\"term\":\"clinical data\"}],\"toward\":[{\"contribution\":0.934309,\"field\":\"title\",\"term\":\"data\"},{\"contribution\":0.387745,\"field\":\"title\",\"term\":\"visualization\"},{\"contribution\":0.378054,\"field\":\"abstract\",\"term\":\"data\"},{\"contribution\":0.357364,\"field\":\"phr\",\"term\":\"data\"},{\"contribution\":0.346165,\"field\":\"phr\",\"term\":\"informatics\"}]},\"fy\":2019,\"parent\":{\"band\":\"high\",\"cohort\":\"validation\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.931061,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":false,\"max_fy\":2018,\"years\":[]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"providing\",\"characteristics\",\"usability\"],\"pca\":\"SPSQ\",\"score\":6.7616},{\"matched_terms\":[\"data\",\"analysis\",\"access\"],\"pca\":\"LSDMA\",\"score\":5.663}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}}",
+      "classification_error": null,
+      "classified_at": "2026-11-18 15:05:52.043000",
+      "classification_attempts": 1
+    },
+    {
+      "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38",
+      "idempotency_key": "cohort:2019:NIAID:UH2:9810625",
+      "payload_sha256": "5a066c895f12ee8f8bcbbd733ac6b7b7287cbe55d122a72e77e39c94a2e80005",
+      "appl_id": 9810625,
+      "fy": 2019,
+      "task1_suggestion": "{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.492246,\"suggestion\":\"nitrd\"}",
+      "task2_suggestion": "{\"pcas\":[\"LSDMA\",\"EHCS\"],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}",
+      "evidence": "{\"intensity_overall\":null,\"key_terms\":[\"ontology\",\"ontology\",\"visualization\",\"data\",\"data\"],\"pmids\":[],\"summary\":\"Operator cohort FY2019 NIAID UH2. Classifier: nitrd (p=0.492, threshold 0.389, band positive_near_threshold). Top PCAs: LSDMA, EHCS. No record of this core in FY2015-FY2018 (new).\"}",
+      "requested_by": "demo_sia",
+      "assigned_reviewer_id": "demo_ic_rep_niaid",
+      "assigned_reviewer_role": "NIAID NITRD Representative (demo)",
+      "routing_tier": "ic_rep",
+      "routing_fallback_used": true,
+      "routing_rationale": "Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.",
+      "inherited_from_full_project_num": null,
+      "inherited_from_fy": null,
+      "routing_policy_version": "nitrd-routing-v2-2026-10-26",
+      "status": "override",
+      "created_at": "2026-11-18 15:06:02.076000",
+      "decided_by": "demo_ic_rep_niaid",
+      "decision_at": "2026-11-18 17:00:56.780000",
+      "decision_rationale": "Data and knowledge infrastructure: NITRD confirmed. Adding AI for ontology-based knowledge representation.",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only",
+      "corrected_parent_label": true,
+      "corrected_pcas": "[\"AI\",\"LSDMA\"]",
+      "classification_status": "ok",
+      "classification_evidence": "{\"appl_id\":9810625,\"explain\":{\"against\":[{\"contribution\":-0.163886,\"field\":\"title\",\"term\":\"vaccine\"},{\"contribution\":-0.157673,\"field\":\"title\",\"term\":\"pathways\"},{\"contribution\":-0.1288,\"field\":\"title\",\"term\":\"induced\"},{\"contribution\":-0.096125,\"field\":\"phr\",\"term\":\"better\"},{\"contribution\":-0.09256,\"field\":\"abstract\",\"term\":\"vaccine\"}],\"toward\":[{\"contribution\":0.540935,\"field\":\"title\",\"term\":\"ontology\"},{\"contribution\":0.484939,\"field\":\"abstract\",\"term\":\"ontology\"},{\"contribution\":0.466255,\"field\":\"title\",\"term\":\"visualization\"},{\"contribution\":0.339881,\"field\":\"phr\",\"term\":\"data\"},{\"contribution\":0.304885,\"field\":\"abstract\",\"term\":\"data\"}]},\"fy\":2019,\"parent\":{\"band\":\"positive_near_threshold\",\"cohort\":\"validation\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.492246,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":false,\"max_fy\":2018,\"years\":[]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"data analysis\",\"analysis\",\"data\",\"knowledge\",\"insights\"],\"pca\":\"LSDMA\",\"score\":19.33},{\"matched_terms\":[\"data\",\"approaches\",\"methods\"],\"pca\":\"EHCS\",\"score\":5.663}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}}",
+      "classification_error": null,
+      "classified_at": "2026-11-18 15:06:02.076000",
+      "classification_attempts": 1
+    },
+    {
+      "request_id": "f1e3249f-33b1-5c87-9796-a80e998ad40d",
+      "idempotency_key": "agent-draft:6a20783528e045358b0215904982a131",
+      "payload_sha256": "d1213709605c74579d0996965d967cd1f77b3d581433d503f108af876a55a697",
+      "appl_id": 10213736,
+      "fy": 2021,
+      "task1_suggestion": "{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.99967,\"suggestion\":\"nitrd\"}",
+      "task2_suggestion": null,
+      "evidence": "{\"intensity_overall\":null,\"key_terms\":[\"computational\",\"computing\",\"software\",\"computer\",\"algorithms\",\"performance computing\"],\"pmids\":[],\"summary\":\"Suggest NITRD for expert review. Application 10213736 (FY2021), Advanced Computing/Computational Core, supports computer storage, high-performance computing, system administration, and programming services for vision research, including sharing specialized software and algorithms for computational modeling and analysis. The public project record already carries the NITRD spending category. The parent classifier suggests NITRD with probability 0.99967, above its threshold of 0.3893682055460409. This is a demonstration suggestion, not an official classification.\"}",
+      "requested_by": "demo_sia",
+      "assigned_reviewer_id": "demo_sia",
+      "assigned_reviewer_role": "NITRD SIA Review Queue (demo)",
+      "routing_tier": "sia_queue",
+      "routing_fallback_used": true,
+      "routing_rationale": "Subproject 7083 inherits the routing of parent appl 10213732. Tier 1: no demo program officer is assigned to this award. Tier 2: no active NEI NITRD representative. Tier 3: NITRD SIA review queue.",
+      "inherited_from_full_project_num": "5P30EY026877-05",
+      "inherited_from_fy": 2021,
+      "routing_policy_version": "nitrd-routing-v2-2026-10-26",
+      "status": "pending",
+      "created_at": "2026-11-18 15:23:31.613000",
+      "decided_by": null,
+      "decision_at": null,
+      "decision_rationale": null,
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only",
+      "corrected_parent_label": null,
+      "corrected_pcas": null,
+      "classification_status": null,
+      "classification_evidence": null,
+      "classification_error": null,
+      "classified_at": null,
+      "classification_attempts": null
+    }
+  ],
+  "review_events": [
+    {
+      "event_id": "1ac5f7c2-bf23-581f-8a5d-636189747767",
+      "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c",
+      "appl_id": 9724345,
+      "event_type": "classified",
+      "actor_id": "demo_sia",
+      "details": "{\"attempt\":1,\"evidence\":{\"appl_id\":9724345,\"explain\":{\"against\":[{\"contribution\":-0.142899,\"field\":\"phr\",\"term\":\"data and\"},{\"contribution\":-0.13918,\"field\":\"title\",\"term\":\"cytometry\"},{\"contribution\":-0.131554,\"field\":\"phr\",\"term\":\"through\"},{\"contribution\":-0.079388,\"field\":\"title\",\"term\":\"of\"},{\"contribution\":-0.06083,\"field\":\"phr\",\"term\":\"the\"}],\"toward\":[{\"contribution\":0.92243,\"field\":\"abstract\",\"term\":\"computational\"},{\"contribution\":0.826221,\"field\":\"title\",\"term\":\"data\"},{\"contribution\":0.679226,\"field\":\"abstract\",\"term\":\"software\"},{\"contribution\":0.418879,\"field\":\"phr\",\"term\":\"software\"},{\"contribution\":0.355011,\"field\":\"abstract\",\"term\":\"computational methods\"}]},\"fy\":2019,\"parent\":{\"band\":\"high\",\"cohort\":\"threshold_selection\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.96416,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":true,\"max_fy\":2018,\"years\":[{\"fy\":2018,\"is_nitrd\":true,\"records\":1}]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"data analysis\",\"data\",\"analysis\",\"provenance\",\"knowledge\"],\"pca\":\"LSDMA\",\"score\":19.33},{\"matched_terms\":[\"analytics\",\"data\",\"approaches\",\"methods\",\"software\",\"novel\"],\"pca\":\"EHCS\",\"score\":11.7314}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}},\"status\":\"ok\"}",
+      "at": "2026-11-18 15:05:12.057000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "eeefe107-3488-50be-a1c8-ba6749b51a48",
+      "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c",
+      "appl_id": 9724345,
+      "event_type": "created",
+      "actor_id": "demo_sia",
+      "details": "{\"core_project_num\":\"UH2AI132342\",\"fy\":2019,\"idempotency_key\":\"cohort:2019:NIAID:UH2:9724345\",\"payload_sha256\":\"839528ce12e951d3415487eabe9d4203a9caff2a96aa2f58e566375d588cc297\"}",
+      "at": "2026-11-18 15:05:12.057000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "1bdd9f68-c455-5935-8f10-02fd78fd0e69",
+      "request_id": "1bf43ca7-3c89-55a3-af28-c6987545acee",
+      "appl_id": 9725122,
+      "event_type": "classified",
+      "actor_id": "demo_sia",
+      "details": "{\"attempt\":1,\"evidence\":{\"appl_id\":9725122,\"explain\":{\"against\":[],\"toward\":[{\"contribution\":0.170669,\"field\":\"abstract\",\"term\":\"data\"},{\"contribution\":0.109853,\"field\":\"phr\",\"term\":\"asthma\"},{\"contribution\":0.092378,\"field\":\"phr\",\"term\":\"cells at\"},{\"contribution\":0.08689,\"field\":\"title\",\"term\":\"phenotype\"},{\"contribution\":0.075399,\"field\":\"phr\",\"term\":\"allergen\"}]},\"fy\":2019,\"parent\":{\"band\":\"clear_negative\",\"cohort\":\"threshold_selection\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.000204,\"suggestion\":\"not_nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":false,\"max_fy\":2018,\"years\":[]},\"schema_version\":1,\"subcategory\":{\"status\":\"not_requested\",\"top_pcas\":[],\"vocabulary_id\":null}},\"status\":\"ok\"}",
+      "at": "2026-11-18 15:05:26.503000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "fcfed377-d795-5bc8-bda0-09f6773c5de5",
+      "request_id": "1bf43ca7-3c89-55a3-af28-c6987545acee",
+      "appl_id": 9725122,
+      "event_type": "created",
+      "actor_id": "demo_sia",
+      "details": "{\"core_project_num\":\"UH2AI144434\",\"fy\":2019,\"idempotency_key\":\"cohort:2019:NIAID:UH2:9725122\",\"payload_sha256\":\"4593283b98fb7df8fc777fdb4ae81fe5e79c8abedf9fbae2503312bb6212c833\"}",
+      "at": "2026-11-18 15:05:26.503000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "5b99f6fb-bf63-5ca8-a084-507ba83ca390",
+      "request_id": "60a0c742-c528-5859-8578-63a13c9e026b",
+      "appl_id": 9730348,
+      "event_type": "classified",
+      "actor_id": "demo_sia",
+      "details": "{\"attempt\":1,\"evidence\":{\"appl_id\":9730348,\"explain\":{\"against\":[{\"contribution\":-0.149764,\"field\":\"phr\",\"term\":\"data and\"},{\"contribution\":-0.08629,\"field\":\"abstract\",\"term\":\"samples\"},{\"contribution\":-0.069405,\"field\":\"title\",\"term\":\"in\"},{\"contribution\":-0.068839,\"field\":\"phr\",\"term\":\"flow cytometry\"},{\"contribution\":-0.064579,\"field\":\"title\",\"term\":\"exploration and\"}],\"toward\":[{\"contribution\":0.745239,\"field\":\"title\",\"term\":\"data\"},{\"contribution\":0.605694,\"field\":\"phr\",\"term\":\"computational\"},{\"contribution\":0.523655,\"field\":\"title\",\"term\":\"visualization\"},{\"contribution\":0.404911,\"field\":\"abstract\",\"term\":\"tools\"},{\"contribution\":0.404253,\"field\":\"abstract\",\"term\":\"computational\"}]},\"fy\":2019,\"parent\":{\"band\":\"high\",\"cohort\":\"validation\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.98965,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":true,\"max_fy\":2018,\"years\":[{\"fy\":2018,\"is_nitrd\":true,\"records\":1}]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"data analysis\",\"data\",\"analysis\",\"access\"],\"pca\":\"LSDMA\",\"score\":16.8451},{\"matched_terms\":[\"data\",\"methods\",\"approaches\",\"while\",\"novel\"],\"pca\":\"EHCS\",\"score\":9.9397}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}},\"status\":\"ok\"}",
+      "at": "2026-11-18 15:05:42.065000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "33af97d4-0486-582f-be46-fa200a0ac899",
+      "request_id": "60a0c742-c528-5859-8578-63a13c9e026b",
+      "appl_id": 9730348,
+      "event_type": "created",
+      "actor_id": "demo_sia",
+      "details": "{\"core_project_num\":\"UH2AI132339\",\"fy\":2019,\"idempotency_key\":\"cohort:2019:NIAID:UH2:9730348\",\"payload_sha256\":\"2e1f6c8cde40ff58b7edc2d85a2ca6b7c34250d51cb4f8fb0ce0f8205beb384a\"}",
+      "at": "2026-11-18 15:05:42.065000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "0b1ae252-f4b6-55af-800c-4a818906b328",
+      "request_id": "6ba15846-6243-50a8-bc03-82097efc7cd8",
+      "appl_id": 9797472,
+      "event_type": "classified",
+      "actor_id": "demo_sia",
+      "details": "{\"attempt\":1,\"evidence\":{\"appl_id\":9797472,\"explain\":{\"against\":[{\"contribution\":-0.134806,\"field\":\"title\",\"term\":\"study\"},{\"contribution\":-0.100605,\"field\":\"title\",\"term\":\"structured\"},{\"contribution\":-0.07861,\"field\":\"phr\",\"term\":\"through\"},{\"contribution\":-0.075825,\"field\":\"phr\",\"term\":\"an interactive\"},{\"contribution\":-0.072144,\"field\":\"title\",\"term\":\"clinical data\"}],\"toward\":[{\"contribution\":0.934309,\"field\":\"title\",\"term\":\"data\"},{\"contribution\":0.387745,\"field\":\"title\",\"term\":\"visualization\"},{\"contribution\":0.378054,\"field\":\"abstract\",\"term\":\"data\"},{\"contribution\":0.357364,\"field\":\"phr\",\"term\":\"data\"},{\"contribution\":0.346165,\"field\":\"phr\",\"term\":\"informatics\"}]},\"fy\":2019,\"parent\":{\"band\":\"high\",\"cohort\":\"validation\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.931061,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":false,\"max_fy\":2018,\"years\":[]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"providing\",\"characteristics\",\"usability\"],\"pca\":\"SPSQ\",\"score\":6.7616},{\"matched_terms\":[\"data\",\"analysis\",\"access\"],\"pca\":\"LSDMA\",\"score\":5.663}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}},\"status\":\"ok\"}",
+      "at": "2026-11-18 15:05:52.043000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "3cd948b9-441a-5550-8bff-ddc5295df5f3",
+      "request_id": "6ba15846-6243-50a8-bc03-82097efc7cd8",
+      "appl_id": 9797472,
+      "event_type": "created",
+      "actor_id": "demo_sia",
+      "details": "{\"core_project_num\":\"UH2AI145837\",\"fy\":2019,\"idempotency_key\":\"cohort:2019:NIAID:UH2:9797472\",\"payload_sha256\":\"d887b43a9dbb962132ab99d477ebe51ba7320ccd0ade1922165f188fdce0eda5\"}",
+      "at": "2026-11-18 15:05:52.043000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "658b9841-f982-5856-9ce1-31a250005b89",
+      "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38",
+      "appl_id": 9810625,
+      "event_type": "classified",
+      "actor_id": "demo_sia",
+      "details": "{\"attempt\":1,\"evidence\":{\"appl_id\":9810625,\"explain\":{\"against\":[{\"contribution\":-0.163886,\"field\":\"title\",\"term\":\"vaccine\"},{\"contribution\":-0.157673,\"field\":\"title\",\"term\":\"pathways\"},{\"contribution\":-0.1288,\"field\":\"title\",\"term\":\"induced\"},{\"contribution\":-0.096125,\"field\":\"phr\",\"term\":\"better\"},{\"contribution\":-0.09256,\"field\":\"abstract\",\"term\":\"vaccine\"}],\"toward\":[{\"contribution\":0.540935,\"field\":\"title\",\"term\":\"ontology\"},{\"contribution\":0.484939,\"field\":\"abstract\",\"term\":\"ontology\"},{\"contribution\":0.466255,\"field\":\"title\",\"term\":\"visualization\"},{\"contribution\":0.339881,\"field\":\"phr\",\"term\":\"data\"},{\"contribution\":0.304885,\"field\":\"abstract\",\"term\":\"data\"}]},\"fy\":2019,\"parent\":{\"band\":\"positive_near_threshold\",\"cohort\":\"validation\",\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.492246,\"suggestion\":\"nitrd\",\"threshold\":0.3893682055460409},\"prior_year\":{\"continuing\":false,\"max_fy\":2018,\"years\":[]},\"schema_version\":1,\"subcategory\":{\"status\":\"ranked\",\"top_pcas\":[{\"matched_terms\":[\"data analysis\",\"analysis\",\"data\",\"knowledge\",\"insights\"],\"pca\":\"LSDMA\",\"score\":19.33},{\"matched_terms\":[\"data\",\"approaches\",\"methods\"],\"pca\":\"EHCS\",\"score\":5.663}],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}},\"status\":\"ok\"}",
+      "at": "2026-11-18 15:06:02.076000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "15744eab-0d67-5ccf-b1f0-be0c4a886a13",
+      "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38",
+      "appl_id": 9810625,
+      "event_type": "created",
+      "actor_id": "demo_sia",
+      "details": "{\"core_project_num\":\"UH2AI132931\",\"fy\":2019,\"idempotency_key\":\"cohort:2019:NIAID:UH2:9810625\",\"payload_sha256\":\"5a066c895f12ee8f8bcbbd733ac6b7b7287cbe55d122a72e77e39c94a2e80005\"}",
+      "at": "2026-11-18 15:06:02.076000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "aacf0448-aff7-5486-b6c8-c8577f4d851f",
+      "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c",
+      "appl_id": 9724345,
+      "event_type": "override",
+      "actor_id": "demo_ic_rep_niaid",
+      "details": "{\"corrected_parent_label\":true,\"corrected_pcas\":[\"AI\",\"LSDMA\"],\"decision\":\"override\",\"from\":\"pending\",\"proposal\":{\"task1_suggestion\":{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.96416,\"suggestion\":\"nitrd\"},\"task2_suggestion\":{\"pcas\":[\"LSDMA\",\"EHCS\"],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}},\"rationale\":\"Data and knowledge infrastructure: NITRD confirmed. Adding AI for ontology-based knowledge representation.\"}",
+      "at": "2026-11-18 15:15:47.032000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "4c2ae110-4ae6-5f43-a934-e4d9b1ee2b41",
+      "request_id": "f1e3249f-33b1-5c87-9796-a80e998ad40d",
+      "appl_id": 10213736,
+      "event_type": "created",
+      "actor_id": "demo_sia",
+      "details": "{\"core_project_num\":\"P30EY026877\",\"fy\":2021,\"idempotency_key\":\"agent-draft:6a20783528e045358b0215904982a131\",\"payload_sha256\":\"d1213709605c74579d0996965d967cd1f77b3d581433d503f108af876a55a697\"}",
+      "at": "2026-11-18 15:23:31.613000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "c3ff2620-b18b-50ef-85ea-bf2e4bd7a15d",
+      "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38",
+      "appl_id": 9810625,
+      "event_type": "override",
+      "actor_id": "demo_ic_rep_niaid",
+      "details": "{\"corrected_parent_label\":true,\"corrected_pcas\":[\"AI\",\"LSDMA\"],\"decision\":\"override\",\"from\":\"pending\",\"proposal\":{\"task1_suggestion\":{\"model_id\":\"nitrd-parent-v2-ba10594d9581\",\"probability\":0.492246,\"suggestion\":\"nitrd\"},\"task2_suggestion\":{\"pcas\":[\"LSDMA\",\"EHCS\"],\"vocabulary_id\":\"vocabulary-scope-only-2026-10-24\"}},\"rationale\":\"Data and knowledge infrastructure: NITRD confirmed. Adding AI for ontology-based knowledge representation.\"}",
+      "at": "2026-11-18 17:00:56.780000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    }
+  ],
+  "routing_events": [
+    {
+      "event_id": "3713d29e-f43c-5692-b60c-77fba58e3cae",
+      "request_id": "49f99042-043e-5bac-94d9-2c2107dea80c",
+      "appl_id": 9724345,
+      "event_type": "routed",
+      "actor_id": "system",
+      "details": "{\"fallback_used\":true,\"inherited_from\":null,\"policy_version\":\"nitrd-routing-v2-2026-10-26\",\"rationale\":\"Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.\",\"reviewer_id\":\"demo_ic_rep_niaid\",\"reviewer_role\":\"NIAID NITRD Representative (demo)\",\"tier\":\"ic_rep\"}",
+      "at": "2026-11-18 15:05:12.057000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "391adb8e-1074-5974-b4d8-bef8f525d75b",
+      "request_id": "1bf43ca7-3c89-55a3-af28-c6987545acee",
+      "appl_id": 9725122,
+      "event_type": "routed",
+      "actor_id": "system",
+      "details": "{\"fallback_used\":true,\"inherited_from\":null,\"policy_version\":\"nitrd-routing-v2-2026-10-26\",\"rationale\":\"Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.\",\"reviewer_id\":\"demo_ic_rep_niaid\",\"reviewer_role\":\"NIAID NITRD Representative (demo)\",\"tier\":\"ic_rep\"}",
+      "at": "2026-11-18 15:05:26.503000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "2a8b847a-0a1f-5efc-bfac-bf5820989af1",
+      "request_id": "60a0c742-c528-5859-8578-63a13c9e026b",
+      "appl_id": 9730348,
+      "event_type": "routed",
+      "actor_id": "system",
+      "details": "{\"fallback_used\":true,\"inherited_from\":null,\"policy_version\":\"nitrd-routing-v2-2026-10-26\",\"rationale\":\"Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.\",\"reviewer_id\":\"demo_ic_rep_niaid\",\"reviewer_role\":\"NIAID NITRD Representative (demo)\",\"tier\":\"ic_rep\"}",
+      "at": "2026-11-18 15:05:42.065000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "d4f77f28-06d5-5fe3-aca4-2c8905e9286c",
+      "request_id": "6ba15846-6243-50a8-bc03-82097efc7cd8",
+      "appl_id": 9797472,
+      "event_type": "routed",
+      "actor_id": "system",
+      "details": "{\"fallback_used\":true,\"inherited_from\":null,\"policy_version\":\"nitrd-routing-v2-2026-10-26\",\"rationale\":\"Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.\",\"reviewer_id\":\"demo_ic_rep_niaid\",\"reviewer_role\":\"NIAID NITRD Representative (demo)\",\"tier\":\"ic_rep\"}",
+      "at": "2026-11-18 15:05:52.043000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "b0cad307-d92e-5dee-ba11-73161ba19a0f",
+      "request_id": "e4cab48f-2a3a-5851-9190-7e776f1fbb38",
+      "appl_id": 9810625,
+      "event_type": "routed",
+      "actor_id": "system",
+      "details": "{\"fallback_used\":true,\"inherited_from\":null,\"policy_version\":\"nitrd-routing-v2-2026-10-26\",\"rationale\":\"Tier 1: no demo program officer is assigned to this award. Tier 2: NIAID NITRD representative demo_ic_rep_niaid.\",\"reviewer_id\":\"demo_ic_rep_niaid\",\"reviewer_role\":\"NIAID NITRD Representative (demo)\",\"tier\":\"ic_rep\"}",
+      "at": "2026-11-18 15:06:02.076000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    },
+    {
+      "event_id": "bdd3b9fb-f0aa-5c36-9216-e2398d465eb1",
+      "request_id": "f1e3249f-33b1-5c87-9796-a80e998ad40d",
+      "appl_id": 10213736,
+      "event_type": "routed",
+      "actor_id": "system",
+      "details": "{\"fallback_used\":true,\"inherited_from\":{\"full_project_num\":\"5P30EY026877-05\",\"fy\":2021},\"policy_version\":\"nitrd-routing-v2-2026-10-26\",\"rationale\":\"Subproject 7083 inherits the routing of parent appl 10213732. Tier 1: no demo program officer is assigned to this award. Tier 2: no active NEI NITRD representative. Tier 3: NITRD SIA review queue.\",\"reviewer_id\":\"demo_sia\",\"reviewer_role\":\"NITRD SIA Review Queue (demo)\",\"tier\":\"sia_queue\"}",
+      "at": "2026-11-18 15:23:31.613000",
+      "sandbox": true,
+      "label": "Not RCDC / demonstration only"
+    }
+  ],
+  "delta_history_since_reset": {
+    "review_requests": [
+      {
+        "version": 411,
+        "timestamp": "2026-11-18 17:01:01.812000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 410,
+        "timestamp": "2026-11-18 15:23:36.287000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 409,
+        "timestamp": "2026-11-18 15:15:54.378000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 408,
+        "timestamp": "2026-11-18 15:06:07.699000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 407,
+        "timestamp": "2026-11-18 15:05:57.253000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 406,
+        "timestamp": "2026-11-18 15:05:47.285000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 405,
+        "timestamp": "2026-11-18 15:05:35.574000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 404,
+        "timestamp": "2026-11-18 15:05:21.623000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 403,
+        "timestamp": "2026-11-17 22:36:40.400000",
+        "operation": "DELETE",
+        "user": "conroyri@nih.gov"
+      }
+    ],
+    "review_events": [
+      {
+        "version": 408,
+        "timestamp": "2026-11-18 17:01:01.812000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 407,
+        "timestamp": "2026-11-18 15:23:36.287000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 406,
+        "timestamp": "2026-11-18 15:15:54.378000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 405,
+        "timestamp": "2026-11-18 15:06:07.699000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 404,
+        "timestamp": "2026-11-18 15:05:57.253000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 403,
+        "timestamp": "2026-11-18 15:05:47.285000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 402,
+        "timestamp": "2026-11-18 15:05:35.574000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 401,
+        "timestamp": "2026-11-18 15:05:21.623000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 400,
+        "timestamp": "2026-11-17 22:36:41.081000",
+        "operation": "DELETE",
+        "user": "conroyri@nih.gov"
+      }
+    ],
+    "routing_events": [
+      {
+        "version": 360,
+        "timestamp": "2026-11-18 15:23:36.287000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 359,
+        "timestamp": "2026-11-18 15:06:07.699000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 358,
+        "timestamp": "2026-11-18 15:05:57.253000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 357,
+        "timestamp": "2026-11-18 15:05:47.285000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 356,
+        "timestamp": "2026-11-18 15:05:35.574000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 355,
+        "timestamp": "2026-11-18 15:05:21.623000",
+        "operation": "TRANSACTION",
+        "user": "06f65816-a82e-4597-abf1-c570283871f5"
+      },
+      {
+        "version": 354,
+        "timestamp": "2026-11-17 22:36:47.794000",
+        "operation": "DELETE",
+        "user": "conroyri@nih.gov"
+      }
+    ]
+  },
+  "principals": "06f65816-a82e-4597-abf1-c570283871f5 (portal SP) for every write; conroyri@nih.gov for the reset DELETE only. No others."
+}

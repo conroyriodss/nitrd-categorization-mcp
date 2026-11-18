@@ -8,6 +8,23 @@
 > and the auth evidence in [`eval/results/auth/`](eval/results/auth/). The click-path below
 > documents what was demonstrated; the records document what was observed.
 
+## Recorded video demo
+
+The submitted video (7:49, submitted to GSA; not in this repository) is a screenshot walkthrough
+with recorded narration of the deployed `d7bad89` build, taken on 2026-11-18. That build does not
+carry the F1-F5 display fixes, which were built but not deployed. It shows:
+
+* the FY2019 NIAID UH2 cohort (5 awards) submitted for review, each classified on submit;
+* card 9810625 (UH2AI132931) overridden by `demo_ic_rep_niaid`: corrected to NITRD with PCAs AI
+  and LSDMA, with its rationale and audit trail;
+* the agent drafting a review request for 10213736, approved by a person.
+
+The sandbox rows, events and Delta versions of that run are in
+[`eval/results/demo/20261118_video_v2.json`](eval/results/demo/20261118_video_v2.json), indexed
+in [`eval/results/demo/RUNS.md`](eval/results/demo/RUNS.md). The same session also recorded an
+override on 9724345, which that file lists too. An earlier live take (2026-11-17) was discarded and
+is kept as `20261117_video_take1.json`.
+
 This is the click-path for a live demonstration. It needs workspace access (the deployed Apps are
 behind Databricks OAuth). A judge without access can check the same steps in the recorded runs:
 [`eval/results/runs/`](eval/results/runs/) and the claim-to-artifact map in
