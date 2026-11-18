@@ -2,11 +2,15 @@
 
 Routed MANUAL by the owner on 2026-11-10. These are not applied by `scripts/apply_routing_batch.py`; the dry run only checks that each "before" text is present exactly once (status `MANUAL: hand-edit list (anchor verified present)`). Line numbers are those of the committed extracts (`*.docx.txt`, `*.pptx.txt`). Each BEFORE/AFTER block is checked against the committed extract and the spec by the verification recorded at the end.
 
+> **Correction (2026-11-18).** The formatting notes for H1-H3 below were wrong. They said the paragraphs are bold+italic throughout. Re-read from the 11-06b `word/document.xml` on 2026-11-18: the lead-in ("Deployed-path verification.", "Untrusted text.") and the tier tags ("[Verified]", "[Team-reported]") are bold, and the body text is regular (not bold, not italic). The "Evaluation integrity without environment access." paragraph is regular throughout. The original notes are kept below, struck through, with the corrected instruction after each.
+
 ## H1. D03, DOCX line 46: deployed-path paragraph (replace whole paragraph)
 
-Formatting in 11-06b, read from the XML: the paragraph is bold+italic from its start through "cleanup to 0/0/0.", the run ids are Courier New (bold+italic), and the last sentence ("Committed records for 315b5bc2 ... INDEX entries.") is italic only. The [Verified] / [Team-reported] tags are not bolded separately: they share the paragraph's bold-italic.
+~~Formatting in 11-06b, read from the XML: the paragraph is bold+italic from its start through "cleanup to 0/0/0.", the run ids are Courier New (bold+italic), and the last sentence ("Committed records for 315b5bc2 ... INDEX entries.") is italic only. The [Verified] / [Team-reported] tags are not bolded separately: they share the paragraph's bold-italic.~~
 
-Apply: keep the bold-italic; set every run id (47501246, d08b246f, d6243323, 3174122a, 5704d50c, 778bd3ab, 315b5bc2, 3d778528, 10388671, 10445135) in Courier New; make the last sentence ("The earlier runs ... were not located.") italic only, as the corresponding sentence is now.
+Corrected: lead-in "Deployed-path verification" and each tier tag bold; body text regular.
+
+~~Apply: keep the bold-italic;~~ Apply: bold lead-in and tags, regular body; set every run id (47501246, d08b246f, d6243323, 3174122a, 5704d50c, 778bd3ab, 315b5bc2, 3d778528, 10388671, 10445135) in Courier New; make the last sentence ("The earlier runs ... were not located.") italic only, as the corresponding sentence is now.
 
 BEFORE:
 ```text
@@ -20,7 +24,7 @@ Deployed-path verification (shipped build: portal and agent at d7bad89, outputs 
 
 ## H2. D09, DOCX line 302: Untrusted text paragraph (replace one sentence)
 
-Formatting in 11-06b: the whole paragraph is bold+italic; no separate tag formatting. Apply: keep bold-italic; `adv-injection-v1` in Courier New, as run ids are elsewhere.
+~~Formatting in 11-06b: the whole paragraph is bold+italic; no separate tag formatting. Apply: keep bold-italic;~~ Corrected: lead-in "Untrusted text." bold, body regular. Apply: bold lead-in and the new [Verified] tag, regular body; `adv-injection-v1` in Courier New, as run ids are elsewhere.
 
 BEFORE:
 ```text
@@ -34,7 +38,7 @@ Untrusted text. Award abstracts and publication metadata can carry injection att
 
 ## H3. D14, after DOCX line 330: lessons-learned entry (new paragraphs; placement owner's)
 
-Place after the paragraph that starts "Evaluation integrity without environment access." (line 330) and ends "...the proposed reusable agency pattern." That paragraph is bold+italic throughout. No lessons-learned subsection exists in 11-06b; the owner chooses whether to add one.
+Place after the paragraph that starts "Evaluation integrity without environment access." (line 330) and ends "...the proposed reusable agency pattern." ~~That paragraph is bold+italic throughout.~~ (Corrected: that paragraph is regular throughout.) No lessons-learned subsection exists in 11-06b; the owner chooses whether to add one.
 
 Apply: first sentence ("The check that mattered most ... did not run.") italic; items 1-5 as a numbered list, each lead-in sentence bold; "Rule." bold.
 
