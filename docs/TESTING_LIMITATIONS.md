@@ -86,7 +86,7 @@ This is the sixth recorded instance of a claim about state that was wrong. The e
 
 ## Sentence for the evaluation document (testing methodology). APPROVED by the owner 2026-11-10, with the addition on recorded runs.
 
-History: this sentence describes CI before `f0def47` (2026-11-18). Since then the four agent tests run in CI on every push; see the update at the top of this file. The submitted 11-18 documents are not changed by this note.
+History: this sentence describes CI before `f0def47` (2026-11-18), and no submitted document ever contained it (checked 2026-11-18 against the committed extracts of the 11-06, 11-06b and 11-18 DOCX and PPTX, and the final 11-18 PDF text). The final evaluation document instead carries a [Verified] "Continuous integration" paragraph citing CI run `44399856352` on `main` at `f0def47` (831 passed, 19 skipped, 2 xfailed, agent SDK at the app pins). See the update at the top of this file.
 
 > Continuous integration runs the unit and contract suite on every push, but four agent tests need the agent SDK, which the CI environment does not install, so they skip there. One of them is the test showing that the shipped agent is offered exactly the tool set measured in the counted adversarial run. They run only in a separately built evaluation environment. Only that identity test has a recorded run there (2026-11-09, when its test file passed 5 of 5); the other three have no recorded run at all.
 

@@ -4,9 +4,9 @@
 
 | File | SHA-256 | Note |
 | --- | --- | --- |
-| `NITRD_Evaluation_2026-11-18.docx` | `3b9f4274c9bdc21712156bc95166cf82a1a6582e49591f46429de69a52856245` | **current, final.** Evaluation document, revision 11-18: 11-06b plus the programmatic routing batch, hand edits H1-H6 and the owner's further edits (see "Round trip 2026-11-18"). The two Word comments were removed on 2026-11-18 (see "Comment removal"). History: the first 11-18 file, with the comments, was `8991571042f216e1ab29e9225caac98647c6f68bd8a05a13bd7b792807ac4ce6` (committed b6f487c; recoverable from git). |
-| `NITRD_Evaluation_2026-11-18.pdf` | `7b63767844b3063df82d076726770969127137072ec5ef12e891cb50b7a79df0` | **current, final.** The required evaluation report, exported by the owner from the 11-18 DOCX (producer LibreOffice 26.2.6.3 Writer, created 2026-11-18T12:44:09-05:00). 17 pages. |
-| `NITRD_Hackathon_Presentation_2026-11-18.pptx` | `ee2114e749ee34226ba75c00626607e2fe7e5e7fb5a42288605afb10395af9c0` | **current, final.** Deck, revision 11-18. |
+| `NITRD_Evaluation_2026-11-18.docx` | `3e1c5bd595eb8b2c272608ee35d9fa2c553d37696a0bf0d29e2c95b71938e056` | **current, final.** Evaluation document, revision 11-18 with the external-review corrections (see "External review 2026-11-18"). 817,144 bytes. History: `3b9f4274c9bdc21712156bc95166cf82a1a6582e49591f46429de69a52856245` (11-18 after comment removal, committed acec1b5); `8991571042f216e1ab29e9225caac98647c6f68bd8a05a13bd7b792807ac4ce6` (first 11-18 file, with comments, committed b6f487c). Both recoverable from git. |
+| `NITRD_Evaluation_2026-11-18.pdf` | `11dbada8ab7dfb4958e5ebc2b5afb76a83abbcff6fa6935c1d2cf9fe9906ac40` | **current, final.** The required evaluation report, exported by the owner from the current DOCX (producer LibreOffice 26.2.6.3 Writer, created 2026-11-18T21:24:18Z). 18 pages. History: `7b63767844b3063df82d076726770969127137072ec5ef12e891cb50b7a79df0` (17 pages, committed b6f487c; recoverable from git). |
+| `NITRD_Hackathon_Presentation_2026-11-18.pptx` | `e3352585ed25a595d75c9d226dc02003c8d7f2a58ff12e834a4b0f847afaccd2` | **current, final.** Deck, revision 11-18 with the external-review corrections (speaker notes only). History: `ee2114e749ee34226ba75c00626607e2fe7e5e7fb5a42288605afb10395af9c0` (committed b6f487c; recoverable from git). |
 | `NITRD_Code_Links_2026-11-06b.pdf` | `172b861c25c392904da584b7bbc0ae2e8c393841c44b3b5caa6e0b842e207334` | **stale placeholder.** Code-link page pinned to 4a9ccee. To be regenerated, pinned to the final commit, when the gsa-mcp-hackathon fork URL is confirmed. |
 | `NITRD_Evaluation_2026-11-06b.docx` | `cc80b368876937528fcd70bc9d64db53344ab6c1dff02130ffdaefdfdc313344` | history: 11-06b with the programmatic routing batch applied (commit 4a9ccee, 2026-11-17). The file sent to reviewers had `2b70c7bcff69a578139d58d7f4e2132ff2a78359fa221b330495e15a34815332` (committed 2026-11-09; recoverable from git). This table was not updated at the apply; corrected 2026-11-18. |
 | `NITRD_Hackathon_Presentation_2026-11-06b.pptx` | `f903f6b9ab323376b4ef26f7e4d1e9c39517ad0d66931b8b9acf8691086a010a` | history: 11-06b deck with the routing batch applied (4a9ccee). The version sent to reviewers had `c974508168cbc19987f9c4260ec4e0f2e0b3738a7c39cf9931069b14e6d01fcb` (slide 1 notes: "Revision 2026-11-06b; corrections B3, C1-C5, latency, failure table applied"). |
@@ -23,6 +23,27 @@ The extracts take the paragraph text of each part, in order.
 Where an extract and its document differ, the document is authoritative.
 
 Extracts are made with `python scripts/extract_submission_text.py <file> ...`, which writes `<file>.txt`. Validation, 2026-11-09: run on the 11-06 DOCX and deck, it reproduced both committed 11-06 extracts byte for byte, and then made the 11-06b extracts. The 11-06 extracts were originally made by a script that was never committed.
+
+## External review 2026-11-18
+
+The 11-18 finals were reviewed externally (ChatGPT and Perplexity reviews, supplied by the owner). Genie Code checked the points raised against committed state (report items A1-A6) before the owner made these edits. Verified by Genie Code on 2026-11-18 from the files listed above.
+
+* **Files.** Found in `/Workspace/Users/conroyri@nih.gov/entry2_inputs/` under timestamped names (the workspace adds a timestamp when a name exists) and matched by SHA-256. Each hash was checked before and after the copy.
+* **DOCX changes** (extract diff against `3b9f4274`, all hunks read; only `word/document.xml` and its relationships changed, images unchanged):
+  * revision marker;
+  * summary cell: the bias prediction is witnessed (record 0006), not pre-registered (A2);
+  * case table and the paragraph after it: 9810625 (FY2019 NIAID UH2, p 0.492; not NITRD in public RePORTER or in the evaluation label `nih_spending_cats`, which gives label 0) and 10213736 (FY2021 NEI P30, p 0.99967, listed NITRD), matching `eval/results/demo/20261118_video_v2.json` (A4);
+  * freeze chronology: witness 0007 fixes the Tier 1c denominator as a post-freeze clarification (A2);
+  * bias paragraph rewritten from witness 0006 (−9.0%, S = 3,655, range −13.0% to −2.0%, committed 2026-11-05T22:02:45Z), the 0008 time correction, and the witness-records source line for 0006-0009 (A2);
+  * the range is a stated tolerance, not a prediction interval;
+  * PCC: the pre-rewrite commit was still retrievable from GitHub by SHA on 2026-11-18 (A3);
+  * new "Continuous integration. [Verified]" paragraph: run `44399856352` on `main` at `f0def47`, 831 passed, 19 skipped, 2 xfailed, agent SDK at the app pins (A1, A6);
+  * parity hyperlink retargeted from `5704d50c` at `f81733c` to `20261109T2147Z_parity_47501246/run.json` at `acec1b5` (`acec1b54f82da75de2a024d11f153c0164e59871`). That this URL opens without signing in was not checked from here.
+  * Nothing else changed.
+* **PPTX changes** (speaker notes only; slides 1, 5, 6, 8, 9 and 11, the only parts that changed): slide 1 marker; slide 5 note (9810625 and 10213736 status); slide 6 parity URL; slides 8 and 9 bias and 0007 text; slide 11 PCC and bias text.
+* **PDF against DOCX.** 18 pages. All 137 body paragraphs appear in order, once page headers, footers, page numbers and line-break hyphens are removed. All 202 table cells are present; in two citation cells pdftotext interleaves the adjacent column, and both halves are present. 44 distinct hyperlinks, equal to the 44 relationships the DOCX uses (a 45th, unused relationship to `GSA-TTS/cdc-places-mcp-server` was also unused in the earlier files). 6 figures (pages 2, 5, 7, 9, 10, 11), matching the 6 DOCX media files. The Neves footnote (id 1) is attached to "0.62 overall; label range 0.42–0.82" and its text is in the PDF.
+* **Note, not a defect.** The case-table paragraph says the reviewer "adds AI to the PCAs". The override replaced the suggested LSDMA and EHCS with AI and LSDMA, so EHCS was also dropped.
+* A5 (tool annotation hints) needed no document change.
 
 ## Round trip 2026-11-18 (11-18 finals)
 

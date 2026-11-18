@@ -60,7 +60,9 @@ Same as the template (an earlier internal audit listed some of these as missing;
 they are present): `.python-version` (3.11), `.env.example` (extended),
 `.dockerignore`, `.github/workflows/ci.yml` (one-line change), `LICENSE` (MIT),
 `QUICKSTART.md` and `SECURITY.md` (rewritten for three servers), and
-`.agents/skills/` (identical to `f39249f`).
+`.agents/skills/` (identical to `f39249f` until 2026-11-18; see below).
+
+`.agents/skills/ibm-cloud-iaas-deploy/` (the template's "Bob" skill for deploying to IBM Cloud Code Engine, added to the template in `d86fa84`) was inherited from the template and removed on 2026-11-18 as unused: this entry deploys on Databricks Apps, and no file in the repository referenced the skill. The other template skills (`mcp-builder`, `mcp-eval`) are unchanged.
 
 ## Why three servers (difference 1)
 

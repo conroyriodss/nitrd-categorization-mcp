@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, ci-agent-sdk]
+    branches: [main]
   pull_request:
     branches: [main]
 
