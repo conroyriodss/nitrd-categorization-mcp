@@ -105,3 +105,20 @@ Read back from this file on disk and compared, character for character:
 * The dry run reports MANUAL with each anchor present exactly once.
 
 Not verified: H6's line count is an estimate; nothing was rendered.
+
+## Applied 2026-11-18 (11-18 finals)
+
+The owner applied H1-H6 in Word and PowerPoint. H6 took the 104-character fallback. All six were confirmed present in `NITRD_Evaluation_2026-11-18.docx` and `NITRD_Hackathon_Presentation_2026-11-18.pptx`; see `submission/README.md`, "Round trip 2026-11-18".
+
+The owner also made further edits that are not on this list. They are recorded here so that the list matches the documents:
+
+* **DOCX.**
+  * A new "Approver check (fix (c))" paragraph in §3.
+  * The identity paragraph and the "Implemented in this prototype" clause, updated for the approver check.
+  * The §4 smoke cell, which now cites d6243323.
+  * The recommendations, which add the request view and the five display fixes F1-F5 (built, not deployed), approval-screen grounding, and the blinded 45-award judging.
+* **PPTX.**
+  * Slide 5 shows the video's cases: 9810625, the FY2019 NIAID UH2 cohort and agent 10213736.
+  * Slides 3 and 11 show the approver check as verified.
+  * The slide 9 caption is the 104-character fallback (H6).
+  * The slide 9 chart label is relabelled (H5).
