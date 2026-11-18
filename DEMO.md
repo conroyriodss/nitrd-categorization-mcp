@@ -22,7 +22,8 @@ carry the F1-F5 display fixes, which were built but not deployed. It shows:
 The sandbox rows, events and Delta versions of that run are in
 [`eval/results/demo/20261118_video_v2.json`](eval/results/demo/20261118_video_v2.json), indexed
 in [`eval/results/demo/RUNS.md`](eval/results/demo/RUNS.md). The same session also recorded an
-override on 9724345, which that file lists too. An earlier live take (2026-11-17) was discarded and
+override on 9724345 (15:15:47Z), from a superseded screenshot pass; not shown in the submitted
+video, where 9724345 appears only as a row of the cohort table. That file lists it too. An earlier live take (2026-11-17) was discarded and
 is kept as `20261117_video_take1.json`.
 
 This is the click-path for a live demonstration. It needs workspace access (the deployed Apps are

@@ -8,7 +8,7 @@ Every take that wrote to the sandbox is kept. Discarded takes are not deleted.
 | --- | --- | --- | --- | --- | --- |
 | aborted attempt | not captured (owner "re-record") | Delta versions only, in the take 1 file | 2026-11-17 19:20:05-19:20:53 | 5 cohort requests, none decided | portal SP 06f65816; DELETE by conroyri@nih.gov 19:48 |
 | take 1 | video take 1 (discarded) | [`20261117_video_take1.json`](20261117_video_take1.json) | 2026-11-17 20:16:41-22:00:59 | 6 requests (5 FY2019 NIAID UH2 cohort + agent draft 10213736), 12 review events, 6 routing events; override on **9797472** | portal SP 06f65816; DELETE by conroyri@nih.gov 22:36 |
-| v2 (screenshots) | video v2, the run shown in the submitted video | [`20261118_video_v2.json`](20261118_video_v2.json) | 2026-11-18 15:05:12-17:00:56 | 6 requests (5 FY2019 NIAID UH2 cohort + one agent draft for 10213736, pending), 13 review events, 6 routing events; overrides on **9810625** (shown, 17:00:56Z) and 9724345 (15:15:47Z) | portal SP 06f65816; reset DELETE by conroyri@nih.gov |
+| v2 (screenshots) | video v2, the run shown in the submitted video | [`20261118_video_v2.json`](20261118_video_v2.json) | 2026-11-18 15:05:12-17:00:56 | 6 requests (5 FY2019 NIAID UH2 cohort + one agent draft for 10213736, pending), 13 review events, 6 routing events; override on **9810625** (shown, 17:00:56Z); a 9724345 override (15:15:47Z) is from a superseded screenshot pass, not shown in the submitted video. Owner's frame check: 9724345 appears only as a Step 2 cohort-table row; Step 8 shows draft 6a207835 approved as request f1e3249f | portal SP 06f65816; reset DELETE by conroyri@nih.gov |
 
 # Browser approval demo, 2026-11-09: why there are two runs
 

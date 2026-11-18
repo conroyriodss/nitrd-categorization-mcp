@@ -22,6 +22,7 @@
         "AI",
         "LSDMA"
       ],
+      "shown_in_video": true,
       "note": "The override shown in the video. Audit trail: classified, created (15:06:02Z), routed, override (17:00:56Z)."
     },
     {
@@ -37,9 +38,11 @@
         "AI",
         "LSDMA"
       ],
-      "note": "Earlier override in the same session, same rationale. Recorded here because it is in the tables; whether it appears in the video is the owner's to state."
+      "note": "From a superseded screenshot pass; not shown in the submitted video. Same session, same rationale; kept because it is in the tables.",
+      "shown_in_video": false
     }
   ],
+  "video_check": "Owner, 2026-11-18, by reading the text off the frames of the final MP4 (NITRD_video_FINAL_compressed.mp4, 21,612,225 bytes): 9724345 appears only as a row in the Step 2 cohort table; its override is not shown. Step 8 shows draft 6a207835 approved with request_id f1e3249f, which matches the 10213736 request row in this file. Owner's check; Genie Code did not read the video.",
   "rationale_both": "Data and knowledge infrastructure: NITRD confirmed. Adding AI for ontology-based knowledge representation.",
   "agent_drafts_10213736": {
     "in_sandbox": "ONE request: f1e3249f..., key agent-draft:6a20783528e045358b0215904982a131, created 15:23:31.613Z by demo_sia, status pending (submitted via draft approval; no review decision).",

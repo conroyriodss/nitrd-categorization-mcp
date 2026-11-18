@@ -64,7 +64,7 @@ Verified by Genie Code on 2026-11-18 from the committed files. Scripts were run 
   * Formatting: lead-ins and tier tags are bold in the PDF wherever they are bold in the DOCX (17 tag runs). The 11 tags that are regular in the PDF are also regular in the DOCX (table cells and figure notes). Separately, "Adversarial evaluation [Verified, narrow]" is regular in the DOCX.
   * Placement of the hand edits: the H passages are on page 3 (H1), page 13 (approver check), page 14 (H2) and pages 16-17 (H3). The Neves footnote is on page 11.
 * **Embedded metadata, as found.** DOCX `core.xml`: modified 2026-11-05T19:04:57Z, revision 1 (not updated by the editor). PPTX `core.xml`: "Walnut Exporter", 2026-11-06T17:23:58Z (not updated).
-* **Not checked:** the visual layout of any slide (nothing was rendered), and whether the 104-character caption fits on one line.
+* **Not checked by Genie Code:** the visual layout of any slide (nothing was rendered here). The 104-character slide 9 caption was rendered by the owner's assistant and fits on one line (owner, 2026-11-18).
 
 ## Where 11-06b had been living
 

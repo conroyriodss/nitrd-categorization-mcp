@@ -120,5 +120,5 @@ The owner also made further edits that are not on this list. They are recorded h
 * **PPTX.**
   * Slide 5 shows the video's cases: 9810625, the FY2019 NIAID UH2 cohort and agent 10213736.
   * Slides 3 and 11 show the approver check as verified.
-  * The slide 9 caption is the 104-character fallback (H6).
+  * The slide 9 caption is the 104-character fallback (H6). The owner's assistant rendered it, and it fits on one line (owner, 2026-11-18).
   * The slide 9 chart label is relabelled (H5).
