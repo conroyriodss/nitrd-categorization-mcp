@@ -2,7 +2,9 @@
 
 Recorded 2026-11-10 by Genie Code, on the owner's instruction. This is a limitation of what "CI green" means, not a footnote.
 
-## L-T1. Four agent skips never run in CI, one of them the adversarial bridge
+**Update 2026-11-18 (supersedes L-T1 and the approved sentence below; both are kept as history).** Since commit `f0def47` (2026-11-18T21:13:42Z), CI installs the agent SDK at the app pins (`openai-agents==0.24.0`, `openai==3.46.0`, from `deploy/databricks/nitrd_agent/requirements.txt`), checks that it imports, and checks out full history, so the four agent tests run on every push. CI run `44399856352` on `main` at `f0def47`: 831 passed, 19 skipped, 2 xfailed (pytest summary published as a run annotation). The 19 skips are the live-data, live-write and `UAC_NITRD_ROOT` skips; the four `importorskip("agents")` skips are gone (23 - 19 = 4, and a local run at the same pins lists no `agents` skip). The first SDK run (`44397011257`) failed one test, `test_allowlist_offers_exactly_the_measured_surface`, because the default shallow checkout lacks `a4718e7`; `fetch-depth: 0` fixed it.
+
+## L-T1 (history, 2026-11-10; superseded 2026-11-18, see the update above). Four agent skips never run in CI, one of them the adversarial bridge
 
 Each of these calls `pytest.importorskip("agents")` (the OpenAI Agents SDK) and SKIPS when that package is missing. Per-test outcomes in the CI install (local `pytest -v -rs`, 2026-11-10):
 
@@ -83,6 +85,8 @@ the tests do not measure it against a live slow warehouse. Docs only; the code i
 This is the sixth recorded instance of a claim about state that was wrong. The earlier one on this same test is the 2026-11-09 correction in `docs/PLAN_fix_c.md`. Rule: a skip counts as not run, and "CI green" never stands for the four skipped items above. Open: no committed record shows any of the four run after 2026-11-09; re-running them in a rebuilt adversarial venv before the deliverables close is the owner's call.
 
 ## Sentence for the evaluation document (testing methodology). APPROVED by the owner 2026-11-10, with the addition on recorded runs.
+
+History: this sentence describes CI before `f0def47` (2026-11-18). Since then the four agent tests run in CI on every push; see the update at the top of this file. The submitted 11-18 documents are not changed by this note.
 
 > Continuous integration runs the unit and contract suite on every push, but four agent tests need the agent SDK, which the CI environment does not install, so they skip there. One of them is the test showing that the shipped agent is offered exactly the tool set measured in the counted adversarial run. They run only in a separately built evaluation environment. Only that identity test has a recorded run there (2026-11-09, when its test file passed 5 of 5); the other three have no recorded run at all.
 
