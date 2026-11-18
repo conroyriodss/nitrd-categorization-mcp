@@ -440,6 +440,7 @@
         "conroyri@nih.gov"
       ]
     },
-    "unexpected_principals": "none"
+    "unexpected_principals": "none",
+    "take1_cleanup": "2026-11-17 22:36:40-22:36:47Z DELETE by conroyri@nih.gov: review_requests v403, review_events v400, routing_events v354; 0/0/0 after. No writes after these versions as of the 2026-11-18 check."
   }
 }
