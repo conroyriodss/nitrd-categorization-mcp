@@ -1,5 +1,8 @@
 {
-  "label": "The run shown in the submitted video, first take",
+  "label": "video take 1 (discarded)",
+  "label_history": "Committed 41a8673 as 'The run shown in the submitted video, first take'; relabelled 2026-11-18 when the owner replaced the live video with a screenshot deck (v2). Kept, not deleted.",
+  "override_note": "The override in this take was recorded on 9797472 (UH2AI145837), not 9810625. 9810625 stayed pending.",
+  "aborted_attempt_before_take1": "Five cohort requests (9724345, 9725122, 9730348, 9797472, 9810625; demo_sia; none decided) were written 19:20:05-19:20:53Z (requests v390-v394) and deleted at 19:48Z by the owner (requests v395, events v392, routing v347) on the owner's 're-record' instruction. Their rows were not captured; their Delta versions are listed here.",
   "filmed": "2026-11-17",
   "build": "d7bad89",
   "deployments": {

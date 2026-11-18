@@ -1,3 +1,14 @@
+# Demo run records
+
+## Video runs, 2026-11-17 onward (index)
+
+Every take that wrote to the sandbox is kept. Discarded takes are not deleted.
+
+| Take | Label | File | Writes (UTC) | Rows | Principals |
+| --- | --- | --- | --- | --- | --- |
+| aborted attempt | not captured (owner "re-record") | Delta versions only, in the take 1 file | 2026-11-17 19:20:05-19:20:53 | 5 cohort requests, none decided | portal SP 06f65816; DELETE by conroyri@nih.gov 19:48 |
+| take 1 | video take 1 (discarded) | [`20261117_video_take1.json`](20261117_video_take1.json) | 2026-11-17 20:16:41-22:00:59 | 6 requests (5 FY2019 NIAID UH2 cohort + agent draft 10213736), 12 review events, 6 routing events; override on **9797472** | portal SP 06f65816; DELETE by conroyri@nih.gov 22:36 |
+
 # Browser approval demo, 2026-11-09: why there are two runs
 
 Two runs of `eval/demo/verify_browser_approval.py` (runbook `eval/demo/RUNBOOK_browser_approval.md`, committed 57aa57c) are in this folder. Both are kept. Nothing was deleted. Same prompt, same award (10213736), same model (`databricks-gpt-6-1-sol`), same owner. Each run is one human approval, not a measurement.
