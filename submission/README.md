@@ -4,7 +4,7 @@
 
 | File | SHA-256 | Note |
 | --- | --- | --- |
-| `NITRD_Evaluation_2026-11-18.docx` | `8991571042f216e1ab29e9225caac98647c6f68bd8a05a13bd7b792807ac4ce6` | **current, final.** Evaluation document, revision 11-18: 11-06b plus the programmatic routing batch, hand edits H1-H6 and the owner's further edits (see "Round trip 2026-11-18"). |
+| `NITRD_Evaluation_2026-11-18.docx` | `3b9f4274c9bdc21712156bc95166cf82a1a6582e49591f46429de69a52856245` | **current, final.** Evaluation document, revision 11-18: 11-06b plus the programmatic routing batch, hand edits H1-H6 and the owner's further edits (see "Round trip 2026-11-18"). The two Word comments were removed on 2026-11-18 (see "Comment removal"). History: the first 11-18 file, with the comments, was `8991571042f216e1ab29e9225caac98647c6f68bd8a05a13bd7b792807ac4ce6` (committed b6f487c; recoverable from git). |
 | `NITRD_Evaluation_2026-11-18.pdf` | `7b63767844b3063df82d076726770969127137072ec5ef12e891cb50b7a79df0` | **current, final.** The required evaluation report, exported by the owner from the 11-18 DOCX (producer LibreOffice 26.2.6.3 Writer, created 2026-11-18T12:44:09-05:00). 17 pages. |
 | `NITRD_Hackathon_Presentation_2026-11-18.pptx` | `ee2114e749ee34226ba75c00626607e2fe7e5e7fb5a42288605afb10395af9c0` | **current, final.** Deck, revision 11-18. |
 | `NITRD_Code_Links_2026-11-06b.pdf` | `172b861c25c392904da584b7bbc0ae2e8c393841c44b3b5caa6e0b842e207334` | **stale placeholder.** Code-link page pinned to 4a9ccee. To be regenerated, pinned to the final commit, when the gsa-mcp-hackathon fork URL is confirmed. |
@@ -29,7 +29,7 @@ Extracts are made with `python scripts/extract_submission_text.py <file> ...`, w
 Verified by Genie Code on 2026-11-18 from the committed files. Scripts were run in the session; nothing here is an estimate unless stated.
 
 * **Source.** The owner said the files would go to `/Volumes/users/conroyri/entry2_inputs/`. They were found in the workspace folder `/Workspace/Users/conroyri@nih.gov/entry2_inputs/` instead. The SHA-256 of each file matched the prefix the owner gave (`8991571042f2`, `7b63767844b3`, `ee2114e749ee`) before the copy, and again after it.
-* **Extracts.** `NITRD_Evaluation_2026-11-18.docx.txt` (352 lines, `7b415d5a...`), `NITRD_Hackathon_Presentation_2026-11-18.pptx.txt` (314 lines, `a6ea0b30...`).
+* **Extracts.** `NITRD_Evaluation_2026-11-18.docx.txt` (352 lines, `7b415d5a...`; after the comment removal, 349 lines, `28491d7f...`), `NITRD_Hackathon_Presentation_2026-11-18.pptx.txt` (314 lines, `a6ea0b30...`).
 * **Routing rows (`apply/routing_spec_11-06b.json`).**
   * All 23 AGREED DOCX rows read as applied: the `new` text of every row is present, and the D10a deletion's text is absent.
   * 10 of 13 AGREED PPTX rows read as applied. P03 and P08 are RETIRED, so there is nothing to find. P01 is superseded by the owner's 104-character fallback (H6).
@@ -57,7 +57,7 @@ Verified by Genie Code on 2026-11-18 from the committed files. Scripts were run 
   * Length: 17 pages.
   * Content: all 318 body paragraphs and table cells of 4 or more alphanumeric characters are present, in document order, as is the footnote. No content was dropped or reordered.
   * Page breaks: five long paragraphs cross a page break (lines 45, 110, 231, 292, 302 of the extract, at pages 3/4, 5/6, 10/11, 13/14 and 14/15). Only the running header or footer falls inside each one.
-  * Comments: the two Word comments in the DOCX ("Template structure adaptation...", "Visual revision...") are not in the PDF, as expected for comments.
+  * Comments: the two Word comments in the DOCX ("Template structure adaptation...", "Visual revision...") are not in the PDF, as expected for comments. They have since been removed from the DOCX (see "Comment removal").
   * Tables: 9 of the 10 tables stay on one page. Table 8 (the agreement-benchmark table) breaks between rows 3 and 4 (Neves on page 11; Hanegraaf, FWF, Pier and the rating-scale row on page 12). It breaks at a row boundary and the header row repeats on page 12.
   * Links: all 44 distinct external hyperlink targets in the DOCX are links in the PDF. There are none extra and none missing.
   * Images: all 6 figures are present.
@@ -65,6 +65,18 @@ Verified by Genie Code on 2026-11-18 from the committed files. Scripts were run 
   * Placement of the hand edits: the H passages are on page 3 (H1), page 13 (approver check), page 14 (H2) and pages 16-17 (H3). The Neves footnote is on page 11.
 * **Embedded metadata, as found.** DOCX `core.xml`: modified 2026-11-05T19:04:57Z, revision 1 (not updated by the editor). PPTX `core.xml`: "Walnut Exporter", 2026-11-06T17:23:58Z (not updated).
 * **Not checked by Genie Code:** the visual layout of any slide (nothing was rendered here). The 104-character slide 9 caption was rendered by the owner's assistant and fits on one line (owner, 2026-11-18).
+
+## Comment removal 2026-11-18
+
+The owner removed the two Word comments and uploaded the result as `/Workspace/Users/conroyri@nih.gov/entry2_inputs/NITRD_Evaluation_2026-11-18 2026-11-18 19:16:50.docx`. It was copied over `NITRD_Evaluation_2026-11-18.docx`.
+
+* **Hash.** SHA-256 `3b9f4274...`, as the owner stated, checked before and after the copy. Size 816,011 bytes (was 816,969).
+* **Package diff against `8991571042f2...`.**
+  * Removed: `word/comments.xml`; its relationship `rId48` in `word/_rels/document.xml.rels`; its `Override` in `[Content_Types].xml`.
+  * Changed: `word/document.xml`. Its old version, with its 2 `commentRangeStart`, 2 `commentRangeEnd` and 2 `commentReference` runs deleted, equals the new version character for character.
+  * No other part changed.
+* **Extract diff.** The regenerated extract differs from the previous one only by the removed `=== comments ===` section (3 lines). The body, footnotes, headers and footers are unchanged.
+* **PDF.** Unchanged (`7b63767844b3...`); it never contained the comments.
 
 ## Where 11-06b had been living
 
