@@ -213,8 +213,13 @@ swept for:
   (superseded) became `73c87d5a…`. Every `uac-nitrd` commit SHA changed, and the tag
   `uac-nitrd-freeze-v1` was moved to the rewritten freeze commit. The full old→new map is in
   [uac-witness record 0003](https://github.com/conroyriodss/uac-witness/blob/main/records/0003-correction-pcc-history-rewrite.json)
-  and in seal-log line 32. Old commits may stay reachable by SHA on GitHub until GitHub Support
-  purges them. The engine never read `PCC`. The fixture's `PO Name` column was removed from the
+  and in seal-log line 32. GitHub Support completed the purge of the old commits on 2026-11-19
+  (ticket #5025607). It was verified the same day: all 43 old commits and the superseded fixture
+  blob were refused by `git fetch` ("not our ref"), and the commit page and raw URL for the old
+  freeze commit `b0ccbe65` returned 404 when signed out. See
+  [uac-witness record 0010](https://github.com/conroyriodss/uac-witness/blob/main/records/0010-correction-0003-purge-request-and-completion.json),
+  which also corrects 0003's "request filed separately": #5025607 was the first request. Copies
+  made outside GitHub before the purge are not covered by these checks. The engine never read `PCC`. The fixture's `PO Name` column was removed from the
   current version by a forward commit (`a1f50f3`, fixture-correction-v2), without a history rewrite. Program-officer names are
   public in RePORTER, but the engine does not need them.
 - **Sealed-volume access during that correction:** while scoping the purge, the assistant ran one
