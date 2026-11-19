@@ -6,8 +6,9 @@ Usage:
 
 Draws one page with reportlab (not a project dependency: run with
 `uv run --with reportlab python scripts/make_code_links_pdf.py ...`); every link
-is a clickable URI annotation. --fork adds the GSA organisation fork line; omit
-it until the fork exists. Every SHA must be a full 40-hex commit SHA.
+is a clickable URI annotation. --fork URL adds the GSA organisation fork first,
+with a link pinned to the --primary SHA (forks keep commit SHAs) and a main link.
+Every SHA must be a full 40-hex commit SHA.
 """
 
 from __future__ import annotations
@@ -83,12 +84,26 @@ def build_items(
         ("p", f"GSA MCP Hackathon submission. Generated {date}."),
         (
             "p",
-            "All three repositories are public. Pinned links open the exact commit "
+            ("All repositories listed" if fork else "All three repositories")
+            + " are public. Pinned links open the exact commit "
             "submitted; main links open the latest version.",
         ),
     ]
     if fork:
-        items.append(("link", "GSA organisation fork (same commit SHAs)", fork))
+        fork = fork.rstrip("/")
+        items.extend(
+            [
+                ("h2", "GSA organisation fork (same commit SHAs)"),
+                (
+                    "p",
+                    f"{fork.removeprefix('https://github.com/')}: a fork of "
+                    "nitrd-categorization-mcp carrying the same commits. Development "
+                    "happens in conroyriodss/nitrd-categorization-mcp, below.",
+                ),
+                ("link", f"Pinned commit {primary}", f"{fork}/tree/{primary}"),
+                ("link", "Main", fork),
+            ]
+        )
     for block in blocks:
         items.extend(block)
     return items

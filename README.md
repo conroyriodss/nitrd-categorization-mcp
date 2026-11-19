@@ -39,6 +39,8 @@ An implementation, a scripted end-to-end test, an agent evaluation, and a human-
 
 ## Submission map: three public repositories
 
+**GSA organisation fork:** [gsa-mcp-hackathon/nitrd-categorization-mcp](https://github.com/gsa-mcp-hackathon/nitrd-categorization-mcp) is a fork of this repository carrying the same commits, so links pinned to a commit SHA work in either. Development happens here, in [conroyriodss/nitrd-categorization-mcp](https://github.com/conroyriodss/nitrd-categorization-mcp); the fork's `main` may lag behind it.
+
 **Final submission documents (2026-11-18), start here:**
 
 * Deck: [`submission/NITRD_Hackathon_Presentation_2026-11-18.pptx`](submission/NITRD_Hackathon_Presentation_2026-11-18.pptx)
