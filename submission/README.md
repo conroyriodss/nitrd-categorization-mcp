@@ -1,5 +1,16 @@
 # Submission documents
 
+## Submitted 2026-11-19
+
+The entry was submitted through the GSA Qualtrics form on 2026-11-19, track Service: Write (owner). Files uploaded, as reported by the owner:
+
+* the 11-18 evaluation PDF; the repository copy is `NITRD_Evaluation_2026-11-18.pdf`, sha256 `11dbada8ab7dfb4958e5ebc2b5afb76a83abbcff6fa6935c1d2cf9fe9906ac40`;
+* the 11-18 deck; the repository copy is `NITRD_Hackathon_Presentation_2026-11-18.pptx`, sha256 `e3352585ed25a595d75c9d226dc02003c8d7f2a58ff12e834a4b0f847afaccd2`;
+* the video `NITRD_video_FINAL_compressed.mp4`, sha256 `52bb3dda…9036` (abbreviated as reported; the video is not in this repository);
+* a code-link PDF. Which one was not stated: `NITRD_Code_Links_2026-11-19.pdf` (with the GSA fork) or `NITRD_Code_Links_2026-11-18.pdf`. Both pin the same commits.
+
+The uploaded bytes were not compared with the repository copies from here; the hashes above are those of the repository files. After this commit, no further commits are made to nitrd-categorization-mcp, uac-nitrd or uac-witness until judging closes, unless the owner asks.
+
 **Rule (owner, 2026-11-09): the repo copy is authoritative.** Every revision of the DOCX and the deck is committed here before it is sent anywhere, to reviewers or to judges. This is the runbook lesson applied to the submission itself. The tagged finals at freeze supersede these files; until then, cite the latest committed revision.
 
 | File | SHA-256 | Note |
